@@ -100,9 +100,8 @@ test.describe("Come lavoriamo e MCP", () => {
 
   test("la sezione MCP mostra i passi del README e i limiti", async ({ page }) => {
     const mcp = page.locator("#mcp");
-    await expect(mcp).toContainText("Disponibile da un clone");
-    await expect(mcp.locator("pre").first()).toContainText("npm ci --omit=dev --ignore-scripts -w @agentrica/mcp");
-    await expect(mcp.locator("pre").nth(1)).toContainText("claude mcp add agentrica -- node --permission");
+    await expect(mcp).toContainText("Pacchetto npm");
+    await expect(mcp.locator("pre").first()).toContainText("claude mcp add agentrica -- npx -y @agentrica/mcp@");
     await expect(mcp).toContainText("nessuna telemetria");
   });
 });

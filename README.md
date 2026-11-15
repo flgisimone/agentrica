@@ -30,7 +30,7 @@ agentrica/
 ├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
 ├── apps/site/           # il sito in Next.js (Tailwind, shadcn/ui): landing, reparti, agenti
-├── packages/mcp/        # il server MCP degli agenti (stdio): vedi packages/mcp/README.md
+├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp: vedi packages/mcp/README.md
 ├── plan/                # decisioni e fasi del progetto
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
@@ -52,7 +52,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F7 | Identità corporate: palette dai ritratti, header con menu, volti, sfondo animato, transizioni | completata |
 | F8 | Sezioni: simulazione di sviluppo e server MCP | completata |
 | F9 | Simboli: ritorno al tema scuro, un glifo per ogni stella al posto dei volti | completata |
-| F10 | Pubblicazione | da fare |
+| F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | sviluppo completato, rilascio da fare |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 
@@ -75,3 +75,7 @@ Il repository è nato da [agentic-starter](https://github.com/flgisimone/agentic
 - **ogni decisione finale è confermata dall'utente**, commit e push compresi.
 
 Per riprendere il lavoro in Claude Code: apri il repository, leggi `plan/README.md` e il file della fase in corso.
+
+## Licenza
+
+MIT, vedi [LICENSE](LICENSE).

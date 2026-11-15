@@ -2,15 +2,17 @@
 // Server MCP di Agentrica su stdio: un prompt per agente e due tool (elenca_agenti, agente).
 // Legge solo i file di agents/ all'avvio; non scrive file, non apre connessioni e non registra dati.
 import { join } from "node:path";
-import { DEPARTMENTS, loadCatalog, type Department, type DepartmentCode } from "@agentrica/catalog";
+import { DEPARTMENTS, loadCatalog, type Department, type DepartmentCode } from "../../catalog/src/index.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { agentSummary, agentText, codeName, findAgent } from "./prompt.ts";
+import { agentSummary, agentText, codeName, findAgent, VERSION } from "./prompt.ts";
 
 // agents/ è in un punto fisso rispetto a questo file, senza risalire le cartelle: la cartella corrente è il progetto
-// dell'utente e non deve poter fornire un'altra agents/.
-// ponytail: vale per l'uso da un clone (packages/mcp/src → agents/); il pacchetto pubblicato (F6) includerà agents/.
+// dell'utente e non deve poter fornire un'altra agents/. Tre livelli sopra c'è agents/ sia da un clone
+// (packages/mcp/src → la root del repository) sia nel pacchetto (dist/mcp/src → la root del pacchetto, dove prepack
+// copia agents/). Il catalogo è importato per percorso relativo, così tsc lo compila dentro dist e il pacchetto non
+// dipende da @agentrica/catalog.
 const AGENTS_DIR = join(import.meta.dirname, "..", "..", "..", "agents");
 
 let catalog: Department[];
@@ -25,8 +27,7 @@ const all = catalog.flatMap((department) => department.agents.map((agent) => ({ 
 const codes = DEPARTMENTS.map((d) => d.code) as [DepartmentCode, ...DepartmentCode[]];
 
 const server = new McpServer(
-  // ponytail: versione scritta a mano; in F6 si allinea a quella del pacchetto pubblicato.
-  { name: "agentrica", version: "0.1.0" },
+  { name: "agentrica", version: VERSION },
   {
     instructions:
       `Agentrica: ${all.length} agenti IA specializzati in ${catalog.length} reparti (${codes.join(", ")}). ` +

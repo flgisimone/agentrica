@@ -84,6 +84,11 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
     for (const file of ["server.ts", "prompt.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
+    mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
+    for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {
+      copyFileSync(join(catalogSrc, file), join(root, "packages", "catalog", "src", file));
+    }
     symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"));
     // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
     const run = spawnSync(process.execPath, [join(src, "server.ts")], { cwd: repo, input: "", encoding: "utf8" });

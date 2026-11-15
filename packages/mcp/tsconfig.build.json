@@ -1,0 +1,12 @@
+{
+  // Build del pacchetto npm (prepack): server e catalogo in JavaScript dentro dist/, senza i test.
+  // rootDir è packages/ perché il server importa il catalogo per percorso relativo: escono dist/mcp e dist/catalog.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "..",
+    "outDir": "dist",
+    "rewriteRelativeImportExtensions": true
+  },
+  "exclude": ["src/*.test.ts"]
+}

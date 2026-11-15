@@ -2,7 +2,7 @@
 
 **Obiettivo**: mettere online il sito e pubblicare il server MCP su npm, così gli agenti di Agentrica si usano nei progetti di chiunque con un comando, nel rispetto dei vincoli decisi con la revisione di sicurezza di F5.
 
-> **Stato: da fare.** I vincoli sono confermati dall'utente (`plan/README.md`, «Vincoli per la pubblicazione»); le «Proposte da confermare» si decidono all'apertura. Deploy, pubblicazione npm e merge in `main` solo con l'approvazione esplicita dell'utente.
+> **Stato: sviluppo completato (F10-01–F10-06), rilascio da fare (F10-07).** Il rilascio richiede prima i passi dell'utente su GitHub e npm (sotto); merge in `main`, deploy e pubblicazione npm solo con la sua approvazione esplicita, ciascuno (CONVENTIONS §13.8).
 
 **Agenzie**: cybersecurity (Cloud Security, Vulnerability Management, Security Architect) per hosting, CI di release e catena di fornitura; privacy (Vendor Compliance, Legal Specialist) per hosting e testi del sito pubblico; software (DevOps, Backend, QA, Code Reviewer); business (Product Marketing) per README e pagina npm.
 
@@ -51,3 +51,44 @@
 - La CI blocca un file di `agents/` con contenuto non ammesso.
 - Il sito pubblico supera gli stessi e2e e axe della CI e ha gli header di sicurezza decisi.
 - Nessuna telemetria e nessun trasporto remoto.
+
+## Decisioni all'apertura (2026-11-15)
+
+- Repository **pubblico** al rilascio (serve alla provenance), licenza **MIT**.
+- Pacchetto `@agentrica/mcp` 0.1.0 compilato con **tsc**: catalogo dentro `dist`, `agents/` copiata da `prepack`, SDK e zod a versione esatta, transitivi a range; Node ≥ 22.
+- Sito su Vercel con dominio **`*.vercel.app`** per ora.
+- Pagina **`/note-legali`**: titolare Giulio Simone Floresta, contatto con le issue di GitHub.
+
+## Fatto
+
+- **F10-01** `packages/mcp`: il server importa il catalogo per percorso relativo; `tsconfig.build.json` compila server e catalogo in `dist/` (senza test); `prepack` copia `agents/` e `LICENSE`; `files`, `engines`, `repository`, `bin` su `dist`. `VERSION` in `prompt.ts`, controllata contro `package.json`. Il percorso di `agents/` è lo stesso da un clone e dal pacchetto.
+- **F10-02** `packages/catalog/src/content.ts` e `content.test.ts`: ogni file di `agents/` è `.md`, senza URL o link, HTML o commenti HTML, caratteri invisibili, bidi o di controllo, blocchi di codice diversi da `json`, al massimo 8 KB. Gira in `npm test`, quindi in CI. `.github/CODEOWNERS` su `agents/` e `.github/`.
+- **F10-03** `.github/workflows/release.yml`: da tag `v*` su `main` e uguale alla versione; job `verify` senza permessi (`npm ci`, `npm audit --omit=dev`, `npm audit signatures`, `npm run verify`); job `publish` con OIDC, ambiente `npm`, `npm ci --ignore-scripts`, `npm publish --provenance`. Action fissate per SHA.
+- **F10-04** Revisione nei ruoli cybersecurity e privacy: `audit/2026-11-15-pubblicazione/`. SEC-REL-01 (P1) corretto in fase.
+- **F10-05** Sito: CSP, HSTS, nosniff, Referrer-Policy, Permissions-Policy, niente `X-Powered-By`; pagina `/note-legali` dal footer; sezione MCP con `claude mcp add agentrica -- npx -y @agentrica/mcp@0.1.0` e link al README del pacchetto.
+- **F10-06** README del pacchetto (italiano e inglese): installazione da npm, permessi minimi con installazione globale, provenance, da un clone, versioni, licenza; link ad `agents/` assoluti per la pagina npm. `LICENSE` MIT nella root.
+
+## Verifiche
+
+- `npm run verify`: superato (40 test unitari).
+- `npm run verify:e2e`: 59 superati, 1 saltato (come in F9); nuovo `e2e/pubblicazione.spec.ts` (header su quattro pagine, nessun errore in console né richieste ad altri domini, note legali con axe e nessun cookie).
+- `npm pack` e installazione da tarball in un progetto vuoto: con `npx agentrica-mcp` un client MCP vede 56 prompt, i tool `elenca_agenti` e `agente`, versione 0.1.0. Da installazione globale anche con `node --permission --allow-fs-read=<cartella del pacchetto>`. Il tarball ha 75 file: `dist`, `agents`, README, LICENSE, package.json.
+- `npm publish -w @agentrica/mcp --dry-run` dopo `npm ci --ignore-scripts`: riuscito.
+- `npm audit --omit=dev`: 0 vulnerabilità; `npm audit signatures`: 598 firme verificate.
+- Prova visiva con `next start` di `/note-legali` e della sezione MCP.
+- **Non verificato**: il workflow di release su GitHub, la provenance reale, gli header serviti da Vercel, Node 22 (provato solo Node 26).
+
+## Passi dell'utente prima del rilascio
+
+1. **GitHub**: rendere pubblico il repository; ambiente `npm` con approvazione obbligatoria; ruleset su `main` (pull request, controllo `verify`, niente force push) e sui tag `v*` (solo il proprietario).
+2. **npm**: registrare l'organizzazione `agentrica`; per `@agentrica/mcp` configurare il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`). Se npm non permette il trusted publisher prima della prima versione, la prima pubblicazione si concorda a parte.
+3. **Vercel**: verificare DPA e conservazione dei log (PRIV-PUB-01); progetto collegato a `main`.
+
+## Rilievi aperti
+
+- SEC-REL-02 (P1): protezioni su GitHub e npm, passi 1–2 qui sopra.
+- PRIV-PUB-01 (P2): DPA, trasferimenti e conservazione dei log di Vercel.
+- SEC-REL-03, SEC-REL-04 (P3, accettati): `'unsafe-inline'` negli script; transitivi a range.
+- SEC-REL-05 (P3): action di `ci.yml` per tag.
+- PRIV-PUB-02 (P3, accettato): contatto con issue pubbliche.
+- Note legali scritte con i ruoli privacy, non riviste da un legale.

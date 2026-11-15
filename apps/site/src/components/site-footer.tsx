@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteFooter() {
   return (
     <footer className="border-t py-12">
@@ -13,6 +15,12 @@ export function SiteFooter() {
             agentic-starter su GitHub
           </a>
           .
+        </p>
+        <p className="text-[0.9375rem]">
+          <Link href="/note-legali" className="underline">
+            Note legali
+          </Link>
+          <span className="text-muted-foreground"> · niente cookie, niente analytics</span>
         </p>
       </div>
     </footer>

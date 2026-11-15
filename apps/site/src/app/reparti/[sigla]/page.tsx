@@ -57,14 +57,14 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
           <h2 id="squadra" className={sectionTitle}>
             La squadra
           </h2>
-          <Card className="gap-1 border-t-[3px] border-t-dept p-6 text-base">
+          <Card className="relative gap-1 border-t-[3px] border-t-dept p-6 text-base hover:border-dept">
             <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>
-            <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} />
+            <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} link />
           </Card>
           <ul className="mt-4 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))]">
             {team.map((a) => (
-              <li key={a.id} className="rounded-xl border bg-card p-5">
-                <AgentLine id={a.id} star={a.star} role={a.role} />
+              <li key={a.id} className="relative rounded-xl border bg-card p-5 hover:border-dept">
+                <AgentLine id={a.id} star={a.star} role={a.role} link />
               </li>
             ))}
           </ul>

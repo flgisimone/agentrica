@@ -85,7 +85,7 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
           </ul>
         </section>
 
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
+        <div data-dept={d.code} className="band grid gap-16 py-14 lg:grid-cols-2 lg:gap-12">
           <section aria-labelledby="flusso">
             <h2 id="flusso" className={sectionTitle}>
               Flusso di lavoro

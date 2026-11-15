@@ -64,3 +64,46 @@ test("nessuna violazione di accessibilità serious o critical", async ({ page })
   const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
+
+test.describe("Come lavoriamo e MCP", () => {
+  test("la simulazione è etichettata, parte quando entra nello schermo e si mette in pausa da tastiera", async ({ page }) => {
+    const terminal = page.locator("#metodo figure");
+    await expect(terminal).toContainText("Simulazione");
+    await terminal.scrollIntoViewIfNeeded();
+    await expect(page.locator('#metodo li[aria-current="step"]')).toHaveCount(1);
+    const pause = terminal.getByRole("button", { name: "Pausa" });
+    await pause.focus();
+    await page.keyboard.press("Enter");
+    const resume = terminal.getByRole("button", { name: "Riprendi" });
+    await expect(resume).toBeVisible();
+    const step = await page.locator('#metodo li[aria-current="step"]').innerText();
+    await page.waitForTimeout(1500);
+    await expect(page.locator('#metodo li[aria-current="step"]')).toHaveText(step);
+    await terminal.getByRole("button", { name: "Ricomincia" }).press("Enter");
+    await expect(terminal.getByRole("button", { name: "Pausa" })).toBeEnabled();
+    await expect(page.locator('#metodo li[aria-current="step"]')).toContainText("La tua richiesta");
+  });
+
+  test("con riduci movimento il terminale è completo e fermo", async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    await page.goto("/");
+    const terminal = page.locator("#metodo figure");
+    await expect(terminal.getByRole("button")).toHaveCount(0);
+    await expect(terminal.locator("ol[aria-hidden] > li.invisible")).toHaveCount(0);
+    await expect(page.locator('#metodo li[aria-current="step"]')).toHaveCount(0);
+    await context.close();
+  });
+
+  test("i lettori di schermo hanno il testo intero della simulazione", async ({ page }) => {
+    await expect(page.locator("#metodo figure .sr-only")).toContainText("git switch develop && git merge fase/f7-identita");
+  });
+
+  test("la sezione MCP mostra i passi del README e i limiti", async ({ page }) => {
+    const mcp = page.locator("#mcp");
+    await expect(mcp).toContainText("Disponibile da un clone");
+    await expect(mcp.locator("pre").first()).toContainText("npm ci --omit=dev --ignore-scripts -w @agentrica/mcp");
+    await expect(mcp.locator("pre").nth(1)).toContainText("claude mcp add agentrica -- node --permission");
+    await expect(mcp).toContainText("nessuna telemetria");
+  });
+});

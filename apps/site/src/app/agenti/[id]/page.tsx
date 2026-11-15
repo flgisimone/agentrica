@@ -33,7 +33,7 @@ export async function generateMetadata(props: PageProps<"/agenti/[id]">): Promis
 }
 
 const navLink =
-  "flex min-h-11 flex-col justify-center gap-0.5 rounded-xl border bg-card px-5 py-3 no-underline hover:border-dept";
+  "flex min-h-11 flex-col justify-center gap-0.5 rounded-xl border px-5 py-3 no-underline hover:border-dept";
 
 export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
   const { agent: a, department: d } = await findAgent(props.params);
@@ -76,7 +76,7 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
         </div>
       </div>
 
-      <main id="contenuto" className="wrap grid gap-16 pb-16">
+      <main id="contenuto" className="wrap grid gap-16">
         <article aria-label={`File di ruolo di ${a.star}`} className="grid max-w-3xl gap-10">
           {a.intro && <Markdown text={a.intro} />}
           {a.sections.map((s) => (
@@ -87,7 +87,7 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
           ))}
         </article>
 
-        <nav aria-label={`Altri agenti di ${d.code}`}>
+        <nav aria-label={`Altri agenti di ${d.code}`} data-dept={d.code} className="band py-12">
           <ul className="grid gap-4 sm:grid-cols-2">
             {prev && (
               <li>

@@ -2,7 +2,7 @@
 
 **Obiettivo**: mostrare come lavora Agentrica, non solo dirlo. «Come lavoriamo» diventa una simulazione dello sviluppo nel progetto (diagramma di flusso e terminale), la sezione MCP smette di dire «presto» e fa vedere il server che esiste già, con i passi reali per usarlo oggi in locale.
 
-> **Stato: da fare.** Scelte di fondo confermate dall'utente il 2026-11-15 (vedi «Decisioni»); le «Proposte da confermare» si decidono all'apertura.
+> **Stato: completata.** Proposte decise con l'utente all'apertura il 2026-11-15 (vedi «Scelte all'apertura»).
 
 **Agenzie**: business (Product Marketing Manager) per i testi delle due sezioni; design (UX Designer per il ritmo della simulazione, UI Designer, Dataviz Designer per il diagramma, Accessibility Specialist, UX Writer) prima e dopo; software (Frontend, QA, Performance, Code Reviewer).
 
@@ -23,8 +23,15 @@
 - **Copione della simulazione**: un compito d'esempio realistico per questo progetto (es. «aggiungere i volti agli agenti», cioè F7), con 6–8 passi: richiesta → reparti coinvolti (business, design) → conferma → `git switch -c fase/…` o `git worktree add` → agenti software al lavoro → `npm run verify` → revisione del Code Reviewer → conferma → merge. Testo del terminale in italiano dove è output degli agenti, comandi veri dove sono comandi.
 - **Diagramma**: nodi dei reparti nei loro accenti, i due nodi «La tua conferma» in evidenza; il nodo attivo si illumina mentre il terminale scrive. SVG e CSS, senza librerie nuove; su mobile il diagramma va in verticale sopra il terminale.
 - **Principi**: le tre card restano accanto o sopra la simulazione, oppure diventano didascalie dei passi.
-- **Sezione MCP**: terminale con `claude mcp add agentrica …` e una chiamata a `/agentrica:aisa-02` con risposta abbreviata dal file di ruolo vero; accanto, tre passi (clona, installa, aggiungi al client) e i limiti dichiarati (solo locale, nessuna telemetria). Il badge «In sviluppo» diventa «Disponibile da un clone».
+- **Sezione MCP**: terminale con `claude mcp add agentrica …` e una chiamata a `/mcp__agentrica__aisa-02` (sintassi del README) con risposta abbreviata dal file di ruolo vero; accanto, tre passi (clona, installa, aggiungi al client) e i limiti dichiarati (solo locale, nessuna telemetria). Il badge «In sviluppo» diventa «Disponibile da un clone».
 - **Componenti**: un `Terminal` riusabile (righe con tipo comando/output/conferma, cursore, velocità) condiviso dalle due sezioni.
+
+## Scelte all'apertura (2026-11-15)
+
+- **Copione**: il compito di F7, «Aggiungi i volti degli agenti alle pagine», in 8 passi; privacy saltata in modo esplicito (nessun dato personale).
+- **Disposizione**: diagramma verticale e terminale affiancati da 1024 px, diagramma sopra il terminale sotto.
+- **Principi**: le tre card restano sopra la simulazione.
+- **Sezione MCP**: come proposta, senza una seconda scena con `elenca_agenti` (i tool sono citati nel passo 3).
 
 ## Backlog
 
@@ -45,3 +52,29 @@
 - I comandi della sezione MCP sono quelli del README di `packages/mcp` e funzionano copiati così come sono (percorsi a parte).
 - Nessuna dipendenza nuova senza conferma dell'utente.
 - `npm run verify` e `npm run verify:e2e` passano.
+
+## Fatto
+
+- **F8-01** Copione e testi scritti nei ruoli di Product Marketing (AIBPD-08) e UX Writer (AIWDA-10), confermati dall'utente. Copioni in `lib/scripts.ts`: nomi in codice e ruoli dal catalogo, comandi MCP identici al README (un test lo controlla), estratto della missione di AISA-02 letto dal file di ruolo.
+- **F8-02** `components/terminal.tsx` con la logica pura in `lib/terminal.ts`: comandi scritti a battute (al massimo 45 per riga), Pausa/Riprendi e Ricomincia, partenza al 35 % nello schermo, tutte le righe sempre nel layout (niente salti d'altezza), testo intero in una lista `sr-only`; con `prefers-reduced-motion`, sul server e senza JavaScript il terminale è completo e senza controlli.
+- **F8-03** `components/simulation.tsx`: diagramma come lista ordinata, nodo in corso con `aria-current="step"` e accento del reparto, nodi «La tua conferma» con bordo pieno e rombo, privacy tratteggiata «saltata». Solo CSS, nessuna dipendenza nuova.
+- **F8-04** «Come lavoriamo»: principi sopra (tre colonne da 768 px, prima 2 + 1 con una casella vuota), poi la simulazione etichettata.
+- **F8-05** Sezione MCP: badge «Disponibile da un clone», dimostrazione con `claude mcp add` e il prompt `aisa-02`, tre passi copiabili, «Cosa fa e cosa non fa».
+- **F8-06** Revisione a 768 px fatta (corretta la griglia dei principi). Sfondo misurato con Playwright: 0,3 ms di script per fotogramma (mediana) a 1440 × 900, 1,4 ms al 95° percentile a 2560 × 1440, 60 fps, nessun long task: nessun intervento.
+- **Stacco fra le sezioni** (richiesta dell'utente alla chiusura): classe `.band` in `globals.css`, fascia navy (`--primary`, il colore dei pulsanti) a tutta larghezza su Reparti e MCP, alternata al fondo chiaro. Sulla fascia testo, focus e accenti chiari (testo secondario 8,7:1, accenti ≥ 6,3:1); card, terminale e codice restano bianchi con i token di `:root`. Poi, su richiesta dell'utente, nelle altre pagine dove serve: nel reparto la fascia su «Flusso di lavoro» e «Con gli altri reparti», nell'agente sulla navigazione Precedente/Successivo (il file di ruolo resta sul chiaro per la lettura). Lì la fascia porta `data-dept`, così l'accento del reparto si ricalcola chiaro. Footer senza margine sopra, attaccato all'ultima sezione (richiesta dell'utente).
+- **Focus delle card dei reparti** (difetto preesistente, visto nella revisione): l'anello era sull'`::after` del link, tagliato da `overflow-hidden`, quindi invisibile. Ora sta sulla scheda con `has-[a:focus-visible]`.
+- **F8-07** Revisione nell'app a 360, 768 e 1440 px, durante e a fine simulazione e con riduci movimento; e2e nuovi per pausa da tastiera, riduci movimento, testo per i lettori di schermo e passi del README.
+
+## Verifiche
+
+- `npm run verify` verde (33 test unitari, 5 nuovi su terminale e copioni).
+- `npm run verify:e2e`: 52 superati, 1 saltato di proposito, 1 timeout in `agenti.spec.ts` (AIWDA, pagine non toccate da F8) che rilanciato passa: 16/16. axe senza violazioni serious o critical sulla landing.
+- Prova sul sito costruito (`next start`) con Playwright e screenshot, nessun errore in console; non con `npm run dev`.
+
+## Rilievi aperti
+
+- Il repository è privato: «Disponibile da un clone» vale solo per chi ha accesso. In F9 il repository diventa pubblico o i passi passano al pacchetto npm. P1 per F9.
+- Sul telefono il diagramma (8 nodi, circa 500 px) sta sopra il terminale: la simulazione si vede dopo uno scorrimento. Da compattare se la revisione con l'utente lo chiede. P3.
+- Le prime prove dopo un build vanno a volte in timeout sul primo `goto` (visto in `agenti.spec.ts` e `landing.spec.ts`); rilanciate passano tutte. Da guardare se si ripete in CI (che ha già un retry). P3.
+
+Il seguito è in [09-pubblicazione.md](09-pubblicazione.md).

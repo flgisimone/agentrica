@@ -14,7 +14,7 @@ Il piano iniziale (contatori di pagine viste in Postgres su Neon, route `POST /a
 
 - **Script** `npm run stats` (Node, `fetch` della libreria standard, nessuna dipendenza): legge dall'API pubblica di npm i download di `@agentrica/mcp` (`https://api.npmjs.org/downloads/range/<periodo>/@agentrica/mcp`) e stampa totale e andamento per settimana dell'ultimo periodo (predefinito: ultimi 3 mesi).
 - **Opzionale**: stelle e fork del repository dall'API pubblica di GitHub, senza token.
-- **Limiti** (`ponytail:`): i download npm contano anche CI, mirror e bot e non distinguono gli utenti; `npx -y` scarica a ogni versione nuova. È una tendenza, non un numero di persone. Passare a qualcosa di più preciso solo con un MCP remoto (F15).
+- **Limiti** (`ponytail:`): i download npm contano anche CI, mirror e bot e non distinguono gli utenti; `npx -y` scarica a ogni versione nuova. È una tendenza, non un numero di persone. Passare a qualcosa di più preciso solo con un MCP remoto (F16).
 - Il sito, la CSP, il footer e `/note-legali` restano come sono.
 
 ## Backlog

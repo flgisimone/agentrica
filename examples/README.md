@@ -7,6 +7,7 @@ Progetti piccoli con difetti noti, per vedere se un agente di Agentrica li trova
 | [aisa-09-api-note](casi/aisa-09-api-note.md) | AISA-09 · REGULUS, Application Security | [api-note](progetti/api-note/) |
 | [aiwda-08-form-iscrizione](casi/aiwda-08-form-iscrizione.md) | AIWDA-08 · GACRUX, Accessibility | [form-iscrizione](progetti/form-iscrizione/) |
 | [aipca-02-prenotazioni-palestra](casi/aipca-02-prenotazioni-palestra.md) | AIPCA-02 · ALIOTH, GDPR | [prenotazioni-palestra](progetti/prenotazioni-palestra/) |
+| [aisa-09-api-fatture](casi/aisa-09-api-fatture.md) | AISA-09 · REGULUS, Application Security | [api-fatture](progetti/api-fatture/) |
 
 I progetti sono difettosi di proposito: non usarli come modello e non metterli in rete.
 
@@ -22,7 +23,7 @@ I progetti sono difettosi di proposito: non usarli come modello e non metterli i
 
    ```sh
    cat > .mcp.json <<'EOF'
-   { "mcpServers": { "agentrica": { "command": "npx", "args": ["-y", "@agentrica/mcp@0.2.1", "--agents", "aisa-09"] } } }
+   { "mcpServers": { "agentrica": { "command": "npx", "args": ["-y", "@agentrica/mcp@0.3.1", "--agents", "aisa-09"] } } }
    EOF
    ```
 

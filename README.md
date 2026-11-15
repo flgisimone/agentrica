@@ -59,7 +59,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | completata |
 | F13 | Prove e distribuzione: casi di prova degli agenti, registri MCP | completata |
 | F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost (`--panel`, da 0.3.0) | completata |
-| F15 | Area personale: accesso Google + TOTP (sospesa) | sospesa |
+| F15 | Rilievi aperti da F5 a F14 | aperta |
+| F16 | Area personale: accesso Google + TOTP (sospesa) | sospesa |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

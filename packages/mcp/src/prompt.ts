@@ -5,13 +5,19 @@ import type { Agent, Department, Section } from "../../catalog/src/index.ts";
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
 export const VERSION = "0.3.0";
 
+/**
+ * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori
+ * squadra, così il tipo impedisce di usarlo senza controllare (rilievo di F12).
+ */
+export type SquadDepartment = Omit<Department, "director">;
+
 export interface Found {
-  department: Department;
+  department: SquadDepartment;
   agent: Agent;
 }
 
 /** Cerca un agente per id, senza distinguere maiuscole e minuscole («aisa-02» o «AISA-02»). */
-export function findAgent(catalog: readonly Department[], id: string): Found | undefined {
+export function findAgent(catalog: readonly SquadDepartment[], id: string): Found | undefined {
   const wanted = id.toUpperCase();
   for (const department of catalog) {
     const agent = department.agents.find((a) => a.id === wanted);
@@ -36,8 +42,8 @@ export function agentSummary({ department, agent }: Found): string {
  * («aisa,aiwda-08»). Restituisce il catalogo ridotto alla squadra, nell'ordine del catalogo e senza doppioni;
  * senza elenco, tutto il catalogo. Un nome sconosciuto o un elenco vuoto è un errore che lo nomina.
  */
-export function selectSquad(catalog: readonly Department[], spec?: string): Department[] {
-  if (spec === undefined) return [...catalog];
+export function selectSquad(catalog: readonly Department[], spec?: string): SquadDepartment[] {
+  if (spec === undefined) return catalog.map(({ director: _, ...d }) => d);
   const names = spec.split(",").map((name) => name.trim()).filter((name) => name !== "");
   if (names.length === 0) throw new Error("--agents è vuoto: indica id di agenti o sigle di reparti, es. --agents aisa,aiwda-08");
   const wanted = new Set<string>();
@@ -52,7 +58,7 @@ export function selectSquad(catalog: readonly Department[], spec?: string): Depa
   // Fra virgolette (JSON.stringify), così nei log del client si vedono anche spazi e caratteri strani.
   if (unknown.length > 0) throw new Error(`agente o reparto sconosciuto in --agents: ${unknown.map((n) => JSON.stringify(n)).join(", ")}`);
   return catalog
-    .map((d) => ({ ...d, agents: d.agents.filter((a) => wanted.has(a.id)) }))
+    .map(({ director: _, ...d }) => ({ ...d, agents: d.agents.filter((a) => wanted.has(a.id)) }))
     .filter((d) => d.agents.length > 0);
 }
 

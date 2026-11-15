@@ -14,7 +14,7 @@
 
 ## Decisioni dell'utente (2026-11-15)
 
-- Analisi business: idee valutate A configuratore di squadre, B preferiti, C agenti personalizzati, D MCP remoto con chiave personale, E proposte di miglioramento. Solo D richiede un account ed è un altro prodotto (area personale, [F15](15-area-personale.md), sospesa).
+- Analisi business: idee valutate A configuratore di squadre, B preferiti, C agenti personalizzati, D MCP remoto con chiave personale, E proposte di miglioramento. Solo D richiede un account ed è un altro prodotto (area personale, [F16](16-area-personale.md), sospesa).
 - Revisione del valore: F12 tiene **`--agents`** e la **regola per i progetti vuoti**. Il configuratore web, il conteggio `squad_copies` e le scorciatoie dalle pagine sono **rinviati**: un esempio nel README e nella sezione MCP basta. La **stima dei token** si mostra solo se una verifica prova che il risparmio esiste.
 
 ## Proposte confermate all'apertura (2026-11-15)
@@ -65,4 +65,4 @@ L'utente ha confermato tutte e quattro le proposte così come sono scritte; la v
 ## Rilievi aperti
 
 - **F12-07** Rilascio 0.2.0 (CONVENTIONS §13.8): PR `develop` → `main`, tag `v0.2.0`, pubblicazione dalla CI con provenance. Fino al rilascio README e sito in `develop` citano una versione non ancora su npm. Risolto: 0.2.0 rilasciata su npm.
-- P3: nelle squadre il campo `director` di un reparto filtrato può indicare un agente fuori squadra; l'MCP non lo usa, ma un uso futuro dovrà tenerne conto.
+- P3: nelle squadre il campo `director` di un reparto filtrato può indicare un agente fuori squadra; l'MCP non lo usa, ma un uso futuro dovrà tenerne conto. Risolto in F15 (F15-07): i reparti della squadra non hanno `director` (tipo `SquadDepartment`), con test.

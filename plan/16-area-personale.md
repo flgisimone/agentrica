@@ -1,4 +1,4 @@
-# F15 — Area personale
+# F16 — Area personale
 
 **Obiettivo**: account per gli utenti di Agentrica con accesso sicuro (Google più secondo fattore) e un pannello del titolare con numeri aggregati. Lo scopo dell'area per gli utenti si decide all'apertura, con dati alla mano.
 

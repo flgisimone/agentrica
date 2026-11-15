@@ -12,7 +12,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, codeName, findAgent, selectSquad, VERSION, type Found } from "./prompt.ts";
+import { agentSummary, agentText, codeName, findAgent, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 
 // agents/ è in un punto fisso rispetto a questo file, senza risalire le cartelle: la cartella corrente è il progetto
 // dell'utente e non deve poter fornire un'altra agents/. Tre livelli sopra c'è agents/ sia da un clone
@@ -48,7 +48,7 @@ try {
   fail(`catalogo non leggibile in ${AGENTS_DIR}: ${reason(error)}`);
 }
 
-let catalog: Department[];
+let catalog: SquadDepartment[];
 try {
   catalog = selectSquad(full, spec);
 } catch (error) {
@@ -94,6 +94,8 @@ const server = new McpServer(
 
 const TASK = z.string().max(20_000).optional().describe("Il compito da affidare all'agente nel progetto corrente.");
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
+// Id ammesso: una sigla di tutto il catalogo (non solo della squadra, così fuori squadra è «non trovato») e due cifre.
+const ID = new RegExp(`^(?:${full.map((d) => d.code).join("|")})-\\d{2}$`, "i");
 
 for (const found of all) {
   const title = `${codeName(found.agent)} — ${found.agent.role}`;
@@ -138,7 +140,7 @@ server.registerTool(
     description:
       "Restituisce le istruzioni complete di un agente (regole comuni del reparto e file di ruolo), da seguire per lavorare come quell'agente.",
     inputSchema: {
-      id: z.string().regex(/^[A-Za-z]{4,5}-\d{2}$/, "Formato dell'id: SIGLA-NN, es. AISA-02.").describe("Id dell'agente, es. AISA-02."),
+      id: z.string().regex(ID, "Formato dell'id: SIGLA-NN, es. AISA-02.").describe("Id dell'agente, es. AISA-02."),
       compito: TASK,
     },
     annotations: READ_ONLY,

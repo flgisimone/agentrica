@@ -112,7 +112,7 @@ export function Terminal({
           </div>
         )}
       </div>
-      <ol aria-hidden className="px-4 py-4 font-mono text-[0.8125rem] leading-6 whitespace-pre-wrap [overflow-wrap:anywhere]">
+      <ol aria-hidden className="px-4 py-4 font-mono text-[0.8125rem] leading-6 whitespace-pre-wrap wrap-anywhere">
         {lines.map((line, i) => {
           const current = i === view.shown && isTyped(line) && !done;
           const visible = i < view.shown;

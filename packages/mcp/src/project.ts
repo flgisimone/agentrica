@@ -43,7 +43,10 @@ export interface Finding {
 
 export interface GitState {
   branch: string;
+  /** File tracciati con modifiche. */
   changed: number;
+  /** File nuovi non ancora aggiunti a git. */
+  untracked: number;
 }
 
 export interface Project {
@@ -59,6 +62,12 @@ const MAX_FILE_BYTES = 1_000_000;
 const DEPARTMENT = /\b(AIBPD|AICA|AIPCA|AISA|AIWDA)\b/;
 const PRIORITY = /\bP[0-3]\b/;
 const CLOSED = new Set(["completata", "sospesa"]);
+// Un rilievo è chiuso quando il testo (fasi) o lo stato (audit) dice «risolto» o «chiuso», in qualsiasi genere e
+// numero, e non «non risolto»: la voce resta nel piano come storia ma il pannello non la mostra fra gli aperti.
+const CLOSED_FINDING = /(?<!\bnon )\b(risolt|chius)[oaie]\b/i;
+
+/** true se il testo dice che il rilievo è risolto o chiuso (README del pacchetto, «Formato»). */
+export const isClosedFinding = (text: string) => CLOSED_FINDING.test(text);
 
 /** Legge un file di testo sotto `root`, rifiutando link simbolici che escono e file troppo grandi. */
 function readInside(root: string, path: string): string {
@@ -147,7 +156,7 @@ function readPhaseFindings(root: string, plan: string, phases: readonly Phase[])
       return [];
     }
     return bullets(section(text, "Rilievi aperti") ?? [])
-      .filter((item) => !/^nessuno\b/i.test(item))
+      .filter((item) => !/^nessuno\b/i.test(item) && !isClosedFinding(item))
       .map((item) => ({
         id: "",
         title: item,
@@ -186,7 +195,9 @@ function readAuditFindings(root: string, problems: string[]): Finding[] {
         return [];
       }
       const department = DEPARTMENT.exec(asText(record.agente))?.[1] ?? null;
-      const items = record.rilievi.filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null);
+      const items = record.rilievi
+        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null)
+        .filter((item) => !isClosedFinding(asText(item.stato)));
       return items.map((item) => ({
         id: asText(item.id),
         title: asText(item.titolo),
@@ -209,7 +220,8 @@ export async function readGit(root: string): Promise<GitState | null> {
     const { stdout } = await run("git", args, { cwd: root, timeout: 2000 });
     const [head = "", ...rest] = stdout.split("\n").filter(Boolean);
     const branch = head.replace(/^## /, "").replace(/^No commits yet on /, "").split("...")[0] ?? "";
-    return { branch, changed: rest.length };
+    const untracked = rest.filter((line) => line.startsWith("??")).length;
+    return { branch, changed: rest.length - untracked, untracked };
   } catch {
     return null;
   }

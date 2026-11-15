@@ -52,6 +52,6 @@
 
 ## Rilievi aperti
 
-- `cn` di shadcn sostituirebbe `clsx` + `tailwind-merge` con un pacchetto solo: da proporre all'utente se serve alleggerire. P3.
-- Rilievi P3 di F1 ancora aperti (hero a destra vuota, griglia 3 + 2, riga sopra il titolo a 360 px): da riprendere in F3 con le pagine dei reparti.
-- CI che non parte al push (da F1). P2.
+- `cn` di shadcn sostituirebbe `clsx` + `tailwind-merge` con un pacchetto solo: da proporre all'utente se serve alleggerire. P3. Chiuso in F6 senza azione, per decisione dell'utente.
+- Rilievi P3 di F1 ancora aperti (hero a destra vuota, griglia 3 + 2, riga sopra il titolo a 360 px): da riprendere in F3 con le pagine dei reparti. Risolto in F6 (F6-07, F6-08).
+- CI che non parte al push (da F1). P2. Risolto in F6 (F6-01).

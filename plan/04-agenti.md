@@ -54,6 +54,6 @@
 
 ## Rilievi aperti
 
-- Squadra: il contorno del focus da tastiera circonda il nome in codice, non l'intera scheda cliccabile. P3.
-- Rilievi P3 di F1 e F3 (hero vuota a destra, griglia 3 + 2, riga sopra il titolo a 360 px, ultima riga con una scheda sola in AIWDA e AIPCA): rimandati per scelta.
-- CI che non parte al push (da F1). P2.
+- Squadra: il contorno del focus da tastiera circonda il nome in codice, non l'intera scheda cliccabile. P3. Risolto in F6 (F6-08).
+- Rilievi P3 di F1 e F3 (hero vuota a destra, griglia 3 + 2, riga sopra il titolo a 360 px, ultima riga con una scheda sola in AIWDA e AIPCA): rimandati per scelta. Risolto in F6 (F6-07, F6-08).
+- CI che non parte al push (da F1). P2. Risolto in F6 (F6-01).

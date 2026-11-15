@@ -117,8 +117,8 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 **Format of `plan/` and `audit/`.** The panel reads the agentic-starter plan format, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 
 - `plan/README.md` with a `## Fasi` section and a `| Fase | File | Contenuto | Stato |` table, the file as a link (`[14-pannello.md](14-pannello.md)`). The open phase is the first one whose status is neither `completata` nor `sospesa`.
-- In the phase file: `# Title`, a `**Obiettivo**: …` line, `## Backlog` with the `| # | Task | Priorità |` table, `## Criteri di accettazione` and `## Fatto` as lists; a task is done when its id appears in bold under «Fatto» (`- **F14-01** …`). `## Rilievi aperti` is a list, with the priority (`P0`–`P3`) in the text.
-- `audit/<folder>/<file>.json` with `agente` (e.g. `"AICA-02 · …"`, which gives the department) and a `rilievi` list of objects with `id`, `titolo`, `priorita` and optional `stato`.
+- In the phase file: `# Title`, a `**Obiettivo**: …` line, `## Backlog` with the `| # | Task | Priorità |` table, `## Criteri di accettazione` and `## Fatto` as lists; a task is done when its id appears in bold under «Fatto» (`- **F14-01** …`). `## Rilievi aperti` is a list, with the priority (`P0`–`P3`) in the text; an item that says «risolto» or «chiuso» (resolved, closed; e.g. «Risolto in F6.») stays in the plan but the panel does not show it.
+- `audit/<folder>/<file>.json` with `agente` (e.g. `"AICA-02 · …"`, which gives the department) and a `rilievi` list of objects with `id`, `titolo`, `priorita` and optional `stato`; a finding whose `stato` says «risolto» or «chiuso» is not shown.
 
 ## Put to the test
 

@@ -34,11 +34,13 @@ const ROLE_FILE = /^(\d{2})-([a-z0-9-]+)\.md$/;
 
 /**
  * Cerca la cartella agents/ risalendo da `from`.
- * ponytail: funziona dentro il repository (sito, test, sviluppo); il pacchetto MCP pubblicato (F4) dovrà
+ * ponytail: funziona dentro il repository (sito, test, sviluppo); il pacchetto MCP pubblicato (F5) dovrà
  * portarsi dietro i file e passare la cartella a loadCatalog.
  */
 export function findAgentsDir(from: string = process.cwd()): string {
-  let dir = resolve(from);
+  // turbopackIgnore: il sito legge il catalogo solo al build (pagine pre-generate), quindi Next non deve tracciare
+  // l'intero repository nel pacchetto server. Un MCP remoto in Next dovrà includere agents/ esplicitamente.
+  let dir = resolve(/*turbopackIgnore: true*/ from);
   for (;;) {
     const candidate = join(dir, "agents");
     if (existsSync(join(candidate, DEPARTMENTS[0]!.folder))) return candidate;

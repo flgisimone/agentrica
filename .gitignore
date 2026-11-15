@@ -1,7 +1,8 @@
 # dipendenze e build
 node_modules/
 dist/
-.astro/
+.next/
+next-env.d.ts
 /build
 /coverage
 *.tsbuildinfo

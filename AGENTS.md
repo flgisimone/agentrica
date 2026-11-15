@@ -53,11 +53,11 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 |---|---|---|---|---|
 | Software (`agents/ai_software_agency/`) | 12 | `sw-` | analisi, sviluppo e verifica. È l'unica che modifica il codice | sì |
 | Web Design (`agents/ai_web_design_agency/`) | 10 | `design-` | audit di UX, UI, architettura informativa, design system, dati e grafici, accessibilità, usabilità e testi. Sola lettura | sì |
-| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | 10 | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | da F4 |
+| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | 10 | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | da F5 |
 | Business & Product (`agents/ai_business_product_development_agency/`) | 12 | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | su richiesta |
-| Cybersecurity (`agents/ai_cybersecurity_agency/`) | 12 | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | da F4 |
+| Cybersecurity (`agents/ai_cybersecurity_agency/`) | 12 | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | da F5 |
 
-In questo repository le agenzie hanno due parti: sono il **contenuto** del prodotto (Agentrica le presenta come reparti AIBPD, AICA, AIPCA, AISA, AIWDA) e il **team** che lo sviluppa. Per questo `agents/` resta completo anche per le agenzie non attive: modificare un file di ruolo cambia il sito e, da F4, il server MCP.
+In questo repository le agenzie hanno due parti: sono il **contenuto** del prodotto (Agentrica le presenta come reparti AIBPD, AICA, AIPCA, AISA, AIWDA) e il **team** che lo sviluppa. Per questo `agents/` resta completo anche per le agenzie non attive: modificare un file di ruolo cambia il sito e, da F5, il server MCP.
 
 ### Due regole che valgono sempre
 
@@ -78,7 +78,7 @@ In questo repository le agenzie hanno due parti: sono il **contenuto** del prodo
 
 ### Adattamenti a questo repository
 
-- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e `apps/site` (Astro statico); il server MCP in `packages/mcp` da F4. Dettagli in CONVENTIONS §5 e §15.
+- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e `apps/site` (Next.js 16, Tailwind 4, shadcn/ui); il server MCP in `packages/mcp` da F5. Lavorando in `apps/site` valgono anche le regole di Next in `apps/site/AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
 - **File di ruolo.** Sono contenuto pubblicato: un cambio a un file di `agents/` è una modifica al prodotto e passa dalla conferma dell'utente, come il codice. Nomi in codice e sigle stanno solo in `packages/catalog/src/departments.ts` e non cambiano dopo la pubblicazione.
 - **Dati.** Nessun dato personale né dato reale: il sito è statico e i contenuti vengono dal catalogo. Niente persone, clienti, risultati o recensioni inventati.
 - **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i report dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.

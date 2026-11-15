@@ -20,7 +20,7 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
     name: "AI Business & Product Development",
     folder: "ai_business_product_development_agency",
     summary: "Obiettivi, requisiti, priorità, roadmap, business case e mercato.",
-    stars: ["CAPELLA", "PROCYON", "ALPHARD", "HAMAL", "ALGIEBA", "DIPHDA", "MENKENT", "MIRACH", "ALPHERATZ", "RASALHAGUE", "KOCHAB", "DENEBOLA"],
+    stars: ["ALDERAMIN", "PROCYON", "ALPHARD", "HAMAL", "ALGIEBA", "DIPHDA", "MENKENT", "MIRACH", "ALPHERATZ", "RASALHAGUE", "KOCHAB", "DENEBOLA"],
   },
   {
     code: "AICA",

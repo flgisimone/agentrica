@@ -1,6 +1,6 @@
 // Lettura minima dei file di ruolo: titolo (#), testo introduttivo e sezioni (##).
 // ponytail: niente parser Markdown completo; i corpi restano Markdown grezzo. Quando il sito dovrà
-// mostrarli formattati (F3) li rende Astro o una dipendenza approvata, non questo file.
+// mostrarli formattati (F4) li rende il sito o una dipendenza approvata, non questo file.
 
 export interface Section {
   heading: string;

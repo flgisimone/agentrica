@@ -31,6 +31,7 @@ test("ogni agente ha ruolo e almeno una sezione", () => {
 test("il direttore è il file 01", () => {
   for (const d of catalog) assert.equal(d.director.number, 1, d.code);
   assert.equal(catalog.find((d) => d.code === "AISA")?.agents[1]?.star, "ALTAIR");
+  assert.equal(catalog.find((d) => d.code === "AIBPD")?.director.star, "ALDERAMIN");
 });
 
 test("un file di ruolo senza nome in codice fa fallire il caricamento", () => {

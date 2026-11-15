@@ -53,7 +53,7 @@ const pill = "rounded-lg h-12 px-6 text-base font-semibold";
 export default function Home() {
   return (
     <PageTransition>
-      <div className="hero wrap grid items-center gap-14 pt-20 pb-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:pt-24">
+      <div className="hero wrap grid items-center gap-14 pt-20 pb-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
         <div>
           {/* A capo solo fra i segmenti, mai dentro «56 agenti IA». */}
           <p className="eyebrow">
@@ -194,7 +194,7 @@ export default function Home() {
 
 function CodeBlock({ lines }: { lines: readonly string[] }) {
   return (
-    <pre className="mt-2 rounded-lg border bg-card px-4 py-3 font-mono text-[0.8125rem] leading-6 whitespace-pre-wrap [overflow-wrap:anywhere]">
+    <pre className="mt-2 rounded-lg border bg-card px-4 py-3 font-mono text-[0.8125rem] leading-6 whitespace-pre-wrap wrap-anywhere">
       <code>{lines.join("\n")}</code>
     </pre>
   );

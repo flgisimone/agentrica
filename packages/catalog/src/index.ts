@@ -47,8 +47,8 @@ const ROLE_FILE = /^(\d{2})-([a-z0-9-]+)\.md$/;
 
 /**
  * Cerca la cartella agents/ risalendo da `from`.
- * ponytail: funziona dentro il repository (sito, test, sviluppo); il pacchetto MCP pubblicato (F5) dovrà
- * portarsi dietro i file e passare la cartella a loadCatalog.
+ * Serve dentro il repository (sito, test, sviluppo). Il server MCP non la usa: passa a loadCatalog una cartella
+ * fissa, perché la cartella corrente è il progetto dell'utente (packages/mcp/src/server.ts).
  */
 export function findAgentsDir(from: string = process.cwd()): string {
   // turbopackIgnore: il sito legge il catalogo solo al build (pagine pre-generate), quindi Next non deve tracciare

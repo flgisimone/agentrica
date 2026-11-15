@@ -66,7 +66,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | completata |
 | F11 | [11-analytics.md](11-analytics.md) | Statistiche: `npm run stats` con i download npm; analytics delle pagine rinviati | completata |
 | F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | completata |
-| F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | da aprire |
+| F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | completata |
 | F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | da aprire |
 | F15 | [15-area-personale.md](15-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 

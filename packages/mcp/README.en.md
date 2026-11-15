@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.2.0"]
+      "args": ["-y", "@agentrica/mcp@0.2.1"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.2.0
+npm install -g --ignore-scripts @agentrica/mcp@0.2.1
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -88,12 +88,25 @@ For example: "Use elenca_agenti, pick the right Agentrica agent and check the ac
 
 Number 01 in each department is the director: it coordinates the specialists and consolidates their findings.
 
+## Put to the test
+
+Three agents tested on 2026-11-15 against three small projects with planted, documented defects, using `@agentrica/mcp@0.2.0 --agents <id>`, Claude Code for VS Code and Opus 5.5 (medium reasoning). One run per case, counted by hand.
+
+| Agent | Project | Defects found | False findings | Other valid findings |
+|---|---|---|---|---|
+| AISA-09 · REGULUS, Application Security | Node REST API | 6 of 6 | 0 | 2 |
+| AIWDA-08 · GACRUX, Accessibility | sign-up form | 8 of 8 | 0 | 2 |
+| AIPCA-02 · ALIOTH, GDPR | gym booking service | 7 of 7 | 0 | 3 |
+
+Limits: the defects are few, known and fairly obvious; one model and one run per case; a result like this says nothing about how an agent does on a large project. Projects, expected defects, counting rules and the agents' full reports (in Italian) are in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): you can repeat the tests.
+
 ## Updates
 
 The agents' text comes from the `agents/` files of the installed version. To update, change the version in the command (or reinstall with `npm install -g`) and restart the client. Ids and code names do not change.
 
 ## Versions
 
+- **0.2.1**: name `io.github.flgisimone/agentrica` for the official MCP registry; agents and behaviour unchanged.
 - **0.2.0**: `--agents` argument to load only a squad of agents or departments; in an empty project, or when what the role must examine is missing, the agent says so and proposes first steps to confirm, without inventing findings.
 - **0.1.0**: first published version. 56 agents in five departments, one prompt per agent and the `elenca_agenti` and `agente` tools.
 

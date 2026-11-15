@@ -39,7 +39,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase | File | Contenuto | Stato |
 |---|---|---|---|
 | F0 | [00-base.md](00-base.md) | Monorepo, catalogo da `agents/` con nomi in codice, sito Astro vuoto, verify, CI, tokensave | completata |
-| F1 | [01-landing.md](01-landing.md) | Landing di Agentrica: chi siamo, i cinque reparti, come lavoriamo, verso l'MCP | da fare |
+| F1 | [01-landing.md](01-landing.md) | Landing di Agentrica: chi siamo, i cinque reparti, come lavoriamo, verso l'MCP | completata |
 | F2 | — | Pagine dei reparti: missione, flusso di lavoro, agenti del reparto | da fare |
 | F3 | — | Biografie dei 56 agenti, ricavate dai rispettivi file | da fare |
 | F4 | — | Server MCP (`packages/mcp`): ogni agente usabile come prompt nei progetti; agenzie Privacy e Cybersecurity | da fare |

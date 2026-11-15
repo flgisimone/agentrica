@@ -1,32 +1,324 @@
 ---
-// F0: verifica del collegamento con il catalogo. La landing vera arriva in F1.
 import { loadCatalog } from "@agentrica/catalog";
+import DepartmentCard from "../components/DepartmentCard.astro";
+import Base from "../layouts/Base.astro";
 
 const departments = loadCatalog();
 const total = departments.reduce((sum, d) => sum + d.agents.length, 0);
+
+const principles = [
+  {
+    title: "Su richiesta",
+    text: "Nessun agente parte senza un'attività che lo richieda. Agentrica non è un sistema sempre acceso.",
+  },
+  {
+    title: "Solo gli specialisti che servono",
+    text: "Per ogni attività si sceglie il reparto e, al suo interno, i soli agenti pertinenti. Mai tutti insieme.",
+  },
+  {
+    title: "Decidi tu",
+    text: "Ogni conclusione di un agente è una proposta: priorità, requisiti, scelte tecniche e rilasci passano dalla tua conferma.",
+  },
+];
+
+const flow = [
+  { label: "Business", code: "AIBPD" },
+  { label: "Design", code: "AIWDA" },
+  { label: "Privacy", code: "AIPCA" },
+  { label: "La tua conferma" },
+  { label: "Software", code: "AISA" },
+  { label: "Revisioni di design, privacy e codice" },
+  { label: "La tua conferma" },
+] as const;
+
+const title = "Agentrica · Consulenza fatta di agenti IA";
+const description = `Agentrica è una società di consulenza fittizia fatta di agenti IA: ${departments.length} reparti e ${total} agenti specializzati in business, design, privacy, software e sicurezza.`;
 ---
 
-<!doctype html>
-<html lang="it">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Agentrica</title>
-  </head>
-  <body>
-    <h1>Agentrica</h1>
-    <p>{departments.length} reparti, {total} agenti.</p>
-    {
-      departments.map((d) => (
-        <section>
-          <h2>{d.code} · {d.name}</h2>
-          <ul>
-            {d.agents.map((a) => (
-              <li>{a.id} · {a.star} — {a.role}</li>
-            ))}
-          </ul>
-        </section>
-      ))
-    }
-  </body>
-</html>
+<Base title={title} description={description}>
+  <header class="hero wrap">
+    <p class="eyebrow">Consulenza digitale · {departments.length} reparti · {total} agenti IA</p>
+    <h1 class="hero__title">Agentrica</h1>
+    <p class="hero__tagline">Una società di consulenza fatta di agenti IA.</p>
+    <p class="hero__lead lead">
+      Business, design, privacy, software e sicurezza: {total} specialisti con un ruolo, un metodo e dei limiti
+      dichiarati. Li attivi quando servono, decidi tu ogni passo.
+    </p>
+    <div class="hero__actions">
+      <a class="button button--primary" href="#reparti">Scopri i reparti</a>
+      <a class="button" href="#metodo">Come lavoriamo</a>
+    </div>
+    <ul class="hero__legend" aria-label="I reparti">
+      {
+        departments.map((d) => (
+          <li data-dept={d.code}>
+            <a href={`#reparto-${d.code}`} class="code">{d.code}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </header>
+
+  <main id="contenuto">
+    <section class="section wrap" id="reparti" aria-labelledby="reparti-titolo">
+      <p class="eyebrow">I reparti</p>
+      <h2 class="section-title" id="reparti-titolo">Cinque competenze, un'unica squadra</h2>
+      <p class="lead">
+        Ogni reparto ha un direttore che coordina e specialisti con un compito preciso. Ogni agente ha un nome in
+        codice di stella: la sigla del reparto, il suo numero e una stella.
+      </p>
+      <div class="grid">
+        {departments.map((d) => <DepartmentCard department={d} />)}
+      </div>
+    </section>
+
+    <section class="section wrap" id="metodo" aria-labelledby="metodo-titolo">
+      <p class="eyebrow">Come lavoriamo</p>
+      <h2 class="section-title" id="metodo-titolo">Pochi agenti alla volta, con te al comando</h2>
+      <ul class="principles">
+        {
+          principles.map((p) => (
+            <li>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="flow__title">Una richiesta che coinvolge più reparti</h3>
+      <ol class="flow">
+        {
+          flow.map((step) => (
+            <li data-dept={"code" in step ? step.code : undefined} class={"code" in step ? undefined : "flow__you"}>
+              {"code" in step && <span class="code flow__code">{step.code}</span>}
+              <span>{step.label}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="lead flow__note">
+        I passaggi che non servono si saltano. La sicurezza (AICA) entra per gli audit e le nuove integrazioni.
+      </p>
+    </section>
+
+    <section class="section wrap" id="mcp" aria-labelledby="mcp-titolo">
+      <div class="mcp">
+        <p class="mcp__badge code">In sviluppo</p>
+        <h2 class="section-title" id="mcp-titolo">Presto nei tuoi progetti</h2>
+        <p class="lead">
+          Stiamo portando gli agenti di Agentrica in un server MCP: potrai chiamarli da Claude Code o da altri client
+          compatibili, con gli stessi ruoli che vedi qui.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p class="footer__brand">Agentrica</p>
+      <p class="footer__note">
+        Agentrica è una società fittizia: i suoi agenti sono modelli di IA guidati da file di ruolo. Nessuna persona,
+        cliente o risultato è reale.
+      </p>
+      <p class="footer__note">
+        Il metodo con cui lavora è aperto:{" "}
+        <a href="https://github.com/flgisimone/agentic-starter">agentic-starter su GitHub</a>.
+      </p>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-24) var(--space-16);
+  }
+
+  .hero__title {
+    font-size: clamp(3rem, 1.5rem + 7vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-top: var(--space-4);
+    background: linear-gradient(90deg, var(--text), var(--c-aisa) 55%, var(--c-aipca));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero__tagline {
+    font-size: clamp(1.375rem, 1rem + 1.5vw, 2rem);
+    font-weight: 600;
+    margin-top: var(--space-2);
+  }
+
+  .hero__lead {
+    margin-top: var(--space-4);
+    font-size: 1.125rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+
+  .hero__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: var(--space-12) 0 0;
+  }
+
+  .hero__legend a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: var(--space-1) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  .hero__legend a::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .hero__legend a:hover {
+    border-color: var(--accent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    align-items: start;
+  }
+
+  .principles {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-8) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-6);
+  }
+
+  .principles li {
+    padding: var(--space-6);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .principles h3 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .principles p {
+    color: var(--text-muted);
+  }
+
+  .flow__title {
+    font-size: 1.125rem;
+    margin-top: var(--space-12);
+  }
+
+  .flow {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    counter-reset: step;
+  }
+
+  .flow li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    font-size: 0.9375rem;
+    counter-increment: step;
+  }
+
+  .flow li::before {
+    content: counter(step) ".";
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .flow .flow__you {
+    --accent: var(--text);
+    font-weight: 600;
+  }
+
+  .flow__code {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.8125rem;
+  }
+
+  .flow__note {
+    margin-top: var(--space-4);
+    font-size: 0.9375rem;
+  }
+
+  .mcp {
+    padding: var(--space-8);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, #38d6f00f, #b49cff0f);
+  }
+
+  .mcp__badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--c-aisa);
+    border-radius: var(--radius-pill);
+    color: var(--c-aisa);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-block: var(--space-12);
+    margin-top: var(--space-8);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .footer__brand {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .footer__note {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    max-width: 48rem;
+  }
+</style>

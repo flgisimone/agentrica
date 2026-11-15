@@ -2,7 +2,7 @@
 
 **Obiettivo**: un monorepo che legge i file di `agents/` come catalogo tipizzato e un sito Astro che lo mostra, con tutti i controlli di qualità già attivi, così F1 aggiunge solo la landing.
 
-> **Stato: completata** (branch `fase/f0-base`; hash del merge dopo la chiusura). Piano, dipendenze e agenzie attive confermati dall'utente il 2026-11-15.
+> **Stato: completata** (`d7ee163`, merge `275efe9` in `develop`). Piano, dipendenze e agenzie attive confermati dall'utente il 2026-11-15.
 
 **Agenzie**: software (Architect per la struttura, DevOps per script, build e CI, QA, Code Reviewer).
 

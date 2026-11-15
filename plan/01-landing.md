@@ -2,7 +2,7 @@
 
 **Obiettivo**: la pagina iniziale presenta Agentrica e i suoi cinque reparti in modo chiaro e credibile, con dati presi dal catalogo, e invita a esplorare reparti e agenti (le pagine arrivano in F2 e F3).
 
-> **Stato: completata** (branch `fase/f1-landing`; hash del merge dopo la chiusura). Testi, colori e link del footer confermati dall'utente il 2026-11-15.
+> **Stato: completata** (`06c8a1f`, merge `abd61da` in `develop`). Testi, colori e link del footer confermati dall'utente il 2026-11-15.
 
 **Agenzie**: web design (Director, UX Designer, UI Designer, UX Writer, Accessibility Specialist) prima e dopo; software (Frontend Developer, QA, Performance, Code Reviewer).
 
@@ -49,11 +49,12 @@
 - `npm run verify`: superato (tsc del catalogo e degli e2e, `astro check` 0 errori, lint, 6/6 test, build).
 - `npm run verify:e2e`: 10/10, partendo senza server attivi.
 - Revisione di design sugli screenshot a 1440 e 360 px (Director, UI Designer, UX Writer, Accessibility): corretti in fase un P1 (il `summary` con `display: flex` perdeva il triangolo e non sembrava apribile) e un P2 (spazio mancante prima del link nel footer).
-- **Non verificato**: Safari e Firefox; lettore di schermo reale (solo axe); CI su GitHub (vedi rilievi).
+- CI su GitHub lanciata a mano: verde.
+- **Non verificato**: Safari e Firefox; lettore di schermo reale (solo axe).
 
 ## Rilievi aperti
 
-- CI di GitHub mai partita su questo repository (0 esecuzioni con il workflow attivo; c'è invece un check di Vercel in coda): si ricontrolla al push di F1, poi le impostazioni di Actions dell'account. P1.
+- La CI non parte al push su questo repository (gamoey, con le stesse credenziali, sì; nessun webhook): lanciata a mano con `gh workflow run ci.yml --ref develop` è verde (verify ed e2e, run 43696157872, 2026-11-15). Finché non si capisce, a ogni chiusura si lancia a mano. P2, da guardare nelle impostazioni di Actions e nell'integrazione Vercel del repository.
 - Hero a 1440 px: la metà destra è vuota. Una costellazione dei reparti lì sarebbe la naturale anteprima delle pagine di F2. P3, da valutare in F2.
 - Griglia dei reparti 3 + 2 con una casella vuota a 1440 px. P3.
 - A 360 px la riga sopra il titolo va a capo spezzando «56 agenti IA». P3.

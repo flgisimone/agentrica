@@ -13,7 +13,7 @@ Ruoli, nella sessione principale: AICA-02 Security Architect, AICA-05 Cloud Secu
 | PRIV-PUB-01 DPA e log di Vercel | P2 | Hobby senza DPA: note legali corrette, rischio residuo per un legale |
 | SEC-REL-03 `'unsafe-inline'` negli script | P3 | accettato |
 | SEC-REL-04 transitivi a range | P3 | accettato |
-| SEC-REL-05 action di `ci.yml` per tag | P3 | aperto |
+| SEC-REL-05 action di `ci.yml` per tag | P3 | risolto: action fissate per SHA, alle versioni di `release.yml` (5ae2bf4) |
 | PRIV-PUB-02 contatto con issue pubbliche | P3 | accettato |
 | PRIV-PUB-03 niente cookie, analytics, terzi | P3 | verificato dagli e2e |
 

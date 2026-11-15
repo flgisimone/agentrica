@@ -97,6 +97,6 @@
 - SEC-REL-02: risolto (ambiente, ruleset, trusted publisher, 2FA senza token). La 0.1.0 non ha provenance (scelta dell'utente); la prima release dalla CI (0.1.1) verifica workflow e provenance.
 - PRIV-PUB-01 (P2): il DPA di Vercel copre solo Pro ed Enterprise e il sito è su Hobby. Scelta dell'utente (2026-11-15): resta Hobby, le note legali dicono che non c'è un DPA e rimandano all'informativa di Vercel. Da valutare con un legale; si riapre passando a Pro o cambiando hosting.
 - SEC-REL-03, SEC-REL-04 (P3, accettati): `'unsafe-inline'` negli script; transitivi a range.
-- SEC-REL-05 (P3): action di `ci.yml` per tag.
+- SEC-REL-05 (P3): risolto dopo la chiusura (5ae2bf4), action di `ci.yml` fissate per SHA.
 - PRIV-PUB-02 (P3, accettato): contatto con issue pubbliche.
 - Note legali scritte con i ruoli privacy, non riviste da un legale.

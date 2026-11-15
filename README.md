@@ -7,7 +7,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.1.0` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.2.0` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi.
 
@@ -56,7 +56,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F9 | Simboli: ritorno al tema scuro, un glifo per ogni stella al posto dei volti | completata |
 | F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | completata |
 | F11 | Statistiche: download npm da terminale | completata |
-| F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | da aprire |
+| F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | completata |
 | F13 | Prove e distribuzione: casi di prova degli agenti, registri MCP | da aprire |
 | F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost | da aprire |
 | F15 | Area personale: accesso Google + TOTP (sospesa) | sospesa |

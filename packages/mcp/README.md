@@ -22,7 +22,7 @@ Serve Node 22 o successivo, con npm.
 **Claude Code**, dalla cartella del tuo progetto:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.1.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0
 ```
 
 Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicata finché non la cambi tu: un aggiornamento dei ruoli non arriva senza che tu lo scelga.
@@ -34,7 +34,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.1.0"]
+      "args": ["-y", "@agentrica/mcp@0.2.0"]
     }
   }
 }
@@ -43,7 +43,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
 **Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.1.0
+npm install -g --ignore-scripts @agentrica/mcp@0.2.0
 npm root -g
 ```
 
@@ -67,6 +67,14 @@ claude mcp add agentrica -- node --permission --allow-fs-read=/cartella/globale/
 
 Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 
+**Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
+
+```sh
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0 --agents aisa,aiwda-08
+```
+
+Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti` e `agente` vedono solo quelli. Senza `--agents` ci sono tutti i 56 agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
+
 **Tool**, per i client che non mostrano i prompt, o quando vuoi che sia il modello a scegliere l'agente:
 
 | Tool | Input | Cosa restituisce |
@@ -86,6 +94,7 @@ Il testo degli agenti viene dai file di `agents/` della versione installata. Per
 
 ## Versioni
 
+- **0.2.0**: argomento `--agents` per caricare solo una squadra di agenti o reparti; con un progetto vuoto, o senza ciò che il ruolo deve esaminare, l'agente lo dice e propone i primi passi da confermare, senza inventare rilievi.
 - **0.1.0**: prima versione pubblicata. 56 agenti in cinque reparti, un prompt per agente e i tool `elenca_agenti` e `agente`.
 
 ## Licenza

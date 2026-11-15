@@ -165,7 +165,16 @@ export default function Home() {
                 <CodeBlock lines={[mcp.add]} />
               </li>
               <li>
-                <h3 className="font-semibold">2. Chiama un agente</h3>
+                <h3 className="font-semibold">2. Se vuoi, scegli la squadra</h3>
+                <p className="text-[0.9375rem] text-muted-foreground">
+                  Con <code className="font-mono text-[0.875rem]">--agents</code> carichi solo gli agenti che ti servono:
+                  id di agenti o reparti interi, separati da virgole. Nel menu dei comandi restano solo quelli, e i tool
+                  vedono solo la squadra.
+                </p>
+                <CodeBlock lines={[mcp.squad]} />
+              </li>
+              <li>
+                <h3 className="font-semibold">3. Chiama un agente</h3>
                 <p className="text-[0.9375rem] text-muted-foreground">
                   Con il suo prompt, il compito fra virgolette, oppure chiedi al modello di usare i tool{" "}
                   <code className="font-mono text-[0.875rem]">elenca_agenti</code> e{" "}

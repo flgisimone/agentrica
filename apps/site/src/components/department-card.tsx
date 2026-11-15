@@ -4,11 +4,24 @@ import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-export function AgentLine({ id, star, role }: { id: string; star: string; role: string }) {
+export const agentHref = (id: string) => `/agenti/${id.toLowerCase()}`;
+
+/**
+ * Nome in codice e ruolo. Con `link` il nome porta alla pagina dell'agente e copre l'intero contenitore,
+ * che deve avere `relative` (scheda tutta cliccabile, un solo link per la tastiera).
+ */
+export function AgentLine({ id, star, role, link }: { id: string; star: string; role: string; link?: boolean }) {
+  const name = `${id} · ${star}`;
   return (
     <p>
       <span className="block font-mono font-semibold tracking-wide text-dept">
-        {id} · {star}
+        {link ? (
+          <Link href={agentHref(id)} className="after:absolute after:inset-0 after:rounded-[inherit] hover:underline">
+            {name}
+          </Link>
+        ) : (
+          name
+        )}
       </span>
       <span className="block text-[0.9375rem]">{role}</span>
     </p>

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { loadCatalog } from "@agentrica/catalog";
 import type { Metadata } from "next";
+import { Constellation } from "@/components/constellation";
 import { DepartmentCard } from "@/components/department-card";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { spanInRows } from "@/lib/grid";
 import { cn } from "@/lib/utils";
 
 const departments = loadCatalog();
@@ -47,41 +49,48 @@ const pill = "rounded-full h-11 px-6 text-base font-semibold";
 export default function Home() {
   return (
     <>
-      <header className="hero wrap pt-24 pb-16">
-        <p className="eyebrow">
-          Consulenza digitale · {departments.length} reparti · {total} agenti IA
-        </p>
-        <h1 className="mt-4 bg-linear-to-r from-foreground via-aisa to-aipca bg-clip-text text-[clamp(3rem,1.5rem+7vw,6rem)] font-extrabold tracking-[-0.04em] text-transparent">
-          Agentrica
-        </h1>
-        <p className="mt-2 text-[clamp(1.375rem,1rem+1.5vw,2rem)] font-semibold">
-          Una società di consulenza fatta di agenti IA.
-        </p>
-        <p className={cn(lead, "mt-4 text-lg")}>
-          Business, design, privacy, software e sicurezza: {total} specialisti con un ruolo, un metodo e dei limiti
-          dichiarati. Li attivi quando servono, decidi tu ogni passo.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a href="#reparti" className={cn(buttonVariants(), pill)}>
-            Scopri i reparti
-          </a>
-          <a href="#metodo" className={cn(buttonVariants({ variant: "outline" }), pill)}>
-            Come lavoriamo
-          </a>
+      <header className="hero wrap grid items-center gap-12 pt-24 pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+        <div>
+          {/* A capo solo fra i segmenti, mai dentro «56 agenti IA». */}
+          <p className="eyebrow">
+            <span className="whitespace-nowrap">Consulenza digitale</span> ·{" "}
+            <span className="whitespace-nowrap">{departments.length} reparti</span> ·{" "}
+            <span className="whitespace-nowrap">{total} agenti IA</span>
+          </p>
+          <h1 className="mt-4 w-fit bg-linear-to-r from-foreground via-aisa to-aipca bg-clip-text text-[clamp(3rem,1.5rem+7vw,6rem)] font-extrabold tracking-[-0.04em] text-transparent">
+            Agentrica
+          </h1>
+          <p className="mt-2 text-[clamp(1.375rem,1rem+1.5vw,2rem)] font-semibold">
+            Una società di consulenza fatta di agenti IA.
+          </p>
+          <p className={cn(lead, "mt-4 text-lg")}>
+            Business, design, privacy, software e sicurezza: {total} specialisti con un ruolo, un metodo e dei limiti
+            dichiarati. Li attivi quando servono, decidi tu ogni passo.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="#reparti" className={cn(buttonVariants(), pill)}>
+              Scopri i reparti
+            </a>
+            <a href="#metodo" className={cn(buttonVariants({ variant: "outline" }), pill)}>
+              Come lavoriamo
+            </a>
+          </div>
+          {/* Da 1024 px i reparti sono nella costellazione accanto: un solo elenco di link alla volta. */}
+          <ul aria-label="I reparti" className="mt-12 flex flex-wrap gap-2 lg:hidden">
+            {departments.map((d) => (
+              <li key={d.code} data-dept={d.code}>
+                <Link
+                  href={`/reparti/${d.slug}`}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border px-4 font-mono text-sm font-bold text-dept no-underline hover:border-dept"
+                >
+                  <span aria-hidden className="size-2 rounded-full bg-dept" />
+                  {d.code}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul aria-label="I reparti" className="mt-12 flex flex-wrap gap-2">
-          {departments.map((d) => (
-            <li key={d.code} data-dept={d.code}>
-              <Link
-                href={`/reparti/${d.slug}`}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border px-4 font-mono text-sm font-bold text-dept no-underline hover:border-dept"
-              >
-                <span aria-hidden className="size-2 rounded-full bg-dept" />
-                {d.code}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <Constellation departments={departments} className="hidden lg:block" />
       </header>
 
       <main id="contenuto">
@@ -94,9 +103,10 @@ export default function Home() {
             Ogni reparto ha un direttore che coordina e specialisti con un compito preciso. Ogni agente ha un nome in
             codice di stella: la sigla del reparto, il suo numero e una stella.
           </p>
-          <div className="mt-8 grid items-start gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))]">
-            {departments.map((d) => (
-              <DepartmentCard key={d.code} department={d} />
+          {/* Cinque schede: 2 + 2 + 1 larga sul tablet, 3 + 2 sul computer, senza caselle vuote. */}
+          <div className="mt-8 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-6">
+            {departments.map((d, index) => (
+              <DepartmentCard key={d.code} department={d} className={spanInRows(index, departments.length)} />
             ))}
           </div>
         </section>

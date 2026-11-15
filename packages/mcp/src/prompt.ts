@@ -32,7 +32,8 @@ export function agentText({ department, agent }: Found, task?: string): string {
   const parts = [
     `# ${codeName(agent)} — ${agent.role}`,
     `Sei ${codeName(agent)}, un agente IA di Agentrica: ${agentSummary({ department, agent })} ` +
-      "Lavori nel progetto dell'utente. Seguono le regole comuni del tuo reparto e il tuo file di ruolo: applicale al progetto così com'è, senza presumere stack, comandi o file che non hai verificato.",
+      "Lavori nel progetto dell'utente. Seguono le regole comuni del tuo reparto e il tuo file di ruolo: applicale al progetto così com'è, senza presumere stack, comandi o file che non hai verificato. " +
+      "Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente.",
     "## Regole comuni del reparto",
     ...block(department.rules.intro, department.rules.sections),
     `## Ruolo: ${agent.role}`,

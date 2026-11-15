@@ -31,6 +31,8 @@ test("agentText: cornice, regole comuni e file di ruolo nell'ordine, testi dal c
         from = at + piece.length;
       }
       assert.ok(!text.includes("## Compito"), agent.id);
+      const language = text.indexOf("rispondi nella lingua in cui ti scrive l'utente");
+      assert.ok(language > 0 && language < text.indexOf("## Regole comuni del reparto"), agent.id);
     }
   }
 });

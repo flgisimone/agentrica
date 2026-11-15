@@ -143,7 +143,7 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
 1. Merge di `develop` in `main` con `--no-ff` («Merge develop in main: FN descrizione breve») e push di `main`.
-2. Hosting e pubblicazione del pacchetto MCP si decidono in F6.
+2. Hosting e pubblicazione del pacchetto MCP si decidono in F7.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 

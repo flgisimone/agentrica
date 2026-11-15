@@ -9,7 +9,7 @@ Ruoli, nella sessione principale: AICA-02 Security Architect, AICA-05 Cloud Secu
 | Rilievo | Priorità | Stato |
 |---|---|---|
 | SEC-REL-01 token OIDC esposto agli script di installazione | P1 | risolto: job separati, `npm ci --ignore-scripts` nella pubblicazione |
-| SEC-REL-02 trusted publisher, ambiente `npm`, ruleset | P1 | da fare (utente) |
+| SEC-REL-02 trusted publisher, ambiente `npm`, ruleset | P1 | risolto dall'utente |
 | PRIV-PUB-01 DPA e log di Vercel | P2 | da fare (utente) |
 | SEC-REL-03 `'unsafe-inline'` negli script | P3 | accettato |
 | SEC-REL-04 transitivi a range | P3 | accettato |

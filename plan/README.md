@@ -38,9 +38,10 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
 | Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
-| Autenticazione | Se il sito avrà account (F14): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [14-area-personale.md](14-area-personale.md) | Scelta dell'utente (2026-11-15) |
-| Monitoraggio | Pannello `/admin` del titolare in F14, solo dati aggregati (account, accessi, pagine viste, agenti nelle squadre copiate, download npm); nessuna telemetria nell'MCP, l'uso degli agenti si stima dai segnali del sito. Fino ad allora lettura da terminale | Scelta dell'utente (2026-11-15) |
-| Pannello locale | F13: UI per seguire e guidare lo sviluppo, servita in locale dal pacchetto (`127.0.0.1`), senza account né dati verso Agentrica; l'area personale slitta a F14 | Scelta dell'utente (2026-11-15) |
+| Autenticazione | Se il sito avrà account (F15, sospesa): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [15-area-personale.md](15-area-personale.md) | Scelta dell'utente (2026-11-15) |
+| Monitoraggio | Download npm (e stelle di GitHub) con `npm run stats` da terminale (F11); analytics delle pagine e conteggio delle squadre rinviati; nessuna telemetria nell'MCP. Il pannello `/admin` aggregato resta legato all'area personale (F15, sospesa) | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Strada (ponte nell'MCP o Agent SDK) da scegliere all'apertura | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, F15 sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -62,9 +63,10 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | completata |
 | F9 | [09-simboli.md](09-simboli.md) | Ritorno al tema scuro; un glifo SVG generato per ogni stella al posto dei volti | completata |
 | F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | completata |
-| F11 | [11-analytics.md](11-analytics.md) | Analytics in casa: contatori aggregati in Postgres, senza dati personali; revisione privacy e testi aggiornati | aperta |
-| F12 | [12-squadre.md](12-squadre.md) | Squadre: configuratore nel sito che genera la configurazione MCP con i soli agenti scelti, senza account; l'MCP accetta l'elenco | da aprire |
-| F13 | [13-pannello.md](13-pannello.md) | Pannello locale: `npx @agentrica/mcp panel` apre su localhost fasi, backlog, rilievi e decisioni del progetto; guida dell'agente da decidere | da aprire |
-| F14 | [14-area-personale.md](14-area-personale.md) | Area personale: accesso Google + TOTP con QR code, pannello `/admin` del titolare con dati aggregati; scopo per gli utenti da decidere | da aprire |
+| F11 | [11-analytics.md](11-analytics.md) | Statistiche: `npm run stats` con i download npm; analytics delle pagine rinviati | aperta |
+| F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | da aprire |
+| F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | da aprire |
+| F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | da aprire |
+| F15 | [15-area-personale.md](15-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 
-Ordine: F0 → F14 in sequenza. I file di F12, F13 e F14 sono scritti; le loro «proposte da confermare» si decidono all'apertura.
+Ordine: F0 → F14 in sequenza; F15 è sospesa. I file di F12–F15 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

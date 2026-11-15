@@ -26,11 +26,12 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Nomi degli agenti | Nome in codice di stella: sigla del reparto, numero del file di ruolo e stella in maiuscolo, es. «AISA-02 · ALTAIR». Il ruolo resta accanto al nome. Nessun nome di persona. Il direttore di AIBPD è ALDERAMIN (era CAPELLA fino a F1; il sito non era pubblicato) | Scelta dell'utente (2026-11-15) |
 | Trasparenza | Il sito dice sempre che gli agenti sono IA; nessuna persona, cliente, risultato o recensione inventati | Contenuti onesti (CONVENTIONS §1) |
 | Identità visiva | Da F9 torna il «tech scuro» di F0–F6 (fondo #0b1020, accenti luminosi per reparto), con Inter e JetBrains Mono di F7; contrasto WCAG AA. Il corporate chiaro di F7–F8 resta nella storia di git | Scelta dell'utente (2026-11-15, dopo F8) |
-| Lingua | Sito, documentazione, piani e convenzioni in italiano; sigle e titoli dei ruoli in inglese come nei file | Scelta dell'utente (2026-11-15) |
+| Lingua | Sito, documentazione, piani e convenzioni in italiano; sigle e titoli dei ruoli in inglese come nei file. Da F11 API e identificatori del codice nuovo in inglese (CONVENTIONS §3) | Scelta dell'utente (2026-11-15; regola del codice in F11) |
 | Agenzie attive | Software e Web Design per costruire il sito; le altre tre sono il contenuto del prodotto e si attivano quando servono (Privacy e Cybersecurity con il server MCP e la pubblicazione) | Proposta F0 |
 | Test | Unitari con `node --test` su `packages/catalog`; prove di fumo e accessibilità con Playwright e axe sul sito | Come nello starter |
 | Rilascio | Solo in locale fino alla fase di pubblicazione; deploy solo dopo l'approvazione dell'utente | Predefinito di agentic-starter |
 | Branch | `develop` per lo sviluppo, `main` per le versioni stabili; una fase = un branch `fase/fN-nome` | Predefinito di agentic-starter |
+| Squadre | Da 0.2.0 `--agents` con id di agenti e sigle di reparti (senza, tutti); un nome sconosciuto ferma il server; i tool vedono solo la squadra. In Claude Code i prompt non entrano nel contesto: il vantaggio è un menu più corto, non un risparmio di token | Scelta dell'utente (2026-11-15, F12) |
 | Server MCP | Solo stdio locale; un prompt per agente (`aisa-02`, argomento `compito`) e i tool `elenca_agenti` e `agente`; SDK ufficiale a versione esatta; legge `agents/` da un percorso fisso, nessuna telemetria | Scelta dell'utente (2026-11-15, F5) |
 | Vincoli per la pubblicazione | Prima di pubblicare: organizzazione npm `@agentrica` registrata; catalogo incluso nel pacchetto o a versione esatta (mai `*`); JavaScript compilato con `files` (solo dist, `agents/`, README) ed `engines`; pubblicazione con trusted publishing e provenance; `npm audit --omit=dev` e `npm audit signatures` nella CI di release; controllo del contenuto di `agents/` in CI (URL, blocchi di comandi, commenti HTML, Unicode invisibile, dimensione) e branch protection su `agents/`; scelta fra range transitivi, shrinkwrap o bundle | Revisione di sicurezza di F5 (`audit/2026-11-15-mcp/`), confermata dall'utente |
 | Fasi F7–F10 | F7 identità corporate, F8 sezioni, F9 simboli e tema scuro, F10 pubblicazione | Scelta dell'utente (2026-11-15, dopo F6; F9 aggiunta dopo F8) |
@@ -38,11 +39,15 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
 | Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
+| Autenticazione | Se il sito avrà account (F15, sospesa): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [15-area-personale.md](15-area-personale.md) | Scelta dell'utente (2026-11-15) |
+| Monitoraggio | Download npm (e stelle di GitHub) con `npm run stats` da terminale (F11); analytics delle pagine e conteggio delle squadre rinviati; nessuna telemetria nell'MCP. Il pannello `/admin` aggregato resta legato all'area personale (F15, sospesa) | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Strada (ponte nell'MCP o Agent SDK) da scegliere all'apertura | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, F15 sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
 
-«Agentrica» (la società), «Reparto» (un'agenzia: AIBPD, AICA, AIPCA, AISA, AIWDA), «Agente» (un ruolo di un reparto), «Nome in codice» (es. AISA-02 · ALTAIR), «Direttore» (l'agente 01 di ogni reparto), «Biografia» (la pagina di un agente, ricavata dal suo file), «Catalogo» (i dati di reparti e agenti letti da `agents/`), «Pagina del reparto», «Pagina dell'agente».
+«Agentrica» (la società), «Reparto» (un'agenzia: AIBPD, AICA, AIPCA, AISA, AIWDA), «Agente» (un ruolo di un reparto), «Nome in codice» (es. AISA-02 · ALTAIR), «Direttore» (l'agente 01 di ogni reparto), «Biografia» (la pagina di un agente, ricavata dal suo file), «Catalogo» (i dati di reparti e agenti letti da `agents/`), «Pagina del reparto», «Pagina dell'agente», «Squadra» (gli agenti scelti da un utente per il suo MCP con `--agents`).
 
 ## Fasi
 
@@ -59,5 +64,10 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | completata |
 | F9 | [09-simboli.md](09-simboli.md) | Ritorno al tema scuro; un glifo SVG generato per ogni stella al posto dei volti | completata |
 | F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | completata |
+| F11 | [11-analytics.md](11-analytics.md) | Statistiche: `npm run stats` con i download npm; analytics delle pagine rinviati | completata |
+| F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | completata |
+| F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | da aprire |
+| F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | da aprire |
+| F15 | [15-area-personale.md](15-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 
-Ordine: F0 → F10 in sequenza. I file di F9 e F10 sono scritti; le loro «proposte da confermare» si decidono all'apertura.
+Ordine: F0 → F14 in sequenza; F15 è sospesa. I file di F12–F15 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

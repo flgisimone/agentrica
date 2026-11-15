@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.1.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.1.0"]
+      "args": ["-y", "@agentrica/mcp@0.2.0"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.1.0
+npm install -g --ignore-scripts @agentrica/mcp@0.2.0
 npm root -g
 ```
 
@@ -69,6 +69,14 @@ claude mcp add agentrica -- node --permission --allow-fs-read=/global/folder/@ag
 
 Put the task in quotes: Claude Code splits arguments on spaces.
 
+**Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
+
+```sh
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0 --agents aisa,aiwda-08
+```
+
+The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
+
 **Tools**, for clients that do not show prompts, or when you want the model to pick the agent:
 
 | Tool | Input | Returns |
@@ -86,6 +94,7 @@ The agents' text comes from the `agents/` files of the installed version. To upd
 
 ## Versions
 
+- **0.2.0**: `--agents` argument to load only a squad of agents or departments; in an empty project, or when what the role must examine is missing, the agent says so and proposes first steps to confirm, without inventing findings.
 - **0.1.0**: first published version. 56 agents in five departments, one prompt per agent and the `elenca_agenti` and `agente` tools.
 
 ## License

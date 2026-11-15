@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, findAgent, VERSION } from "./prompt.ts";
+import { agentText, findAgent, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -33,6 +33,9 @@ test("agentText: cornice, regole comuni e file di ruolo nell'ordine, testi dal c
         from = at + piece.length;
       }
       assert.ok(!text.includes("## Compito"), agent.id);
+      const empty = text.indexOf("Se il progetto è vuoto o manca ciò che il tuo ruolo deve esaminare");
+      assert.ok(empty > 0 && empty < text.indexOf("## Regole comuni del reparto"), agent.id);
+      assert.match(text, /non inventare rilievi né scegliere lo stack da solo/);
       const language = text.indexOf("rispondi nella lingua in cui ti scrive l'utente");
       assert.ok(language > 0 && language < text.indexOf("## Regole comuni del reparto"), agent.id);
     }
@@ -48,4 +51,26 @@ test("agentText: il compito va in fondo, vuoto si omette", () => {
 test("VERSION è quella di package.json", () => {
   const pkg = JSON.parse(readFileSync(join(import.meta.dirname, "..", "package.json"), "utf8")) as { version: string };
   assert.equal(VERSION, pkg.version);
+});
+
+const ids = (squad: ReturnType<typeof selectSquad>) => squad.flatMap((d) => d.agents.map((a) => a.id));
+
+test("selectSquad: senza elenco tutto il catalogo", () => {
+  assert.equal(ids(selectSquad(catalog)).length, 56);
+});
+
+test("selectSquad: agenti e reparti, maiuscole indifferenti, ordine del catalogo, niente doppioni", () => {
+  const squad = selectSquad(catalog, " aiwda-08 , AISA,aisa-02,");
+  assert.deepEqual(squad.map((d) => d.code), ["AISA", "AIWDA"]);
+  assert.equal(squad[0]!.agents.length, 12);
+  assert.deepEqual(squad[1]!.agents.map((a) => a.id), ["AIWDA-08"]);
+  assert.equal(ids(squad).length, 13);
+  assert.deepEqual(ids(selectSquad(catalog, "aica-03,aibpd-01")), ["AIBPD-01", "AICA-03"]);
+});
+
+test("selectSquad: nomi sconosciuti o elenco vuoto sono errori che li nominano", () => {
+  assert.throws(() => selectSquad(catalog, "aisa-02,aisa-99,xyz"), /sconosciuto in --agents: "aisa-99", "xyz"$/);
+  assert.throws(() => selectSquad(catalog, "\u001b[31m"), /"\\u001b\[31m"/);
+  assert.throws(() => selectSquad(catalog, ""), /--agents è vuoto/);
+  assert.throws(() => selectSquad(catalog, " , "), /--agents è vuoto/);
 });

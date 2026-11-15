@@ -100,6 +100,52 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   }
 });
 
+test("--agents: prompt e tool vedono solo la squadra", async () => {
+  const squad = new Client({ name: "test-squadra", version: "0" });
+  const squadTransport = new StdioClientTransport({
+    command: process.execPath,
+    args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--agents", "aiwda,aisa-02"],
+    cwd,
+    stderr: "pipe",
+  });
+  await squad.connect(squadTransport);
+  try {
+    const { prompts } = await squad.listPrompts();
+    assert.equal(prompts.length, 11);
+    assert.equal(prompts[0]!.name, "aisa-02");
+    assert.ok(prompts.slice(1).every((p) => p.name.startsWith("aiwda-")));
+    assert.match(squad.getInstructions() ?? "", /^Agentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
+    const list = text(await squad.callTool({ name: "elenca_agenti", arguments: {} }));
+    assert.equal(list.match(/^- /gm)?.length, 11);
+    const outside = await squad.callTool({ name: "elenca_agenti", arguments: { reparto: "AICA" } });
+    assert.equal(outside.isError, true);
+    const missing = await squad.callTool({ name: "agente", arguments: { id: "AISA-03" } });
+    assert.equal(missing.isError, true);
+    assert.match(text(await squad.callTool({ name: "agente", arguments: { id: "aisa-02" } })), /^# AISA-02 · ALTAIR/);
+  } finally {
+    await squad.close();
+  }
+});
+
+test("--agents sbagliato o opzione sconosciuta: il server non parte, una riga su stderr che li nomina", () => {
+  const start = (...args: string[]) =>
+    spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), ...args], { cwd, input: "", encoding: "utf8" });
+  const unknown = start("--agents", "aisa-02,aisa-99");
+  assert.equal(unknown.status, 1);
+  assert.equal(unknown.stderr, 'agentrica: agente o reparto sconosciuto in --agents: "aisa-99"\n');
+  const empty = start("--agents=");
+  assert.equal(empty.status, 1);
+  assert.match(empty.stderr, /^agentrica: --agents è vuoto/);
+  const option = start("--agent", "aisa");
+  assert.equal(option.status, 1);
+  assert.match(option.stderr, /^agentrica: .*--agent\b/);
+  assert.equal(option.stderr.trim().split("\n").length, 1);
+  const control = start("--x\n\u001b[31m");
+  assert.equal(control.status, 1);
+  assert.equal(control.stderr.split("\n").length, 2);
+  assert.ok(!control.stderr.includes("\u001b") && control.stderr.includes("\\u001b"));
+});
+
 // Ultima prova, dopo tutte le chiamate: il server non ha scritto niente su stderr né nella cartella del progetto.
 test("dopo tutte le chiamate: stderr vuoto, nessun file nella cartella del progetto", () => {
   assert.equal(stderr, "");

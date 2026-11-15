@@ -102,6 +102,7 @@ test.describe("Come lavoriamo e MCP", () => {
     const mcp = page.locator("#mcp");
     await expect(mcp).toContainText("Pacchetto npm");
     await expect(mcp.locator("pre").first()).toContainText("claude mcp add agentrica -- npx -y @agentrica/mcp@");
+    await expect(mcp).toContainText("--agents aisa,aiwda-08");
     await expect(mcp).toContainText("nessuna telemetria");
   });
 });

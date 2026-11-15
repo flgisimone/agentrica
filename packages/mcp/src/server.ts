@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // Server MCP di Agentrica su stdio: un prompt per agente e due tool (elenca_agenti, agente).
+// Con --agents (es. --agents aisa,aiwda-08) prompt e tool vedono solo la squadra; senza, tutti gli agenti.
 // Legge solo i file di agents/ all'avvio; non scrive file, non apre connessioni e non registra dati.
 import { join } from "node:path";
-import { DEPARTMENTS, loadCatalog, type Department, type DepartmentCode } from "../../catalog/src/index.ts";
+import { parseArgs } from "node:util";
+import { loadCatalog, type Department, type DepartmentCode } from "../../catalog/src/index.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { agentSummary, agentText, codeName, findAgent, VERSION } from "./prompt.ts";
+import { agentSummary, agentText, codeName, findAgent, selectSquad, VERSION } from "./prompt.ts";
 
 // agents/ è in un punto fisso rispetto a questo file, senza risalire le cartelle: la cartella corrente è il progetto
 // dell'utente e non deve poter fornire un'altra agents/. Tre livelli sopra c'è agents/ sia da un clone
@@ -15,24 +17,47 @@ import { agentSummary, agentText, codeName, findAgent, VERSION } from "./prompt.
 // dipende da @agentrica/catalog.
 const AGENTS_DIR = join(import.meta.dirname, "..", "..", "..", "agents");
 
-let catalog: Department[];
-try {
-  catalog = loadCatalog(AGENTS_DIR);
-} catch (error) {
-  // Senza catalogo completo il server non parte: niente contenuti parziali. Una riga sola, il client la mostra nei log.
-  process.stderr.write(`agentrica: catalogo non leggibile in ${AGENTS_DIR}: ${error instanceof Error ? error.message : String(error)}\n`);
+// Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
+// contenere argomenti della configurazione del client: i caratteri di controllo (a capo, escape) diventano \uXXXX.
+function fail(message: string): never {
+  const safe = message.replace(/\p{Cc}/gu, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
+  process.stderr.write(`agentrica: ${safe}\n`);
   process.exit(1);
 }
+const reason = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+let spec: string | undefined;
+try {
+  spec = parseArgs({ options: { agents: { type: "string" } } }).values.agents;
+} catch (error) {
+  fail(reason(error));
+}
+
+let full: Department[];
+try {
+  full = loadCatalog(AGENTS_DIR);
+} catch (error) {
+  // Senza catalogo completo il server non parte: niente contenuti parziali.
+  fail(`catalogo non leggibile in ${AGENTS_DIR}: ${reason(error)}`);
+}
+
+let catalog: Department[];
+try {
+  catalog = selectSquad(full, spec);
+} catch (error) {
+  fail(reason(error));
+}
 const all = catalog.flatMap((department) => department.agents.map((agent) => ({ department, agent })));
-const codes = DEPARTMENTS.map((d) => d.code) as [DepartmentCode, ...DepartmentCode[]];
+const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+const codes = catalog.map((d) => d.code) as [DepartmentCode, ...DepartmentCode[]];
 
 const server = new McpServer(
   { name: "agentrica", version: VERSION },
   {
     instructions:
-      `Agentrica: ${all.length} agenti IA specializzati in ${catalog.length} reparti (${codes.join(", ")}). ` +
+      `Agentrica: ${count(all.length, "agente IA", "agenti IA")} in ${count(catalog.length, "reparto", "reparti")} (${codes.join(", ")}). ` +
       "Per scegliere un agente usa elenca_agenti; per lavorare come quell'agente carica le sue istruzioni con agente. " +
-      "I prompt hanno il nome dell'id dell'agente, es. aisa-02.",
+      `I prompt hanno il nome dell'id dell'agente, es. ${all[0]!.agent.id.toLowerCase()}.`,
   },
 );
 

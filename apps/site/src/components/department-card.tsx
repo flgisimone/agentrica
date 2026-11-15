@@ -3,12 +3,13 @@ import type { Department } from "@agentrica/catalog";
 import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 export const agentHref = (id: string) => `/agenti/${id.toLowerCase()}`;
 
 /**
  * Nome in codice e ruolo. Con `link` il nome porta alla pagina dell'agente e copre l'intero contenitore,
- * che deve avere `relative` (scheda tutta cliccabile, un solo link per la tastiera).
+ * che deve avere `relative` e `rounded-xl` (scheda tutta cliccabile, un solo link per la tastiera, focus sull'intera scheda).
  */
 export function AgentLine({ id, star, role, link }: { id: string; star: string; role: string; link?: boolean }) {
   const name = `${id} · ${star}`;
@@ -16,7 +17,10 @@ export function AgentLine({ id, star, role, link }: { id: string; star: string; 
     <p>
       <span className="block font-mono font-semibold tracking-wide text-dept">
         {link ? (
-          <Link href={agentHref(id)} className="after:absolute after:inset-0 after:rounded-[inherit] hover:underline">
+          <Link
+            href={agentHref(id)}
+            className="outline-none after:absolute after:inset-0 after:rounded-xl after:outline-offset-3 hover:underline focus-visible:after:outline-2 focus-visible:after:outline-ring"
+          >
             {name}
           </Link>
         ) : (
@@ -28,11 +32,11 @@ export function AgentLine({ id, star, role, link }: { id: string; star: string; 
   );
 }
 
-export function DepartmentCard({ department: d }: { department: Department }) {
+export function DepartmentCard({ department: d, className }: { department: Department; className?: string }) {
   const team = d.agents.slice(1);
 
   return (
-    <article data-dept={d.code} aria-labelledby={`reparto-${d.code}`} className="flex">
+    <article data-dept={d.code} aria-labelledby={`reparto-${d.code}`} className={cn("flex", className)}>
       <Card className="w-full gap-4 border-t-[3px] border-t-dept p-6 text-base">
         <header className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1">
           <p className="col-span-full font-mono text-sm font-bold tracking-wide text-dept">{d.code}</p>

@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { loadCatalog } from "../packages/catalog/src/index.ts";
+import { expectFullRows } from "./grid.ts";
 
 const departments = loadCatalog();
 const total = departments.reduce((sum, d) => sum + d.agents.length, 0);
@@ -14,6 +15,11 @@ test("presenta Agentrica con i numeri del catalogo", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Agentrica" })).toBeVisible();
   await expect(page.locator(".hero")).toContainText(`${departments.length} reparti`);
   await expect(page.locator(".hero")).toContainText(`${total} agenti IA`);
+  // Ogni segmento della riga sopra il titolo sta su una riga sola, anche a 360 px.
+  for (const segment of await page.locator(".hero .eyebrow > span").all()) {
+    const lines = await segment.evaluate((el) => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight));
+    expect(lines, await segment.innerText()).toBeLessThan(1.5);
+  }
 });
 
 test("mostra i cinque reparti con direttore e agenti", async ({ page }) => {
@@ -27,10 +33,17 @@ test("mostra i cinque reparti con direttore e agenti", async ({ page }) => {
   }
 });
 
+test("la griglia dei reparti non lascia caselle vuote", async ({ page }) => {
+  await expectFullRows(page.locator("#reparti > div.grid"));
+});
+
 test("i link della hero portano alle sezioni", async ({ page }) => {
   await page.getByRole("link", { name: "Scopri i reparti" }).click();
   await expect(page).toHaveURL(/#reparti$/);
-  await page.getByRole("link", { name: "AISA", exact: true }).click();
+  // Sul telefono i reparti sono pillole, sul computer stelle della costellazione: un solo link visibile per reparto.
+  const hero = page.locator(".hero");
+  await expect(hero.getByRole("link", { name: /^AISA\b/ })).toHaveCount(1);
+  await hero.getByRole("link", { name: /^AISA\b/ }).click();
   await expect(page).toHaveURL(/\/reparti\/aisa$/);
 });
 

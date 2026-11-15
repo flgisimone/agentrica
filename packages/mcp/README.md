@@ -1,5 +1,7 @@
 # Agentrica MCP
 
+[English](README.en.md)
+
 Il server MCP di Agentrica: i 56 agenti IA dei cinque reparti (AIBPD, AICA, AIPCA, AISA, AIWDA) usabili nel tuo progetto da Claude Code o da qualsiasi client MCP.
 
 Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA-02 · ALTAIR`, Senior Software Architect, o `AIPCA-03 · DUBHE`, Senior Privacy Legal Specialist. Il server dà al modello le regole comuni del reparto e il file di ruolo dell'agente, presi da [`agents/`](../../agents/), e il modello lavora nel tuo progetto con quelle istruzioni.
@@ -28,7 +30,7 @@ Così si installano solo le dipendenze del server, senza il sito e gli strumenti
 **Claude Code**, dalla cartella del tuo progetto:
 
 ```sh
-claude mcp add agentrica -- node /percorso/di/agentrica/packages/mcp/src/server.ts
+claude mcp add agentrica -- node --permission --allow-fs-read=/percorso/di/agentrica /percorso/di/agentrica/packages/mcp/src/server.ts
 ```
 
 **Altri client MCP**: aggiungi il server alla configurazione del client, di solito un file JSON come questo:
@@ -38,13 +40,19 @@ claude mcp add agentrica -- node /percorso/di/agentrica/packages/mcp/src/server.
   "mcpServers": {
     "agentrica": {
       "command": "node",
-      "args": ["/percorso/di/agentrica/packages/mcp/src/server.ts"]
+      "args": [
+        "--permission",
+        "--allow-fs-read=/percorso/di/agentrica",
+        "/percorso/di/agentrica/packages/mcp/src/server.ts"
+      ]
     }
   }
 }
 ```
 
 Il percorso deve essere assoluto: il client avvia il server dalla cartella del tuo progetto.
+
+**Permessi minimi.** `--permission` e `--allow-fs-read` attivano il permission model di Node: il server può solo leggere il clone di Agentrica, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro. I test del server lo avviano così. Puoi toglierli, ma è sconsigliato.
 
 ## Uso
 
@@ -66,6 +74,8 @@ Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
 
 Il numero 01 di ogni reparto è il direttore: coordina gli specialisti e consolida i loro rilievi.
+
+I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi.
 
 ## Aggiornamenti
 

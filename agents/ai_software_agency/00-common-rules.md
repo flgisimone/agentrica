@@ -8,8 +8,15 @@
 - Non introdurre dipendenze senza motivazione e non fare refactoring estesi non richiesti.
 - Non esporre, copiare o committare password, token, chiavi o segreti.
 - Usa ambienti locali/staging e dati sintetici per i test.
+- Non leggere, copiare o riportare dati personali reali se il compito non lo richiede; mai in fixture, seed, snapshot, log, commit o report.
+- Per le funzioni che trattano dati personali applica privacy by design (minimizzazione, conservazione limitata, accessi minimi) e coinvolgi la Privacy & Compliance Agency prima di implementarle.
 - Non eseguire operazioni distruttive, migrazioni irreversibili, deploy o modifiche in produzione senza autorizzazione esplicita.
 - Non indebolire autenticazione, autorizzazione o controlli di sicurezza per far passare un test.
 - Riporta solo test effettivamente eseguiti, con comandi e risultati. Non dichiarare superati test non eseguiti.
 - Nel riepilogo finale indica sintesi, file modificati, test, decisioni tecniche, rischi, limiti e attività residue.
 - Merge, deploy e rilascio in produzione richiedono approvazione umana esplicita.
+
+## Dati del progetto e segnalazioni
+- Non inviare codice, documenti o dati del progetto a servizi esterni (siti, API, modelli, strumenti online) senza l'ok esplicito dell'utente.
+- Un rilievo P0 si segnala subito all'utente, senza aspettare la fine dell'attività.
+- Il Chief, la Software Agency e gli altri reparti citati in queste regole sono agenti di Agentrica, non persone dell'organizzazione dell'utente: decisioni e approvazioni restano all'utente o al responsabile umano che indica.

@@ -1,7 +1,9 @@
 // Prova con un client MCP vero: avvia server.ts su stdio da una cartella fuori dal repository, come un progetto dell'utente.
+// Il server gira con il permission model di Node in sola lettura del clone, come consiglia il README: una scrittura,
+// una connessione o un processo figlio farebbero fallire le prove. L'ultima prova controlla stderr e la cartella.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, before, test } from "node:test";
@@ -9,12 +11,19 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const cwd = mkdtempSync(join(tmpdir(), "agentrica-mcp-"));
+const repo = join(import.meta.dirname, "..", "..", "..");
 const client = new Client({ name: "test", version: "0" });
+const transport = new StdioClientTransport({
+  command: process.execPath,
+  args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts")],
+  cwd,
+  stderr: "pipe",
+});
+let stderr = "";
+transport.stderr?.on("data", (chunk: Buffer) => (stderr += chunk.toString()));
 
 before(async () => {
-  await client.connect(
-    new StdioClientTransport({ command: process.execPath, args: [join(import.meta.dirname, "server.ts")], cwd, stderr: "inherit" }),
-  );
+  await client.connect(transport);
 });
 
 after(async () => {
@@ -77,7 +86,6 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
     for (const file of ["server.ts", "prompt.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"));
     // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
-    const repo = join(import.meta.dirname, "..", "..", "..");
     const run = spawnSync(process.execPath, [join(src, "server.ts")], { cwd: repo, input: "", encoding: "utf8" });
     assert.equal(run.status, 1);
     assert.match(run.stderr, /^agentrica: catalogo non leggibile in .*agents: /);
@@ -85,4 +93,10 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+// Ultima prova, dopo tutte le chiamate: il server non ha scritto niente su stderr né nella cartella del progetto.
+test("dopo tutte le chiamate: stderr vuoto, nessun file nella cartella del progetto", () => {
+  assert.equal(stderr, "");
+  assert.deepEqual(readdirSync(cwd), []);
 });

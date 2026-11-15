@@ -8,6 +8,8 @@ import { Markdown } from "@/components/markdown";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { spanInRows } from "@/lib/grid";
+import { cn } from "@/lib/utils";
 
 const departments = loadCatalog();
 
@@ -61,9 +63,12 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
             <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>
             <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} link />
           </Card>
-          <ul className="mt-4 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))]">
-            {team.map((a) => (
-              <li key={a.id} className="relative rounded-xl border bg-card p-5 hover:border-dept">
+          <ul className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+            {team.map((a, index) => (
+              <li
+                key={a.id}
+                className={cn("relative rounded-xl border bg-card p-5 hover:border-dept", spanInRows(index, team.length))}
+              >
                 <AgentLine id={a.id} star={a.star} role={a.role} link />
               </li>
             ))}

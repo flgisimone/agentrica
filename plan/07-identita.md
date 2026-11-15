@@ -65,8 +65,8 @@
 
 ## Rilievi aperti
 
-- Larghezza 768 px non guardata a occhio (coperta solo dagli e2e a 360 e 1440 px). P3.
-- Sfondo: costo per fotogramma non misurato con il profiler (circa 60 nodi su 1440 × 900, confronto fra tutte le coppie). Da controllare con Performance in F8 o F9. P3.
+- Larghezza 768 px non guardata a occhio (coperta solo dagli e2e a 360 e 1440 px). P3. Risolto in F15: landing, reparto e agente guardati a 768 px, senza scorrimento orizzontale.
+- Sfondo: costo per fotogramma non misurato con il profiler (circa 60 nodi su 1440 × 900, confronto fra tutte le coppie). Da controllare con Performance in F8 o F9. P3. Risolto in F15: 60 fps per 5 s a 1440 × 900, circa 0,5 ms di script per fotogramma, nessun long task, anche con la CPU rallentata 4×.
 - Sezioni «Come lavoriamo» e MCP invariate: sono F8. Risolto in F8.
 
 ## Criteri di accettazione

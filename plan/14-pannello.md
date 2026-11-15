@@ -8,7 +8,7 @@
 
 ## Situazione di partenza
 
-- `@agentrica/mcp` è un server stdio locale dentro il client dell'utente: il sito su Vercel non vede il computer, il repository né la sessione dell'agente. Per questo la UI non può stare nel sito senza un agente remoto (area personale, [F15](15-area-personale.md), sospesa).
+- `@agentrica/mcp` è un server stdio locale dentro il client dell'utente: il sito su Vercel non vede il computer, il repository né la sessione dell'agente. Per questo la UI non può stare nel sito senza un agente remoto (area personale, [F16](16-area-personale.md), sospesa).
 - Il metodo delle agenzie vive in file del progetto: `plan/` (fasi e backlog), `audit/` (rilievi JSON e report), git (branch e stato).
 - Le UI generiche esistono già (estensione VS Code, app desktop, claude.ai/code); manca una vista sul metodo Agentrica.
 
@@ -122,5 +122,5 @@ Ruoli: UX Designer, UI Designer, UX Writer, Accessibility Specialist.
 ## Rilievi aperti
 
 - P3: «Agenti in uso» nella sessione vera non è stato guardato a occhio dopo il prompt `aisa-02` (coperto dal test con un client MCP vero).
-- P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi.
+- P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi. Risolto in `fix/f14-rilievi` (2765e21): le voci che dicono «risolto» o «chiuso» non si mostrano; i piani ripuliti in F15.
 - P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`). Risolto in `fix/f14-rilievi`: modificati e nuovi contati a parte.

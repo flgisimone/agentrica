@@ -67,7 +67,7 @@
 
 ## Rilievi aperti
 
-- minimatch moderato in typescript-eslint (da F0): rischio accettato finché typescript-eslint non passa a minimatch 11. P3.
-- deepmerge, prototype poisoning (GHSA-gcqx-w48m-w2h4), basso, solo fra le dipendenze di sviluppo. P3.
-- `spanInRows`: con un solo elemento nell'ultima riga resterebbe una scheda sola, larga; oggi non succede (5, 9 e 11 elementi). P3.
+- minimatch moderato in typescript-eslint (da F0): rischio accettato finché typescript-eslint non passa a minimatch 11. P3. Ricontrollato in F15 (F15-05): typescript-eslint 8.72.2 e ts-morph 28.0.0, le ultime, chiedono ancora minimatch ^10.
+- deepmerge, prototype poisoning (GHSA-gcqx-w48m-w2h4), basso, solo fra le dipendenze di sviluppo. P3. Ricontrollato in F15 (F15-05): nessuna versione corretta, rischio accettato.
+- `spanInRows`: con un solo elemento nell'ultima riga resterebbe una scheda sola, larga; oggi non succede (5, 9 e 11 elementi). P3. Risolto in F15 (F15-06): con 4, 7, 10… elementi le ultime quattro schede vanno 2 + 2, con test.
 - Chiusi senza azione per decisione dell'utente: `cn` di shadcn, `.claude/` non indicizzato da tokensave. Lingua dei file di ruolo: decisa (restano in italiano, l'agente risponde nella lingua dell'utente).

@@ -73,8 +73,21 @@ test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", as
   assert.equal(missing.isError, true);
   assert.match(text(missing), /non trovato/);
   assert.ok(!text(missing).includes("AISA-99"));
-  const malformed = await client.callTool({ name: "agente", arguments: { id: "../../etc" } });
-  assert.equal(malformed.isError, true);
+  for (const id of ["../../etc", "AIXX-01", "AISA-2", "AISA-02\n", " AISA-02", "AISA-002"]) {
+    const malformed = await client.callTool({ name: "agente", arguments: { id } });
+    assert.equal(malformed.isError, true, JSON.stringify(id));
+    assert.match(text(malformed), /Formato dell'id/);
+    // Nessuna eco dell'input (tolto l'esempio del messaggio, che è un id valido).
+    assert.ok(!text(malformed).replace("es. AISA-02", "").includes(id.trim()), JSON.stringify(id));
+  }
+});
+
+test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
+  const ok = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_000) } });
+  assert.notEqual(ok.isError, true);
+  const long = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_001) } });
+  assert.equal(long.isError, true);
+  await assert.rejects(client.getPrompt({ name: "aisa-02", arguments: { compito: "x".repeat(20_001) } }));
 });
 
 test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr, codice 1", () => {

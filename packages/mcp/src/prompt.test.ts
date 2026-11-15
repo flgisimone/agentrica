@@ -75,6 +75,11 @@ test("selectSquad: agenti e reparti, maiuscole indifferenti, ordine del catalogo
   assert.equal(ids(squad).length, 13);
   assert.deepEqual(ids(selectSquad(catalog, "aica-03,aibpd-01")), ["AIBPD-01", "AICA-03"]);
 });
+test("selectSquad: i reparti della squadra non portano il direttore, che può essere fuori squadra", () => {
+  for (const squad of [selectSquad(catalog), selectSquad(catalog, "aica-03")]) {
+    for (const department of squad) assert.ok(!("director" in department), department.code);
+  }
+});
 
 test("selectSquad: nomi sconosciuti o elenco vuoto sono errori che li nominano", () => {
   assert.throws(() => selectSquad(catalog, "aisa-02,aisa-99,xyz"), /sconosciuto in --agents: "aisa-99", "xyz"$/);

@@ -37,5 +37,6 @@ Le analisi non sostituiscono CISO, responsabile IT, DPO, legale o incident respo
 
 ## Dati del progetto e segnalazioni
 - Non inviare codice, documenti o dati del progetto a servizi esterni (siti, API, modelli, strumenti online) senza l'ok esplicito dell'utente.
+- Priorità comuni a tutti i reparti: P0 critica, P1 alta, P2 media, P3 bassa. Nei rilievi scrivi solo la sigla (es. P2), senza etichette aggiunte; le descrizioni del reparto dicono quando usarle.
 - Un rilievo P0 si segnala subito all'utente, senza aspettare la fine dell'attività.
 - Il Chief, la Software Agency e gli altri reparti citati in queste regole sono agenti di Agentrica, non persone dell'organizzazione dell'utente: decisioni e approvazioni restano all'utente o al responsabile umano che indica.

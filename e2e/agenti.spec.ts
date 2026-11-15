@@ -55,3 +55,17 @@ test("ogni agente ha il suo simbolo, lo stesso nella squadra e nella sua pagina"
   expect(await glyph.innerHTML()).toBe(inTeam);
   await expect(page.locator("body")).not.toContainText("Volto");
 });
+
+test("il simbolo si disegna quando entra nello schermo; con «riduci movimento» è fermo e completo", async ({ page }) => {
+  await page.goto("/agenti/aisa-02");
+  const glyph = page.locator('.page-intro svg[data-star="ALTAIR"]');
+  await expect(glyph).toHaveAttribute("data-draw", "done");
+  await expect.poll(() => glyph.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBeGreaterThan(0);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload();
+  await expect(glyph).toHaveAttribute("data-draw", "done");
+  expect(await glyph.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+  const line = await glyph.locator(".glyph-line").first().evaluate((e) => getComputedStyle(e).strokeDashoffset);
+  expect(line).toBe("0px");
+});

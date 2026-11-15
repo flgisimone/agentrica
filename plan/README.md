@@ -39,10 +39,10 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
 | Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
-| Autenticazione | Se il sito avrà account (F15, sospesa): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [15-area-personale.md](15-area-personale.md) | Scelta dell'utente (2026-11-15) |
-| Monitoraggio | Download npm (e stelle di GitHub) con `npm run stats` da terminale (F11); analytics delle pagine e conteggio delle squadre rinviati; nessuna telemetria nell'MCP. Il pannello `/admin` aggregato resta legato all'area personale (F15, sospesa) | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Autenticazione | Se il sito avrà account (F16, sospesa): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [16-area-personale.md](16-area-personale.md) | Scelta dell'utente (2026-11-15) |
+| Monitoraggio | Download npm (e stelle di GitHub) con `npm run stats` da terminale (F11); analytics delle pagine e conteggio delle squadre rinviati; nessuna telemetria nell'MCP. Il pannello `/admin` aggregato resta legato all'area personale (F16, sospesa) | Scelta dell'utente (2026-11-15, revisione del valore) |
 | Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Da 0.3.0: flag `--panel` del server MCP (ponte nell'MCP, niente Agent SDK), tool `open_panel` e `ask_user`, formato di `plan/` e `audit/` di oggi documentato nel README del pacchetto | Scelta dell'utente (2026-11-15, revisione del valore e apertura di F14) |
-| Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, F15 sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
+| Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, F16 sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -68,6 +68,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | completata |
 | F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | completata |
 | F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | completata |
-| F15 | [15-area-personale.md](15-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
+| F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | aperta |
+| F16 | [16-area-personale.md](16-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 
-Ordine: F0 → F14 in sequenza; F15 è sospesa. I file di F12–F15 sono scritti; le loro «proposte da confermare» si decidono all'apertura.
+Ordine: F0 → F15 in sequenza; F16 è sospesa. I file di F12–F16 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

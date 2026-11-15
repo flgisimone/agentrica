@@ -7,7 +7,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.0` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.1` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi.
 

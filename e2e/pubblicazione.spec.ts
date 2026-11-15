@@ -34,6 +34,8 @@ test("note legali: titolare, hosting e log, nessun cookie; raggiungibili dal foo
   await page.goto("/");
   await page.getByRole("contentinfo").getByRole("link", { name: "Note legali" }).click();
   await expect(page).toHaveURL(/\/note-legali$/);
+  // Dopo la navigazione client Next aggiorna il titolo in modo asincrono: axe va lanciato dopo.
+  await expect(page).toHaveTitle("Note legali · Agentrica");
   await expect(page.getByRole("heading", { level: 1, name: "Note legali" })).toBeVisible();
   const main = page.locator("main");
   await expect(main).toContainText("Giulio Simone Floresta");

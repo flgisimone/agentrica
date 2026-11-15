@@ -2,7 +2,7 @@
 
 **Obiettivo**: un server MCP (`packages/mcp`) con cui uno sviluppatore usa gli agenti di Agentrica nel proprio progetto reale, da Claude Code o da un altro client MCP. Il server legge lo stesso catalogo del sito. È il primo passo verso l'acquisizione di clienti e sviluppatori: chi lo installa deve poterlo usare subito e potersi fidare.
 
-> **Stato: completata** su `fase/f5-mcp`. Decisioni confermate dall'utente il 2026-11-15.
+> **Stato: completata** (`57bee23`, merge `a9739ed` in `develop`, CI verde). Decisioni confermate dall'utente il 2026-11-15.
 
 **Agenzie**: software (Backend Developer, QA, Code Reviewer); cybersecurity (Security Architect, Vulnerability Management) e privacy (GDPR Specialist) per una revisione mirata a fine sviluppo, come subagent. Il design non entra: la fase non cambia il sito.
 

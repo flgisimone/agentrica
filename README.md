@@ -49,7 +49,9 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F4 | Pagine degli agenti con biografia | completata |
 | F5 | Server MCP su stdio: gli agenti come prompt e tool nei progetti | completata |
 | F6 | Rilievi | completata |
-| F7 | Pubblicazione | da fare |
+| F7 | Identità corporate: palette dai ritratti, header con menu, volti, sfondo animato, transizioni | completata |
+| F8 | Sezioni: simulazione di sviluppo e server MCP | da fare |
+| F9 | Pubblicazione | da fare |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

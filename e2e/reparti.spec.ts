@@ -10,7 +10,7 @@ for (const d of departments) {
     await page.goto(`/reparti/${d.slug}`);
     await expect(page).toHaveTitle(`${d.code} · ${d.name} · Agentrica`);
     await expect(page.getByRole("heading", { level: 1, name: d.name })).toBeVisible();
-    await expect(page.locator("header")).toContainText(d.mission);
+    await expect(page.locator(".page-intro")).toContainText(d.mission);
     for (const a of d.agents) await expect(page.getByRole("main")).toContainText(`${a.id} · ${a.star}`);
     const steps = d.workflow.split("\n").filter((line) => /^\d+\. /.test(line)).length;
     await expect(page.locator("section[aria-labelledby=flusso] ol > li")).toHaveCount(steps);

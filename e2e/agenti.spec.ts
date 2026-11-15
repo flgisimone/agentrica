@@ -10,7 +10,7 @@ for (const d of departments) {
       await page.goto(`/agenti/${a.id.toLowerCase()}`);
       await expect(page).toHaveTitle(`${a.id} · ${a.star} · Agentrica`);
       await expect(page.getByRole("heading", { level: 1, name: a.star })).toBeVisible();
-      await expect(page.locator("header")).toContainText(a.role);
+      await expect(page.locator(".page-intro")).toContainText(a.role);
       const headings = page.getByRole("article").getByRole("heading", { level: 2 });
       await expect(headings).toHaveText(a.sections.map((s) => s.heading));
 
@@ -44,4 +44,12 @@ test("dal reparto all'agente, al successivo e ritorno", async ({ page }) => {
 test("un id sconosciuto dà 404", async ({ page }) => {
   const response = await page.goto("/agenti/aisa-99");
   expect(response?.status()).toBe(404);
+});
+
+test("chi ha il ritratto lo mostra con la dicitura IA, chi non lo ha mostra il segnaposto", async ({ page }) => {
+  await page.goto("/agenti/aibpd-01");
+  await expect(page.locator(".page-intro").getByRole("img", { name: "Ritratto generato con IA di AIBPD-01 · ALDERAMIN" })).toBeVisible();
+  await expect(page.locator(".page-intro")).toContainText("Volto generato con IA");
+  await page.goto("/agenti/aibpd-02");
+  await expect(page.locator(".page-intro").getByRole("img")).toHaveCount(0);
 });

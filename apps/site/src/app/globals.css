@@ -2,39 +2,43 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Design system di Agentrica: tema scuro unico (plan/README.md, «Identità visiva»).
-   Contrasti verificati AA su --background e --card: testo ≥ 4,5:1, accenti ≥ 4,5:1 (usati anche come testo). */
+/* Design system di Agentrica: corporate chiaro, palette presa dai ritratti dei direttori (plan/07-identita.md).
+   Contrasti misurati su --background e --card: testo ≥ 4,5:1, accenti ≥ 4,5:1 (usati anche come testo). */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --background: #0b1020;
-  --foreground: #e8ebf4;
-  --card: #121a2e;
-  --card-foreground: #e8ebf4;
-  --popover: #121a2e;
-  --popover-foreground: #e8ebf4;
-  --primary: #e8ebf4;
-  --primary-foreground: #0b1020;
-  --secondary: #18223b;
-  --secondary-foreground: #e8ebf4;
-  --muted: #18223b;
-  --muted-foreground: #a8b1c7;
-  --accent: #18223b;
-  --accent-foreground: #e8ebf4;
-  --destructive: #ff7a6b;
-  --border: #26324f;
-  --input: #26324f;
-  --ring: #ffffff;
+  --background: #f4f6f9;
+  --foreground: #131c2e;
+  --card: #ffffff;
+  --card-foreground: #131c2e;
+  --popover: #ffffff;
+  --popover-foreground: #131c2e;
+  --primary: #1c2b47;
+  --primary-foreground: #ffffff;
+  --secondary: #e9edf2;
+  --secondary-foreground: #131c2e;
+  --muted: #e9edf2;
+  --muted-foreground: #4b5567;
+  --accent: #e9edf2;
+  --accent-foreground: #131c2e;
+  --destructive: #a8392c;
+  --border: #d7dde6;
+  --input: #d7dde6;
+  --ring: #1c2b47;
   --radius: 0.75rem;
+  --card-shadow: 0 1px 2px #131c2e0f, 0 8px 24px -12px #131c2e2e;
+  /* rete dello sfondo: colore in RGB e opacità delle linee */
+  --net: 28, 43, 71;
+  --net-alpha: 0.16;
 
-  /* un accento per reparto: sempre accompagnato dalla sigla */
-  --aibpd: #f5b544;
-  --aica: #ff7a6b;
-  --aipca: #b49cff;
-  --aisa: #38d6f0;
-  --aiwda: #4fe0a8;
-  --dept: var(--aisa);
+  /* un accento sobrio per reparto: sempre accompagnato dalla sigla */
+  --aibpd: #8a5a00;
+  --aica: #a8392c;
+  --aipca: #5a46a8;
+  --aisa: #0b6a80;
+  --aiwda: #1d6f4c;
+  --dept: var(--primary);
 }
 
 [data-dept="AIBPD"] { --dept: var(--aibpd); }
@@ -72,8 +76,9 @@
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, Menlo, Consolas, monospace;
+  --shadow-card: var(--card-shadow);
   --font-heading: var(--font-sans);
 }
 
@@ -84,6 +89,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* le ancore non finiscono sotto l'header fisso */
+    scroll-padding-top: 5.5rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -97,28 +104,14 @@
     min-height: 100dvh;
     font-size: 1.0625rem;
     line-height: 1.6;
-    /* campo di stelle statico e decorativo, tema dei nomi in codice */
-    background-image:
-      radial-gradient(1px 1px at 12% 18%, #ffffff8c 50%, transparent 51%),
-      radial-gradient(1px 1px at 78% 9%, #ffffff73 50%, transparent 51%),
-      radial-gradient(1.5px 1.5px at 64% 32%, #ffffff66 50%, transparent 51%),
-      radial-gradient(1px 1px at 33% 41%, #ffffff59 50%, transparent 51%),
-      radial-gradient(1px 1px at 91% 47%, #ffffff66 50%, transparent 51%),
-      radial-gradient(1.5px 1.5px at 22% 68%, #ffffff4d 50%, transparent 51%),
-      radial-gradient(1px 1px at 52% 83%, #ffffff59 50%, transparent 51%),
-      radial-gradient(1px 1px at 84% 76%, #ffffff4d 50%, transparent 51%),
-      radial-gradient(60rem 30rem at 85% -10%, #38d6f01a, transparent 70%),
-      radial-gradient(50rem 30rem at -10% 10%, #b49cff14, transparent 70%);
-    background-size: 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 100% 100%, 100% 100%;
-    background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
   }
 
   h1,
   h2,
   h3 {
     @apply font-heading;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
   }
 
   :focus-visible {
@@ -136,6 +129,55 @@
 }
 
 @utility wrap {
-  width: min(100% - 2rem, 72rem);
+  width: min(100% - 2rem, 76rem);
   margin-inline: auto;
+}
+
+/* Transizioni fra le pagine (components/page-transition.tsx): dissolvenza con una leggera salita; l'header resta fermo. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page) {
+  animation: 160ms ease-in both page-out;
+}
+
+::view-transition-new(.page) {
+  animation: 320ms ease-out 80ms both page-in;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    translate: 0 -12px;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }

@@ -78,7 +78,4 @@
 - Sfondo e transizioni si fermano con `prefers-reduced-motion`; lo sfondo non blocca il thread principale (verifica di Performance).
 - `npm run verify` e `npm run verify:e2e` passano.
 
-## F8 — Sezioni (bozza, si conferma all'apertura)
-
-- **Come lavoriamo**: simulazione dello sviluppo nel progetto, con diagramma di flusso moderno sincronizzato con un terminale finto (worktree, branch di fase, agenti attivati, `npm run verify`, domanda di conferma, merge). Parte quando entra nello schermo, con Pausa e Ricomincia (WCAG 2.2.2); con `prefers-reduced-motion` il terminale è completo e fermo. Etichetta «Simulazione»: nessun risultato inventato, solo i passi del metodo reale.
-- **Server MCP**: dimostrazione di un client che usa il prompt `aisa-02` e il tool `elenca_agenti`, più i passi reali per usarlo oggi in locale; con F9 diventano il comando npm.
+Il seguito è in [08-sezioni.md](08-sezioni.md).

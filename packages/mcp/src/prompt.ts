@@ -1,6 +1,9 @@
 // Testo che il server MCP dà al modello per un agente: chi è, le regole comuni del reparto, il file di ruolo
 // e, se c'è, il compito. Tutto viene dal catalogo (agents/); qui c'è solo la cornice.
-import type { Agent, Department, Section } from "@agentrica/catalog";
+import type { Agent, Department, Section } from "../../catalog/src/index.ts";
+
+/** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
+export const VERSION = "0.1.0";
 
 export interface Found {
   department: Department;

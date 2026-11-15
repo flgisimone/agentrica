@@ -24,7 +24,9 @@ test("simulazione: le righe degli agenti hanno il nome in codice e il reparto de
 
 test("MCP: i comandi sono quelli del README di packages/mcp", () => {
   const readme = readFileSync(new URL("../../../../packages/mcp/README.md", import.meta.url), "utf8");
-  for (const command of [...mcp.install, mcp.add, mcp.use]) assert.ok(readme.includes(command), command);
+  for (const command of [mcp.add, mcp.use]) assert.ok(readme.includes(command), command);
+  const pkg = JSON.parse(readFileSync(new URL("../../../../packages/mcp/package.json", import.meta.url), "utf8")) as { version: string };
+  assert.ok(mcp.add.endsWith(`@agentrica/mcp@${pkg.version}`), "versione del pacchetto nel comando");
 });
 
 test("MCP: la dimostrazione cita il file di ruolo vero di AISA-02", () => {

@@ -41,7 +41,7 @@ const mcpDemo = mcpDemoScript(departments);
 
 const limits = [
   "Gira solo sul tuo computer: lo avvia il client e i due parlano con stdio.",
-  "Legge solo i file di agents/ del clone. Non scrive file, non apre connessioni, nessuna telemetria.",
+  "Legge solo i file di agents/ del pacchetto. Non scrive file, non apre connessioni, nessuna telemetria.",
   "Il compito e i file del progetto vanno al fornitore del modello attraverso il tuo client, non ad Agentrica.",
   "Gli agenti sono IA: le loro conclusioni sono proposte da verificare.",
 ];
@@ -140,34 +140,32 @@ export default function Home() {
 
         <section id="mcp" aria-labelledby="mcp-titolo" className="wrap band py-16">
           <Badge variant="outline" className="border-aisa font-mono text-xs font-bold uppercase text-aisa">
-            Disponibile da un clone
+            Pacchetto npm
           </Badge>
           <h2 id="mcp-titolo" className={sectionTitle}>
             Gli agenti nei tuoi progetti
           </h2>
           <p className={lead}>
             Il server MCP di Agentrica porta i {total} agenti in Claude Code e negli altri client MCP: ogni agente è un
-            prompt con il suo id, e due tool aiutano il modello a sceglierlo. Oggi si usa da un clone del repository; il
-            pacchetto npm arriva con la pubblicazione.
+            prompt con il suo id, e due tool aiutano il modello a sceglierlo. Si installa da npm con un comando.
           </p>
           <div className="mt-8 grid items-start gap-8 lg:grid-cols-2">
             <Terminal lines={mcpDemo} title="il tuo progetto" label="Dimostrazione" />
             <ol className="grid gap-6">
               <li>
-                <h3 className="font-semibold">1. Clona e installa</h3>
-                <p className="text-[0.9375rem] text-muted-foreground">Servono Node 26 e npm.</p>
-                <CodeBlock lines={mcp.install} />
-              </li>
-              <li>
-                <h3 className="font-semibold">2. Aggiungilo a Claude Code</h3>
+                <h3 className="font-semibold">1. Aggiungilo a Claude Code</h3>
                 <p className="text-[0.9375rem] text-muted-foreground">
-                  Dalla cartella del tuo progetto, con il percorso assoluto del clone. Gli altri client lo aggiungono
-                  nel loro file di configurazione, come spiega il README del server.
+                  Dalla cartella del tuo progetto; serve Node 22 o successivo. Al primo avvio npx scarica il pacchetto,
+                  alla versione indicata. Gli altri client e l&apos;avvio con i permessi minimi di Node sono nel{" "}
+                  <a href="https://www.npmjs.com/package/@agentrica/mcp" className="underline">
+                    README del pacchetto
+                  </a>
+                  .
                 </p>
                 <CodeBlock lines={[mcp.add]} />
               </li>
               <li>
-                <h3 className="font-semibold">3. Chiama un agente</h3>
+                <h3 className="font-semibold">2. Chiama un agente</h3>
                 <p className="text-[0.9375rem] text-muted-foreground">
                   Con il suo prompt, il compito fra virgolette, oppure chiedi al modello di usare i tool{" "}
                   <code className="font-mono text-[0.875rem]">elenca_agenti</code> e{" "}

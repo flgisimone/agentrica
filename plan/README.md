@@ -36,6 +36,8 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fasi F7–F10 | F7 identità corporate, F8 sezioni, F9 simboli e tema scuro, F10 pubblicazione | Scelta dell'utente (2026-11-15, dopo F6; F9 aggiunta dopo F8) |
 | Simboli | Da F9 ogni agente ha un glifo SVG calcolato dal nome della sua stella (stesso nome, stesso disegno), nello stile comune e nell'accento del reparto; sostituisce i ritratti generati con IA di F7 | Scelta dell'utente (2026-11-15, dopo F8) |
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
+| Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
+| Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -56,6 +58,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F7 | [07-identita.md](07-identita.md) | Identità corporate: palette dai ritratti (anteprima da confermare), header con menu, sfondo animato, transizioni, card senza accordion, volti degli agenti | completata |
 | F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | completata |
 | F9 | [09-simboli.md](09-simboli.md) | Ritorno al tema scuro; un glifo SVG generato per ogni stella al posto dei volti | completata |
-| F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | da fare |
+| F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | sviluppo completato, rilascio da fare |
 
 Ordine: F0 → F10 in sequenza. I file di F9 e F10 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

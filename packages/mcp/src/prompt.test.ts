@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { test } from "node:test";
-import { loadCatalog } from "@agentrica/catalog";
-import { agentText, findAgent } from "./prompt.ts";
+import { loadCatalog } from "../../catalog/src/index.ts";
+import { agentText, findAgent, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -41,4 +43,9 @@ test("agentText: il compito va in fondo, vuoto si omette", () => {
   const found = findAgent(catalog, "AISA-02")!;
   assert.ok(agentText(found, "  Rivedi i confini dei moduli.  ").endsWith("## Compito\n\nRivedi i confini dei moduli.\n"));
   assert.ok(!agentText(found, "   ").includes("## Compito"));
+});
+
+test("VERSION è quella di package.json", () => {
+  const pkg = JSON.parse(readFileSync(join(import.meta.dirname, "..", "package.json"), "utf8")) as { version: string };
+  assert.equal(VERSION, pkg.version);
 });

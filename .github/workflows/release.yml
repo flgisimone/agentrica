@@ -1,0 +1,76 @@
+# Rilascio del server MCP su npm (F10): parte solo da un tag v* che punta a un commit di main e ha la versione
+# di packages/mcp/package.json. Pubblica con trusted publishing (OIDC, nessun token salvato) e provenance.
+# Il sito non si pubblica da qui: lo fa Vercel da main.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Controlli senza permessi di pubblicazione: qui girano gli script di installazione delle dipendenze.
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Action fissate per SHA nei job di rilascio.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Tag su main e uguale alla versione del pacchetto
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "il tag $TAG non è su main"; exit 1; }
+          version="v$(node -p "require('./packages/mcp/package.json').version")"
+          [ "$TAG" = "$version" ] || { echo "tag $TAG diverso dalla versione $version"; exit 1; }
+
+      - run: npm ci
+
+      - name: Dipendenze di produzione senza vulnerabilità
+        run: npm audit --omit=dev
+
+      - name: Firme e attestazioni del registro
+        run: npm audit signatures
+
+      # Comprende il controllo del contenuto di agents/ (packages/catalog/src/content.test.ts).
+      - run: npm run verify
+
+  # Pubblicazione: l'unico job con il token OIDC. Installa senza script di installazione, così nessuna dipendenza
+  # esegue codice mentre il token è disponibile; prepack (tsc e copia di agents/) è uno script del pacchetto.
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Su GitHub l'ambiente «npm» può chiedere l'approvazione prima di pubblicare; npm accetta solo questo workflow.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci --ignore-scripts
+
+      - name: Pubblicazione con provenance
+        run: npm publish -w @agentrica/mcp --provenance --access public

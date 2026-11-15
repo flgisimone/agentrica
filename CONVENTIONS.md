@@ -143,7 +143,8 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
 1. Merge di `develop` in `main` con `--no-ff` («Merge develop in main: FN descrizione breve») e push di `main`.
-2. Hosting e pubblicazione del pacchetto MCP si decidono in F7.
+2. **Sito**: Vercel pubblica `main` (Root Directory `apps/site`).
+3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 

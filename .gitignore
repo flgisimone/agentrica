@@ -35,3 +35,7 @@ test-results/
 # Claude Code: impostazioni personali e lock locali
 .claude/settings.local.json
 .claude/*.lock
+
+# pacchetto MCP: prepack copia qui agents/ e LICENSE
+packages/mcp/agents/
+packages/mcp/LICENSE

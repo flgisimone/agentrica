@@ -63,8 +63,7 @@ export function simulationScript(catalog: readonly Department[]): TerminalLine[]
 
 /** Comandi del README di packages/mcp, uguali carattere per carattere. */
 export const mcp = {
-  install: ["git clone <url del repository> agentrica", "cd agentrica", "npm ci --omit=dev --ignore-scripts -w @agentrica/mcp"],
-  add: "claude mcp add agentrica -- node --permission --allow-fs-read=/percorso/di/agentrica /percorso/di/agentrica/packages/mcp/src/server.ts",
+  add: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.1.0",
   use: '/mcp__agentrica__aisa-02 "Rivedi i confini fra i moduli di src/"',
 } as const;
 

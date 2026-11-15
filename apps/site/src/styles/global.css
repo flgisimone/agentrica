@@ -1,0 +1,188 @@
+/* Design system di Agentrica: tema scuro unico (plan/README.md, «Identità visiva»).
+   Contrasti su --bg e --surface verificati AA: testo ≥ 4,5:1, accenti ≥ 4,5:1 (sono usati anche come testo). */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0b1020;
+  --surface: #121a2e;
+  --surface-raised: #18223b;
+  --border: #26324f;
+  --text: #e8ebf4;
+  --text-muted: #a8b1c7;
+  --focus: #ffffff;
+
+  /* un accento per reparto: sempre accompagnato dalla sigla */
+  --c-aibpd: #f5b544;
+  --c-aica: #ff7a6b;
+  --c-aipca: #b49cff;
+  --c-aisa: #38d6f0;
+  --c-aiwda: #4fe0a8;
+  --accent: var(--c-aisa);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  --radius: 0.75rem;
+  --radius-pill: 999px;
+  --content: 72rem;
+}
+
+[data-dept="AIBPD"] { --accent: var(--c-aibpd); }
+[data-dept="AICA"] { --accent: var(--c-aica); }
+[data-dept="AIPCA"] { --accent: var(--c-aipca); }
+[data-dept="AISA"] { --accent: var(--c-aisa); }
+[data-dept="AIWDA"] { --accent: var(--c-aiwda); }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: var(--bg);
+  /* campo di stelle statico e decorativo, tema dei nomi in codice */
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #ffffff8c 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 9%, #ffffff73 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 64% 32%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1px 1px at 33% 41%, #ffffff59 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 47%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 22% 68%, #ffffff4d 50%, transparent 51%),
+    radial-gradient(1px 1px at 52% 83%, #ffffff59 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 76%, #ffffff4d 50%, transparent 51%),
+    radial-gradient(60rem 30rem at 85% -10%, #38d6f01a, transparent 70%),
+    radial-gradient(50rem 30rem at -10% 10%, #b49cff14, transparent 70%);
+  background-size: 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 40rem 40rem, 100% 100%, 100% 100%;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  width: min(100% - 2 * var(--space-4), var(--content));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-16);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  margin-block: var(--space-2) var(--space-4);
+}
+
+.lead {
+  color: var(--text-muted);
+  max-width: 42rem;
+}
+
+.code {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -3rem;
+  padding: var(--space-2) var(--space-4);
+  background: var(--text);
+  color: var(--bg);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+.button:hover {
+  border-color: var(--text-muted);
+}
+
+.button--primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.button--primary:hover {
+  background: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

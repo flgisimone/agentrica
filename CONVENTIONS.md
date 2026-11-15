@@ -162,6 +162,8 @@ npm workspaces (`packages/*`, `apps/*`); le dipendenze di sviluppo comuni (TypeS
 ### 15.3 Astro
 Output statico, telemetria spenta. Le pagine leggono il catalogo nel frontmatter al build. Il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`): gli script vanno lanciati da dentro il repository.
 
+Astro 7 manda in background `astro dev` e `astro preview` quando li lancia un agente (Claude Code): il comando termina subito e il server resta attivo finché non lo si spegne con `npx astro preview stop` (o `astro dev stop`) da `apps/site`. Per un server in primo piano si aggiunge `--ignore-lock`, come fa `playwright.config.ts`.
+
 ### 15.4 Agenzie
 Ruoli, attivazione e coordinamento delle agenzie sono in `AGENTS.md`, sezione «Agenzie», e in `docs/AI Multi-Agency System.md`. Le regole delle agenzie si aggiungono a questo documento, non lo sostituiscono.
 

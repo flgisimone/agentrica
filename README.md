@@ -43,7 +43,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | Fase | Contenuto | Stato |
 |---|---|---|
 | F0 | Monorepo, catalogo da `agents/`, sito Astro di base, controlli e CI | completata |
-| F1 | Landing di Agentrica | da fare |
+| F1 | Landing di Agentrica | completata |
 | F2 | Pagine dei reparti | da fare |
 | F3 | Biografie dei 56 agenti | da fare |
 | F4 | Server MCP | da fare |

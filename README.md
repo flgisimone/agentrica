@@ -30,7 +30,7 @@ agentrica/
 ├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
 ├── apps/site/           # il sito in Next.js (Tailwind, shadcn/ui): landing, reparti, agenti
-├── packages/mcp/        # (in arrivo) il server MCP degli agenti
+├── packages/mcp/        # il server MCP degli agenti (stdio): vedi packages/mcp/README.md
 ├── plan/                # decisioni e fasi del progetto
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
@@ -46,8 +46,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F1 | Landing di Agentrica | completata |
 | F2 | Il sito passa da Astro a Next.js con Tailwind e shadcn | completata |
 | F3 | Pagine dei reparti | completata |
-| F4 | Pagine degli agenti con biografia | da fare |
-| F5 | Server MCP | da fare |
+| F4 | Pagine degli agenti con biografia | completata |
+| F5 | Server MCP su stdio: gli agenti come prompt e tool nei progetti | completata |
 | F6 | Pubblicazione | da fare |
 
 Il dettaglio è in [plan/README.md](plan/README.md).

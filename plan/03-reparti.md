@@ -2,7 +2,7 @@
 
 **Obiettivo**: una pagina per reparto, `/reparti/<sigla>` (es. `/reparti/aisa`), pre-generata al build dal catalogo: missione, regole comuni, flusso di lavoro e agenti del reparto. La landing porta alle cinque pagine.
 
-> **Stato: completata** (branch `fase/f3-reparti`). Decisioni e testi dei README confermati dall'utente il 2026-11-15.
+> **Stato: completata** (`a474d16`, merge `87c8114` in `develop`; CI lanciata a mano: verde, run 43699178049). Decisioni e testi dei README confermati dall'utente il 2026-11-15.
 
 **Agenzie**: web design (Information Architect, UI Designer, UX Writer, Accessibility) per i controlli prima e la revisione nell'app dopo; software (Architect, Frontend Developer, QA, Code Reviewer).
 
@@ -55,11 +55,11 @@
 - `npm run verify`: superato (typecheck, lint, 12/12 test, build con `/reparti/aibpd` … `/reparti/aiwda` pre-generate).
 - `npm run verify:e2e`: 24/24 (computer 1440 px e telefono 360 px).
 - Revisione di design sugli screenshot di `/reparti/aiwda` (regole aperte) e della landing, a 1440 e 360 px: nessun P0 o P1.
-- **Non verificato**: Safari e Firefox; lettore di schermo reale; CI su GitHub (al push, a mano se non parte).
+- **Non verificato**: Safari e Firefox; lettore di schermo reale.
 
 ## Rilievi aperti
 
 - Squadra a 1440 px: con 9 o 11 specialisti l'ultima riga ha una scheda sola (AIWDA, AIPCA). P3.
 - F3-07, rilievi P3 da F1 (hero vuota a destra, griglia 3 + 2, riga sopra il titolo a 360 px): non affrontati, restano per F4.
 - CI che non parte al push (da F1). P2.
-- Push di `fix/readme-agenzie` in agentic-starter: da confermare.
+- agentic-starter: `fix/readme-agenzie` è su GitHub, non ancora unito a `main` dello starter.

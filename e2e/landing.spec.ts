@@ -22,7 +22,7 @@ test("mostra i cinque reparti con direttore e agenti", async ({ page }) => {
     await expect(card.getByRole("heading", { name: d.name })).toBeVisible();
     await expect(card).toContainText(`${d.agents.length} agenti`);
     await expect(card).toContainText(`${d.director.id} · ${d.director.star}`);
-    await card.getByText(/Gli altri \d+ agenti/).click();
+    await card.getByRole("button", { name: /Gli altri \d+ agenti/ }).click();
     for (const a of d.agents.slice(1)) await expect(card).toContainText(`${a.id} · ${a.star}`);
   }
 });
@@ -40,7 +40,7 @@ test("nessuno scorrimento orizzontale", async ({ page }) => {
 });
 
 test("nessuna violazione di accessibilità serious o critical", async ({ page }) => {
-  await page.locator("details").evaluateAll((all) => all.forEach((d) => d.setAttribute("open", "")));
+  for (const trigger of await page.getByRole("button", { name: /Gli altri \d+ agenti/ }).all()) await trigger.click();
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

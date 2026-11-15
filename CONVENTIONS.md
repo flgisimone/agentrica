@@ -48,20 +48,20 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 |---|---|
 | `agents/` | i file di ruolo dei cinque reparti: la fonte unica dei contenuti |
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
-| `apps/site/` | il sito Astro, statico: `src/pages/` le pagine, `src/components/` i componenti, `src/styles/` i token |
-| `packages/mcp/` | (F4) il server MCP, che legge lo stesso catalogo |
+| `apps/site/` | il sito Next.js (App Router): `src/app/` pagine, layout e `globals.css` con i token; `src/components/` i componenti, `src/components/ui/` quelli di shadcn; `src/lib/` le utilità |
+| `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo |
 | `e2e/` | prove di fumo e accessibilità del sito con Playwright |
 | `plan/` | decisioni e fasi |
 | `.claude/agents/` | i ruoli come subagent per lavorare al repository |
 | `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
 
-Il catalogo non importa Astro né il browser (lo controlla ESLint): deve servire anche al server MCP.
+Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve servire anche al server MCP.
 
 ## 6. Dati e stato
 
 - Il sito non ha database né dati dinamici: legge il catalogo al build con `loadCatalog()` e genera HTML statico.
 - Un contenuto del sito che parla di reparti o agenti viene dal catalogo; un testo scritto a mano nel sito non ripete né contraddice quello dei file di ruolo.
-- Nessuna libreria di stato; il JavaScript nel browser solo dove serve un'interazione, nelle isole di Astro.
+- Le pagine sono Server Components che leggono il catalogo al build e vengono pre-generate (per le pagine con parametri, `generateStaticParams`). Nessuna libreria di stato; `"use client"` solo dove serve un'interazione (oggi i componenti di Base UI).
 
 ## 7. Confini: catalogo e file di ruolo
 
@@ -76,7 +76,8 @@ Il catalogo non importa Astro né il browser (lo controlla ESLint): deve servire
 
 ## 9. Componenti
 
-- Un componente Astro fa una cosa e riceve dati già pronti dal catalogo come props.
+- Un componente React fa una cosa e riceve dati già pronti dal catalogo come props; Server Component salvo bisogno di stato o eventi.
+- Prima di creare un componente si usa quello di shadcn (`npx shadcn add <nome>` da `apps/site`, poi adattato ai token); i file in `src/components/ui/` importano `cn` da `@/lib/utils`.
 - Le chiavi delle liste sono stabili: l'`id` dell'agente o la sigla del reparto.
 - Niente framework UI nel browser (React, Vue…) senza una decisione in `plan/README.md`.
 
@@ -100,7 +101,7 @@ Il catalogo non importa Astro né il browser (lo controlla ESLint): deve servire
 
 - Si ottimizza solo su misure.
 - Le dipendenze nuove richiedono un motivo e l'ok dell'utente; prima si guarda la libreria standard e la piattaforma. Le versioni si fissano esatte.
-- Font di sistema o un solo font self-hosted; immagini ottimizzate da Astro; nessuno script di terze parti.
+- Font di sistema o un solo font self-hosted (`next/font`); immagini con `next/image`; nessuno script di terze parti.
 
 ## 13. Test e controlli
 
@@ -117,7 +118,7 @@ Non ci sono database. Il «formato» da proteggere è quello dei file di ruolo (
 Con Playwright in `e2e/`, sul sito costruito (da F1). L'accessibilità si controlla con axe: nessuna violazione serious o critical, salvo i rilievi aperti elencati.
 
 ### 13.5 Controlli prima del commit e del merge
-- `npm run verify`: typecheck (catalogo con `tsc`, sito con `astro check`), lint, test unitari e build del sito. Prima di ogni commit.
+- `npm run verify`: typecheck (catalogo ed e2e con `tsc`, sito con `next typegen` e `tsc`), lint, test unitari e build del sito. Prima di ogni commit.
 - `npm run verify:e2e`: test end-to-end. Prima del merge di una fase, da F1.
 
 La CI esegue gli stessi due script: se uno manca, quel passo della CI si salta.
@@ -142,7 +143,7 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
 1. Merge di `develop` in `main` con `--no-ff` («Merge develop in main: FN descrizione breve») e push di `main`.
-2. Hosting e pubblicazione del pacchetto MCP si decidono in F5.
+2. Hosting e pubblicazione del pacchetto MCP si decidono in F6.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 
@@ -157,12 +158,14 @@ Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello del
 npm workspaces (`packages/*`, `apps/*`); le dipendenze di sviluppo comuni (TypeScript, ESLint) stanno nella root, quelle di un'app nel suo `package.json`. Node dalla versione di `.nvmrc`. Gli script si lanciano dalla root (`npm run dev`, `npm run verify`).
 
 ### 15.2 TypeScript ed ESLint
-`tsconfig.base.json` strict per il catalogo; il sito estende `astro/tsconfigs/strict`. TypeScript resta alla 6 finché typescript-eslint e `@astrojs/check` non supportano la 7. `eslint.config.js` vieta Astro nel catalogo; i file `.astro` li controlla `astro check`.
+`tsconfig.base.json` strict per il catalogo e gli e2e; il sito ha il suo `tsconfig.json` strict (con il plugin di Next e `@/*`). TypeScript resta alla 6 finché typescript-eslint non supporta la 7. `eslint.config.js` usa `eslint-config-next` (core-web-vitals e typescript) e vieta Next e React nel catalogo.
 
-### 15.3 Astro
-Output statico, telemetria spenta. Le pagine leggono il catalogo nel frontmatter al build. Il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`): gli script vanno lanciati da dentro il repository.
+### 15.3 Next.js e Tailwind
+Next.js 16 con App Router e Turbopack, che compila da solo il pacchetto del catalogo (nessun `transpilePackages`). Questa versione cambia API e convenzioni: prima di scrivere codice si legge la guida pertinente in `node_modules/next/dist/docs/` (lo ricorda `apps/site/AGENTS.md`, scritto da `next dev` e importato da `apps/site/CLAUDE.md`). Niente `output: export`: le pagine sono pre-generate, ma restano possibili route server.
 
-Astro 7 manda in background `astro dev` e `astro preview` quando li lancia un agente (Claude Code): il comando termina subito e il server resta attivo finché non lo si spegne con `npx astro preview stop` (o `astro dev stop`) da `apps/site`. Per un server in primo piano si aggiunge `--ignore-lock`, come fa `playwright.config.ts`.
+Il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`): gli script vanno lanciati da dentro il repository. La ricerca è esclusa dal tracciamento di Turbopack (`turbopackIgnore`) perché il sito legge il catalogo solo al build; una route che lo legge a runtime dovrà includere `agents/` con `outputFileTracingIncludes`.
+
+Tailwind 4 con `@theme inline` in `src/app/globals.css`: i token di shadcn (`--background`, `--card`, `--muted-foreground`…) hanno i valori del tema scuro; gli accenti dei reparti sono `--aibpd` … `--aiwda` e `--dept`, che `[data-dept="SIGLA"]` imposta per il sottoalbero (classi `text-dept`, `border-dept`, `bg-dept`). shadcn con lo stile base-nova su Base UI (`components.json`).
 
 ### 15.4 Agenzie
 Ruoli, attivazione e coordinamento delle agenzie sono in `AGENTS.md`, sezione «Agenzie», e in `docs/AI Multi-Agency System.md`. Le regole delle agenzie si aggiungono a questo documento, non lo sostituiscono.

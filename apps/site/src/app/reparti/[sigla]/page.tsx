@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AgentLine } from "@/components/department-card";
 import { Markdown } from "@/components/markdown";
+import { PageTransition } from "@/components/page-transition";
+import { Portrait } from "@/components/portrait";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -38,8 +40,9 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
   const others = departments.filter((o) => o.code !== d.code);
 
   return (
+    <PageTransition>
     <div data-dept={d.code}>
-      <header className="wrap pt-10 pb-12">
+      <div className="page-intro wrap pt-10 pb-12">
         <Link
           href="/#reparti"
           className="inline-flex min-h-11 items-center gap-1.5 text-[0.9375rem] text-muted-foreground hover:text-foreground"
@@ -52,23 +55,30 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
         </p>
         <h1 className="mt-2 text-[clamp(2.25rem,1.4rem+4vw,3.75rem)] font-extrabold tracking-[-0.03em]">{d.name}</h1>
         <p className="mt-4 max-w-3xl text-lg text-muted-foreground">{d.mission}</p>
-      </header>
+      </div>
 
       <main id="contenuto" className="wrap grid gap-16 pb-16">
         <section aria-labelledby="squadra">
           <h2 id="squadra" className={sectionTitle}>
             La squadra
           </h2>
-          <Card className="relative gap-1 border-t-[3px] border-t-dept p-6 text-base hover:border-dept">
-            <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>
-            <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} link />
+          <Card className="relative grid grid-cols-[6rem_1fr] items-center gap-5 border-t-[3px] border-t-dept p-4 text-base hover:border-dept sm:grid-cols-[8rem_1fr]">
+            <Portrait id={d.director.id} star={d.director.star} sizes="8rem" tag="short" eager className="aspect-square rounded-lg" />
+            <div>
+              <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>
+              <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} link />
+            </div>
           </Card>
           <ul className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
             {team.map((a, index) => (
               <li
                 key={a.id}
-                className={cn("relative rounded-xl border bg-card p-5 hover:border-dept", spanInRows(index, team.length))}
+                className={cn(
+                  "relative grid grid-cols-[3.5rem_1fr] items-center gap-4 rounded-xl border bg-card p-4 hover:border-dept",
+                  spanInRows(index, team.length),
+                )}
               >
+                <Portrait id={a.id} star={a.star} sizes="3.5rem" tag="mini" className="size-14 rounded-lg" />
                 <AgentLine id={a.id} star={a.star} role={a.role} link />
               </li>
             ))}
@@ -142,5 +152,6 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
 
       <SiteFooter />
     </div>
+    </PageTransition>
   );
 }

@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { loadCatalog } from "@agentrica/catalog";
 import type { Metadata } from "next";
-import { Constellation } from "@/components/constellation";
 import { DepartmentCard } from "@/components/department-card";
+import { DirectorsMosaic } from "@/components/directors-mosaic";
+import { PageTransition } from "@/components/page-transition";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,7 +15,7 @@ const departments = loadCatalog();
 const total = departments.reduce((sum, d) => sum + d.agents.length, 0);
 
 export const metadata: Metadata = {
-  description: `Agentrica è una società di consulenza fittizia fatta di agenti IA: ${departments.length} reparti e ${total} agenti specializzati in business, design, privacy, software e sicurezza.`,
+  description: `Agentrica è una società fittizia di consulenza agentica: ${departments.length} reparti e ${total} agenti specializzati in business, design, privacy, software e sicurezza.`,
 };
 
 const principles = [
@@ -44,12 +45,12 @@ const flow: { label: string; code?: string }[] = [
 
 const sectionTitle = "mt-2 mb-4 text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] font-bold";
 const lead = "max-w-2xl text-muted-foreground";
-const pill = "rounded-full h-11 px-6 text-base font-semibold";
+const pill = "rounded-lg h-12 px-6 text-base font-semibold";
 
 export default function Home() {
   return (
-    <>
-      <header className="hero wrap grid items-center gap-12 pt-24 pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+    <PageTransition>
+      <div className="hero wrap grid items-center gap-14 pt-20 pb-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:pt-24">
         <div>
           {/* A capo solo fra i segmenti, mai dentro «56 agenti IA». */}
           <p className="eyebrow">
@@ -57,11 +58,9 @@ export default function Home() {
             <span className="whitespace-nowrap">{departments.length} reparti</span> ·{" "}
             <span className="whitespace-nowrap">{total} agenti IA</span>
           </p>
-          <h1 className="mt-4 w-fit bg-linear-to-r from-foreground via-aisa to-aipca bg-clip-text text-[clamp(3rem,1.5rem+7vw,6rem)] font-extrabold tracking-[-0.04em] text-transparent">
-            Agentrica
-          </h1>
-          <p className="mt-2 text-[clamp(1.375rem,1rem+1.5vw,2rem)] font-semibold">
-            Una società di consulenza fatta di agenti IA.
+          <h1 className="mt-4 text-[clamp(2.75rem,1.4rem+5vw,4.75rem)] font-extrabold tracking-[-0.045em]">Agentrica</h1>
+          <p className="mt-1 text-[clamp(1.75rem,1rem+3vw,3rem)] leading-[1.1] font-extrabold tracking-[-0.035em] text-muted-foreground">
+            Consulenza agentica, con te al comando.
           </p>
           <p className={cn(lead, "mt-4 text-lg")}>
             Business, design, privacy, software e sicurezza: {total} specialisti con un ruolo, un metodo e dei limiti
@@ -75,7 +74,7 @@ export default function Home() {
               Come lavoriamo
             </a>
           </div>
-          {/* Da 1024 px i reparti sono nella costellazione accanto: un solo elenco di link alla volta. */}
+          {/* Sotto i 1024 px, al posto del mosaico dei direttori: scorciatoie ai reparti. */}
           <ul aria-label="I reparti" className="mt-12 flex flex-wrap gap-2 lg:hidden">
             {departments.map((d) => (
               <li key={d.code} data-dept={d.code}>
@@ -90,8 +89,8 @@ export default function Home() {
             ))}
           </ul>
         </div>
-        <Constellation departments={departments} className="hidden lg:block" />
-      </header>
+        <DirectorsMosaic departments={departments} className="hidden lg:grid" />
+      </div>
 
       <main id="contenuto">
         <section id="reparti" aria-labelledby="reparti-titolo" className="wrap py-16">
@@ -104,7 +103,7 @@ export default function Home() {
             codice di stella: la sigla del reparto, il suo numero e una stella.
           </p>
           {/* Cinque schede: 2 + 2 + 1 larga sul tablet, 3 + 2 sul computer, senza caselle vuote. */}
-          <div className="mt-8 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-6">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-6">
             {departments.map((d, index) => (
               <DepartmentCard key={d.code} department={d} className={spanInRows(index, departments.length)} />
             ))}
@@ -166,6 +165,6 @@ export default function Home() {
       </main>
 
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }

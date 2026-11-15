@@ -22,14 +22,16 @@ test("presenta Agentrica con i numeri del catalogo", async ({ page }) => {
   }
 });
 
-test("mostra i cinque reparti con direttore e agenti", async ({ page }) => {
+test("mostra i cinque reparti con il volto del direttore", async ({ page }) => {
   for (const d of departments) {
     const card = page.locator(`article[data-dept="${d.code}"]`);
     await expect(card.getByRole("heading", { name: d.name })).toBeVisible();
     await expect(card).toContainText(`${d.agents.length} agenti`);
     await expect(card).toContainText(`${d.director.id} · ${d.director.star}`);
-    await card.getByRole("button", { name: /Gli altri \d+ agenti/ }).click();
-    for (const a of d.agents.slice(1)) await expect(card).toContainText(`${a.id} · ${a.star}`);
+    // Il ritratto dichiara che il volto è generato con IA (piano, «Volti»).
+    await expect(card.getByRole("img", { name: `Ritratto generato con IA di ${d.director.id} · ${d.director.star}` })).toBeVisible();
+    await expect(card).toContainText("Volto generato con IA");
+    await expect(card.getByRole("link")).toHaveAttribute("href", `/reparti/${d.slug}`);
   }
 });
 
@@ -37,14 +39,19 @@ test("la griglia dei reparti non lascia caselle vuote", async ({ page }) => {
   await expectFullRows(page.locator("#reparti > div.grid"));
 });
 
-test("i link della hero portano alle sezioni", async ({ page }) => {
+test("la hero porta ai reparti, il menu dell'header a ciascun reparto", async ({ page }) => {
   await page.getByRole("link", { name: "Scopri i reparti" }).click();
   await expect(page).toHaveURL(/#reparti$/);
-  // Sul telefono i reparti sono pillole, sul computer stelle della costellazione: un solo link visibile per reparto.
-  const hero = page.locator(".hero");
-  await expect(hero.getByRole("link", { name: /^AISA\b/ })).toHaveCount(1);
-  await hero.getByRole("link", { name: /^AISA\b/ }).click();
+  // Sul computer il menu «Reparti», sul telefono il pannello del menu: un solo pulsante visibile.
+  await page.getByRole("button", { name: /^(Reparti|Apri il menu)$/ }).click();
+  await page.locator(":popover-open").getByRole("link", { name: /^AISA\b/ }).click();
   await expect(page).toHaveURL(/\/reparti\/aisa$/);
+  await expect(page.locator(":popover-open")).toHaveCount(0);
+});
+
+test("i cinque direttori nella hero del computer", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Sotto i 1024 px la hero mostra le scorciatoie ai reparti al posto del mosaico.");
+  await expect(page.getByRole("list", { name: "I direttori dei reparti" }).getByRole("img")).toHaveCount(departments.length);
 });
 
 test("nessuno scorrimento orizzontale", async ({ page }) => {
@@ -53,7 +60,6 @@ test("nessuno scorrimento orizzontale", async ({ page }) => {
 });
 
 test("nessuna violazione di accessibilità serious o critical", async ({ page }) => {
-  for (const trigger of await page.getByRole("button", { name: /Gli altri \d+ agenti/ }).all()) await trigger.click();
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

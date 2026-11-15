@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { agentHref } from "@/components/department-card";
 import { Markdown } from "@/components/markdown";
+import { PageTransition } from "@/components/page-transition";
+import { Portrait } from "@/components/portrait";
 import { SiteFooter } from "@/components/site-footer";
 
 const departments = loadCatalog();
@@ -39,8 +41,9 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
   const next = d.agents[a.number];
 
   return (
+    <PageTransition>
     <div data-dept={d.code}>
-      <header className="wrap pt-10 pb-12">
+      <div className="page-intro wrap pt-10 pb-12">
         <Link
           href={`/reparti/${d.slug}`}
           className="inline-flex min-h-11 items-center gap-1.5 text-[0.9375rem] text-muted-foreground hover:text-foreground"
@@ -48,7 +51,17 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
           <ArrowLeftIcon aria-hidden className="size-4" />
           {d.code} · {d.name}
         </Link>
-        <p className="mt-8 font-mono text-sm font-bold tracking-wide text-dept">
+        <div className="mt-8 grid items-start gap-8 sm:grid-cols-[13rem_minmax(0,1fr)] lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-12">
+        <Portrait
+          id={a.id}
+          star={a.star}
+          sizes="(min-width: 1024px) 18rem, (min-width: 640px) 13rem, 100vw"
+          eager
+          position="50% 25%"
+          className="aspect-[4/5] max-w-72 rounded-2xl border shadow-card sm:max-w-none"
+        />
+        <div>
+        <p className="font-mono text-sm font-bold tracking-wide text-dept">
           {a.id} · {a.number === 1 ? "Direttore" : "Specialista"}
         </p>
         <h1 className="mt-2 font-mono text-[clamp(2.25rem,1.4rem+4vw,3.75rem)] font-extrabold tracking-[-0.02em]">
@@ -59,7 +72,9 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
           {a.star} è un agente IA del reparto {d.name}. Qui sotto c&apos;è il suo file di ruolo, così come è scritto: sono
           le istruzioni che lo guidano quando lavora.
         </p>
-      </header>
+        </div>
+        </div>
+      </div>
 
       <main id="contenuto" className="wrap grid gap-16 pb-16">
         <article aria-label={`File di ruolo di ${a.star}`} className="grid max-w-3xl gap-10">
@@ -108,5 +123,6 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
 
       <SiteFooter />
     </div>
+    </PageTransition>
   );
 }

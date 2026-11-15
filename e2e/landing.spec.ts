@@ -22,15 +22,14 @@ test("presenta Agentrica con i numeri del catalogo", async ({ page }) => {
   }
 });
 
-test("mostra i cinque reparti con il volto del direttore", async ({ page }) => {
+test("mostra i cinque reparti con il simbolo del direttore", async ({ page }) => {
   for (const d of departments) {
     const card = page.locator(`article[data-dept="${d.code}"]`);
     await expect(card.getByRole("heading", { name: d.name })).toBeVisible();
     await expect(card).toContainText(`${d.agents.length} agenti`);
     await expect(card).toContainText(`${d.director.id} · ${d.director.star}`);
-    // Il ritratto dichiara che il volto è generato con IA (piano, «Volti»).
-    await expect(card.getByRole("img", { name: `Ritratto generato con IA di ${d.director.id} · ${d.director.star}` })).toBeVisible();
-    await expect(card).toContainText("Volto generato con IA");
+    // Il simbolo è decorativo: il nome in codice gli sta accanto (plan/09-simboli.md).
+    await expect(card.locator(`svg[data-star="${d.director.star}"][aria-hidden="true"]`)).toBeVisible();
     await expect(card.getByRole("link")).toHaveAttribute("href", `/reparti/${d.slug}`);
   }
 });
@@ -51,7 +50,7 @@ test("la hero porta ai reparti, il menu dell'header a ciascun reparto", async ({
 
 test("i cinque direttori nella hero del computer", async ({ page, isMobile }) => {
   test.skip(isMobile, "Sotto i 1024 px la hero mostra le scorciatoie ai reparti al posto del mosaico.");
-  await expect(page.getByRole("list", { name: "I direttori dei reparti" }).getByRole("img")).toHaveCount(departments.length);
+  await expect(page.getByRole("list", { name: "I direttori dei reparti" }).locator("svg[data-star]")).toHaveCount(departments.length);
 });
 
 test("nessuno scorrimento orizzontale", async ({ page }) => {
@@ -96,7 +95,7 @@ test.describe("Come lavoriamo e MCP", () => {
   });
 
   test("i lettori di schermo hanno il testo intero della simulazione", async ({ page }) => {
-    await expect(page.locator("#metodo figure .sr-only")).toContainText("git switch develop && git merge fase/f7-identita");
+    await expect(page.locator("#metodo figure .sr-only")).toContainText("git switch develop && git merge fase/f9-simboli");
   });
 
   test("la sezione MCP mostra i passi del README e i limiti", async ({ page }) => {

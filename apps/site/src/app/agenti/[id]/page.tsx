@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { agentHref } from "@/components/department-card";
 import { Markdown } from "@/components/markdown";
 import { PageTransition } from "@/components/page-transition";
-import { Portrait } from "@/components/portrait";
+import { StarGlyph } from "@/components/star-glyph";
 import { SiteFooter } from "@/components/site-footer";
 
 const departments = loadCatalog();
@@ -52,14 +52,9 @@ export default async function AgentPage(props: PageProps<"/agenti/[id]">) {
           {d.code} · {d.name}
         </Link>
         <div className="mt-8 grid items-start gap-8 sm:grid-cols-[13rem_minmax(0,1fr)] lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-12">
-        <Portrait
-          id={a.id}
-          star={a.star}
-          sizes="(min-width: 1024px) 18rem, (min-width: 640px) 13rem, 100vw"
-          eager
-          position="50% 25%"
-          className="aspect-[4/5] max-w-72 rounded-2xl border shadow-card sm:max-w-none"
-        />
+        <div className="grid aspect-square max-w-72 place-items-center rounded-2xl border shadow-card sm:max-w-none bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--dept)_14%,var(--muted)),var(--muted))]">
+          <StarGlyph star={a.star} director={a.number === 1} className="size-3/4" />
+        </div>
         <div>
         <p className="font-mono text-sm font-bold tracking-wide text-dept">
           {a.id} · {a.number === 1 ? "Direttore" : "Specialista"}

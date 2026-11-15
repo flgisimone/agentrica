@@ -1,5 +1,5 @@
 import type { Department } from "@agentrica/catalog";
-import { Portrait } from "@/components/portrait";
+import { StarGlyph } from "@/components/star-glyph";
 import { cn } from "@/lib/utils";
 
 // Disposizione scelta dall'utente fra quattro provate (plan/07-identita.md): griglia a 6 colonne, fascia larga in basso.
@@ -23,17 +23,12 @@ export function DirectorsMosaic({ departments, className }: { departments: reado
         <li
           key={d.code}
           data-dept={d.code}
-          className={cn("relative overflow-hidden rounded-[0.9rem] border shadow-card", TILES[index])}
+          className={cn(
+            "relative grid place-items-center overflow-hidden rounded-[0.9rem] border pt-2 pb-9 shadow-card bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--dept)_14%,var(--muted)),var(--muted))]",
+            TILES[index],
+          )}
         >
-          <Portrait
-            id={d.director.id}
-            star={d.director.star}
-            sizes="(min-width: 1024px) 34rem, 1px"
-            tag="short"
-            eager
-            position={index === TILES.length - 1 ? "50% 40%" : "50% 18%"}
-            className="size-full"
-          />
+          <StarGlyph star={d.director.star} director className="h-full max-h-36 w-auto" />
           <p className="absolute bottom-2 left-2 inline-flex items-center gap-1.5 rounded-md bg-card/90 px-2 py-1 font-mono text-[0.6875rem] font-bold whitespace-nowrap text-dept backdrop-blur-sm">
             <span aria-hidden className="size-1.5 rounded-full bg-dept" />
             {d.director.id} · {d.director.star}

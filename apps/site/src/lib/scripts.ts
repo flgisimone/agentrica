@@ -35,29 +35,29 @@ export const flowNodes: readonly FlowNode[] = [
   { label: "La tua conferma", detail: "su commit e merge", confirm: true },
 ];
 
-/** Il compito di F7, i volti degli agenti, rifatto con i passi del metodo. */
+/** Il compito di F9, i simboli degli agenti, rifatto con i passi del metodo. */
 export function simulationScript(catalog: readonly Department[]): TerminalLine[] {
   return [
-    { kind: "command", text: 'claude "Aggiungi i volti degli agenti alle pagine"', step: 0 },
+    { kind: "command", text: 'claude "Dai a ogni agente un simbolo calcolato dal nome della stella"', step: 0 },
     agentLine(catalog, "AIBPD-04", 1),
-    { kind: "output", text: "Obiettivo: un volto per agente, dichiarato come generato con IA.", step: 1 },
+    { kind: "output", text: "Obiettivo: un glifo diverso per agente, sempre uguale fra un build e l'altro.", step: 1 },
     agentLine(catalog, "AIWDA-05", 2),
     agentLine(catalog, "AIWDA-08", 2),
-    { kind: "output", text: "Rilievo: etichetta «Volto IA» visibile e nel testo alternativo.", step: 2 },
+    { kind: "output", text: "Rilievo: il nome in codice resta accanto al simbolo; tratto ≥ 3:1 sul fondo.", step: 2 },
     { kind: "agent", label: "AIPCA", text: "saltata: nessun dato personale nel compito.", dept: "AIPCA", step: 3 },
     { kind: "confirm", text: "Confermi requisiti e rilievi? › Sì", step: 4 },
-    { kind: "command", text: "git switch -c fase/f7-identita", step: 5 },
+    { kind: "command", text: "git switch -c fase/f9-simboli", step: 5 },
     agentLine(catalog, "AISA-05", 5),
-    { kind: "output", text: "Componente Portrait con la dicitura IA.", step: 5 },
+    { kind: "output", text: "Generatore del glifo in lib/ e componente StarGlyph.", step: 5 },
     agentLine(catalog, "AISA-08", 5),
-    { kind: "output", text: "Prove e2e dei ritratti e controllo con axe.", step: 5 },
+    { kind: "output", text: "Test: 56 glifi distinti, stesso nome stesso disegno; axe.", step: 5 },
     { kind: "command", text: "npm run verify", step: 5 },
     { kind: "ok", text: "✓ typecheck  ✓ lint  ✓ test  ✓ build", step: 5 },
     agentLine(catalog, "AISA-12", 6),
     { kind: "output", text: "Esito sul diff: APPROVE.", step: 6 },
     { kind: "confirm", text: "Commit e merge in develop? › Sì", step: 7 },
-    { kind: "command", text: 'git commit -m "F7: volti degli agenti"', step: 7 },
-    { kind: "command", text: "git switch develop && git merge fase/f7-identita", step: 7 },
+    { kind: "command", text: 'git commit -m "F9: simboli degli agenti"', step: 7 },
+    { kind: "command", text: "git switch develop && git merge fase/f9-simboli", step: 7 },
   ];
 }
 

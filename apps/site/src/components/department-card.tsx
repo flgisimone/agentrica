@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Department } from "@agentrica/catalog";
 import { ArrowRightIcon } from "lucide-react";
-import { Portrait } from "@/components/portrait";
+import { StarGlyph } from "@/components/star-glyph";
 import { cn } from "@/lib/utils";
 
 export const agentHref = (id: string) => `/agenti/${id.toLowerCase()}`;
@@ -31,7 +31,7 @@ export function AgentLine({ id, star, role, link }: { id: string; star: string; 
   );
 }
 
-/** Scheda di un reparto: il volto del direttore e i dati essenziali; la scheda intera porta alla pagina del reparto. */
+/** Scheda di un reparto: il simbolo del direttore e i dati essenziali; la scheda intera porta alla pagina del reparto. */
 export function DepartmentCard({ department: d, className }: { department: Department; className?: string }) {
   return (
     <article
@@ -43,12 +43,9 @@ export function DepartmentCard({ department: d, className }: { department: Depar
         className,
       )}
     >
-      <Portrait
-        id={d.director.id}
-        star={d.director.star}
-        sizes="(min-width: 1024px) 25rem, (min-width: 768px) 50vw, 100vw"
-        className="h-56 border-b-[3px] border-b-dept"
-      />
+      <div className="grid h-56 place-items-center border-b-[3px] border-b-dept bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--dept)_14%,var(--muted)),var(--muted))]">
+        <StarGlyph star={d.director.star} director className="size-40" />
+      </div>
       <div className="flex flex-1 flex-col gap-2.5 p-6">
         <p className="flex items-baseline justify-between gap-4">
           <span className="font-mono text-sm font-bold tracking-wide text-dept">{d.code}</span>

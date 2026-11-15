@@ -131,7 +131,7 @@ export default function Home() {
 
           <h3 className="mt-12 text-lg font-semibold">Una richiesta, dall&apos;idea al merge</h3>
           <p className={cn(lead, "mt-2 text-[0.9375rem]")}>
-            Simulazione di un compito vero di questo sito, i volti degli agenti: i passi e i comandi sono quelli del
+            Simulazione di un compito vero di questo sito, i simboli degli agenti: i passi e i comandi sono quelli del
             metodo, il testo degli agenti è abbreviato. I passaggi che non servono si saltano; la sicurezza (AICA) entra
             per gli audit e le nuove integrazioni.
           </p>

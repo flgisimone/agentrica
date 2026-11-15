@@ -55,10 +55,11 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F8 | Sezioni: simulazione di sviluppo e server MCP | completata |
 | F9 | Simboli: ritorno al tema scuro, un glifo per ogni stella al posto dei volti | completata |
 | F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | completata |
-| F11 | Analytics in casa: pagine viste aggregate in Postgres | aperta |
-| F12 | Squadre: configuratore della configurazione MCP con i soli agenti scelti | da aprire |
-| F13 | Pannello locale: fasi, rilievi e decisioni del progetto in una pagina su localhost | da aprire |
-| F14 | Area personale: accesso Google + TOTP, pannello del titolare | da aprire |
+| F11 | Statistiche: download npm da terminale | aperta |
+| F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | da aprire |
+| F13 | Prove e distribuzione: casi di prova degli agenti, registri MCP | da aprire |
+| F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost | da aprire |
+| F15 | Area personale: accesso Google + TOTP (sospesa) | sospesa |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

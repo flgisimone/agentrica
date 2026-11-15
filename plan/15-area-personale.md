@@ -1,14 +1,14 @@
-# F14 — Area personale
+# F15 — Area personale
 
 **Obiettivo**: account per gli utenti di Agentrica con accesso sicuro (Google più secondo fattore) e un pannello del titolare con numeri aggregati. Lo scopo dell'area per gli utenti si decide all'apertura, con dati alla mano.
 
-> **Stato: da aprire** (dopo F13, solo con un obiettivo misurabile). Requisiti di accesso e monitoraggio decisi dall'utente il 2026-11-15.
+> **Stato: sospesa** (revisione del valore, 2026-11-15): senza uno scopo per gli utenti account e secondo fattore sono costo e rischio senza beneficio. Si riapre solo con la scelta di un MCP remoto o un altro obiettivo misurabile. Requisiti di accesso e monitoraggio decisi dall'utente il 2026-11-15.
 
 **Agenzie**: business (Product Manager, Business Analyst) per scopo e criteri di successo; privacy (GDPR Specialist, Data Subject Rights, Vendor Compliance, Legal Specialist) prima del design; cybersecurity (IAM Engineer, AppSec, Cloud Security); design (UX Designer, UX Writer, Accessibility); software (Architect, Database Engineer, Fullstack, QA, Security, Code Reviewer).
 
 ## Situazione di partenza
 
-- Dopo F11: Postgres (Neon, UE) con `page_views`; dopo F12: configuratore di squadre e `squad_copies`. Nessun account.
+- Nessun database né account: analytics in Postgres (F11) e `squad_copies` (F12) sono stati rinviati il 2026-11-15; i download npm si leggono con `npm run stats`. Con gli account serve anche il database.
 - Vercel Hobby senza DPA (PRIV-PUB-01): con gli account il sito tratta dati personali, serve Vercel Pro.
 - Analisi business di F12 ([12-squadre.md](12-squadre.md)): solo un MCP remoto con chiave personale richiede davvero un account; le altre idee (preferiti, squadre su più dispositivi) sono comodità.
 

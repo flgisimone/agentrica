@@ -63,8 +63,9 @@ export function simulationScript(catalog: readonly Department[]): TerminalLine[]
 
 /** Comandi del README di packages/mcp, uguali carattere per carattere. */
 export const mcp = {
-  add: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1",
-  squad: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1 --agents aisa,aiwda-08",
+  add: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0",
+  squad: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --agents aisa,aiwda-08",
+  panel: "claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --panel",
   use: '/mcp__agentrica__aisa-02 "Rivedi i confini fra i moduli di src/"',
 } as const;
 

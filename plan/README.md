@@ -26,7 +26,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Nomi degli agenti | Nome in codice di stella: sigla del reparto, numero del file di ruolo e stella in maiuscolo, es. «AISA-02 · ALTAIR». Il ruolo resta accanto al nome. Nessun nome di persona. Il direttore di AIBPD è ALDERAMIN (era CAPELLA fino a F1; il sito non era pubblicato) | Scelta dell'utente (2026-11-15) |
 | Trasparenza | Il sito dice sempre che gli agenti sono IA; nessuna persona, cliente, risultato o recensione inventati | Contenuti onesti (CONVENTIONS §1) |
 | Identità visiva | Da F9 torna il «tech scuro» di F0–F6 (fondo #0b1020, accenti luminosi per reparto), con Inter e JetBrains Mono di F7; contrasto WCAG AA. Il corporate chiaro di F7–F8 resta nella storia di git | Scelta dell'utente (2026-11-15, dopo F8) |
-| Lingua | Sito, documentazione, piani e convenzioni in italiano; sigle e titoli dei ruoli in inglese come nei file | Scelta dell'utente (2026-11-15) |
+| Lingua | Sito, documentazione, piani e convenzioni in italiano; sigle e titoli dei ruoli in inglese come nei file. Da F11 API e identificatori del codice nuovo in inglese (CONVENTIONS §3) | Scelta dell'utente (2026-11-15; regola del codice in F11) |
 | Agenzie attive | Software e Web Design per costruire il sito; le altre tre sono il contenuto del prodotto e si attivano quando servono (Privacy e Cybersecurity con il server MCP e la pubblicazione) | Proposta F0 |
 | Test | Unitari con `node --test` su `packages/catalog`; prove di fumo e accessibilità con Playwright e axe sul sito | Come nello starter |
 | Rilascio | Solo in locale fino alla fase di pubblicazione; deploy solo dopo l'approvazione dell'utente | Predefinito di agentic-starter |
@@ -38,6 +38,8 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
 | Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
+| Autenticazione | Se il sito avrà account (area personale, fase futura dopo F12): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [12-squadre.md](12-squadre.md) | Scelta dell'utente (2026-11-15) |
+| Monitoraggio | Pannello `/admin` del titolare con la fase dell'area personale, solo dati aggregati (account, accessi, pagine viste, agenti nelle squadre copiate, download npm); nessuna telemetria nell'MCP, l'uso degli agenti si stima dai segnali del sito. Fino ad allora lettura da terminale | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -59,5 +61,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | completata |
 | F9 | [09-simboli.md](09-simboli.md) | Ritorno al tema scuro; un glifo SVG generato per ogni stella al posto dei volti | completata |
 | F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | completata |
+| F11 | [11-analytics.md](11-analytics.md) | Analytics in casa: contatori aggregati in Postgres, senza dati personali; revisione privacy e testi aggiornati | aperta |
+| F12 | [12-squadre.md](12-squadre.md) | Squadre: configuratore nel sito che genera la configurazione MCP con i soli agenti scelti, senza account; l'MCP accetta l'elenco | da aprire |
 
-Ordine: F0 → F10 in sequenza. I file di F9 e F10 sono scritti; le loro «proposte da confermare» si decidono all'apertura.
+Ordine: F0 → F12 in sequenza. Il file di F12 è scritto; le sue «proposte da confermare» si decidono all'apertura.

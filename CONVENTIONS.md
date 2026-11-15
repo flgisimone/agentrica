@@ -31,6 +31,7 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 - **Semplicità**: il codice più corto che resta chiaro. Niente «per dopo».
 - **DRY senza esagerare**: si estrae alla terza ripetizione o quando la logica deve restare identica.
 - **Costanti**: niente valori magici ripetuti; sigle, nomi dei reparti e nomi in codice stanno solo in `packages/catalog/src/departments.ts`.
+- **Lingua del codice**: API (rotte, payload, tabelle, colonne) e identificatori in inglese; testi visibili e commenti in italiano. Vale dal codice nuovo di F11: quello esistente non si rinomina.
 - **Commenti**: spiegano il perché, non il cosa. Brevi, in italiano. Una semplificazione voluta si segna con `ponytail:`, dicendo il limite e quando superarlo.
 - **Codice morto**: si toglie, non si commenta.
 - **Difese**: il catalogo valida i file di `agents/` quando li legge (titolo, numerazione, un nome in codice per file) e si ferma con un errore chiaro; dentro, si usano i tipi.

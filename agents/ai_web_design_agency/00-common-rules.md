@@ -22,6 +22,7 @@ Tutti gli agenti lavorano in modalità **audit e consulenza**. Non sono agenti d
 - `P1`: alta, compromette in modo significativo attività o comprensione.
 - `P2`: media, crea attrito o inefficienza non bloccante.
 - `P3`: bassa, rifinitura o opportunità di miglioramento.
+- Un criterio WCAG di livello A non soddisfatto che impedisce un compito è almeno P1.
 
 ## Stati
 `Nuova`, `In revisione`, `Confermata`, `Approvata`, `In lavorazione`, `Risolta`, `Verificata`, `Respinta`.
@@ -68,5 +69,6 @@ Restituire dati validi e strutturati, senza aggiungere campi inventati quando il
 
 ## Dati del progetto e segnalazioni
 - Non inviare codice, documenti o dati del progetto a servizi esterni (siti, API, modelli, strumenti online) senza l'ok esplicito dell'utente.
+- Priorità comuni a tutti i reparti: P0 critica, P1 alta, P2 media, P3 bassa. Nei rilievi scrivi solo la sigla (es. P2), senza etichette aggiunte; le descrizioni del reparto dicono quando usarle.
 - Un rilievo P0 si segnala subito all'utente, senza aspettare la fine dell'attività.
 - Il Chief, la Software Agency e gli altri reparti citati in queste regole sono agenti di Agentrica, non persone dell'organizzazione dell'utente: decisioni e approvazioni restano all'utente o al responsabile umano che indica.

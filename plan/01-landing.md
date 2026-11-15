@@ -54,10 +54,10 @@
 
 ## Rilievi aperti
 
-- La CI non parte al push su questo repository (gamoey, con le stesse credenziali, sì; nessun webhook): lanciata a mano con `gh workflow run ci.yml --ref develop` è verde (verify ed e2e, run 43696157872, 2026-11-15). Finché non si capisce, a ogni chiusura si lancia a mano. P2, da guardare nelle impostazioni di Actions e nell'integrazione Vercel del repository.
-- Hero a 1440 px: la metà destra è vuota. Una costellazione dei reparti lì sarebbe la naturale anteprima delle pagine di F2. P3, da valutare in F2.
-- Griglia dei reparti 3 + 2 con una casella vuota a 1440 px. P3.
-- A 360 px la riga sopra il titolo va a capo spezzando «56 agenti IA». P3.
-- Il titolo in sfumatura non è misurabile da axe; i suoi colori sono chiari sul fondo scuro (contrasto alto a occhio), da misurare con lo strumento in F2. P3.
-- Dipendenze di sviluppo: minimatch moderato in typescript-eslint (da F0). P3.
-- Corretto in fase: il `.gitignore` dello starter ignorava solo `node_modules` della root, e F0 aveva committato la cache di Vite di `apps/site/node_modules` (29 file, nessun dato sensibile); ora `node_modules/` vale ovunque e i file sono tolti dal repository. Stessa correzione nel template di agentic-starter.
+- La CI non parte al push su questo repository (gamoey, con le stesse credenziali, sì; nessun webhook): lanciata a mano con `gh workflow run ci.yml --ref develop` è verde (verify ed e2e, run 43696157872, 2026-11-15). Finché non si capisce, a ogni chiusura si lancia a mano. P2, da guardare nelle impostazioni di Actions e nell'integrazione Vercel del repository. Risolto in F6 (F6-01).
+- Hero a 1440 px: la metà destra è vuota. Una costellazione dei reparti lì sarebbe la naturale anteprima delle pagine di F2. P3, da valutare in F2. Risolto in F6 (F6-07).
+- Griglia dei reparti 3 + 2 con una casella vuota a 1440 px. P3. Risolto in F6 (F6-08).
+- A 360 px la riga sopra il titolo va a capo spezzando «56 agenti IA». P3. Risolto in F6 (F6-08).
+- Il titolo in sfumatura non è misurabile da axe; i suoi colori sono chiari sul fondo scuro (contrasto alto a occhio), da misurare con lo strumento in F2. P3. Risolto in F6 (F6-08).
+- Dipendenze di sviluppo: minimatch moderato in typescript-eslint (da F0). P3. Chiuso qui: ripreso in F6.
+- Corretto in fase: il `.gitignore` dello starter ignorava solo `node_modules` della root, e F0 aveva committato la cache di Vite di `apps/site/node_modules` (29 file, nessun dato sensibile); ora `node_modules/` vale ovunque e i file sono tolti dal repository. Stessa correzione nel template di agentic-starter. Risolto in F1.

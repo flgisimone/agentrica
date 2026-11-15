@@ -2,13 +2,13 @@
 
 **Obiettivo**: chi usa `@agentrica/mcp` segue e guida lo sviluppo del proprio progetto da una pagina web invece che dal terminale: fasi, backlog, rilievi e decisioni in attesa, con le scelte prese dalla pagina. Tutto gira sul computer dell'utente: niente account, niente server di Agentrica, nessun dato inviato.
 
-> **Stato: completata** (2026-11-15). 0.3.0 pronta in `develop`, da rilasciare (CONVENTIONS §13.8). Strada scelta dall'utente il 2026-11-15, fra pannello locale, area personale remota, entrambe o nessuna UI nuova.
+> **Stato: completata** (2026-11-15). 0.3.0 rilasciata su npm e pubblicata nel registro MCP. Strada scelta dall'utente il 2026-11-15, fra pannello locale, area personale remota, entrambe o nessuna UI nuova.
 
 **Agenzie**: business (Product Manager) per obiettivo e criteri di successo; design (UX Designer, UI Designer, UX Writer, Accessibility) prima e dopo; software (Architect, Backend per `packages/mcp`, Frontend, QA, Security, Code Reviewer); cybersecurity (AppSec, Network Security) per il server locale in ascolto su una porta.
 
 ## Situazione di partenza
 
-- `@agentrica/mcp` è un server stdio locale dentro il client dell'utente: il sito su Vercel non vede il computer, il repository né la sessione dell'agente. Per questo la UI non può stare nel sito senza un agente remoto (area personale, [F15](15-area-personale.md), sospesa).
+- `@agentrica/mcp` è un server stdio locale dentro il client dell'utente: il sito su Vercel non vede il computer, il repository né la sessione dell'agente. Per questo la UI non può stare nel sito senza un agente remoto (area personale, [F16](16-area-personale.md), sospesa).
 - Il metodo delle agenzie vive in file del progetto: `plan/` (fasi e backlog), `audit/` (rilievi JSON e report), git (branch e stato).
 - Le UI generiche esistono già (estensione VS Code, app desktop, claude.ai/code); manca una vista sul metodo Agentrica.
 
@@ -109,6 +109,7 @@ Ruoli: UX Designer, UI Designer, UX Writer, Accessibility Specialist.
 - **F14-06** `--panel`, `open_panel`, `ask_user` (opzioni con etichette diverse, consigliata per prima, nota libera), registro in memoria delle ultime 20 chiamate a prompt e tool `agente`; uscita del processo alla chiusura di stdio. Senza `--panel` nessun cambiamento (i test di 0.2.1 restano verdi).
 - **F14-07** Revisione di sicurezza nei ruoli AppSec e Network Security: corretta l'esecuzione di `core.fsmonitor` da parte di `git status`. Rischi accettati: il token passa nella risposta di `open_panel` e quindi nel contesto del modello (vale solo su `127.0.0.1` e per la sessione); con `--panel` non si usa il permission model di Node.
 - **F14-08** README italiano e inglese («Pannello locale», formato di `plan/` e `audit/`, «Versioni»), passo 4 nella sezione MCP del sito, versione 0.3.0 in `package.json`, `server.json`, `VERSION`, lock e comandi.
+- **Rilascio 0.3.0** (CONVENTIONS §13.8): PR #7 `develop` → `main`, tag `v0.3.0`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`; `latest` è 0.3.0. L'utente ha pubblicato nel registro MCP con `mcp-publisher publish` (il primo tentativo, subito dopo npm, è fallito perché la versione non era ancora visibile).
 
 ## Verifiche
 
@@ -120,7 +121,6 @@ Ruoli: UX Designer, UI Designer, UX Writer, Accessibility Specialist.
 
 ## Rilievi aperti
 
-- P2: rilascio 0.3.0 (CONVENTIONS §13.8). Fino al rilascio README e sito in `develop` citano una versione non ancora su npm.
 - P3: «Agenti in uso» nella sessione vera non è stato guardato a occhio dopo il prompt `aisa-02` (coperto dal test con un client MCP vero).
-- P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi.
-- P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`).
+- P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi. Risolto in `fix/f14-rilievi` (2765e21): le voci che dicono «risolto» o «chiuso» non si mostrano; i piani ripuliti in F15.
+- P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`). Risolto in `fix/f14-rilievi`: modificati e nuovi contati a parte.

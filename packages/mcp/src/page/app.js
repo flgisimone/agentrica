@@ -34,9 +34,14 @@ const time = (iso) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit
 const empty = (text) => el("p", { class: "empty" }, text);
 
 function renderHeader({ project }) {
-  const git = project.git
-    ? ` · branch ${project.git.branch} · ${project.git.changed === 1 ? "1 file modificato" : `${project.git.changed} file modificati`}`
-    : " · non è un repository git";
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const files = project.git
+    ? [
+        project.git.changed > 0 && plural(project.git.changed, "file modificato", "file modificati"),
+        project.git.untracked > 0 && plural(project.git.untracked, "nuovo", "nuovi"),
+      ].filter(Boolean)
+    : [];
+  const git = project.git ? [` · branch ${project.git.branch}`, ...files].join(" · ") : " · non è un repository git";
   $("project").textContent = project.name + git;
   const problems = $("problems");
   problems.hidden = project.problems.length === 0;
@@ -240,7 +245,7 @@ function renderFindings({ project }) {
   });
   $("findings").replaceChildren(
     ...(shown.length ? groups.filter(Boolean) : [empty(filter ? `Nessun rilievo di ${filter}.` : "Nessun rilievo.")]),
-    el("p", { class: "hint" }, "In ogni gruppo prima i «Rilievi aperti» dei file di fase, poi i rilievi degli audit con il loro stato."),
+    el("p", { class: "hint" }, "In ogni gruppo prima i «Rilievi aperti» dei file di fase, poi i rilievi degli audit con il loro stato. Quelli segnati come risolti o chiusi non compaiono."),
   );
 }
 

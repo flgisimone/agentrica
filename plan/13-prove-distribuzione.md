@@ -2,7 +2,7 @@
 
 **Obiettivo**: mostrare con risultati ripetibili che gli agenti di Agentrica producono rilievi utili, e rendere `@agentrica/mcp` trovabile da chi cerca server MCP. Sono le due cose che portano qualcuno a installarlo.
 
-> **Stato: completata** (2026-11-15). 0.2.1 rilasciata su npm e pubblicata nel registro MCP ufficiale (F13-06). Fase aggiunta dall'utente il 2026-11-15 dopo la revisione del valore di F11–F15.
+> **Stato: completata** (2026-11-15). 0.2.1 rilasciata su npm e pubblicata nel registro MCP ufficiale (F13-06). Fase aggiunta dall'utente il 2026-11-15 dopo la revisione del valore di F11–F16.
 
 **Agenzie**: business (Product Manager, Product Marketing Manager) per criteri di successo e messaggi; software (QA, Backend) per i casi di prova; design (UX Writer) per README e sito. Ogni agente provato è anche il revisore del proprio file di ruolo.
 
@@ -72,4 +72,4 @@
 ## Rilievi aperti
 
 - P2: le prove sono facili (difetti piantati ed evidenti, un modello, un'esecuzione). Prossimo passo utile: un caso su un progetto vero o con difetti sottili, e una seconda esecuzione per vedere la variabilità.
-- P3: scala di gravità comune fra i reparti (vedi F13-03), da decidere se diventa una regola comune.
+- P3: scala di gravità comune fra i reparti (vedi F13-03), da decidere se diventa una regola comune. Risolto in F15 (F15-08): riga comune nei cinque `00-common-rules.md`, scala in Software, regola WCAG livello A in Design.

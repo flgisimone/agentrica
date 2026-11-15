@@ -22,7 +22,7 @@ Serve Node 22 o successivo, con npm.
 **Claude Code**, dalla cartella del tuo progetto:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.1
 ```
 
 Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicata finché non la cambi tu: un aggiornamento dei ruoli non arriva senza che tu lo scelga.
@@ -34,7 +34,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.3.0"]
+      "args": ["-y", "@agentrica/mcp@0.3.1"]
     }
   }
 }
@@ -43,7 +43,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
 **Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.3.0
+npm install -g --ignore-scripts @agentrica/mcp@0.3.1
 npm root -g
 ```
 
@@ -70,7 +70,7 @@ Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 **Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.1 --agents aisa,aiwda-08
 ```
 
 Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti` e `agente` vedono solo quelli. Senza `--agents` ci sono tutti i 56 agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
@@ -93,7 +93,7 @@ I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli 
 Con `--panel` il server apre anche una pagina sul tuo computer da cui segui il progetto e prendi le scelte che l'agente ti chiede, invece di rispondere nel terminale:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.1 --panel
 ```
 
 Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Mostra:
@@ -117,8 +117,8 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani di agentic-starter, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 
 - `plan/README.md` con una sezione `## Fasi` e una tabella `| Fase | File | Contenuto | Stato |`, il file come link (`[14-pannello.md](14-pannello.md)`). La fase aperta è la prima con uno stato diverso da `completata` e `sospesa`.
-- Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …`, `## Backlog` con la tabella `| # | Task | Priorità |`, `## Criteri di accettazione` e `## Fatto` come elenchi; un task è fatto quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` è un elenco, con la priorità (`P0`–`P3`) nel testo.
-- `audit/<cartella>/<file>.json` con `agente` (es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo.
+- Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …`, `## Backlog` con la tabella `| # | Task | Priorità |`, `## Criteri di accettazione` e `## Fatto` come elenchi; un task è fatto quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` è un elenco, con la priorità (`P0`–`P3`) nel testo; una voce che dice «risolto» o «chiuso» (es. «Risolto in F6.») resta nel piano ma il pannello non la mostra.
+- `audit/<cartella>/<file>.json` con `agente` (es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo; un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
 
 ## Messi alla prova
 
@@ -138,6 +138,7 @@ Il testo degli agenti viene dai file di `agents/` della versione installata. Per
 
 ## Versioni
 
+- **0.3.1**: pannello che nasconde i rilievi chiusi e conta a parte i file nuovi; id del tool `agente` limitato alle sigle dei reparti; regole comuni con una scala di gravità condivisa (P0–P3) e una scala per il reparto software.
 - **0.3.0**: pannello locale con `--panel`: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina (tool `open_panel` e `ask_user`). Senza `--panel` nulla cambia.
 - **0.2.1**: nome `io.github.flgisimone/agentrica` per il registro MCP ufficiale; agenti e comportamento invariati.
 - **0.2.0**: argomento `--agents` per caricare solo una squadra di agenti o reparti; con un progetto vuoto, o senza ciò che il ruolo deve esaminare, l'agente lo dice e propone i primi passi da confermare, senza inventare rilievi.

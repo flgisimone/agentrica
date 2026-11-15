@@ -42,7 +42,7 @@ test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
       "## Glossario",
     ].join("\n"),
   );
-  write("plan/00-base.md", "# F0 — Base\n\n## Rilievi aperti\n\n- P3: un dettaglio di AISA.\n- Nessuno altro.\n");
+  write("plan/00-base.md", "# F0 — Base\n\n## Rilievi aperti\n\n- P3: un dettaglio di AISA.\n- P2: la CI. Risolto in F6.\n- P3: i rilievi chiusi senza azione.\n- P3: non risolto, va ripreso.\n- Nessuno altro.\n");
   write(
     "plan/01-uno.md",
     [
@@ -59,7 +59,7 @@ test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
       "- **F1-01** fatto.",
     ].join("\n"),
   );
-  write("audit/2026-01-01/sec.json", JSON.stringify({ agente: "AICA-02 · sec", rilievi: [{ id: "S-1", titolo: "Uno", priorita: "P2 (per F6)", stato: "Accettata" }, null] }));
+  write("audit/2026-01-01/sec.json", JSON.stringify({ agente: "AICA-02 · sec", rilievi: [{ id: "S-1", titolo: "Uno", priorita: "P2 (per F6)", stato: "Accettata" }, { id: "S-2", titolo: "Due", priorita: "P1", stato: "Risolta in F10" }, null] }));
   write("audit/2026-01-01/rotto.json", "{");
   symlinkSync(outside, join(root, "audit", "link"));
 
@@ -79,6 +79,7 @@ test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
   });
   assert.deepEqual(plan.findings, [
     { id: "", title: "P3: un dettaglio di AISA.", priority: "P3", department: "AISA", source: "F0", status: null },
+    { id: "", title: "P3: non risolto, va ripreso.", priority: "P3", department: null, source: "F0", status: null },
     { id: "S-1", title: "Uno", priority: "P2", department: "AICA", source: "2026-01-01/sec.json", status: "Accettata" },
   ]);
   assert.deepEqual(plan.problems, ["audit/2026-01-01/rotto.json non è un JSON leggibile: saltato."]);
@@ -101,6 +102,6 @@ test("il piano di questo repository si legge senza problemi", async () => {
   assert.ok(plan.phases.length >= 15);
   assert.ok(plan.findings.some((f) => f.source.endsWith("sec-release.json")));
   const git = await readGit(repo);
-  assert.ok(git && git.branch.length > 0);
+  assert.ok(git && git.branch.length > 0 && git.changed >= 0 && git.untracked >= 0);
   assert.equal(await readGit(outside), null);
 });

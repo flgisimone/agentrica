@@ -1,10 +1,11 @@
 # dipendenze e build
-/node_modules
-/dist
+node_modules/
+dist/
+.next/
+next-env.d.ts
 /build
 /coverage
 *.tsbuildinfo
-# completare in F0 con le cartelle dello stack, es. /.next/ /out/ /dist-ssr .vite/ .wrangler/ .vercel next-env.d.ts
 
 # misc
 .DS_Store
@@ -22,7 +23,7 @@
 .tokensave/
 
 # Playwright
-/test-results/
+test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
@@ -34,3 +35,7 @@
 # Claude Code: impostazioni personali e lock locali
 .claude/settings.local.json
 .claude/*.lock
+
+# pacchetto MCP: prepack copia qui agents/ e LICENSE
+packages/mcp/agents/
+packages/mcp/LICENSE

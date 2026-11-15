@@ -1,0 +1,107 @@
+// Prova con un client MCP vero: avvia server.ts su stdio da una cartella fuori dal repository, come un progetto dell'utente.
+// Il server gira con il permission model di Node in sola lettura del clone, come consiglia il README: una scrittura,
+// una connessione o un processo figlio farebbero fallire le prove. L'ultima prova controlla stderr e la cartella.
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { after, before, test } from "node:test";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+const cwd = mkdtempSync(join(tmpdir(), "agentrica-mcp-"));
+const repo = join(import.meta.dirname, "..", "..", "..");
+const client = new Client({ name: "test", version: "0" });
+const transport = new StdioClientTransport({
+  command: process.execPath,
+  args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts")],
+  cwd,
+  stderr: "pipe",
+});
+let stderr = "";
+transport.stderr?.on("data", (chunk: Buffer) => (stderr += chunk.toString()));
+
+before(async () => {
+  await client.connect(transport);
+});
+
+after(async () => {
+  await client.close();
+  rmSync(cwd, { recursive: true, force: true });
+});
+
+const text = (result: Record<string, unknown>) => (result.content as { type: string; text: string }[])[0]!.text;
+
+test("56 prompt con id in minuscolo e argomento compito facoltativo", async () => {
+  const { prompts } = await client.listPrompts();
+  assert.equal(prompts.length, 56);
+  const altair = prompts.find((p) => p.name === "aisa-02");
+  assert.equal(altair?.title, "AISA-02 · ALTAIR — Senior Software Architect");
+  assert.deepEqual(altair?.arguments?.map((a) => [a.name, a.required ?? false]), [["compito", false]]);
+});
+
+test("un prompt con compito restituisce il testo dell'agente", async () => {
+  const { messages } = await client.getPrompt({ name: "aisa-02", arguments: { compito: "Rivedi i confini." } });
+  assert.equal(messages.length, 1);
+  const content = messages[0]!.content as { type: string; text: string };
+  assert.match(content.text, /^# AISA-02 · ALTAIR — Senior Software Architect\n/);
+  assert.match(content.text, /## Compito\n\nRivedi i confini\.\n$/);
+});
+
+test("due tool in sola lettura", async () => {
+  const { tools } = await client.listTools();
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti"]);
+  for (const t of tools) assert.equal(t.annotations?.readOnlyHint, true);
+});
+
+test("elenca_agenti: tutti o un reparto", async () => {
+  const all = text(await client.callTool({ name: "elenca_agenti", arguments: {} }));
+  assert.equal(all.match(/^- /gm)?.length, 56);
+  const aipca = text(await client.callTool({ name: "elenca_agenti", arguments: { reparto: "AIPCA" } }));
+  assert.equal(aipca.match(/^- /gm)?.length, 10);
+  assert.ok(!aipca.includes("AISA-"));
+  const wrong = await client.callTool({ name: "elenca_agenti", arguments: { reparto: "XYZ" } });
+  assert.equal(wrong.isError, true);
+});
+
+test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", async () => {
+  const ok = await client.callTool({ name: "agente", arguments: { id: "aica-01" } });
+  assert.notEqual(ok.isError, true);
+  assert.match(text(ok), /^# AICA-01 · VEGA — /);
+  const missing = await client.callTool({ name: "agente", arguments: { id: "AISA-99" } });
+  assert.equal(missing.isError, true);
+  assert.match(text(missing), /non trovato/);
+  assert.ok(!text(missing).includes("AISA-99"));
+  const malformed = await client.callTool({ name: "agente", arguments: { id: "../../etc" } });
+  assert.equal(malformed.isError, true);
+});
+
+test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr, codice 1", () => {
+  // Stessa struttura del repository (packages/mcp/src) ma senza agents/: il server non deve cercarla altrove.
+  const root = mkdtempSync(join(tmpdir(), "agentrica-vuoto-"));
+  try {
+    const src = join(root, "packages", "mcp", "src");
+    mkdirSync(src, { recursive: true });
+    for (const file of ["server.ts", "prompt.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
+    mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
+    for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {
+      copyFileSync(join(catalogSrc, file), join(root, "packages", "catalog", "src", file));
+    }
+    symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"));
+    // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
+    const run = spawnSync(process.execPath, [join(src, "server.ts")], { cwd: repo, input: "", encoding: "utf8" });
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /^agentrica: catalogo non leggibile in .*agents: /);
+    assert.equal(run.stderr.trim().split("\n").length, 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// Ultima prova, dopo tutte le chiamate: il server non ha scritto niente su stderr né nella cartella del progetto.
+test("dopo tutte le chiamate: stderr vuoto, nessun file nella cartella del progetto", () => {
+  assert.equal(stderr, "");
+  assert.deepEqual(readdirSync(cwd), []);
+});

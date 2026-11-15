@@ -1,0 +1,32 @@
+{
+  "name": "@agentrica/mcp",
+  "version": "0.1.0",
+  "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente e due tool in sola lettura.",
+  "license": "MIT",
+  "author": "Giulio Simone Floresta",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flgisimone/agentrica.git",
+    "directory": "packages/mcp"
+  },
+  "keywords": ["mcp", "model-context-protocol", "agents", "claude"],
+  "type": "module",
+  "bin": {
+    "agentrica-mcp": "dist/mcp/src/server.js"
+  },
+  "files": [
+    "dist",
+    "agents",
+    "README.en.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepack": "rm -rf dist agents LICENSE && tsc -p tsconfig.build.json && cp -R ../../agents agents && cp ../../LICENSE LICENSE"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  }
+}

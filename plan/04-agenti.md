@@ -2,7 +2,7 @@
 
 **Obiettivo**: una pagina per agente, `/agenti/<id>` (es. `/agenti/aisa-02`), pre-generata al build dal catalogo: nome in codice, ruolo, reparto e il file di ruolo così com'è scritto. Dalla squadra di ogni reparto si arriva alle pagine dei suoi agenti.
 
-> **Stato: completata.** Decisioni confermate dall'utente il 2026-11-15.
+> **Stato: completata** (`69f9605`, merge `b7fe654` in `develop`). Decisioni confermate dall'utente il 2026-11-15.
 
 **Agenzie**: web design (UI Designer, UX Writer, Accessibility) per i controlli prima e la revisione nell'app dopo; software (Frontend Developer, QA, Code Reviewer).
 

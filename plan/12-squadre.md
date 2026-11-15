@@ -16,15 +16,7 @@
 
 Idee valutate: A configuratore di squadre, B preferiti, C agenti personalizzati, D MCP remoto con chiave personale, E proposte di miglioramento. Solo D richiede un account ed è un cambio di prodotto (servizio ospitato, costi, Vercel Pro per il DPA, revisioni privacy e cybersecurity). A dà il valore più alto senza account: oggi il client carica tutti i 56 prompt.
 
-**Decisione dell'utente**: F12 fa solo A. Un'area personale con account (D) è una fase a sé, da proporre solo con un obiettivo misurabile, per esempio dagli analytics di F11. Impostazione di riferimento per D:
-
-- **Accesso (decisione dell'utente, 2026-11-15)**: Google (OpenID Connect) più secondo fattore TOTP obbligatorio con un'app authenticator, attivato inquadrando un QR code. Auth.js con il provider Google; il TOTP non è in Auth.js e si aggiunge sopra (RFC 6238, libreria da scegliere a versione esatta).
-- **Attivazione del TOTP**: al primo accesso, prima di qualunque altra pagina dell'area; QR code dell'URI `otpauth://` generato sul server come SVG (mai un servizio esterno: la CSP resta `'self'`), con la chiave anche in testo per chi non può inquadrare; conferma con un primo codice valido.
-- **Codici di recupero**: generati all'attivazione, mostrati una volta, conservati come hash; senza di essi un telefono perso blocca l'account.
-- **Sicurezza del TOTP**: segreto cifrato nel DB (AES-GCM, chiave in una variabile d'ambiente solo server); tentativi limitati per account; un codice non si riusa nella stessa finestra; la sessione vale solo dopo il secondo fattore.
-- **Dati minimi**: da Google solo lo scope `openid` (l'identificativo `sub`); email solo se serve. Google è titolare autonomo del proprio accesso.
-- **Pannello admin (decisione dell'utente, 2026-11-15)**: `/admin` per il titolare, con lo stesso accesso Google + TOTP e un ruolo admin legato al suo `sub` (variabile d'ambiente solo server). Solo dati aggregati: account registrati, accessi al giorno, secondo fattore attivo, pagine viste (F11), agenti più scelti nelle squadre (F12), download npm settimanali (API pubblica di npm). Nessun elenco di persone né attività del singolo. Uso reale degli agenti solo se un giorno ci sarà un MCP remoto; niente telemetria nell'MCP. Fino ad allora i numeri si leggono da terminale.
-- **Resto**: `DELETE /api/account` (account, segreto e codici in un passo), sessioni in Postgres con cookie tecnico, revisioni privacy e cybersecurity (IAM Engineer per il flusso MFA), Vercel Pro per il DPA, progetto Google Cloud e schermata di consenso OAuth creati dall'utente.
+**Decisione dell'utente**: F12 fa solo A. L'area personale con account (D) è la fase [F13](13-area-personale.md), da aprire solo con un obiettivo misurabile, per esempio dagli analytics di F11.
 
 ## Proposte da confermare all'apertura
 

@@ -38,8 +38,8 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Fase dei rilievi | F6 chiude i rilievi aperti da F0 a F5 prima della pubblicazione (oggi F10); le regole nuove valgono anche per agentic-starter | Scelta dell'utente (2026-11-15) |
 | Licenza | MIT per codice e file degli agenti; titolare del sito e del pacchetto Giulio Simone Floresta, contatto con le issue di GitHub | Scelta dell'utente (2026-11-15, F10) |
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
-| Autenticazione | Se il sito avrà account (area personale, fase futura dopo F12): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [12-squadre.md](12-squadre.md) | Scelta dell'utente (2026-11-15) |
-| Monitoraggio | Pannello `/admin` del titolare con la fase dell'area personale, solo dati aggregati (account, accessi, pagine viste, agenti nelle squadre copiate, download npm); nessuna telemetria nell'MCP, l'uso degli agenti si stima dai segnali del sito. Fino ad allora lettura da terminale | Scelta dell'utente (2026-11-15) |
+| Autenticazione | Se il sito avrà account (F13): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [13-area-personale.md](13-area-personale.md) | Scelta dell'utente (2026-11-15) |
+| Monitoraggio | Pannello `/admin` del titolare in F13, solo dati aggregati (account, accessi, pagine viste, agenti nelle squadre copiate, download npm); nessuna telemetria nell'MCP, l'uso degli agenti si stima dai segnali del sito. Fino ad allora lettura da terminale | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -63,5 +63,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F10 | [10-pubblicazione.md](10-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per la pubblicazione») | completata |
 | F11 | [11-analytics.md](11-analytics.md) | Analytics in casa: contatori aggregati in Postgres, senza dati personali; revisione privacy e testi aggiornati | aperta |
 | F12 | [12-squadre.md](12-squadre.md) | Squadre: configuratore nel sito che genera la configurazione MCP con i soli agenti scelti, senza account; l'MCP accetta l'elenco | da aprire |
+| F13 | [13-area-personale.md](13-area-personale.md) | Area personale: accesso Google + TOTP con QR code, pannello `/admin` del titolare con dati aggregati; scopo per gli utenti da decidere | da aprire |
 
-Ordine: F0 → F12 in sequenza. Il file di F12 è scritto; le sue «proposte da confermare» si decidono all'apertura.
+Ordine: F0 → F13 in sequenza. I file di F12 e F13 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

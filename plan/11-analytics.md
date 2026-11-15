@@ -2,7 +2,14 @@
 
 **Obiettivo**: contare le pagine viste del sito con un sistema nostro: contatori aggregati in Postgres, nessun dato personale, nessun cookie, testi del sito che dicono il vero su cosa viene raccolto.
 
-> **Stato: aperta.**
+> **Stato: aperta.** Piano scritto e committato; nessun codice.
+
+## Prossimi passi (per la sessione nuova)
+
+1. Revisione privacy del design (F11-01), nella sessione principale con i ruoli privacy; rilievi in `audit/`.
+2. L'utente crea il database Neon dal Marketplace di Vercel (regione Frankfurt) collegato al progetto `agentrica` (F11-02): Vercel aggiunge `DATABASE_URL`.
+3. Conferma della dipendenza `@neondatabase/serverless` a versione esatta.
+4. Poi F11-03 → F11-09. Nomi di API, tabelle e identificatori in inglese (CONVENTIONS §3).
 
 **Agenzie**: privacy (GDPR Specialist, Data Governance, Legal Specialist) prima del design, come chiede la decisione «Privacy dei trasporti»; software (Database Engineer, Backend, Frontend, DevOps, QA, Security, Code Reviewer); design (UX Writer) per footer e note legali.
 

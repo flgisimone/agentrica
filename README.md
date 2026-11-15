@@ -56,6 +56,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F9 | Simboli: ritorno al tema scuro, un glifo per ogni stella al posto dei volti | completata |
 | F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | completata |
 | F11 | Analytics in casa: pagine viste aggregate in Postgres | aperta |
+| F12 | Squadre: configuratore della configurazione MCP con i soli agenti scelti | da aprire |
+| F13 | Area personale: accesso Google + TOTP, pannello del titolare | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

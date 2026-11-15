@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere i rilievi aperti da F0 a F5 prima della pubblicazione (F7). Le regole comuni degli agenti arrivano nei progetti di altri, la CI deve partire da sola e i difetti P3 del sito, rimandati fase dopo fase, si sistemano.
 
-> **Stato: in corso** su `fase/f6-rilievi`. Decisioni confermate dall'utente il 2026-11-15.
+> **Stato: completata** (`2a9d71e`, merge in `develop`, CI verde al push). Decisioni confermate dall'utente il 2026-11-15.
 
 **Agenzie**: privacy (GDPR Specialist) per il testo delle regole nuove; software (Frontend, Backend, DevOps, QA, Code Reviewer); design (UI Designer, Accessibility Specialist) prima e dopo le modifiche al sito. Le modifiche a `agents/` sono modifiche al prodotto: il testo esatto si conferma con l'utente prima di scriverlo.
 
@@ -47,7 +47,7 @@
 
 ## Fatto
 
-- **F6-01** Causa: il repository ha le stesse impostazioni di Actions di gamoey (abilitate, tutte le azioni, permessi in lettura) e GitHub riceve i push (`PushEvent`), ma per i commit pushati crea solo la check suite di Vercel e nessuna di Actions: il workflow non era registrato per gli eventi `push`. Tentativo: workflow disattivato e riattivato (`gh workflow disable/enable CI`). **Non basta**: il push di `2eace22` su `fase/f6-rilievi` non ha avviato la CI (nessun run dopo 2 minuti, di nuovo solo la check suite di Vercel). Ancora aperto.
+- **F6-01** Causa: il repository ha le stesse impostazioni di Actions di gamoey (abilitate, tutte le azioni, permessi in lettura) e GitHub riceve i push (`PushEvent`), ma per i commit pushati crea solo la check suite di Vercel e nessuna di Actions: il workflow non era registrato per gli eventi `push`. Disattivare e riattivare il workflow non è bastato (il push di `2eace22` non ha avviato la CI). Causa vera: Actions andava attivato dalla pagina Actions del repository (conferma «Actions Enabled.»), passo che l'API non mostra (`enabled: true`) e che non blocca i run lanciati a mano. Dopo la conferma il push di `2a9d71e` ha avviato la CI da solo (run 43706086700, `event: push`, verde).
 - **F6-02** Testo confermato dall'utente e scritto nei cinque `00-common-rules.md`: sezione «Dati del progetto e segnalazioni» (niente dati del progetto a servizi esterni senza ok, P0 subito all'utente, Chief e reparti sono agenti di Agentrica); `conforme_verificato` per il singolo controllo (privacy) e nessuna dichiarazione di progetto sicuro o conforme (cybersecurity); niente dati personali reali in fixture, seed, snapshot, log, commit e report e privacy by design con il reparto privacy (software). Sito e server MCP li mostrano senza modifiche al codice (e2e dei reparti: titoli delle sezioni dal catalogo).
 - **F6-03** agentic-starter: le stesse regole senza la riga sul Chief nei cinque `template/agents/*/00-common-rules.md`, su `fix/readme-agenzie` (commit, merge in `main` e push con la chiusura).
 - **F6-04** Cornice di `prompt.ts`: «Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente», con test; `packages/mcp/README.en.md` e link fra le due versioni.
@@ -60,6 +60,7 @@
 ## Verifiche
 
 - `npm run verify`: superato (24 test unitari). `npm run verify:e2e`: 42/42.
+- CI al push: run 43706086700 su `fase/f6-rilievi`, partito da solo e verde.
 - Contrasto della sfumatura del titolo, misurato su 101 campioni per tratto (`#e8ebf4` → `#38d6f0` → `#b49cff`) contro `#0b1020`: minimo 8,24:1 (`#b49cff`), AA anche per il testo normale.
 - Revisione nell'app (build di produzione) a 1440, 1024 e 360 px: costellazione nella metà destra, «56 agenti IA» intero a 360 px, reparti 3 + 2, squadra AIWDA 3 × 3, focus da tastiera sull'intera scheda.
 - `npm audit --omit=dev`: 0 vulnerabilità.

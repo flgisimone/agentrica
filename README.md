@@ -48,7 +48,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F3 | Pagine dei reparti | completata |
 | F4 | Pagine degli agenti con biografia | completata |
 | F5 | Server MCP su stdio: gli agenti come prompt e tool nei progetti | completata |
-| F6 | Rilievi | in corso |
+| F6 | Rilievi | completata |
 | F7 | Pubblicazione | da fare |
 
 Il dettaglio è in [plan/README.md](plan/README.md).

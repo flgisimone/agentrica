@@ -50,7 +50,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F3 | [03-reparti.md](03-reparti.md) | Pagine dei reparti (`/reparti/[sigla]`): missione, regole comuni, flusso di lavoro, agenti del reparto; README dei reparti in forma comune | completata |
 | F4 | [04-agenti.md](04-agenti.md) | Pagine degli agenti (`/agenti/[id]`): il file di ruolo così com'è, navigazione dalla squadra e fra agenti | completata |
 | F5 | [05-mcp.md](05-mcp.md) | Server MCP (`packages/mcp`): ogni agente usabile come prompt e tool nei progetti, stdio locale; revisione di sicurezza e privacy | completata |
-| F6 | [06-rilievi.md](06-rilievi.md) | Rilievi aperti da F0 a F5: CI al push, regole comuni di privacy, lingua, hero e ritocchi del sito, dipendenze | in corso |
+| F6 | [06-rilievi.md](06-rilievi.md) | Rilievi aperti da F0 a F5: CI al push, regole comuni di privacy, lingua, hero e ritocchi del sito, dipendenze | completata |
 | F7 | — | Pubblicazione del sito e del pacchetto | da fare |
 
 Ordine: F0 → F7 in sequenza. I file di F3–F7 si scrivono all'apertura di ciascuna.

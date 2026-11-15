@@ -41,6 +41,8 @@ test("note legali: titolare, hosting e log, nessun cookie; raggiungibili dal foo
   await expect(main).toContainText("Giulio Simone Floresta");
   await expect(main).toContainText("Vercel");
   await expect(main).toContainText("indirizzo IP");
+  // Piano gratuito di Vercel: nessun DPA, e le note lo dicono (PRIV-PUB-01).
+  await expect(main).toContainText("non offre un accordo sul trattamento dei dati");
   await expect(main).toContainText("non usa cookie");
   expect(await context.cookies()).toEqual([]);
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();

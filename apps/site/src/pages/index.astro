@@ -1,0 +1,32 @@
+---
+// F0: verifica del collegamento con il catalogo. La landing vera arriva in F1.
+import { loadCatalog } from "@agentrica/catalog";
+
+const departments = loadCatalog();
+const total = departments.reduce((sum, d) => sum + d.agents.length, 0);
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agentrica</title>
+  </head>
+  <body>
+    <h1>Agentrica</h1>
+    <p>{departments.length} reparti, {total} agenti.</p>
+    {
+      departments.map((d) => (
+        <section>
+          <h2>{d.code} · {d.name}</h2>
+          <ul>
+            {d.agents.map((a) => (
+              <li>{a.id} · {a.star} — {a.role}</li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </body>
+</html>

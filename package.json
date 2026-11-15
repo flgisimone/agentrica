@@ -11,7 +11,8 @@
     "build": "npm run build -w @agentrica/site",
     "typecheck": "tsc -p packages/catalog && tsc -p packages/mcp && tsc -p . && npm run typecheck -w @agentrica/site",
     "lint": "eslint",
-    "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts apps/site/src/lib/*.test.ts",
+    "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts apps/site/src/lib/*.test.ts scripts/*.test.ts",
+    "stats": "node scripts/stats.ts",
     "verify": "npm run typecheck && npm run lint && npm test && npm run build",
     "verify:e2e": "playwright test"
   },

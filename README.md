@@ -55,7 +55,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F8 | Sezioni: simulazione di sviluppo e server MCP | completata |
 | F9 | Simboli: ritorno al tema scuro, un glifo per ogni stella al posto dei volti | completata |
 | F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | completata |
-| F11 | Statistiche: download npm da terminale | aperta |
+| F11 | Statistiche: download npm da terminale | completata |
 | F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | da aprire |
 | F13 | Prove e distribuzione: casi di prova degli agenti, registri MCP | da aprire |
 | F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost | da aprire |
@@ -71,6 +71,7 @@ Requisiti: Node (versione in `.nvmrc`) e npm.
 npm ci
 npm run dev       # il sito in locale
 npm run verify    # typecheck, lint, test, build: prima di ogni commit
+npm run stats     # download npm di @agentrica/mcp e stelle su GitHub
 ```
 
 ## Come si lavora

@@ -51,5 +51,5 @@
 
 ## Rilievi aperti
 
-- `npm audit` (sviluppo): minimatch con DoS moderato dentro typescript-eslint, solo strumenti locali; come in kitty-3d. P3: si riguarda al prossimo aggiornamento di typescript-eslint.
-- tokensave segnala che `.claude/` (56 subagent) non è indicizzato: sono Markdown, non codice. P3, nessuna azione.
+- `npm audit` (sviluppo): minimatch con DoS moderato dentro typescript-eslint, solo strumenti locali; come in kitty-3d. P3: si riguarda al prossimo aggiornamento di typescript-eslint. Chiuso qui: ripreso in F6.
+- tokensave segnala che `.claude/` (56 subagent) non è indicizzato: sono Markdown, non codice. P3, nessuna azione. Chiuso in F6 senza azione, per decisione dell'utente.

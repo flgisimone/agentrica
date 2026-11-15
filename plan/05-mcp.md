@@ -62,11 +62,11 @@
 
 ## Rilievi aperti
 
-- PRIV-MCP-04 (P2): le regole comuni di privacy e cybersecurity non limitano `conforme_verificato` al singolo controllo né escludono la certificazione di conformità di un progetto. Richiede una modifica di `agents/`: rimandato per scelta dell'utente.
-- PRIV-MCP-05 (P2): le regole comuni del reparto Software non vietano dati personali reali in fixture, seed, log e commit e non citano la privacy by design. Modifica di `agents/`: rimandato.
-- PRIV-MCP-06 (P3): manca una regola comune contro l'invio di dati del progetto a servizi esterni, con P0 segnalati subito all'utente. Modifica di `agents/`: rimandato.
-- SEC-ARCH-06 (P3): provare il permission model di Node (`--permission --allow-fs-read`) e, se regge, consigliarlo nel README.
-- PRIV-MCP-01 (P3): test che fallisce se il server scrive su stderr o su file durante il normale funzionamento.
-- Le regole comuni citano «il Chief» e la «Software Agency»: in un progetto altrui sono gli altri agenti di Agentrica, non persone del cliente. P3, da chiarire con i rilievi sopra.
-- I file di ruolo sono in italiano: per sviluppatori non italiani serve una decisione di prodotto (business). P3.
-- Dalle fasi precedenti: CI che non parte al push (P2); rilievi P3 di F1, F3 e F4.
+- PRIV-MCP-04 (P2): le regole comuni di privacy e cybersecurity non limitano `conforme_verificato` al singolo controllo né escludono la certificazione di conformità di un progetto. Richiede una modifica di `agents/`: rimandato per scelta dell'utente. Risolto in F6 (F6-02).
+- PRIV-MCP-05 (P2): le regole comuni del reparto Software non vietano dati personali reali in fixture, seed, log e commit e non citano la privacy by design. Modifica di `agents/`: rimandato. Risolto in F6 (F6-02).
+- PRIV-MCP-06 (P3): manca una regola comune contro l'invio di dati del progetto a servizi esterni, con P0 segnalati subito all'utente. Modifica di `agents/`: rimandato. Risolto in F6 (F6-02).
+- SEC-ARCH-06 (P3): provare il permission model di Node (`--permission --allow-fs-read`) e, se regge, consigliarlo nel README. Risolto in F6 (F6-05).
+- PRIV-MCP-01 (P3): test che fallisce se il server scrive su stderr o su file durante il normale funzionamento. Risolto in F6 (F6-06).
+- Le regole comuni citano «il Chief» e la «Software Agency»: in un progetto altrui sono gli altri agenti di Agentrica, non persone del cliente. P3, da chiarire con i rilievi sopra. Risolto in F6 (F6-02).
+- I file di ruolo sono in italiano: per sviluppatori non italiani serve una decisione di prodotto (business). P3. Chiuso in F6: restano in italiano, l'agente risponde nella lingua dell'utente.
+- Dalle fasi precedenti: CI che non parte al push (P2); rilievi P3 di F1, F3 e F4. Risolto in F6.

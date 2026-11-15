@@ -73,7 +73,7 @@
 
 ## Rilievi aperti
 
-- Il repository è privato: «Disponibile da un clone» vale solo per chi ha accesso. In F10 (pubblicazione) il repository diventa pubblico o i passi passano al pacchetto npm. P1 per F9.
+- Il repository è privato: «Disponibile da un clone» vale solo per chi ha accesso. In F10 (pubblicazione) il repository diventa pubblico o i passi passano al pacchetto npm. P1 per F9. Risolto in F10: il repository è pubblico.
 - Sul telefono il diagramma (8 nodi, circa 500 px) sta sopra il terminale: la simulazione si vede dopo uno scorrimento. Da compattare se la revisione con l'utente lo chiede. P3.
 - Le prime prove dopo un build vanno a volte in timeout sul primo `goto` (visto in `agenti.spec.ts` e `landing.spec.ts`); rilanciate passano tutte. Da guardare se si ripete in CI (che ha già un retry). P3.
 

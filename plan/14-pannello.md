@@ -123,4 +123,4 @@ Ruoli: UX Designer, UI Designer, UX Writer, Accessibility Specialist.
 
 - P3: «Agenti in uso» nella sessione vera non è stato guardato a occhio dopo il prompt `aisa-02` (coperto dal test con un client MCP vero).
 - P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi.
-- P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`).
+- P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`). Risolto in `fix/f14-rilievi`: modificati e nuovi contati a parte.

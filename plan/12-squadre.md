@@ -64,5 +64,5 @@ L'utente ha confermato tutte e quattro le proposte così come sono scritte; la v
 
 ## Rilievi aperti
 
-- **F12-07** Rilascio 0.2.0 (CONVENTIONS §13.8): PR `develop` → `main`, tag `v0.2.0`, pubblicazione dalla CI con provenance. Fino al rilascio README e sito in `develop` citano una versione non ancora su npm.
+- **F12-07** Rilascio 0.2.0 (CONVENTIONS §13.8): PR `develop` → `main`, tag `v0.2.0`, pubblicazione dalla CI con provenance. Fino al rilascio README e sito in `develop` citano una versione non ancora su npm. Risolto: 0.2.0 rilasciata su npm.
 - P3: nelle squadre il campo `director` di un reparto filtrato può indicare un agente fuori squadra; l'MCP non lo usa, ma un uso futuro dovrà tenerne conto.

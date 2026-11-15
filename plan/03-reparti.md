@@ -59,7 +59,7 @@
 
 ## Rilievi aperti
 
-- Squadra a 1440 px: con 9 o 11 specialisti l'ultima riga ha una scheda sola (AIWDA, AIPCA). P3.
-- F3-07, rilievi P3 da F1 (hero vuota a destra, griglia 3 + 2, riga sopra il titolo a 360 px): non affrontati, restano per F4.
-- CI che non parte al push (da F1). P2.
-- agentic-starter: `fix/readme-agenzie` è su GitHub, non ancora unito a `main` dello starter.
+- Squadra a 1440 px: con 9 o 11 specialisti l'ultima riga ha una scheda sola (AIWDA, AIPCA). P3. Risolto in F6 (F6-08).
+- F3-07, rilievi P3 da F1 (hero vuota a destra, griglia 3 + 2, riga sopra il titolo a 360 px): non affrontati, restano per F4. Risolto in F6 (F6-07, F6-08).
+- CI che non parte al push (da F1). P2. Risolto in F6 (F6-01).
+- agentic-starter: `fix/readme-agenzie` è su GitHub, non ancora unito a `main` dello starter. Risolto in F6 (F6-03).

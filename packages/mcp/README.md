@@ -117,8 +117,8 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani di agentic-starter, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 
 - `plan/README.md` con una sezione `## Fasi` e una tabella `| Fase | File | Contenuto | Stato |`, il file come link (`[14-pannello.md](14-pannello.md)`). La fase aperta è la prima con uno stato diverso da `completata` e `sospesa`.
-- Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …`, `## Backlog` con la tabella `| # | Task | Priorità |`, `## Criteri di accettazione` e `## Fatto` come elenchi; un task è fatto quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` è un elenco, con la priorità (`P0`–`P3`) nel testo.
-- `audit/<cartella>/<file>.json` con `agente` (es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo.
+- Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …`, `## Backlog` con la tabella `| # | Task | Priorità |`, `## Criteri di accettazione` e `## Fatto` come elenchi; un task è fatto quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` è un elenco, con la priorità (`P0`–`P3`) nel testo; una voce che dice «risolto» o «chiuso» (es. «Risolto in F6.») resta nel piano ma il pannello non la mostra.
+- `audit/<cartella>/<file>.json` con `agente` (es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo; un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
 
 ## Messi alla prova
 

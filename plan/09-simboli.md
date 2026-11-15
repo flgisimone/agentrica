@@ -76,6 +76,6 @@
 ## Rilievi aperti
 
 - Il cerchio di cornice del glifo (opacità 0,3) è sotto 3:1: è decorativo e non porta informazione. P3.
-- Dal rilievo di F8 resta il repository privato: in F10 diventa pubblico o i passi passano al pacchetto npm. P1 per F10.
+- Dal rilievo di F8 resta il repository privato: in F10 diventa pubblico o i passi passano al pacchetto npm. P1 per F10. Risolto in F10: il repository è pubblico.
 
 Il seguito è in [10-pubblicazione.md](10-pubblicazione.md).

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Agentrica · pannello</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-row">
+        <h1 class="brand">Agentrica <span aria-hidden="true">·</span> pannello</h1>
+        <p class="meta" id="project">Caricamento…</p>
+        <p class="link" id="link" role="status">Collegamento in corso…</p>
+      </div>
+    </header>
+    <main class="wrap">
+      <p class="problems" id="problems" hidden></p>
+      <div class="live">
+        <section aria-labelledby="h-decide" class="card">
+          <h2 id="h-decide">Da decidere</h2>
+          <div id="announce" class="sr-only" aria-live="polite"></div>
+          <div id="questions"></div>
+        </section>
+        <section aria-labelledby="h-agents" class="card">
+          <h2 id="h-agents">Agenti in uso</h2>
+          <div id="activity"></div>
+        </section>
+      </div>
+      <section aria-labelledby="h-phases" class="card">
+        <h2 id="h-phases">Fasi</h2>
+        <div id="open-phase"></div>
+        <div id="phases"></div>
+      </section>
+      <section aria-labelledby="h-findings" class="card">
+        <h2 id="h-findings">Rilievi</h2>
+        <div id="filters" class="filters" role="group" aria-label="Filtra per reparto"></div>
+        <div id="findings"></div>
+      </section>
+    </main>
+  </body>
+</html>

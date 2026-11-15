@@ -3,7 +3,7 @@
 import type { Agent, Department, Section } from "../../catalog/src/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.2.1";
+export const VERSION = "0.3.0";
 
 export interface Found {
   department: Department;

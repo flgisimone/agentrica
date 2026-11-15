@@ -1,0 +1,258 @@
+// Pannello locale: server HTTP nello stesso processo del server MCP, attivo solo con --panel.
+// Chi raggiunge la pagina risponde alle domande dell'agente, quindi le difese sono strette: ascolto solo su 127.0.0.1
+// con porta casuale; token casuale nell'URL aperto dal tool, scambiato con un cookie HttpOnly e SameSite=Strict;
+// Host fisso contro il DNS rebinding; Origin fisso e JSON obbligatorio per le POST; CSP 'self' e nessuna risorsa
+// esterna. Le rotte sono un elenco chiuso: nessun percorso dell'URL diventa un percorso di file.
+import { spawn } from "node:child_process";
+import { randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import type { AddressInfo } from "node:net";
+import { join } from "node:path";
+import { readProject } from "./project.ts";
+
+export interface Choice {
+  label: string;
+  description: string;
+}
+
+export interface QuestionInput {
+  header: string;
+  question: string;
+  options: Choice[];
+  multiple: boolean;
+}
+
+export interface Question extends QuestionInput {
+  id: string;
+  askedAt: string;
+}
+
+export interface Answer {
+  choices: string[];
+  note: string;
+}
+
+export interface Activity {
+  time: string;
+  id: string;
+  codeName: string;
+  role: string;
+  department: string;
+  task: string;
+}
+
+export interface Panel {
+  /** URL con il token: apre la sessione del browser. */
+  url: string;
+  /** Mostra la domanda nella pagina e aspetta la risposta; con `signal` interrotto la domanda sparisce. */
+  ask(question: QuestionInput, signal: AbortSignal): Promise<Answer>;
+  record(activity: Omit<Activity, "time">): void;
+  hasViewers(): boolean;
+  close(): Promise<void>;
+}
+
+const MAX_BODY_BYTES = 16_000;
+const MAX_NOTE = 2000;
+const MAX_ACTIVITY = 20;
+const KEEPALIVE_MS = 25_000;
+
+const SECURITY_HEADERS = {
+  "Content-Security-Policy": "default-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "no-referrer",
+  "Cache-Control": "no-store",
+  "Cross-Origin-Resource-Policy": "same-origin",
+} as const;
+
+const PAGE_FILES = {
+  "/": ["index.html", "text/html; charset=utf-8"],
+  "/app.js": ["app.js", "text/javascript; charset=utf-8"],
+  "/style.css": ["style.css", "text/css; charset=utf-8"],
+} as const;
+
+function sameSecret(given: string | undefined, token: string): boolean {
+  if (!given) return false;
+  const a = Buffer.from(given);
+  const b = Buffer.from(token);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+function cookie(req: IncomingMessage, name: string): string | undefined {
+  for (const part of (req.headers.cookie ?? "").split(";")) {
+    const [key, ...value] = part.trim().split("=");
+    if (key === name) return value.join("=");
+  }
+  return undefined;
+}
+
+function send(res: ServerResponse, status: number, body = "", type = "text/plain; charset=utf-8") {
+  res.writeHead(status, { ...SECURITY_HEADERS, "Content-Type": type });
+  res.end(body);
+}
+
+function readBody(req: IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let size = 0;
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: Buffer) => {
+      size += chunk.length;
+      if (size > MAX_BODY_BYTES) {
+        reject(new Error("corpo troppo grande"));
+        req.destroy();
+      } else chunks.push(chunk);
+    });
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+    req.on("error", reject);
+  });
+}
+
+/** Controlla una risposta della pagina contro la domanda: etichette esistenti, una sola se la scelta è singola. */
+export function parseAnswer(question: QuestionInput, body: unknown): Answer | null {
+  if (typeof body !== "object" || body === null) return null;
+  const { choices, note = "" } = body as { choices?: unknown; note?: unknown };
+  if (!Array.isArray(choices) || typeof note !== "string" || note.length > MAX_NOTE) return null;
+  const labels = new Set(question.options.map((o) => o.label));
+  const picked = [...new Set(choices)];
+  if (!picked.every((c): c is string => typeof c === "string" && labels.has(c))) return null;
+  if (picked.length === 0 && note.trim() === "") return null;
+  if (!question.multiple && picked.length > 1) return null;
+  return { choices: picked, note: note.trim() };
+}
+
+/** Apre l'URL nel browser predefinito; se non riesce (es. sessione remota) l'URL resta nella risposta del tool. */
+export function openBrowser(url: string): void {
+  const [command, args] =
+    process.platform === "darwin" ? ["open", [url]] : process.platform === "win32" ? ["cmd", ["/c", "start", "", url]] : ["xdg-open", [url]];
+  try {
+    const child = spawn(command, args, { stdio: "ignore", detached: true });
+    child.on("error", () => {});
+    child.unref();
+  } catch {
+    // Nessun browser: l'utente apre l'URL a mano.
+  }
+}
+
+export async function startPanel(root: string, pageDir = join(import.meta.dirname, "page")): Promise<Panel> {
+  const token = randomBytes(32).toString("hex");
+  const pages = Object.fromEntries(Object.entries(PAGE_FILES).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
+  const pending = new Map<string, { question: Question; resolve: (answer: Answer) => void }>();
+  const activity: Activity[] = [];
+  const viewers = new Set<ServerResponse>();
+
+  const changed = () => {
+    for (const viewer of viewers) viewer.write("event: change\ndata: {}\n\n");
+  };
+
+  const server = createServer((req, res) => {
+    // Un errore in una richiesta non deve fermare il processo, che è anche il server MCP della sessione.
+    handle(req, res).catch(() => {
+      if (!res.headersSent) send(res, 500, "Errore del pannello.");
+      else res.end();
+    });
+  });
+
+  async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    const port = (server.address() as AddressInfo).port;
+    const origin = `http://127.0.0.1:${port}`;
+    if (req.headers.host !== `127.0.0.1:${port}`) return send(res, 421, "Host non valido.");
+    const url = new URL(req.url ?? "/", origin);
+    const cookieName = `agentrica_panel_${port}`;
+
+    if (req.method === "GET" && url.pathname === "/" && url.searchParams.has("t")) {
+      if (!sameSecret(url.searchParams.get("t") ?? undefined, token)) return send(res, 403, "Token non valido.");
+      // Il token esce dalla barra degli indirizzi e dalla cronologia: da qui vale il cookie.
+      res.writeHead(303, { ...SECURITY_HEADERS, Location: "/", "Set-Cookie": `${cookieName}=${token}; HttpOnly; SameSite=Strict; Path=/` });
+      res.end();
+      return;
+    }
+    if (!sameSecret(cookie(req, cookieName), token)) {
+      return send(res, 403, "Apri il pannello dall'URL che dà il tool open_panel dell'agente.");
+    }
+
+    if (req.method === "GET" && url.pathname in pages) {
+      const page = pages[url.pathname]!;
+      return send(res, 200, page.body.toString("utf8"), page.type);
+    }
+    if (req.method === "GET" && url.pathname === "/api/state") {
+      const project = await readProject(root);
+      const questions = [...pending.values()].map((p) => p.question);
+      return send(res, 200, JSON.stringify({ project, questions, activity }), "application/json; charset=utf-8");
+    }
+    if (req.method === "GET" && url.pathname === "/api/events") {
+      res.writeHead(200, { ...SECURITY_HEADERS, "Content-Type": "text/event-stream; charset=utf-8", Connection: "keep-alive" });
+      res.write("retry: 3000\n\n");
+      viewers.add(res);
+      req.on("close", () => viewers.delete(res));
+      return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/answer") {
+      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      let body: { id?: unknown };
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch {
+        return send(res, 400, "Richiesta non valida.");
+      }
+      const entry = typeof body?.id === "string" ? pending.get(body.id) : undefined;
+      if (!entry) return send(res, 404, "La domanda non è più in attesa.");
+      const answer = parseAnswer(entry.question, body);
+      if (!answer) return send(res, 400, "Risposta non valida.");
+      entry.resolve(answer);
+      res.writeHead(204, SECURITY_HEADERS);
+      res.end();
+      return;
+    }
+    return send(res, 404, "Non trovato.");
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const port = (server.address() as AddressInfo).port;
+  const keepalive = setInterval(() => viewers.forEach((viewer) => viewer.write(": ping\n\n")), KEEPALIVE_MS);
+  keepalive.unref();
+  server.unref();
+
+  return {
+    url: `http://127.0.0.1:${port}/?t=${token}`,
+    ask(input, signal) {
+      return new Promise((resolve, reject) => {
+        const id = randomUUID();
+        const done = () => {
+          pending.delete(id);
+          signal.removeEventListener("abort", abort);
+          changed();
+        };
+        const abort = () => {
+          done();
+          reject(signal.reason);
+        };
+        if (signal.aborted) return reject(signal.reason);
+        signal.addEventListener("abort", abort);
+        pending.set(id, {
+          question: { ...input, id, askedAt: new Date().toISOString() },
+          resolve: (answer) => {
+            done();
+            resolve(answer);
+          },
+        });
+        changed();
+      });
+    },
+    record(entry) {
+      activity.unshift({ ...entry, time: new Date().toISOString() });
+      activity.length = Math.min(activity.length, MAX_ACTIVITY);
+      changed();
+    },
+    hasViewers: () => viewers.size > 0,
+    close() {
+      clearInterval(keepalive);
+      for (const viewer of viewers) viewer.end();
+      return new Promise((resolve) => server.close(() => resolve()));
+    },
+  };
+}

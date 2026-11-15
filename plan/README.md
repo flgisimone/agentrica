@@ -41,7 +41,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Pubblicazione | Repository pubblico; `@agentrica/mcp` compilato con tsc, catalogo e `agents/` inclusi, SDK e zod a versione esatta, Node ≥ 22, `npx -y @agentrica/mcp@<versione>`; rilascio da tag `v*` su `main` con trusted publishing e provenance; sito su Vercel con dominio `*.vercel.app`, CSP e HSTS, pagina `/note-legali` | Scelta dell'utente (2026-11-15, F10) |
 | Autenticazione | Se il sito avrà account (F15, sospesa): accesso con Google più secondo fattore TOTP obbligatorio da app authenticator, attivato con QR code generato sul server; codici di recupero. Dettagli in [15-area-personale.md](15-area-personale.md) | Scelta dell'utente (2026-11-15) |
 | Monitoraggio | Download npm (e stelle di GitHub) con `npm run stats` da terminale (F11); analytics delle pagine e conteggio delle squadre rinviati; nessuna telemetria nell'MCP. Il pannello `/admin` aggregato resta legato all'area personale (F15, sospesa) | Scelta dell'utente (2026-11-15, revisione del valore) |
-| Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Strada (ponte nell'MCP o Agent SDK) da scegliere all'apertura | Scelta dell'utente (2026-11-15, revisione del valore) |
+| Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Da 0.3.0: flag `--panel` del server MCP (ponte nell'MCP, niente Agent SDK), tool `open_panel` e `ask_user`, formato di `plan/` e `audit/` di oggi documentato nel README del pacchetto | Scelta dell'utente (2026-11-15, revisione del valore e apertura di F14) |
 | Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, F15 sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
@@ -67,7 +67,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F11 | [11-analytics.md](11-analytics.md) | Statistiche: `npm run stats` con i download npm; analytics delle pagine rinviati | completata |
 | F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | completata |
 | F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | completata |
-| F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | da aprire |
+| F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | completata |
 | F15 | [15-area-personale.md](15-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 
 Ordine: F0 → F14 in sequenza; F15 è sospesa. I file di F12–F15 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

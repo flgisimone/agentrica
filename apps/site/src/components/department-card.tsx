@@ -1,9 +1,10 @@
+import Link from "next/link";
 import type { Department } from "@agentrica/catalog";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-function AgentLine({ id, star, role }: { id: string; star: string; role: string }) {
+export function AgentLine({ id, star, role }: { id: string; star: string; role: string }) {
   return (
     <p>
       <span className="block font-mono font-semibold tracking-wide text-dept">
@@ -29,6 +30,14 @@ export function DepartmentCard({ department: d }: { department: Department }) {
         </header>
 
         <p className="text-muted-foreground">{d.summary}</p>
+
+        <Link
+          href={`/reparti/${d.slug}`}
+          className="inline-flex min-h-11 items-center gap-1.5 self-start font-semibold text-dept underline-offset-4 hover:underline"
+        >
+          Vai al reparto {d.code}
+          <ArrowRightIcon aria-hidden className="size-4" />
+        </Link>
 
         <div className="rounded-lg bg-muted px-4 py-3">
           <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>

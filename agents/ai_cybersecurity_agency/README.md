@@ -1,8 +1,8 @@
 # AI Cybersecurity Agency
 
-Pacchetto composto da 12 profili di agenti, e regole comuni.
+12 agenti con approccio defensive-first: proteggono sistemi, dati, persone e continuità operativa con governance, architettura, sviluppo sicuro, gestione delle vulnerabilità, monitoraggio, risposta agli incidenti, IAM, sicurezza cloud e di rete, audit e formazione.
 
-## I 12 agenti
+## Agenti
 1. Chief Information Security Officer
 2. Senior Security Architect
 3. Senior Application Security Engineer
@@ -21,8 +21,15 @@ Pacchetto composto da 12 profili di agenti, e regole comuni.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
 - I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/cybersecurity/` e rimandano a questi file.
 
-## Workflow suggerito
-Il CISO definisce obiettivi e priorità; Security Architect definisce i controlli; specialisti AppSec, Cloud, Network e IAM esaminano i rispettivi domini; SOC e Incident Response supportano detection e incidenti; Vulnerability Management consolida i rilievi; Risk & Compliance verifica governance; il Penetration Testing Specialist opera solo con rules of engagement approvate; Awareness prepara la formazione.
+## Flusso di lavoro
+1. Il CISO definisce obiettivi e priorità.
+2. Security Architect definisce i controlli.
+3. Gli specialisti AppSec, Cloud, Network e IAM esaminano i rispettivi domini.
+4. SOC e Incident Response supportano detection e incidenti.
+5. Vulnerability Management consolida i rilievi.
+6. Risk & Compliance verifica la governance.
+7. Il Penetration Testing Specialist opera solo con rules of engagement approvate.
+8. Awareness prepara la formazione.
 
 ## Collaborazione con le altre agenzie
 - Software: secure SDLC, code review, threat model, vulnerabilità e remediation.

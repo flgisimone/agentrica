@@ -31,7 +31,7 @@ test("i link della hero portano alle sezioni", async ({ page }) => {
   await page.getByRole("link", { name: "Scopri i reparti" }).click();
   await expect(page).toHaveURL(/#reparti$/);
   await page.getByRole("link", { name: "AISA", exact: true }).click();
-  await expect(page).toHaveURL(/#reparto-AISA$/);
+  await expect(page).toHaveURL(/\/reparti\/aisa$/);
 });
 
 test("nessuno scorrimento orizzontale", async ({ page }) => {

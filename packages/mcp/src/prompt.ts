@@ -3,7 +3,7 @@
 import type { Agent, Department, Section } from "../../catalog/src/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 export interface Found {
   department: Department;
@@ -31,11 +31,37 @@ export function agentSummary({ department, agent }: Found): string {
   return `${agent.role}, ${position} del reparto ${department.code} (${department.name}).`;
 }
 
+/**
+ * La squadra di --agents: id di agenti e sigle di reparti separati da virgole, senza distinguere maiuscole
+ * («aisa,aiwda-08»). Restituisce il catalogo ridotto alla squadra, nell'ordine del catalogo e senza doppioni;
+ * senza elenco, tutto il catalogo. Un nome sconosciuto o un elenco vuoto è un errore che lo nomina.
+ */
+export function selectSquad(catalog: readonly Department[], spec?: string): Department[] {
+  if (spec === undefined) return [...catalog];
+  const names = spec.split(",").map((name) => name.trim()).filter((name) => name !== "");
+  if (names.length === 0) throw new Error("--agents è vuoto: indica id di agenti o sigle di reparti, es. --agents aisa,aiwda-08");
+  const wanted = new Set<string>();
+  const unknown: string[] = [];
+  for (const name of names) {
+    const department = catalog.find((d) => d.code === name.toUpperCase());
+    const found = department ? undefined : findAgent(catalog, name);
+    if (department) for (const agent of department.agents) wanted.add(agent.id);
+    else if (found) wanted.add(found.agent.id);
+    else unknown.push(name);
+  }
+  // Fra virgolette (JSON.stringify), così nei log del client si vedono anche spazi e caratteri strani.
+  if (unknown.length > 0) throw new Error(`agente o reparto sconosciuto in --agents: ${unknown.map((n) => JSON.stringify(n)).join(", ")}`);
+  return catalog
+    .map((d) => ({ ...d, agents: d.agents.filter((a) => wanted.has(a.id)) }))
+    .filter((d) => d.agents.length > 0);
+}
+
 export function agentText({ department, agent }: Found, task?: string): string {
   const parts = [
     `# ${codeName(agent)} — ${agent.role}`,
     `Sei ${codeName(agent)}, un agente IA di Agentrica: ${agentSummary({ department, agent })} ` +
       "Lavori nel progetto dell'utente. Seguono le regole comuni del tuo reparto e il tuo file di ruolo: applicale al progetto così com'è, senza presumere stack, comandi o file che non hai verificato. " +
+      "Se il progetto è vuoto o manca ciò che il tuo ruolo deve esaminare, dillo e proponi i primi passi (obiettivo, stack, struttura) da confermare con l'utente; non inventare rilievi né scegliere lo stack da solo. " +
       "Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente.",
     "## Regole comuni del reparto",
     ...block(department.rules.intro, department.rules.sections),

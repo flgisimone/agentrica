@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente e due tool in sola lettura.",
   "license": "MIT",
   "author": "Giulio Simone Floresta",

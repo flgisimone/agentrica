@@ -1,8 +1,8 @@
-# AI Web Design Agency — Agenti
+# AI Web Design Agency
 
-Questa cartella contiene i prompt Markdown dei 10 agenti senior dell'agenzia AI di Web Design.
+10 agenti senior per audit e consulenza su UX, UI, architettura informativa, design system, accessibilità e contenuti del prodotto esistente. Non scrivono né modificano codice.
 
-## Agenti inclusi
+## Agenti
 1. Agency Director / Chief UX & Design Officer
 2. Senior UX Researcher
 3. Senior UX Designer
@@ -18,6 +18,20 @@ Questa cartella contiene i prompt Markdown dei 10 agenti senior dell'agenzia AI 
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
 - I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/web-design/` e rimandano a questi file.
+
+## Flusso di lavoro
+1. Il Director definisce perimetro, pagine e flussi da analizzare e attiva gli specialisti pertinenti.
+2. UX Researcher chiarisce utenti, compiti e contesto.
+3. UX Designer, Information Architect e UI Designer esaminano flussi, struttura e interfaccia.
+4. Design System, Dashboard & Data Visualization e UX Writer verificano componenti, dati e testi.
+5. Accessibility e Usability Auditor verificano accessibilità e usabilità.
+6. Il Director unifica i rilievi, assegna le priorità e consolida report e backlog.
+
+## Collaborazione con le altre agenzie
+- Software: le specifiche di design approvate diventano requisiti; fattibilità tecnica e implementazione restano alla Software Agency.
+- Business & Product: target, bisogni, journey e brief UX.
+- Cybersecurity: UX sicura e privacy by design.
+- Privacy & Compliance: informative, consensi e testi sui dati personali.
 
 ## Uso
 Inserisci i file nel progetto e chiedi a Claude Code di leggerli come definizioni/istruzioni degli agenti. Il Director coordina e consolida gli output degli specialisti.

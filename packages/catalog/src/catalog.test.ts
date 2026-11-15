@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { cpSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -32,6 +32,28 @@ test("il direttore è il file 01", () => {
   for (const d of catalog) assert.equal(d.director.number, 1, d.code);
   assert.equal(catalog.find((d) => d.code === "AISA")?.agents[1]?.star, "ALTAIR");
   assert.equal(catalog.find((d) => d.code === "AIBPD")?.director.star, "ALDERAMIN");
+});
+
+test("ogni reparto ha missione, flusso, collaborazione e regole comuni dai suoi file", () => {
+  for (const d of catalog) {
+    assert.equal(d.slug, d.code.toLowerCase());
+    assert.ok(d.mission.length > 0 && !d.mission.startsWith("#"), d.code);
+    assert.match(d.workflow, /^1\. /, d.code);
+    assert.match(d.collaboration, /^- /, d.code);
+    assert.ok(d.rules.sections.length > 0, d.code);
+  }
+});
+
+test("un README senza flusso di lavoro fa fallire il caricamento", () => {
+  const copy = mkdtempSync(join(tmpdir(), "agentrica-"));
+  try {
+    cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
+    const readme = join(copy, "agents", DEPARTMENTS[4]!.folder, "README.md");
+    writeFileSync(readme, readFileSync(readme, "utf8").replace("## Flusso di lavoro", "## Workflow"));
+    assert.throws(() => loadCatalog(join(copy, "agents")), /AIWDA: README.md senza «## Flusso di lavoro»/);
+  } finally {
+    rmSync(copy, { recursive: true, force: true });
+  }
 });
 
 test("un file di ruolo senza nome in codice fa fallire il caricamento", () => {

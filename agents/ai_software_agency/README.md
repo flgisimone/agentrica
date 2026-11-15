@@ -1,6 +1,6 @@
-# AI Software Agency — Agenti
+# AI Software Agency
 
-Pacchetto con 12 ruoli senior per analisi, progettazione, sviluppo, test, sicurezza e manutenzione di un software esistente.
+12 agenti senior per analisi, progettazione, sviluppo, test, sicurezza e manutenzione di un software esistente. È l'unica agenzia che modifica il codice.
 
 ## Agenti
 1. Software Agency Director / CTO — `01-software-agency-director-cto.md`
@@ -21,12 +21,7 @@ Pacchetto con 12 ruoli senior per analisi, progettazione, sviluppo, test, sicure
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
 - I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/software/` e rimandano a questi file.
 
-## Uso con Claude Code
-Estrai la cartella nel repository o nella directory di progetto. Chiedi a Claude Code di leggere questo README e i file degli agenti prima di assegnare il lavoro. Integra queste istruzioni con le convenzioni e i permessi effettivi del repository.
-
-I file Markdown definiscono ruoli e comportamenti: non creano da soli subagent eseguibili. L'attivazione dei ruoli dipende dalla configurazione e dalle funzionalità di Claude Code.
-
-## Flusso suggerito
+## Flusso di lavoro
 1. Director/CTO analizza la richiesta e coordina il lavoro.
 2. Architect e Functional Analyst definiscono soluzione e criteri di accettazione quando necessario.
 3. Gli sviluppatori implementano le parti assegnate.
@@ -34,5 +29,13 @@ I file Markdown definiscono ruoli e comportamenti: non creano da soli subagent e
 5. Code Reviewer esamina il diff.
 6. Director/CTO riepiloga esito e attività residue.
 
-## Rapporto con la Web Design Agency
-La Software Agency si occupa di fattibilità tecnica e implementazione. La Web Design Agency si occupa di UX/UI, design system, accessibilità e contenuti. Le specifiche di design approvate possono diventare requisiti per il team software.
+## Collaborazione con le altre agenzie
+- Web Design: la Software Agency si occupa di fattibilità tecnica e implementazione, la Web Design Agency di UX/UI, design system, accessibilità e contenuti. Le specifiche di design approvate possono diventare requisiti per il team software.
+- Business & Product: requisiti, priorità, criteri di accettazione, business case e vincoli.
+- Cybersecurity: secure SDLC, code review, threat model, vulnerabilità e remediation.
+- Privacy & Compliance: misure tecniche sui dati personali; le correzioni si implementano previa approvazione umana.
+
+## Uso con Claude Code
+Estrai la cartella nel repository o nella directory di progetto. Chiedi a Claude Code di leggere questo README e i file degli agenti prima di assegnare il lavoro. Integra queste istruzioni con le convenzioni e i permessi effettivi del repository.
+
+I file Markdown definiscono ruoli e comportamenti: non creano da soli subagent eseguibili. L'attivazione dei ruoli dipende dalla configurazione e dalle funzionalità di Claude Code.

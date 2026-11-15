@@ -43,7 +43,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F0 | [00-base.md](00-base.md) | Monorepo, catalogo da `agents/` con nomi in codice, sito Astro vuoto, verify, CI, tokensave | completata |
 | F1 | [01-landing.md](01-landing.md) | Landing di Agentrica: chi siamo, i cinque reparti, come lavoriamo, verso l'MCP | completata |
 | F2 | [02-next.md](02-next.md) | Il sito passa da Astro a Next.js con Tailwind e shadcn: stessa landing, stesse prove; AIBPD-01 diventa ALDERAMIN | completata |
-| F3 | — | Pagine dei reparti (`/reparti/[sigla]`): missione, regole comuni, flusso di lavoro, agenti del reparto | da fare |
+| F3 | [03-reparti.md](03-reparti.md) | Pagine dei reparti (`/reparti/[sigla]`): missione, regole comuni, flusso di lavoro, agenti del reparto; README dei reparti in forma comune | completata |
 | F4 | — | Pagine degli agenti (`/agenti/[id]`): biografia ricavata dal file di ruolo | da fare |
 | F5 | — | Server MCP (`packages/mcp`): ogni agente usabile come prompt nei progetti; agenzie Privacy e Cybersecurity | da fare |
 | F6 | — | Pubblicazione del sito e del pacchetto | da fare |

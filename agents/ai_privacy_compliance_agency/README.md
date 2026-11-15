@@ -1,6 +1,6 @@
 # AI Privacy & Compliance Agency
 
-Team di 10 agenti per audit e consulenza su GDPR, privacy e compliance del prodotto.
+10 agenti per audit e consulenza su GDPR, privacy e compliance del prodotto.
 
 ## Agenti
 1. Chief Privacy & Compliance Officer
@@ -27,6 +27,12 @@ Team di 10 agenti per audit e consulenza su GDPR, privacy e compliance del prodo
 5. Rights e Breach verificano processi operativi.
 6. Auditor verifica indipendentemente evidenze e conclusioni.
 7. Il Chief consolida il GDPR Compliance Master Report.
+
+## Collaborazione con le altre agenzie
+- Software: le correzioni tecniche spettano alla Software Agency, previa approvazione umana.
+- Business & Product: finalità, flussi di dati, categorie di dati, fornitori e modelli di business.
+- Cybersecurity: breach, DPIA, misure di sicurezza, retention e fornitori.
+- Web Design: informative, consensi e privacy by design nell'interfaccia.
 
 ## GDPR Compliance Master Report
 Deve includere perimetro e data audit, mappa trattamenti/flussi, matrice requisiti-evidenze-stato, registro rilievi e priorità, rischi residui, aree non verificabili, piano di remediation, responsabili suggeriti, criteri di chiusura e limiti dell'audit.

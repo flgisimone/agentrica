@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { loadCatalog } from "@agentrica/catalog";
 import type { Metadata } from "next";
 import { DepartmentCard } from "@/components/department-card";
+import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,13 +72,13 @@ export default function Home() {
         <ul aria-label="I reparti" className="mt-12 flex flex-wrap gap-2">
           {departments.map((d) => (
             <li key={d.code} data-dept={d.code}>
-              <a
-                href={`#reparto-${d.code}`}
+              <Link
+                href={`/reparti/${d.slug}`}
                 className="inline-flex min-h-11 items-center gap-2 rounded-full border px-4 font-mono text-sm font-bold text-dept no-underline hover:border-dept"
               >
                 <span aria-hidden className="size-2 rounded-full bg-dept" />
                 {d.code}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -153,22 +155,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="mt-8 border-t py-12">
-        <div className="wrap grid gap-3">
-          <p className="font-extrabold tracking-tight">Agentrica</p>
-          <p className="max-w-3xl text-[0.9375rem] text-muted-foreground">
-            Agentrica è una società fittizia: i suoi agenti sono modelli di IA guidati da file di ruolo. Nessuna
-            persona, cliente o risultato è reale.
-          </p>
-          <p className="max-w-3xl text-[0.9375rem] text-muted-foreground">
-            Il metodo con cui lavora è aperto:{" "}
-            <a href="https://github.com/flgisimone/agentic-starter" className="underline">
-              agentic-starter su GitHub
-            </a>
-            .
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

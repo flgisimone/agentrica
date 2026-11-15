@@ -45,7 +45,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F0 | Monorepo, catalogo da `agents/`, sito Astro di base, controlli e CI | completata |
 | F1 | Landing di Agentrica | completata |
 | F2 | Il sito passa da Astro a Next.js con Tailwind e shadcn | completata |
-| F3 | Pagine dei reparti | da fare |
+| F3 | Pagine dei reparti | completata |
 | F4 | Pagine degli agenti con biografia | da fare |
 | F5 | Server MCP | da fare |
 | F6 | Pubblicazione | da fare |

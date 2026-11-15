@@ -26,9 +26,22 @@ export interface Agent {
 }
 
 export interface Department extends Omit<DepartmentInfo, "stars"> {
+  /** Sigla in minuscolo, per l'indirizzo della pagina: es. «aisa». */
+  slug: string;
+  /** Introduzione del README. */
+  mission: string;
+  /** «## Flusso di lavoro» del README, in Markdown. */
+  workflow: string;
+  /** «## Collaborazione con le altre agenzie» del README, in Markdown. */
+  collaboration: string;
+  /** 00-common-rules.md: introduzione e sezioni. */
+  rules: { intro: string; sections: Section[] };
   agents: Agent[];
   director: Agent;
 }
+
+const WORKFLOW = "Flusso di lavoro";
+const COLLABORATION = "Collaborazione con le altre agenzie";
 
 const ROLE_FILE = /^(\d{2})-([a-z0-9-]+)\.md$/;
 
@@ -82,6 +95,23 @@ function loadDepartment(agentsDir: string, info: DepartmentInfo): Department {
     };
   });
 
+  const readme = parseRole(readFileSync(join(folder, "README.md"), "utf8"));
+  const readmeSection = (heading: string): string => {
+    const body = readme.sections.find((s) => s.heading === heading)?.body;
+    if (!body) throw new Error(`${info.code}: README.md senza «## ${heading}»`);
+    return body;
+  };
+  const { intro, sections } = parseRole(readFileSync(join(folder, "00-common-rules.md"), "utf8"));
+
   const { stars: _stars, ...rest } = info;
-  return { ...rest, agents, director: agents[0]! };
+  return {
+    ...rest,
+    slug: info.code.toLowerCase(),
+    mission: readme.intro,
+    workflow: readmeSection(WORKFLOW),
+    collaboration: readmeSection(COLLABORATION),
+    rules: { intro, sections },
+    agents,
+    director: agents[0]!,
+  };
 }

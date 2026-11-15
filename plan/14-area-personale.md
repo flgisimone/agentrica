@@ -1,8 +1,8 @@
-# F13 — Area personale
+# F14 — Area personale
 
 **Obiettivo**: account per gli utenti di Agentrica con accesso sicuro (Google più secondo fattore) e un pannello del titolare con numeri aggregati. Lo scopo dell'area per gli utenti si decide all'apertura, con dati alla mano.
 
-> **Stato: da aprire** (dopo F12, solo con un obiettivo misurabile). Requisiti di accesso e monitoraggio decisi dall'utente il 2026-11-15.
+> **Stato: da aprire** (dopo F13, solo con un obiettivo misurabile). Requisiti di accesso e monitoraggio decisi dall'utente il 2026-11-15.
 
 **Agenzie**: business (Product Manager, Business Analyst) per scopo e criteri di successo; privacy (GDPR Specialist, Data Subject Rights, Vendor Compliance, Legal Specialist) prima del design; cybersecurity (IAM Engineer, AppSec, Cloud Security); design (UX Designer, UX Writer, Accessibility); software (Architect, Database Engineer, Fullstack, QA, Security, Code Reviewer).
 

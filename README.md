@@ -57,7 +57,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F10 | Pubblicazione: pacchetto npm, CI di release, header di sicurezza, note legali | completata |
 | F11 | Analytics in casa: pagine viste aggregate in Postgres | aperta |
 | F12 | Squadre: configuratore della configurazione MCP con i soli agenti scelti | da aprire |
-| F13 | Area personale: accesso Google + TOTP, pannello del titolare | da aprire |
+| F13 | Pannello locale: fasi, rilievi e decisioni del progetto in una pagina su localhost | da aprire |
+| F14 | Area personale: accesso Google + TOTP, pannello del titolare | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

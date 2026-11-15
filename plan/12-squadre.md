@@ -16,7 +16,7 @@
 
 Idee valutate: A configuratore di squadre, B preferiti, C agenti personalizzati, D MCP remoto con chiave personale, E proposte di miglioramento. Solo D richiede un account ed è un cambio di prodotto (servizio ospitato, costi, Vercel Pro per il DPA, revisioni privacy e cybersecurity). A dà il valore più alto senza account: oggi il client carica tutti i 56 prompt.
 
-**Decisione dell'utente**: F12 fa solo A. L'area personale con account (D) è la fase [F13](13-area-personale.md), da aprire solo con un obiettivo misurabile, per esempio dagli analytics di F11.
+**Decisione dell'utente**: F12 fa solo A. L'area personale con account (D) è la fase [F14](14-area-personale.md), da aprire solo con un obiettivo misurabile, per esempio dagli analytics di F11.
 
 ## Proposte da confermare all'apertura
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -49,17 +50,7 @@ export function SiteHeader({ departments }: { departments: readonly NavDepartmen
     >
       <div className="wrap flex h-17 items-center gap-6">
         <Link href="/" className="inline-flex min-h-11 items-center gap-2.5 text-xl font-extrabold tracking-tight">
-          <svg aria-hidden viewBox="0 0 32 32" className="size-7">
-            <rect width="32" height="32" rx="8" className="fill-primary" />
-            <g className="fill-primary-foreground stroke-primary-foreground" strokeWidth="1.6">
-              <line x1="9" y1="22" x2="16" y2="9" />
-              <line x1="16" y1="9" x2="23" y2="20" />
-              <line x1="9" y1="22" x2="23" y2="20" opacity=".5" />
-              <circle cx="9" cy="22" r="2.3" />
-              <circle cx="16" cy="9" r="2.3" />
-              <circle cx="23" cy="20" r="2.3" />
-            </g>
-          </svg>
+          <BrandMark className="size-7" />
           Agentrica
         </Link>
 

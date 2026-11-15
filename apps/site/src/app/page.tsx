@@ -189,6 +189,15 @@ export default function Home() {
                 </p>
                 <CodeBlock lines={[mcp.use]} />
               </li>
+              <li>
+                <h3 className="font-semibold">4. Se vuoi, segui il lavoro da una pagina</h3>
+                <p className="text-[0.9375rem] text-muted-foreground">
+                  Con <code className="font-mono text-[0.875rem]">--panel</code> il server apre sul tuo computer una
+                  pagina con fasi, backlog e rilievi del progetto, gli agenti in uso e le scelte che l&apos;agente ti chiede:
+                  rispondi da lì invece che nel terminale. Niente account, nessun dato fuori dal computer.
+                </p>
+                <CodeBlock lines={[mcp.panel]} />
+              </li>
             </ol>
           </div>
           <h3 className="mt-10 text-lg font-semibold">Cosa fa e cosa non fa</h3>

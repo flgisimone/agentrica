@@ -83,7 +83,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "prompt.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "prompt.ts", "panel.ts", "project.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
     for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {

@@ -12,7 +12,7 @@ The agent files are in Italian. The agent answers in the language you write in.
 
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
-- It writes no files, opens no network connections, logs nothing, collects and sends no data, and has no telemetry.
+- It writes no files, opens no network connections, logs nothing, collects and sends no data, and has no telemetry. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
 - It runs nothing in your project. It only gives instructions to the model: what the model does in the project depends on the client and on the permissions you grant it.
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.2.1"]
+      "args": ["-y", "@agentrica/mcp@0.3.0"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.2.1
+npm install -g --ignore-scripts @agentrica/mcp@0.3.0
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -87,6 +87,38 @@ The command menu shows only the squad's prompts, and `elenca_agenti` and `agente
 For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
 
 Number 01 in each department is the director: it coordinates the specialists and consolidates their findings.
+
+## Local panel
+
+With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
+
+```sh
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.0 --panel
+```
+
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It shows:
+
+- **Da decidere** (to decide): pending choices, with options and reasons; your answer, with an optional note, goes back to the agent;
+- **Agenti in uso** (agents in use): the Agentrica agents called in this session, with the start of the task;
+- **Fasi** (phases): the project phases, the open phase with backlog and acceptance criteria;
+- **Rilievi** (findings): open findings from phases and audits, by priority and department.
+
+With the panel the model has two more tools:
+
+| Tool | Input | What it does |
+|---|---|---|
+| `open_panel` | none | opens the page in the browser and returns its URL |
+| `ask_user` | `question`, 2–4 `options` (`label`, `description`), optional `header` and `multiple` | shows the choice in the page and returns the answer |
+
+If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
+
+**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
+
+**Format of `plan/` and `audit/`.** The panel reads the agentic-starter plan format, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
+
+- `plan/README.md` with a `## Fasi` section and a `| Fase | File | Contenuto | Stato |` table, the file as a link (`[14-pannello.md](14-pannello.md)`). The open phase is the first one whose status is neither `completata` nor `sospesa`.
+- In the phase file: `# Title`, a `**Obiettivo**: …` line, `## Backlog` with the `| # | Task | Priorità |` table, `## Criteri di accettazione` and `## Fatto` as lists; a task is done when its id appears in bold under «Fatto» (`- **F14-01** …`). `## Rilievi aperti` is a list, with the priority (`P0`–`P3`) in the text.
+- `audit/<folder>/<file>.json` with `agente` (e.g. `"AICA-02 · …"`, which gives the department) and a `rilievi` list of objects with `id`, `titolo`, `priorita` and optional `stato`.
 
 ## Put to the test
 
@@ -106,6 +138,7 @@ The agents' text comes from the `agents/` files of the installed version. To upd
 
 ## Versions
 
+- **0.3.0**: local panel with `--panel`: phases, backlog, findings, agents in use and choices made from the page (`open_panel` and `ask_user` tools). Without `--panel` nothing changes.
 - **0.2.1**: name `io.github.flgisimone/agentrica` for the official MCP registry; agents and behaviour unchanged.
 - **0.2.0**: `--agents` argument to load only a squad of agents or departments; in an empty project, or when what the role must examine is missing, the agent says so and proposes first steps to confirm, without inventing findings.
 - **0.1.0**: first published version. 56 agents in five departments, one prompt per agent and the `elenca_agenti` and `agente` tools.

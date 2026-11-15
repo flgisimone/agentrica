@@ -2,7 +2,7 @@
 
 **Obiettivo**: mostrare con risultati ripetibili che gli agenti di Agentrica producono rilievi utili, e rendere `@agentrica/mcp` trovabile da chi cerca server MCP. Sono le due cose che portano qualcuno a installarlo.
 
-> **Stato: completata** (2026-11-15). Codice in `develop` con versione 0.2.1; rilascio npm e registrazione nel registro MCP (F13-06) seguono la chiusura, con l'approvazione dell'utente. Fase aggiunta dall'utente il 2026-11-15 dopo la revisione del valore di F11–F15.
+> **Stato: completata** (2026-11-15). 0.2.1 rilasciata su npm e pubblicata nel registro MCP ufficiale (F13-06). Fase aggiunta dall'utente il 2026-11-15 dopo la revisione del valore di F11–F15.
 
 **Agenzie**: business (Product Manager, Product Marketing Manager) per criteri di successo e messaggi; software (QA, Backend) per i casi di prova; design (UX Writer) per README e sito. Ogni agente provato è anche il revisore del proprio file di ruolo.
 
@@ -60,6 +60,7 @@
 - **F13-03** Nessuna correzione dei ruoli (decisione dell'utente). Osservazioni non correttive: la scala di gravità non è unica fra i reparti («P0 · Critica» in AISA-09, criteri di livello A in P2 in AIWDA-08).
 - **F13-04** `mcpName` `io.github.flgisimone/agentrica` in `packages/mcp/package.json`, `packages/mcp/server.json` (schema 2025-12-11, descrizione di 86 caratteri, `subfolder`), versione 0.2.1 in `package.json`, `VERSION`, lock e comandi di README, sito ed `examples/`. Test: `VERSION`, `mcpName`, versioni e identificatore uguali fra `package.json` e `server.json`.
 - **F13-05** Sezione «Messi alla prova» / «Put to the test» nei README del pacchetto, voce 0.2.1 in «Versioni»; tabella «Messi alla prova» nella sezione MCP del sito (regione scorrevole raggiungibile con Tab sul telefono, rilievo di axe `scrollable-region-focusable` corretto) ed e2e sulla tabella.
+- **F13-06** Rilascio 0.2.1 (PR #6 `develop` → `main`, tag `v0.2.1`, Release con provenance dopo l'approvazione dell'ambiente `npm`). L'utente ha pubblicato nel registro con `mcp-publisher login github` e `publish`: `io.github.flgisimone/agentrica` 0.2.1 è `active` e `isLatest` in `registry.modelcontextprotocol.io` (2026-11-15).
 
 ## Verifiche
 
@@ -70,7 +71,5 @@
 
 ## Rilievi aperti
 
-- **F13-06** Rilascio 0.2.1 (CONVENTIONS §13.8): PR `develop` → `main`, tag `v0.2.1`, pubblicazione dalla CI. Poi, dalla cartella `packages/mcp`, l'utente esegue `mcp-publisher login github` e `mcp-publisher publish` e si verifica con `curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.flgisimone/agentrica"`. Fino ad allora il criterio «elencato in un registro» non è soddisfatto, e README e sito in `develop` citano una versione non ancora su npm.
 - P2: le prove sono facili (difetti piantati ed evidenti, un modello, un'esecuzione). Prossimo passo utile: un caso su un progetto vero o con difetti sottili, e una seconda esecuzione per vedere la variabilità.
 - P3: scala di gravità comune fra i reparti (vedi F13-03), da decidere se diventa una regola comune.
-- P3: i link a `examples/` in README e sito puntano a `main`: funzionano dal rilascio di 0.2.1.

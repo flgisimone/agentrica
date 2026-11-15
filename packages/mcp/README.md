@@ -22,7 +22,7 @@ Serve Node 22 o successivo, con npm.
 **Claude Code**, dalla cartella del tuo progetto:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1
 ```
 
 Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicata finché non la cambi tu: un aggiornamento dei ruoli non arriva senza che tu lo scelga.
@@ -34,7 +34,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.2.0"]
+      "args": ["-y", "@agentrica/mcp@0.2.1"]
     }
   }
 }
@@ -43,7 +43,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
 **Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.2.0
+npm install -g --ignore-scripts @agentrica/mcp@0.2.1
 npm root -g
 ```
 
@@ -70,7 +70,7 @@ Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 **Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.2.1 --agents aisa,aiwda-08
 ```
 
 Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti` e `agente` vedono solo quelli. Senza `--agents` ci sono tutti i 56 agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
@@ -88,12 +88,25 @@ Il numero 01 di ogni reparto è il direttore: coordina gli specialisti e consoli
 
 I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi.
 
+## Messi alla prova
+
+Tre agenti provati il 2026-11-15 su tre piccoli progetti con difetti piantati e documentati, con `@agentrica/mcp@0.2.0 --agents <id>`, Claude Code per VS Code e Opus 5.5 (ragionamento medio). Un'esecuzione per caso, contata a mano.
+
+| Agente | Progetto | Difetti trovati | Rilievi falsi | Altri rilievi validi |
+|---|---|---|---|---|
+| AISA-09 · REGULUS, Application Security | API REST in Node | 6 su 6 | 0 | 2 |
+| AIWDA-08 · GACRUX, Accessibility | form di iscrizione | 8 su 8 | 0 | 2 |
+| AIPCA-02 · ALIOTH, GDPR | prenotazioni di una palestra | 7 su 7 | 0 | 3 |
+
+Limiti: i difetti sono pochi, noti e abbastanza evidenti; un solo modello e una sola esecuzione per caso; un risultato del genere non dice come va un agente su un progetto grande. Progetti, difetti attesi, regole di conteggio e rapporti completi degli agenti sono in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): puoi ripetere le prove.
+
 ## Aggiornamenti
 
 Il testo degli agenti viene dai file di `agents/` della versione installata. Per aggiornare cambia la versione nel comando (o reinstalla con `npm install -g`) e riavvia il client. Gli id e i nomi in codice non cambiano.
 
 ## Versioni
 
+- **0.2.1**: nome `io.github.flgisimone/agentrica` per il registro MCP ufficiale; agenti e comportamento invariati.
 - **0.2.0**: argomento `--agents` per caricare solo una squadra di agenti o reparti; con un progetto vuoto, o senza ciò che il ruolo deve esaminare, l'agente lo dice e propone i primi passi da confermare, senza inventare rilievi.
 - **0.1.0**: prima versione pubblicata. 56 agenti in cinque reparti, un prompt per agente e i tool `elenca_agenti` e `agente`.
 

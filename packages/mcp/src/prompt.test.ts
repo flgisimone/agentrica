@@ -48,9 +48,17 @@ test("agentText: il compito va in fondo, vuoto si omette", () => {
   assert.ok(!agentText(found, "   ").includes("## Compito"));
 });
 
-test("VERSION è quella di package.json", () => {
-  const pkg = JSON.parse(readFileSync(join(import.meta.dirname, "..", "package.json"), "utf8")) as { version: string };
+test("VERSION e nome nel registro MCP uguali in package.json e server.json", () => {
+  const read = (file: string) => JSON.parse(readFileSync(join(import.meta.dirname, "..", file), "utf8"));
+  const pkg = read("package.json") as { name: string; version: string; mcpName: string };
+  const server = read("server.json") as { name: string; version: string; packages: { identifier: string; version: string }[] };
   assert.equal(VERSION, pkg.version);
+  assert.equal(server.name, pkg.mcpName);
+  assert.equal(server.version, pkg.version);
+  assert.deepEqual(
+    server.packages.map((p) => [p.identifier, p.version]),
+    [[pkg.name, pkg.version]],
+  );
 });
 
 const ids = (squad: ReturnType<typeof selectSquad>) => squad.flatMap((d) => d.agents.map((a) => a.id));

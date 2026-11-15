@@ -46,6 +46,13 @@ const limits = [
   "Gli agenti sono IA: le loro conclusioni sono proposte da verificare.",
 ];
 
+// Prove del 2026-11-15 (examples/risultati/): numeri veri, da aggiornare solo con una nuova esecuzione.
+const trials = [
+  { agent: "AISA-09 · REGULUS", role: "Application Security", project: "API REST in Node", found: "6 su 6", falsePositives: 0, extra: 2 },
+  { agent: "AIWDA-08 · GACRUX", role: "Accessibility", project: "Form di iscrizione", found: "8 su 8", falsePositives: 0, extra: 2 },
+  { agent: "AIPCA-02 · ALIOTH", role: "GDPR", project: "Prenotazioni di una palestra", found: "7 su 7", falsePositives: 0, extra: 3 },
+];
+
 const sectionTitle = "mt-2 mb-4 text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] font-bold";
 const lead = "max-w-2xl text-muted-foreground";
 const pill = "rounded-lg h-12 px-6 text-base font-semibold";
@@ -193,6 +200,47 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <h3 id="prove-titolo" className="mt-10 text-lg font-semibold">
+            Messi alla prova
+          </h3>
+          <p className={cn(lead, "mt-2 text-[0.9375rem]")}>
+            Tre agenti su tre piccoli progetti con difetti piantati e documentati, il 2026-11-15, con la versione 0.2.0,
+            Claude Code e Opus 5.5. Un&apos;esecuzione per caso, contata a mano: i difetti sono pochi ed evidenti, e il
+            risultato non dice come va un agente su un progetto grande. Progetti, rapporti completi e regole di conteggio
+            sono nella cartella{" "}
+            <a href="https://github.com/flgisimone/agentrica/tree/main/examples" className="underline">
+              examples del repository
+            </a>
+            .
+          </p>
+          {/* Sul telefono la tabella scorre: la regione si raggiunge con Tab per scorrerla da tastiera. */}
+          <div role="region" aria-labelledby="prove-titolo" tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border">
+            <table className="w-full text-left text-[0.9375rem]">
+              <thead className="bg-card text-muted-foreground">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-semibold">Agente</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Progetto</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Difetti trovati</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Rilievi falsi</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Altri rilievi validi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trials.map((t) => (
+                  <tr key={t.agent} className="border-t">
+                    <th scope="row" className="px-4 py-3 font-normal">
+                      <span className="block font-mono text-[0.8125rem] font-bold whitespace-nowrap">{t.agent}</span>
+                      <span className="text-muted-foreground">{t.role}</span>
+                    </th>
+                    <td className="px-4 py-3">{t.project}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">{t.found}</td>
+                    <td className="px-4 py-3">{t.falsePositives}</td>
+                    <td className="px-4 py-3">{t.extra}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
 

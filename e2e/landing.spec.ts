@@ -104,5 +104,8 @@ test.describe("Come lavoriamo e MCP", () => {
     await expect(mcp.locator("pre").first()).toContainText("claude mcp add agentrica -- npx -y @agentrica/mcp@");
     await expect(mcp).toContainText("--agents aisa,aiwda-08");
     await expect(mcp).toContainText("nessuna telemetria");
+    const trials = mcp.getByRole("table");
+    await expect(trials.getByRole("row")).toHaveCount(4);
+    await expect(trials.getByRole("rowheader", { name: /AIPCA-02 · ALIOTH/ })).toBeVisible();
   });
 });

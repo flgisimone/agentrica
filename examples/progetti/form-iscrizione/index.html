@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iscrizione al workshop</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <img src="logo.svg" width="120" height="40" />
+    </header>
+    <main>
+      <h1>Iscriviti al workshop di sabato</h1>
+      <p class="hint">I posti sono 30. Ti scriviamo una conferma entro un giorno.</p>
+      <form id="signup" novalidate>
+        <input id="name" name="name" type="text" placeholder="Nome e cognome" />
+        <input id="email" name="email" type="email" placeholder="Email" />
+        <select id="session" name="session">
+          <option value="">Turno</option>
+          <option value="am">Mattina (10–13)</option>
+          <option value="pm">Pomeriggio (15–18)</option>
+        </select>
+        <div class="button" id="submit">Iscrivimi</div>
+      </form>
+      <p id="done" hidden>Grazie, sei iscritto.</p>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

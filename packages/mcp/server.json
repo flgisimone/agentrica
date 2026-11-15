@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.flgisimone/agentrica",
+  "description": "56 AI agents for software, design, privacy, security and product work, as MCP prompts.",
+  "repository": {
+    "url": "https://github.com/flgisimone/agentrica",
+    "source": "github",
+    "subfolder": "packages/mcp"
+  },
+  "version": "0.2.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@agentrica/mcp",
+      "version": "0.2.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

@@ -142,9 +142,10 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
-1. Merge di `develop` in `main` con `--no-ff` («Merge develop in main: FN descrizione breve») e push di `main`.
+1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando il controllo `verify` è verde (`gh pr merge --merge`). Il ruleset `main` vieta push diretti, force push e altri metodi di unione.
 2. **Sito**: Vercel pubblica `main` (Root Directory `apps/site`).
-3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`.
+3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`. Il ruleset `versioni` lascia creare i tag `v*` solo all'amministratore del repository.
+4. **Eccezione, solo per la 0.1.0**: npm configura il trusted publisher dalla pagina di un pacchetto che esiste già, quindi la prima versione si pubblica a mano da `main` (`npm publish -w @agentrica/mcp --access public`, con il codice 2FA) e non ha provenance. Subito dopo si configura il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`) e dalla versione successiva vale il punto 3. Per la 0.1.0 non si crea il tag, che avvierebbe la release.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 

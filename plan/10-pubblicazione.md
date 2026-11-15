@@ -80,13 +80,13 @@
 
 ## Passi dell'utente prima del rilascio
 
-1. **GitHub**: rendere pubblico il repository; ambiente `npm` con approvazione obbligatoria; ruleset su `main` (pull request, controllo `verify`, niente force push) e sui tag `v*` (solo il proprietario).
-2. **npm**: registrare l'organizzazione `agentrica`; per `@agentrica/mcp` configurare il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`). Se npm non permette il trusted publisher prima della prima versione, la prima pubblicazione si concorda a parte.
+1. **GitHub** (fatto, verificato con `gh api`): repository pubblico; ambiente `npm` con approvazione obbligatoria e solo tag `v*`; ruleset `main` (pull request con merge commit, controllo `verify`, niente force push né cancellazione) e `versioni` (tag `v*` solo all'amministratore).
+2. **npm**: organizzazione `agentrica` registrata, owner `flgisimone`, 2FA per accesso e pubblicazione (fatto, verificato con `npm org ls` e `npm profile get`). La 0.1.0 si pubblica a mano senza provenance (scelta dell'utente), poi si configura il trusted publisher (CONVENTIONS §13.8, punto 4).
 3. **Vercel**: verificare DPA e conservazione dei log (PRIV-PUB-01); progetto collegato a `main`.
 
 ## Rilievi aperti
 
-- SEC-REL-02 (P1): protezioni su GitHub e npm, passi 1–2 qui sopra.
+- SEC-REL-02 (P1): protezioni su GitHub e npm attive; resta il trusted publisher dopo la 0.1.0. La 0.1.0 non ha provenance (scelta dell'utente).
 - PRIV-PUB-01 (P2): DPA, trasferimenti e conservazione dei log di Vercel.
 - SEC-REL-03, SEC-REL-04 (P3, accettati): `'unsafe-inline'` negli script; transitivi a range.
 - SEC-REL-05 (P3): action di `ci.yml` per tag.

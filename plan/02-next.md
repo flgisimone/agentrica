@@ -2,7 +2,7 @@
 
 **Obiettivo**: `apps/site` riscritto in Next.js 16 con Tailwind 4 e shadcn/ui, con la stessa landing di F1 (stessi contenuti, stesse prove e2e verdi), pronto per le pagine dei reparti e degli agenti. AIBPD-01 diventa ALDERAMIN.
 
-> **Stato: completata** (branch `fase/f2-next`; hash dopo la chiusura). Next, Tailwind con shadcn, riorganizzazione delle fasi e ALDERAMIN scelti dall'utente il 2026-11-15; dipendenze approvate lo stesso giorno.
+> **Stato: completata** (`d2d3b62`, merge `efa491b` in `develop`). Next, Tailwind con shadcn, riorganizzazione delle fasi e ALDERAMIN scelti dall'utente il 2026-11-15; dipendenze approvate lo stesso giorno.
 
 **Agenzie**: software (Architect, Frontend Developer, DevOps, QA, Code Reviewer); web design (UI Designer, Design System Specialist, Accessibility) per la revisione della parità visiva.
 

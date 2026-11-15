@@ -13,8 +13,9 @@ const REPO = "https://github.com/flgisimone/agentrica";
 const sectionTitle = "mb-3 text-[clamp(1.25rem,1rem+1vw,1.5rem)] font-bold";
 const body = "grid max-w-3xl gap-3 text-muted-foreground";
 
-// ponytail: testo scritto con i ruoli privacy (AIPCA-03, AIPCA-06), non rivisto da un legale; va riletto da una persona
-// competente prima di aggiungere cookie, analytics, moduli o un MCP remoto.
+// ponytail: testo scritto con i ruoli privacy (AIPCA-03, AIPCA-07), non rivisto da un legale; va riletto da una persona
+// competente prima di aggiungere cookie, analytics, moduli o un MCP remoto, e se il sito passa a un piano di Vercel con
+// DPA (Pro) o a un altro hosting: oggi Vercel Hobby non ha un DPA (PRIV-PUB-01).
 export default function LegalNotes() {
   return (
     <PageTransition>
@@ -68,14 +69,24 @@ export default function LegalNotes() {
               font sono serviti dal sito stesso.
             </p>
             <p>
-              Il sito è ospitato da Vercel Inc. Come ogni server web, a ogni visita Vercel riceve e registra nei suoi log
-              i dati tecnici della richiesta, fra cui l&apos;indirizzo IP, la pagina chiesta, la data e il browser. Servono
-              a far funzionare il sito e a proteggerlo da abusi (legittimo interesse, art. 6.1.f del GDPR). Vercel li
-              tratta per conto del titolare, li conserva per il tempo previsto dal suo servizio e può trattarli anche
-              fuori dallo Spazio economico europeo, con le garanzie descritte nella sua informativa privacy e nel suo
-              accordo sul trattamento dei dati.
+              Il sito è ospitato da Vercel Inc., negli Stati Uniti. Come ogni server web, a ogni visita Vercel riceve e
+              registra nei suoi log i dati tecnici della richiesta, fra cui l&apos;indirizzo IP, la pagina chiesta, la
+              data e il browser. Servono a far funzionare il sito e a proteggerlo da abusi (legittimo interesse, art.
+              6.1.f del GDPR).
             </p>
-            <p>Il titolare non usa questi log per altri scopi e non li unisce ad altri dati.</p>
+            <p>
+              Il sito usa il piano gratuito di Vercel, per il quale Vercel non offre un accordo sul trattamento dei dati
+              per conto del titolare: questi dati li tratta Vercel secondo la sua{" "}
+              <a href="https://vercel.com/legal/privacy" className="underline">
+                informativa privacy
+              </a>
+              , che indica anche per quanto li conserva. Vercel dichiara di aderire al Data Privacy Framework fra Unione
+              europea e Stati Uniti per i trasferimenti fuori dallo Spazio economico europeo.
+            </p>
+            <p>
+              Il titolare vede questi log nel pannello di Vercel solo per circa un&apos;ora, non li scarica e non li usa
+              per altri scopi né li unisce ad altri dati.
+            </p>
           </div>
         </section>
 

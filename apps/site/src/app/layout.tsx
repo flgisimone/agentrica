@@ -12,6 +12,8 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 const departments = loadCatalog().map(({ code, name, slug }) => ({ code, name, slug }));
 
 export const metadata: Metadata = {
+  // Indirizzi assoluti per l'immagine Open Graph e il manifest.
+  metadataBase: new URL("https://agentrica.vercel.app"),
   title: "Agentrica · Consulenza agentica",
   description:
     "Agentrica è una società fittizia di consulenza agentica: reparti e agenti specializzati in business, design, privacy, software e sicurezza.",

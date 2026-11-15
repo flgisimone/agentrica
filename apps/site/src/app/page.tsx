@@ -4,11 +4,14 @@ import type { Metadata } from "next";
 import { DepartmentCard } from "@/components/department-card";
 import { DirectorsMosaic } from "@/components/directors-mosaic";
 import { PageTransition } from "@/components/page-transition";
+import { Simulation } from "@/components/simulation";
 import { SiteFooter } from "@/components/site-footer";
+import { Terminal } from "@/components/terminal";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { spanInRows } from "@/lib/grid";
+import { flowNodes, mcp, mcpDemoScript, simulationScript } from "@/lib/scripts";
 import { cn } from "@/lib/utils";
 
 const departments = loadCatalog();
@@ -33,14 +36,14 @@ const principles = [
   },
 ];
 
-const flow: { label: string; code?: string }[] = [
-  { label: "Business", code: "AIBPD" },
-  { label: "Design", code: "AIWDA" },
-  { label: "Privacy", code: "AIPCA" },
-  { label: "La tua conferma" },
-  { label: "Software", code: "AISA" },
-  { label: "Revisioni di design, privacy e codice" },
-  { label: "La tua conferma" },
+const simulation = simulationScript(departments);
+const mcpDemo = mcpDemoScript(departments);
+
+const limits = [
+  "Gira solo sul tuo computer: lo avvia il client e i due parlano con stdio.",
+  "Legge solo i file di agents/ del clone. Non scrive file, non apre connessioni, nessuna telemetria.",
+  "Il compito e i file del progetto vanno al fornitore del modello attraverso il tuo client, non ad Agentrica.",
+  "Gli agenti sono IA: le loro conclusioni sono proposte da verificare.",
 ];
 
 const sectionTitle = "mt-2 mb-4 text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] font-bold";
@@ -93,7 +96,7 @@ export default function Home() {
       </div>
 
       <main id="contenuto">
-        <section id="reparti" aria-labelledby="reparti-titolo" className="wrap py-16">
+        <section id="reparti" aria-labelledby="reparti-titolo" className="wrap band py-16">
           <p className="eyebrow">I reparti</p>
           <h2 id="reparti-titolo" className={sectionTitle}>
             Cinque competenze, un&apos;unica squadra
@@ -115,7 +118,7 @@ export default function Home() {
           <h2 id="metodo-titolo" className={sectionTitle}>
             Pochi agenti alla volta, con te al comando
           </h2>
-          <ul className="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr))]">
+          <ul className="mt-8 grid gap-6 md:grid-cols-3">
             {principles.map((p) => (
               <li key={p.title}>
                 <Card className="h-full gap-2 p-6 text-base">
@@ -126,45 +129,75 @@ export default function Home() {
             ))}
           </ul>
 
-          <h3 className="mt-12 text-lg font-semibold">Una richiesta che coinvolge più reparti</h3>
-          <ol className="mt-4 flex flex-wrap gap-2">
-            {flow.map((step, index) => (
-              <li
-                key={index}
-                data-dept={step.code}
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border border-l-[3px] bg-card px-4 py-2 text-[0.9375rem]",
-                  step.code ? "border-l-dept" : "border-l-foreground font-semibold",
-                )}
-              >
-                <span className="font-mono text-[0.8125rem] text-muted-foreground">{index + 1}.</span>
-                {step.code && <span className="font-mono text-[0.8125rem] font-bold text-dept">{step.code}</span>}
-                <span>{step.label}</span>
-              </li>
-            ))}
-          </ol>
-          <p className={cn(lead, "mt-4 text-[0.9375rem]")}>
-            I passaggi che non servono si saltano. La sicurezza (AICA) entra per gli audit e le nuove integrazioni.
+          <h3 className="mt-12 text-lg font-semibold">Una richiesta, dall&apos;idea al merge</h3>
+          <p className={cn(lead, "mt-2 text-[0.9375rem]")}>
+            Simulazione di un compito vero di questo sito, i volti degli agenti: i passi e i comandi sono quelli del
+            metodo, il testo degli agenti è abbreviato. I passaggi che non servono si saltano; la sicurezza (AICA) entra
+            per gli audit e le nuove integrazioni.
           </p>
+          <Simulation nodes={flowNodes} lines={simulation} />
         </section>
 
-        <section id="mcp" aria-labelledby="mcp-titolo" className="wrap py-16">
-          <div className="rounded-xl border border-dashed bg-linear-135 from-aisa/6 to-aipca/6 p-8">
-            <Badge variant="outline" className="border-aisa font-mono text-xs font-bold uppercase text-aisa">
-              In sviluppo
-            </Badge>
-            <h2 id="mcp-titolo" className={sectionTitle}>
-              Presto nei tuoi progetti
-            </h2>
-            <p className={lead}>
-              Stiamo portando gli agenti di Agentrica in un server MCP: potrai chiamarli da Claude Code o da altri
-              client compatibili, con gli stessi ruoli che vedi qui.
-            </p>
+        <section id="mcp" aria-labelledby="mcp-titolo" className="wrap band py-16">
+          <Badge variant="outline" className="border-aisa font-mono text-xs font-bold uppercase text-aisa">
+            Disponibile da un clone
+          </Badge>
+          <h2 id="mcp-titolo" className={sectionTitle}>
+            Gli agenti nei tuoi progetti
+          </h2>
+          <p className={lead}>
+            Il server MCP di Agentrica porta i {total} agenti in Claude Code e negli altri client MCP: ogni agente è un
+            prompt con il suo id, e due tool aiutano il modello a sceglierlo. Oggi si usa da un clone del repository; il
+            pacchetto npm arriva con la pubblicazione.
+          </p>
+          <div className="mt-8 grid items-start gap-8 lg:grid-cols-2">
+            <Terminal lines={mcpDemo} title="il tuo progetto" label="Dimostrazione" />
+            <ol className="grid gap-6">
+              <li>
+                <h3 className="font-semibold">1. Clona e installa</h3>
+                <p className="text-[0.9375rem] text-muted-foreground">Servono Node 26 e npm.</p>
+                <CodeBlock lines={mcp.install} />
+              </li>
+              <li>
+                <h3 className="font-semibold">2. Aggiungilo a Claude Code</h3>
+                <p className="text-[0.9375rem] text-muted-foreground">
+                  Dalla cartella del tuo progetto, con il percorso assoluto del clone. Gli altri client lo aggiungono
+                  nel loro file di configurazione, come spiega il README del server.
+                </p>
+                <CodeBlock lines={[mcp.add]} />
+              </li>
+              <li>
+                <h3 className="font-semibold">3. Chiama un agente</h3>
+                <p className="text-[0.9375rem] text-muted-foreground">
+                  Con il suo prompt, il compito fra virgolette, oppure chiedi al modello di usare i tool{" "}
+                  <code className="font-mono text-[0.875rem]">elenca_agenti</code> e{" "}
+                  <code className="font-mono text-[0.875rem]">agente</code>.
+                </p>
+                <CodeBlock lines={[mcp.use]} />
+              </li>
+            </ol>
           </div>
+          <h3 className="mt-10 text-lg font-semibold">Cosa fa e cosa non fa</h3>
+          <ul className="mt-4 grid gap-3 md:grid-cols-2">
+            {limits.map((text) => (
+              <li key={text} className="flex gap-3 text-[0.9375rem]">
+                <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-aisa" />
+                <span className="text-muted-foreground">{text}</span>
+              </li>
+            ))}
+          </ul>
         </section>
       </main>
 
       <SiteFooter />
     </PageTransition>
+  );
+}
+
+function CodeBlock({ lines }: { lines: readonly string[] }) {
+  return (
+    <pre className="mt-2 rounded-lg border bg-card px-4 py-3 font-mono text-[0.8125rem] leading-6 whitespace-pre-wrap [overflow-wrap:anywhere]">
+      <code>{lines.join("\n")}</code>
+    </pre>
   );
 }

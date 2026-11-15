@@ -38,7 +38,8 @@ export function DepartmentCard({ department: d, className }: { department: Depar
       data-dept={d.code}
       aria-labelledby={`reparto-${d.code}`}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-card transition-[translate,border-color] duration-200 hover:-translate-y-1 hover:border-dept motion-reduce:transition-none",
+        // L'anello del focus sta sulla scheda: sul link (dentro overflow-hidden) verrebbe tagliato.
+        "group relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-card transition-[translate,border-color] duration-200 hover:-translate-y-1 hover:border-dept motion-reduce:transition-none has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-ring",
         className,
       )}
     >
@@ -57,7 +58,7 @@ export function DepartmentCard({ department: d, className }: { department: Depar
           <Link
             href={`/reparti/${d.slug}`}
             aria-label={`Vai al reparto ${d.code} · ${d.name}`}
-            className="outline-none after:absolute after:inset-0 after:rounded-2xl focus-visible:after:outline-2 focus-visible:after:outline-offset-3 focus-visible:after:outline-ring"
+            className="outline-none after:absolute after:inset-0 after:rounded-2xl"
           >
             {d.name}
           </Link>

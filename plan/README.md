@@ -54,7 +54,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F5 | [05-mcp.md](05-mcp.md) | Server MCP (`packages/mcp`): ogni agente usabile come prompt e tool nei progetti, stdio locale; revisione di sicurezza e privacy | completata |
 | F6 | [06-rilievi.md](06-rilievi.md) | Rilievi aperti da F0 a F5: CI al push, regole comuni di privacy, lingua, hero e ritocchi del sito, dipendenze | completata |
 | F7 | [07-identita.md](07-identita.md) | Identità corporate: palette dai ritratti (anteprima da confermare), header con menu, sfondo animato, transizioni, card senza accordion, volti degli agenti | completata |
-| F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | da fare |
+| F8 | [08-sezioni.md](08-sezioni.md) | Sezioni: simulazione di sviluppo in «Come lavoriamo», sezione del server MCP con dimostrazione e uso locale | completata |
 | F9 | [09-pubblicazione.md](09-pubblicazione.md) | Pubblicazione del sito e del pacchetto (vincoli in «Vincoli per F9») | da fare |
 
 Ordine: F0 → F9 in sequenza. I file di F8 e F9 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

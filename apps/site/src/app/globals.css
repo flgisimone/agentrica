@@ -133,6 +133,48 @@
   margin-inline: auto;
 }
 
+/* Fascia navy a tutta larghezza per staccare una sezione dalla successiva, senza cambiare il markup di .wrap:
+   l'ombra allarga il fondo fino ai bordi della finestra, clip-path la taglia in altezza (nessuno scorrimento orizzontale).
+   Sul navy testo, anello del focus e accenti diventano chiari (contrasti misurati su --primary: testo secondario 8,7:1,
+   accenti ≥ 6,3:1); le superfici bianche dentro la fascia (card, terminale, codice) tornano ai valori di :root.
+   Nelle pagine di reparto e agente la fascia porta anche data-dept, così l'accento del reparto si ricalcola chiaro. */
+@layer components {
+  .band {
+    --foreground: #ffffff;
+    --muted-foreground: #c3cbd9;
+    --border: #3b4c6b;
+    --muted: #2a3b5c;
+    --ring: #ffffff;
+    --aibpd: #e8b04a;
+    --aica: #f4948a;
+    --aipca: #b9adf2;
+    --aisa: #63c7dc;
+    --aiwda: #74d2a2;
+    color: var(--foreground);
+    background: var(--primary);
+    box-shadow: 0 0 0 100vmax var(--primary);
+    clip-path: inset(0 -100vmax);
+  }
+
+  .band :is(article, figure, pre) {
+    --foreground: #131c2e;
+    --muted-foreground: #4b5567;
+    --border: #d7dde6;
+    --muted: #e9edf2;
+    --aibpd: #8a5a00;
+    --aica: #a8392c;
+    --aipca: #5a46a8;
+    --aisa: #0b6a80;
+    --aiwda: #1d6f4c;
+    color: var(--foreground);
+  }
+
+  /* Dentro terminale e codice il focus è su fondo bianco; l'anello delle card sta fuori, sul navy, e resta bianco. */
+  .band :is(figure, pre) {
+    --ring: #1c2b47;
+  }
+}
+
 /* Transizioni fra le pagine (components/page-transition.tsx): dissolvenza con una leggera salita; l'header resta fermo. */
 ::view-transition {
   pointer-events: none;
@@ -179,5 +221,16 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+}
+
+/* Cursore del terminale (components/terminal.tsx): c'è solo mentre scrive, quindi mai con «riduci movimento». */
+.cursor {
+  animation: cursor-blink 1s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
   }
 }

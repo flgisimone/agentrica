@@ -2,7 +2,7 @@
 
 **Obiettivo**: sapere se `@agentrica/mcp` viene installato, con il segnale che conta davvero (i download npm), senza database, senza route server e senza toccare la promessa «niente cookie, niente analytics» del sito.
 
-> **Stato: aperta.** Piano ridotto il 2026-11-15; nessun codice.
+> **Stato: completata** (2026-11-15).
 
 **Agenzie**: software (Backend per lo script, QA, Code Reviewer). Privacy e design non servono: il sito non cambia e lo script legge solo dati pubblici e aggregati di npm.
 
@@ -30,3 +30,21 @@ Il piano iniziale (contatori di pagine viste in Postgres su Neon, route `POST /a
 - `npm run stats` stampa i download settimanali di `@agentrica/mcp` senza chiavi né variabili d'ambiente.
 - Nessuna dipendenza nuova, nessun cambio al sito né all'MCP.
 - `npm run verify` verde.
+
+## Fatto
+
+- **F11-01** `scripts/stats.ts` (`npm run stats`): download giornalieri di `@agentrica/mcp` dall'API pubblica di npm per gli ultimi 3 mesi fino a ieri, totale e righe per settimana (dal lunedì) con una barra. Se npm risponde 404 (pacchetto pubblicato da meno di un giorno o due) lo dice e non fallisce. Calcoli puri in `scripts/stats-lib.ts` (periodo, inizio settimana, somma, formato). Limiti dei conteggi nel commento `ponytail:`.
+- **F11-02** Stelle e fork di `flgisimone/agentrica` dall'API pubblica di GitHub, senza token; se GitHub non risponde (limite di 60 richieste l'ora) lo script lo dice e i download restano.
+- **F11-03** `scripts/stats-lib.test.ts` in `npm test`; `scripts/` nel typecheck della root (`tsconfig.json`).
+
+## Verifiche
+
+- `npm run verify`: superato (44 test unitari, 4 nuovi).
+- `npm run stats` reale: npm non ha ancora dati per `@agentrica/mcp` (pubblicato oggi, risposta 404 gestita); GitHub 0 stelle, 0 fork.
+- Formato provato con dati reali su una copia dello script puntata a `@modelcontextprotocol/sdk` (13 settimane, totale e barre corretti).
+- `npm run verify:e2e`: 59 superati, 1 saltato (come in F10).
+- **Non verificato**: la lettura dei download di `@agentrica/mcp` con dati veri, che arriveranno nei prossimi giorni.
+
+## Rilievi aperti
+
+- Nessuno. La prima settimana del periodo appare con il suo lunedì anche se parziale (voluto, scritto in `toWeekly`).

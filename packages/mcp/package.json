@@ -1,0 +1,13 @@
+{
+  "name": "@agentrica/mcp",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "agentrica-mcp": "./src/server.ts"
+  },
+  "dependencies": {
+    "@agentrica/catalog": "*",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  }
+}

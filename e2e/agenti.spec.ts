@@ -46,10 +46,12 @@ test("un id sconosciuto dà 404", async ({ page }) => {
   expect(response?.status()).toBe(404);
 });
 
-test("chi ha il ritratto lo mostra con la dicitura IA, chi non lo ha mostra il segnaposto", async ({ page }) => {
-  await page.goto("/agenti/aibpd-01");
-  await expect(page.locator(".page-intro").getByRole("img", { name: "Ritratto generato con IA di AIBPD-01 · ALDERAMIN" })).toBeVisible();
-  await expect(page.locator(".page-intro")).toContainText("Volto generato con IA");
+test("ogni agente ha il suo simbolo, lo stesso nella squadra e nella sua pagina", async ({ page }) => {
+  await page.goto("/reparti/aibpd");
+  const inTeam = await page.locator('svg[data-star="PROCYON"]').innerHTML();
   await page.goto("/agenti/aibpd-02");
-  await expect(page.locator(".page-intro").getByRole("img")).toHaveCount(0);
+  const glyph = page.locator('.page-intro svg[data-star="PROCYON"]');
+  await expect(glyph).toBeVisible();
+  expect(await glyph.innerHTML()).toBe(inTeam);
+  await expect(page.locator("body")).not.toContainText("Volto");
 });

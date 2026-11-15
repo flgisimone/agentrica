@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { AgentLine } from "@/components/department-card";
 import { Markdown } from "@/components/markdown";
 import { PageTransition } from "@/components/page-transition";
-import { Portrait } from "@/components/portrait";
+import { StarGlyph } from "@/components/star-glyph";
 import { SiteFooter } from "@/components/site-footer";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -63,7 +63,9 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
             La squadra
           </h2>
           <Card className="relative grid grid-cols-[6rem_1fr] items-center gap-5 border-t-[3px] border-t-dept p-4 text-base hover:border-dept sm:grid-cols-[8rem_1fr]">
-            <Portrait id={d.director.id} star={d.director.star} sizes="8rem" tag="short" eager className="aspect-square rounded-lg" />
+            <div className="grid aspect-square place-items-center rounded-lg bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--dept)_14%,var(--muted)),var(--muted))]">
+              <StarGlyph star={d.director.star} director className="size-4/5" />
+            </div>
             <div>
               <p className="text-[0.8125rem] text-muted-foreground">Direttore</p>
               <AgentLine id={d.director.id} star={d.director.star} role={d.director.role} link />
@@ -78,7 +80,9 @@ export default async function DepartmentPage(props: PageProps<"/reparti/[sigla]"
                   spanInRows(index, team.length),
                 )}
               >
-                <Portrait id={a.id} star={a.star} sizes="3.5rem" tag="mini" className="size-14 rounded-lg" />
+                <div className="grid size-14 place-items-center rounded-lg bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--dept)_14%,var(--muted)),var(--muted))]">
+                  <StarGlyph star={a.star} className="size-12" />
+                </div>
                 <AgentLine id={a.id} star={a.star} role={a.role} link />
               </li>
             ))}

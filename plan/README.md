@@ -68,7 +68,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F12 | [12-squadre.md](12-squadre.md) | Squadre: `--agents` nell'MCP, regola per i progetti vuoti, verifica dei token | completata |
 | F13 | [13-prove-distribuzione.md](13-prove-distribuzione.md) | Prove e distribuzione: casi di prova ripetibili degli agenti, correzione dei ruoli, registri MCP | completata |
 | F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | completata |
-| F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | aperta |
+| F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | completata |
 | F16 | [16-area-personale.md](16-area-personale.md) | Area personale: accesso Google + TOTP, pannello `/admin`; sospesa finché non c'è uno scopo per gli utenti | sospesa |
 
 Ordine: F0 → F15 in sequenza; F16 è sospesa. I file di F12–F16 sono scritti; le loro «proposte da confermare» si decidono all'apertura.

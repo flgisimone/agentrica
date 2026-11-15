@@ -2,7 +2,7 @@
 
 **Obiettivo**: mettere online il sito e pubblicare il server MCP su npm, così gli agenti di Agentrica si usano nei progetti di chiunque con un comando, nel rispetto dei vincoli decisi con la revisione di sicurezza di F5.
 
-> **Stato: sviluppo completato (F10-01–F10-06), rilascio da fare (F10-07).** Il rilascio richiede prima i passi dell'utente su GitHub e npm (sotto); merge in `main`, deploy e pubblicazione npm solo con la sua approvazione esplicita, ciascuno (CONVENTIONS §13.8).
+> **Stato: completata.** Sito online su https://agentrica.vercel.app da `main`; `@agentrica/mcp@0.1.0` pubblicato su npm (a mano, senza provenance); trusted publisher configurato per le versioni successive.
 
 **Agenzie**: cybersecurity (Cloud Security, Vulnerability Management, Security Architect) per hosting, CI di release e catena di fornitura; privacy (Vendor Compliance, Legal Specialist) per hosting e testi del sito pubblico; software (DevOps, Backend, QA, Code Reviewer); business (Product Marketing) per README e pagina npm.
 
@@ -68,6 +68,12 @@
 - **F10-05** Sito: CSP, HSTS, nosniff, Referrer-Policy, Permissions-Policy, niente `X-Powered-By`; pagina `/note-legali` dal footer; sezione MCP con `claude mcp add agentrica -- npx -y @agentrica/mcp@0.1.0` e link al README del pacchetto.
 - **F10-06** README del pacchetto (italiano e inglese): installazione da npm, permessi minimi con installazione globale, provenance, da un clone, versioni, licenza; link ad `agents/` assoluti per la pagina npm. `LICENSE` MIT nella root.
 
+## Rilascio (F10-07, 2026-11-15)
+
+- Pull request #1 `develop → main` unita con merge commit dopo `verify` verde; Vercel ha pubblicato `main` su https://agentrica.vercel.app.
+- `@agentrica/mcp@0.1.0` pubblicato dall'utente con `npm publish -w @agentrica/mcp --access public` e 2FA; nessun tag `v0.1.0` (CONVENTIONS §13.8, punto 4).
+- npm: trusted publisher `flgisimone/agentrica`, `release.yml`, ambiente `npm`, con «Allow npm publish» (scelta dell'utente: un'approvazione, sull'ambiente GitHub; lo staged publishing con seconda approvazione su npm resta possibile in futuro). Publishing access: 2FA obbligatoria, niente token. Configurato dall'utente; non verificabile da CLI.
+
 ## Verifiche
 
 - `npm run verify`: superato (40 test unitari).
@@ -76,18 +82,20 @@
 - `npm publish -w @agentrica/mcp --dry-run` dopo `npm ci --ignore-scripts`: riuscito.
 - `npm audit --omit=dev`: 0 vulnerabilità; `npm audit signatures`: 598 firme verificate.
 - Prova visiva con `next start` di `/note-legali` e della sezione MCP.
-- **Non verificato**: il workflow di release su GitHub, la provenance reale, gli header serviti da Vercel, Node 22 (provato solo Node 26).
+- Dopo il rilascio: gli stessi e2e (configurazione temporanea con `baseURL` https://agentrica.vercel.app) 59 superati, 1 saltato; header CSP, HSTS, nosniff, Referrer-Policy e Permissions-Policy serviti da Vercel.
+- `npm view @agentrica/mcp@0.1.0`: 75 file, shasum uguale al tarball pubblicato, MIT, dipendenze esatte, `engines` Node ≥ 22. `npx -y @agentrica/mcp@0.1.0` in un progetto vuoto: 56 prompt, due tool, versione 0.1.0, nessun file scritto.
+- **Non verificato**: il workflow di release su GitHub e la provenance (dalla 0.1.1), Node 22 (provato solo Node 26), le impostazioni del pacchetto su npm (solo da interfaccia).
 
 ## Passi dell'utente prima del rilascio
 
 1. **GitHub** (fatto, verificato con `gh api`): repository pubblico; ambiente `npm` con approvazione obbligatoria e solo tag `v*`; ruleset `main` (pull request con merge commit, controllo `verify`, niente force push né cancellazione) e `versioni` (tag `v*` solo all'amministratore).
 2. **npm**: organizzazione `agentrica` registrata, owner `flgisimone`, 2FA per accesso e pubblicazione (fatto, verificato con `npm org ls` e `npm profile get`). La 0.1.0 si pubblica a mano senza provenance (scelta dell'utente), poi si configura il trusted publisher (CONVENTIONS §13.8, punto 4).
-3. **Vercel**: verificare DPA e conservazione dei log (PRIV-PUB-01); progetto collegato a `main`.
+3. **Vercel** (verificato): piano Hobby, senza DPA (PRIV-PUB-01); progetto collegato a `main`.
 
 ## Rilievi aperti
 
-- SEC-REL-02 (P1): protezioni su GitHub e npm attive; resta il trusted publisher dopo la 0.1.0. La 0.1.0 non ha provenance (scelta dell'utente).
-- PRIV-PUB-01 (P2): DPA, trasferimenti e conservazione dei log di Vercel.
+- SEC-REL-02: risolto (ambiente, ruleset, trusted publisher, 2FA senza token). La 0.1.0 non ha provenance (scelta dell'utente); la prima release dalla CI (0.1.1) verifica workflow e provenance.
+- PRIV-PUB-01 (P2): il DPA di Vercel copre solo Pro ed Enterprise e il sito è su Hobby. Scelta dell'utente (2026-11-15): resta Hobby, le note legali dicono che non c'è un DPA e rimandano all'informativa di Vercel. Da valutare con un legale; si riapre passando a Pro o cambiando hosting.
 - SEC-REL-03, SEC-REL-04 (P3, accettati): `'unsafe-inline'` negli script; transitivi a range.
 - SEC-REL-05 (P3): action di `ci.yml` per tag.
 - PRIV-PUB-02 (P3, accettato): contatto con issue pubbliche.

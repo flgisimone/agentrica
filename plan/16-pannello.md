@@ -60,5 +60,5 @@ Confermato dall'utente il 2026-11-16.
 
 ## Rilievi aperti
 
-- Risolto: le tre pagine arrivano agli utenti con il rilascio 0.3.2 (2026-11-16, su richiesta dell'utente).
+- Risolto: le tre pagine arrivano agli utenti con il rilascio 0.3.2 (2026-11-16, su richiesta dell'utente). PR #9 `develop` → `main`, tag `v0.3.2` su `3c0f729`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`; `io.github.flgisimone/agentrica` 0.3.2 pubblicata nel registro MCP con `mcp-publisher` (login GitHub dell'utente), `active` e `isLatest`.
 - P3: il pannello multipagina non è stato guardato in una sessione vera di Claude Code.

@@ -5,21 +5,13 @@
 // Con --panel (F14) apre anche il pannello locale su 127.0.0.1 (panel.ts), che legge plan/, audit/ e lo stato di git
 // della cartella corrente e aggiunge i tool open_panel e ask_user; le chiamate agli agenti restano solo in memoria.
 import { realpathSync } from "node:fs";
-import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { loadCatalog, type Department, type DepartmentCode } from "../../catalog/src/index.ts";
+import { AGENTS_DIR, loadCatalog, type Department, type DepartmentCode } from "./catalog.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
 import { agentSummary, agentText, codeName, findAgent, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
-
-// agents/ è in un punto fisso rispetto a questo file, senza risalire le cartelle: la cartella corrente è il progetto
-// dell'utente e non deve poter fornire un'altra agents/. Tre livelli sopra c'è agents/ sia da un clone
-// (packages/mcp/src → la root del repository) sia nel pacchetto (dist/mcp/src → la root del pacchetto, dove prepack
-// copia agents/). Il catalogo è importato per percorso relativo, così tsc lo compila dentro dist e il pacchetto non
-// dipende da @agentrica/catalog.
-const AGENTS_DIR = join(import.meta.dirname, "..", "..", "..", "agents");
 
 // Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
 // contenere argomenti della configurazione del client: i caratteri di controllo (a capo, escape) diventano \uXXXX.
@@ -42,7 +34,7 @@ try {
 
 let full: Department[];
 try {
-  full = loadCatalog(AGENTS_DIR);
+  full = loadCatalog();
 } catch (error) {
   // Senza catalogo completo il server non parte: niente contenuti parziali.
   fail(`catalogo non leggibile in ${AGENTS_DIR}: ${reason(error)}`);

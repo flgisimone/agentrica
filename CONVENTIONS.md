@@ -57,14 +57,15 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 |---|---|
 | `agents/` | i file di ruolo dei cinque reparti: la fonte unica dei contenuti |
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
-| `apps/site/` | il sito Next.js (App Router): `src/app/` pagine, layout e `globals.css` con i token; `src/components/` i componenti, `src/components/ui/` quelli di shadcn; `src/lib/` le utilità |
-| `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo |
-| `e2e/` | prove di fumo e accessibilità del sito con Playwright |
+| `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@agentrica/mcp/catalog` per il sito |
 | `plan/` | decisioni e fasi |
-| `.claude/agents/` | i ruoli come subagent per lavorare al repository |
+| `starter/` | (F18) il modello di progetto che `agentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
+| `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto Agentrica.» |
 | `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
 
 Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve servire anche al server MCP.
+
+Da F17 il sito è nel repository privato `flgisimone/agentrica-site` (in locale `../agentrica-site`): Next.js con App Router, `src/app/` pagine, layout e `globals.css` con i token, `src/components/` i componenti (`ui/` quelli di shadcn), `src/lib/` le utilità, `e2e/` le prove con Playwright. Installa `@agentrica/mcp` a versione esatta e ne legge il catalogo; le sezioni di questo documento sul sito (§9, §11, §12, §13.4, §15.3) valgono lì.
 
 ## 6. Dati e stato
 
@@ -86,7 +87,7 @@ Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve s
 ## 9. Componenti
 
 - Un componente React fa una cosa e riceve dati già pronti dal catalogo come props; Server Component salvo bisogno di stato o eventi.
-- Prima di creare un componente si usa quello di shadcn (`npx shadcn add <nome>` da `apps/site`, poi adattato ai token); i file in `src/components/ui/` importano `cn` da `@/lib/utils`.
+- Prima di creare un componente si usa quello di shadcn (`npx shadcn add <nome>` nel repository del sito, poi adattato ai token); i file in `src/components/ui/` importano `cn` da `@/lib/utils`.
 - Le chiavi delle liste sono stabili: l'`id` dell'agente o la sigla del reparto.
 - Niente framework UI nel browser (React, Vue…) senza una decisione in `plan/README.md`.
 
@@ -97,7 +98,7 @@ Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve s
 
 ## 11. Interfaccia, coerenza e accessibilità
 
-- Si usano i token di `apps/site/src/styles/`, mai colori scritti a mano; ogni reparto ha il suo colore d'accento.
+- Si usano i token di `src/app/globals.css` del sito, mai colori scritti a mano; ogni reparto ha il suo colore d'accento.
 - Lo stato non si affida mai al solo colore: c'è sempre un segno, una forma o un testo (la sigla accanto al colore del reparto).
 - HTML semantico: un `h1` per pagina, titoli di sezione, liste per gli elenchi, etichette sui controlli.
 - Tastiera: ogni azione è raggiungibile, il focus è visibile.
@@ -115,20 +116,20 @@ Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve s
 ## 13. Test e controlli
 
 ### 13.1 Cosa testare
-Si testano il comportamento e i rischi: il catalogo (conteggi, nomi in codice unici, numerazione, file malformati) e che il sito mostri i dati del catalogo. Un bug corretto ha il suo test di regressione.
+Si testano il comportamento e i rischi: il catalogo (conteggi, nomi in codice unici, numerazione, file malformati), il server MCP e, nel repository del sito, che il sito mostri i dati del catalogo. Un bug corretto ha il suo test di regressione.
 
 ### 13.2 Test unitari
-Con `node --test` in `packages/catalog/src/*.test.ts` (`npm test`), senza dipendenze in più.
+Con `node --test` accanto al codice (`packages/*/src/*.test.ts`, `scripts/*.test.ts`; `npm test`), senza dipendenze in più.
 
 ### 13.3 Schema e migrazioni
 Non ci sono database. Il «formato» da proteggere è quello dei file di ruolo (§7).
 
 ### 13.4 Test end-to-end
-Con Playwright in `e2e/`, sul sito costruito (da F1). L'accessibilità si controlla con axe: nessuna violazione serious o critical, salvo i rilievi aperti elencati.
+Con Playwright in `e2e/` del repository del sito, sul sito costruito (da F1; da F17 solo lì). L'accessibilità si controlla con axe: nessuna violazione serious o critical, salvo i rilievi aperti elencati.
 
 ### 13.5 Controlli prima del commit e del merge
-- `npm run verify`: typecheck (catalogo ed e2e con `tsc`, sito con `next typegen` e `tsc`), lint, test unitari e build del sito. Prima di ogni commit.
-- `npm run verify:e2e`: test end-to-end. Prima del merge di una fase, da F1.
+- `npm run verify`: typecheck (catalogo, server MCP e script con `tsc`), lint e test unitari. Prima di ogni commit.
+- `npm run verify:e2e`: test end-to-end, da F17 solo nel repository del sito (lì `verify` aggiunge `next typegen` e la build). Prima del merge di una fase che tocca il sito.
 
 La CI esegue gli stessi due script: se uno manca, quel passo della CI si salta.
 
@@ -152,7 +153,7 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
 1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando il controllo `verify` è verde (`gh pr merge --merge`). Il ruleset `main` vieta push diretti, force push e altri metodi di unione.
-2. **Sito**: Vercel pubblica `main` (Root Directory `apps/site`).
+2. **Sito**: da F17 Vercel pubblica `main` del repository privato `agentrica-site`, con le stesse regole (PR da `develop`, CI verde). Un rilascio del pacchetto arriva sul sito quando lì si alza la versione di `@agentrica/mcp`: Dependabot apre la PR verso `develop` di `agentrica-site` entro un giorno; la si unisce con la CI verde e poi si rilascia il sito in `main`.
 3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`. Il ruleset `versioni` lascia creare i tag `v*` solo all'amministratore del repository.
 4. **Eccezione, solo per la 0.1.0**: npm configura il trusted publisher dalla pagina di un pacchetto che esiste già, quindi la prima versione si pubblica a mano da `main` (`npm publish -w @agentrica/mcp --access public`, con il codice 2FA) e non ha provenance. Subito dopo si configura il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`) e dalla versione successiva vale il punto 3. Per la 0.1.0 non si crea il tag, che avvierebbe la release.
 
@@ -166,15 +167,15 @@ Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello del
 ## 15. Configurazione del repository
 
 ### 15.1 Monorepo
-npm workspaces (`packages/*`, `apps/*`); le dipendenze di sviluppo comuni (TypeScript, ESLint) stanno nella root, quelle di un'app nel suo `package.json`. Node dalla versione di `.nvmrc`. Gli script si lanciano dalla root (`npm run dev`, `npm run verify`).
+npm workspaces (`packages/*`); le dipendenze di sviluppo comuni (TypeScript, ESLint) stanno nella root, quelle di un pacchetto nel suo `package.json`. Node dalla versione di `.nvmrc`. Gli script si lanciano dalla root (`npm run verify`).
 
 ### 15.2 TypeScript ed ESLint
-`tsconfig.base.json` strict per il catalogo e gli e2e; il sito ha il suo `tsconfig.json` strict (con il plugin di Next e `@/*`). TypeScript resta alla 6 finché typescript-eslint non supporta la 7. `eslint.config.js` usa `eslint-config-next` (core-web-vitals e typescript) e vieta Next e React nel catalogo.
+`tsconfig.base.json` strict per catalogo, server MCP e script; il sito ha il suo `tsconfig.json` strict (con il plugin di Next e `@/*`). TypeScript resta alla 6 finché typescript-eslint non supporta la 7. `eslint.config.js` usa le regole consigliate di `typescript-eslint` e vieta Next e React nel catalogo; il sito usa `eslint-config-next`.
 
-### 15.3 Next.js e Tailwind
-Next.js 16 con App Router e Turbopack, che compila da solo il pacchetto del catalogo (nessun `transpilePackages`). Questa versione cambia API e convenzioni: prima di scrivere codice si legge la guida pertinente in `node_modules/next/dist/docs/` (lo ricorda `apps/site/AGENTS.md`, scritto da `next dev` e importato da `apps/site/CLAUDE.md`). Niente `output: export`: le pagine sono pre-generate, ma restano possibili route server.
+### 15.3 Next.js e Tailwind (repository del sito)
+Next.js 16 con App Router e Turbopack. Questa versione cambia API e convenzioni: prima di scrivere codice si legge la guida pertinente in `node_modules/next/dist/docs/` (lo ricorda l'`AGENTS.md` del sito, scritto da `next dev`). Niente `output: export`: le pagine sono pre-generate, ma restano possibili route server.
 
-Il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`): gli script vanno lanciati da dentro il repository. La ricerca è esclusa dal tracciamento di Turbopack (`turbopackIgnore`) perché il sito legge il catalogo solo al build; una route che lo legge a runtime dovrà includere `agents/` con `outputFileTracingIncludes`.
+Il sito legge il catalogo da `@agentrica/mcp/catalog`, che trova `agents/` accanto al proprio file (`import.meta.dirname`): per questo `next.config.ts` ha `serverExternalPackages: ["@agentrica/mcp"]`, che lo carica da `node_modules` invece di impacchettarlo. In questo repository il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`), per i test e gli script.
 
 Tailwind 4 con `@theme inline` in `src/app/globals.css`: i token di shadcn (`--background`, `--card`, `--muted-foreground`…) hanno i valori del tema scuro; gli accenti dei reparti sono `--aibpd` … `--aiwda` e `--dept`, che `[data-dept="SIGLA"]` imposta per il sottoalbero (classi `text-dept`, `border-dept`, `bg-dept`). shadcn con lo stile base-nova su Base UI (`components.json`).
 

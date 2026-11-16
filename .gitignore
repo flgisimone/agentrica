@@ -1,8 +1,6 @@
 # dipendenze e build
 node_modules/
 dist/
-.next/
-next-env.d.ts
 /build
 /coverage
 *.tsbuildinfo
@@ -21,11 +19,6 @@ next-env.d.ts
 # indice locale di tokensave
 .tokensave/
 
-# Playwright
-test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
 
 # agents/, .claude/agents/, plan/, docs/ e audit/ sono versionati (scelta di agentic-starter).
 # Se le evidenze degli audit mostrano dati personali, togliere il commento:
@@ -35,6 +28,8 @@ test-results/
 .claude/settings.local.json
 .claude/*.lock
 
-# pacchetto MCP: prepack copia qui agents/ e LICENSE
+# pacchetto MCP: prepack copia qui agents/, starter/, .claude/agents/ e LICENSE
 packages/mcp/agents/
 packages/mcp/LICENSE
+packages/mcp/starter/
+packages/mcp/.claude/

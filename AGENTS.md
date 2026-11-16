@@ -40,9 +40,9 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 ## Verifica
 
-- `npm run verify` (typecheck, lint, test unitari, build) deve passare prima di ogni commit.
-- `npm run verify:e2e` (Playwright) prima del merge di una fase, dalla fase che lo introduce.
-- Le modifiche visibili si provano nell'app (`npm run dev`) prima di dichiararle fatte. Se una prova non è stata fatta, si dice.
+- `npm run verify` (typecheck, lint, test unitari) deve passare prima di ogni commit.
+- `npm run verify:e2e` (Playwright) prima del merge di una fase che tocca il sito: da F17 sta nel repository del sito, insieme alla build.
+- Le modifiche visibili si provano nel sito (`npm run dev` in `../agentrica-site`) prima di dichiararle fatte. Se una prova non è stata fatta, si dice.
 - La CI (`.github/workflows/ci.yml`) esegue gli stessi due comandi: i nomi `verify` e `verify:e2e` sono il contratto fra il progetto e la CI.
 
 ## Agenzie
@@ -78,7 +78,7 @@ In questo repository le agenzie hanno due parti: sono il **contenuto** del prodo
 
 ### Adattamenti a questo repository
 
-- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e `apps/site` (Next.js 16, Tailwind 4, shadcn/ui); il server MCP in `packages/mcp` da F5. Lavorando in `apps/site` valgono anche le regole di Next in `apps/site/AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
+- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e il server MCP in `packages/mcp`, che esporta anche il catalogo (`@agentrica/mcp/catalog`). Da F17 il sito (Next.js 16, Tailwind 4, shadcn/ui) è nel repository privato `flgisimone/agentrica-site` (in locale `../agentrica-site`), con le regole di Next nel suo `AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
 - **File di ruolo.** Sono contenuto pubblicato: un cambio a un file di `agents/` è una modifica al prodotto e passa dalla conferma dell'utente, come il codice. Nomi in codice e sigle stanno solo in `packages/catalog/src/departments.ts` e non cambiano dopo la pubblicazione.
 - **Dati.** Nessun dato personale né dato reale: il sito è statico e i contenuti vengono dal catalogo. Niente persone, clienti, risultati o recensioni inventati.
 - **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i report dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.

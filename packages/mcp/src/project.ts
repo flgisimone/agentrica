@@ -1,5 +1,5 @@
 // Lettura del progetto dell'utente per il pannello: fasi e backlog da plan/, rilievi da plan/ e audit/, stato di git.
-// Il formato è quello di agentic-starter, descritto nel README del pacchetto. Si legge solo dentro plan/ e audit/
+// Il formato è quello che crea `init` (init.ts), descritto nel README del pacchetto. Si legge solo dentro plan/ e audit/
 // della cartella del progetto: i link simbolici che escono sono rifiutati e ogni file ha un limite di dimensione.
 // Un file mancante o fuori formato diventa un problema in `problems`, mai un errore che ferma il pannello.
 import { execFile } from "node:child_process";
@@ -105,7 +105,7 @@ function readPhases(root: string, plan: string, problems: string[]): Phase[] {
   try {
     readme = readInside(root, join(plan, "README.md"));
   } catch {
-    problems.push("Non trovo plan/README.md: il pannello legge il formato di agentic-starter (vedi il README del pacchetto).");
+    problems.push("Non trovo plan/README.md: il pannello legge il formato creato da `agentrica-mcp init` (vedi il README del pacchetto).");
     return [];
   }
   const fasi = section(readme, "Fasi");

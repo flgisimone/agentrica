@@ -71,5 +71,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | completata |
 | F16 | [16-pannello.md](16-pannello.md) | Pannello multipagina (Sessione, Piano, Rilievi), area personale eliminata, pulizia, metodo a fasi in CONVENTIONS | completata |
 | F17 | [17-sito-privato.md](17-sito-privato.md) | Sito in un repository privato, separato dal pacchetto; questo repository resta pubblico | da aprire |
+| F18 | [18-starter.md](18-starter.md) | agentic-starter: tenerlo e allinearlo ad Agentrica, eliminarlo o fonderlo nel pacchetto | da aprire |
+| F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico (`agents/` resta: è il prodotto) | da aprire |
 
-Ordine: F0 → F17 in sequenza.
+Ordine: F0 → F19 in sequenza; F19 dopo F17, che può ospitare i file tolti.

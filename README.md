@@ -62,6 +62,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F15 | Rilievi aperti da F5 a F14 (0.3.1) | completata |
 | F16 | Pannello multipagina e pulizia (0.3.2) | completata |
 | F17 | Sito in un repository privato | da aprire |
+| F18 | agentic-starter: allineare, eliminare o fondere | da aprire |
+| F19 | File di lavoro fuori dal repository pubblico | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

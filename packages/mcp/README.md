@@ -96,11 +96,10 @@ Con `--panel` il server apre anche una pagina sul tuo computer da cui segui il p
 claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.1 --panel
 ```
 
-Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Mostra:
+Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha tre pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
 
-- **Da decidere**: le scelte in attesa, con le opzioni e le motivazioni; la risposta, con una nota facoltativa, torna all'agente;
-- **Agenti in uso**: gli agenti di Agentrica chiamati in questa sessione, con l'inizio del compito;
-- **Fasi**: le fasi del progetto, la fase aperta con backlog e criteri di accettazione;
+- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), con l'inizio del compito;
+- **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
 - **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto.
 
 Con il pannello il modello ha due tool in più:

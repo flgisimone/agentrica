@@ -96,11 +96,10 @@ With `--panel` the server also opens a page on your computer where you follow th
 claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.1 --panel
 ```
 
-Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It shows:
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
 
-- **Da decidere** (to decide): pending choices, with options and reasons; your answer, with an optional note, goes back to the agent;
-- **Agenti in uso** (agents in use): the Agentrica agents called in this session, with the start of the task;
-- **Fasi** (phases): the project phases, the open phase with backlog and acceptance criteria;
+- **Sessione** (session): pending choices (*Da decidere*, to decide), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agenti in uso*, agents in use), with the start of the task;
+- **Piano** (plan): the open phase with backlog and acceptance criteria, and all project phases;
 - **Rilievi** (findings): open findings from phases and audits, by priority and department.
 
 With the panel the model has two more tools:

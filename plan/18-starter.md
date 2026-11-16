@@ -53,7 +53,7 @@ Ordine: F18-01 → F18-02/03 → F18-04 → chiusura in `develop` → F18-05 →
 
 - **F18-05** Rilascio 0.4.0: PR #11 `develop` → `main`, tag `v0.4.0` su `4d70739`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm` (159 file); `io.github.flgisimone/agentrica` 0.4.0 nel registro MCP con `mcp-publisher` (nuovo login GitHub dell'utente, il token era scaduto).
 - **F18-06** agentic-starter: README con il rimando a `npx -y @agentrica/mcp@0.4.0 init` e a `starter/` (`d54fcef` su `main`), repository archiviato su GitHub.
-- **F18-07** `agentrica-site`: `@agentrica/mcp` 0.4.0 a versione esatta; passo 5 «Se parti da zero, crea il progetto» con `mcp.init` dal README della versione installata (test dei comandi esteso); limite «Il server non scrive file (solo init, quando lo lanci tu)». Merge `fase/f18-init` in `develop` con CI verde. Il rilascio in `main` (produzione su Vercel) aspetta l'ok separato dell'utente.
+- **F18-07** `agentrica-site`: `@agentrica/mcp` 0.4.0 a versione esatta; passo 5 «Se parti da zero, crea il progetto» con `mcp.init` dal README della versione installata (test dei comandi esteso); limite «Il server non scrive file (solo init, quando lo lanci tu)». Merge `fase/f18-init` in `develop` con CI verde; rilascio in `main` con PR #2 (`9317441`) dopo l'ok separato dell'utente.
 
 ## Verifiche
 
@@ -61,9 +61,9 @@ Ordine: F18-01 → F18-02/03 → F18-04 → chiusura in `develop` → F18-05 →
 - `npm pack` e `init` dal tarball in una cartella temporanea, come sopra; secondo `init` nella stessa cartella: uscita 1, nessun file scritto.
 - Release `v0.4.0` (run 43936249766) verde; `latest` su npm 0.4.0 dopo qualche minuto di elaborazione del registro.
 - `agentrica-site`: `npm run verify` superato (19 test, build di 70 percorsi), `npm run verify:e2e` 61 superati e 1 saltato come prima, `npm audit --omit=dev` 0 vulnerabilità, `npm audit signatures` 159 attestazioni verificate; testo e comando nell'HTML della landing; CI di `develop` verde.
-- **Non verificato**: la landing in produzione, finché il sito non è rilasciato in `main`.
+- Produzione: `agentrica.vercel.app` mostra il passo 5 con `npx -y @agentrica/mcp@0.4.0 init` e il limite aggiornato; `/agenti/aisa-02` risponde 200.
 
 ## Rilievi aperti
 
 - **F18-R1** (P3) `docs/AI Multi-Agency System.md` è in due copie (`docs/` e `starter/docs/`). F19 sposta `docs/` fuori dal repository pubblico: resterà solo quella di `starter/`, che però i subagent di Agentrica citano come `docs/…`; da sistemare in F19.
-- **F18-R2** (P2) Rilascio del sito in `main` di `agentrica-site` con la sezione `init`: in attesa dell'ok dell'utente.
+- **F18-R2** (P2) Rilascio del sito in `main` con la sezione `init`. Risolto il 2026-11-16 (PR #2 di `agentrica-site`).

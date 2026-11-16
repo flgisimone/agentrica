@@ -44,6 +44,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, area personale sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Area personale | Eliminata (era F16, sospesa dal 2026-11-15): account, accesso Google + TOTP e pannello `/admin` non hanno uno scopo per gli utenti. Il file resta nella storia di git; si riparte da capo se serve un MCP remoto | Scelta dell'utente (2026-11-16) |
 | Starter | Da F18 un progetto nuovo si crea con `npx @agentrica/mcp init`: copia `starter/` (regole generali di Agentrica), gli `agents/` e i subagent del pacchetto con il nome del progetto, `.mcp.json` con il pannello e, fuori da un repository, git su `main` e `develop`. agentic-starter è archiviato; gamoey, kitty-3d e oneoffice restano come sono | Scelta dell'utente (2026-11-16, F18) |
+| File di lavoro | `plan/`, `audit/`, `docs/` ed `examples/` restano nel repository pubblico (F19 abbandonata all'apertura) | Scelta dell'utente (2026-11-16, F19) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -73,6 +74,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F16 | [16-pannello.md](16-pannello.md) | Pannello multipagina (Sessione, Piano, Rilievi), area personale eliminata, pulizia, metodo a fasi in CONVENTIONS | completata |
 | F17 | [17-sito-privato.md](17-sito-privato.md) | Sito in un repository privato, separato dal pacchetto; questo repository resta pubblico | completata |
 | F18 | [18-starter.md](18-starter.md) | agentic-starter fuso nel pacchetto: `npx @agentrica/mcp init` (0.4.0), starter archiviato, comando sul sito | completata |
-| F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico (`agents/` resta: è il prodotto) | da aprire |
+| F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico: abbandonata all'apertura, resta tutto pubblico | sospesa |
 
-Ordine: F0 → F19 in sequenza; F19 dopo F17, che può ospitare i file tolti.
+Ordine: F0 → F19 in sequenza.

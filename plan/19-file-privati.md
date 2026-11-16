@@ -18,7 +18,8 @@ Cosa usa ciascuna cartella oggi:
 | `audit/` | l'utente; evidenza pubblica delle revisioni di sicurezza e privacy di F5 e F10 | Sì, perdendo la trasparenza delle revisioni |
 | `docs/` | l'utente | Sì |
 | `examples/` | le prove degli agenti (rilievo P2 di F15-03); il README del pacchetto (npm e registro) la cita come prova ripetibile dei risultati | Sì, ma i risultati dichiarati nel README non sarebbero più verificabili da chi legge |
-| `.claude/agents/` | i subagent delle sessioni di sviluppo | Sì, ma senza i subagent chi clona non ha il team |
+| `.claude/agents/` | i subagent delle sessioni di sviluppo; da F18 anche `init` del pacchetto, che li copia nei progetti nuovi (`prepack`) | **No** da F18, come `agents/` |
+| `starter/` | da F18 il modello di progetto di `init`, copiato da `prepack` | **No**: è il prodotto. Contiene l'altra copia di `docs/AI Multi-Agency System.md` (F18-R1) |
 | `AGENTS.md`, `CONVENTIONS.md`, `CLAUDE.md` | sessioni di Claude Code | Sì, con le stesse avvertenze di `plan/` |
 
 ## Proposte da confermare

@@ -1,0 +1,36 @@
+# dipendenze e build
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+# completare in F0 con le cartelle dello stack, es. /.next/ /out/ /dist-ssr .vite/ .wrangler/ .vercel next-env.d.ts
+
+# misc
+.DS_Store
+*.log
+*.pem
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# env: si versiona solo l'esempio
+.env*
+!.env.example
+
+# indice locale di tokensave
+.tokensave/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# agents/, .claude/agents/, plan/, docs/ e audit/ sono versionati (predefinito di `@agentrica/mcp init`).
+# Se le evidenze degli audit mostrano dati personali, togliere il commento:
+# audit/*/evidenze/
+
+# Claude Code: impostazioni personali e lock locali
+.claude/settings.local.json
+.claude/*.lock

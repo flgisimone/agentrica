@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Server MCP di Agentrica su stdio: un prompt per agente e due tool (elenca_agenti, agente).
 // Con --agents (es. --agents aisa,aiwda-08) prompt e tool vedono solo la squadra; senza, tutti gli agenti.
-// Legge solo i file di agents/ all'avvio; non scrive file, non apre connessioni e non registra dati.
+// Legge solo i file di agents/ all'avvio; non scrive file, non apre connessioni e non registra dati (scrive solo init).
 // Con --panel (F14) apre anche il pannello locale su 127.0.0.1 (panel.ts), che legge plan/, audit/ e lo stato di git
 // della cartella corrente e aggiunge i tool open_panel e ask_user; le chiamate agli agenti restano solo in memoria.
 import { realpathSync } from "node:fs";
@@ -24,6 +24,11 @@ const reason = (error: unknown) => (error instanceof Error ? error.message : Str
 
 let spec: string | undefined;
 let withPanel = false;
+// `init` (F18) crea un progetto e termina, senza avviare il server: è l'unico comando che scrive file (init.ts).
+if (process.argv[2] === "init") {
+  const { runInit } = await import("./init.ts");
+  process.exit(runInit(process.argv.slice(3)));
+}
 try {
   const { values } = parseArgs({ options: { agents: { type: "string" }, panel: { type: "boolean" } } });
   spec = values.agents;

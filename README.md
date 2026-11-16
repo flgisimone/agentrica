@@ -7,7 +7,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.3` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.4.0` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
@@ -61,7 +61,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F15 | Rilievi aperti da F5 a F14 (0.3.1) | completata |
 | F16 | Pannello multipagina e pulizia (0.3.2) | completata |
 | F17 | Sito in un repository privato (0.3.3) | completata |
-| F18 | agentic-starter: allineare, eliminare o fondere | da aprire |
+| F18 | agentic-starter fuso nel pacchetto: `init` (0.4.0) | in corso |
 | F19 | File di lavoro fuori dal repository pubblico | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
@@ -72,14 +72,13 @@ Requisiti: Node (versione in `.nvmrc`) e npm.
 
 ```sh
 npm ci
-npm run dev       # il sito in locale
-npm run verify    # typecheck, lint, test, build: prima di ogni commit
+npm run verify    # typecheck, lint, test: prima di ogni commit
 npm run stats     # download npm di @agentrica/mcp e stelle su GitHub
 ```
 
 ## Come si lavora
 
-Il repository è nato da [agentic-starter](https://github.com/flgisimone/agentic-starter) e ne segue il metodo:
+Il metodo di lavoro è lo stesso che `npx @agentrica/mcp init` porta nei progetti nuovi (vedi [packages/mcp/README.md](packages/mcp/README.md)):
 
 - **una fase alla volta**: un file in `plan/` con backlog (task `FN-NN` con priorità `P0`–`P3`) e criteri di accettazione confermati dall'utente, un branch `fase/fN-nome` da `develop`, chiusura con la procedura di [CONVENTIONS §13.7](CONVENTIONS.md); il metodo è in [CONVENTIONS §2.6](CONVENTIONS.md);
 - **agenzie su richiesta**: i ruoli sono un modo di lavorare, i subagent si avviano solo per gli audit;

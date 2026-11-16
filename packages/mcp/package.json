@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "mcpName": "io.github.flgisimone/agentrica",
   "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente e due tool in sola lettura.",
   "license": "MIT",
@@ -25,13 +25,15 @@
   "files": [
     "dist",
     "agents",
+    "starter",
+    ".claude/agents",
     "README.en.md"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "prepack": "rm -rf dist agents LICENSE && tsc -p tsconfig.build.json && cp -R src/page dist/mcp/src/page && cp -R ../../agents agents && cp ../../LICENSE LICENSE"
+    "prepack": "rm -rf dist agents starter .claude LICENSE && tsc -p tsconfig.build.json && cp -R src/page dist/mcp/src/page && cp -R ../../agents agents && cp -R ../../starter starter && mkdir .claude && cp -R ../../.claude/agents .claude/agents && cp ../../LICENSE LICENSE"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

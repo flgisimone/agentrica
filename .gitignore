@@ -28,6 +28,8 @@ dist/
 .claude/settings.local.json
 .claude/*.lock
 
-# pacchetto MCP: prepack copia qui agents/ e LICENSE
+# pacchetto MCP: prepack copia qui agents/, starter/, .claude/agents/ e LICENSE
 packages/mcp/agents/
 packages/mcp/LICENSE
+packages/mcp/starter/
+packages/mcp/.claude/

@@ -54,6 +54,7 @@ Ordine: F18-01 → F18-02/03 → F18-04 → chiusura in `develop` → F18-05 →
 - **F18-05** Rilascio 0.4.0: PR #11 `develop` → `main`, tag `v0.4.0` su `4d70739`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm` (159 file); `io.github.flgisimone/agentrica` 0.4.0 nel registro MCP con `mcp-publisher` (nuovo login GitHub dell'utente, il token era scaduto).
 - **F18-06** agentic-starter: README con il rimando a `npx -y @agentrica/mcp@0.4.0 init` e a `starter/` (`d54fcef` su `main`), repository archiviato su GitHub.
 - **F18-07** `agentrica-site`: `@agentrica/mcp` 0.4.0 a versione esatta; passo 5 «Se parti da zero, crea il progetto» con `mcp.init` dal README della versione installata (test dei comandi esteso); limite «Il server non scrive file (solo init, quando lo lanci tu)». Merge `fase/f18-init` in `develop` con CI verde; rilascio in `main` con PR #2 (`9317441`) dopo l'ok separato dell'utente.
+- Dopo il rilascio, su richiesta dell'utente (`agentrica-site`, PR #3): «Cosa fa» e «Cosa non fa» in due liste con ✓ e ✕; sezione «Prima di usarlo» (sfondo normale, voce nel menu) con i limiti e «Messi alla prova», separata da «Gli agenti nei tuoi progetti»; shell della dimostrazione sticky su desktop; footer a fascia nella landing; link del metodo a `starter/` al posto di agentic-starter archiviato.
 
 ## Verifiche
 

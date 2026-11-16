@@ -43,6 +43,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Pannello locale | F14: pagina servita in locale (`127.0.0.1`) con fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina invece che dal terminale; senza account né dati verso Agentrica. Da 0.3.0: flag `--panel` del server MCP (ponte nell'MCP, niente Agent SDK), tool `open_panel` e `ask_user`, formato di `plan/` e `audit/` di oggi documentato nel README del pacchetto. Da F16 in tre pagine: Sessione, Piano, Rilievi | Scelta dell'utente (2026-11-15, revisione del valore e apertura di F14) |
 | Revisione del valore | F11 ridotta ai download npm, F12 a `--agents` e progetti vuoti, F14 confermato con le scelte dalla pagina, area personale sospesa; nuova F13 su prove degli agenti e distribuzione, che portano più valore delle funzioni del sito | Scelta dell'utente (2026-11-15) |
 | Area personale | Eliminata (era F16, sospesa dal 2026-11-15): account, accesso Google + TOTP e pannello `/admin` non hanno uno scopo per gli utenti. Il file resta nella storia di git; si riparte da capo se serve un MCP remoto | Scelta dell'utente (2026-11-16) |
+| Starter | Da F18 un progetto nuovo si crea con `npx @agentrica/mcp init`: copia `starter/` (regole generali di Agentrica), gli `agents/` e i subagent del pacchetto con il nome del progetto, `.mcp.json` con il pannello e, fuori da un repository, git su `main` e `develop`. agentic-starter è archiviato; gamoey, kitty-3d e oneoffice restano come sono | Scelta dell'utente (2026-11-16, F18) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -71,7 +72,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | completata |
 | F16 | [16-pannello.md](16-pannello.md) | Pannello multipagina (Sessione, Piano, Rilievi), area personale eliminata, pulizia, metodo a fasi in CONVENTIONS | completata |
 | F17 | [17-sito-privato.md](17-sito-privato.md) | Sito in un repository privato, separato dal pacchetto; questo repository resta pubblico | completata |
-| F18 | [18-starter.md](18-starter.md) | agentic-starter: tenerlo e allinearlo ad Agentrica, eliminarlo o fonderlo nel pacchetto | da aprire |
+| F18 | [18-starter.md](18-starter.md) | agentic-starter fuso nel pacchetto: `npx @agentrica/mcp init` (0.4.0), starter archiviato, comando sul sito | in corso |
 | F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico (`agents/` resta: è il prodotto) | da aprire |
 
 Ordine: F0 → F19 in sequenza; F19 dopo F17, che può ospitare i file tolti.

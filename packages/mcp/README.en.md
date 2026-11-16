@@ -12,7 +12,7 @@ The agent files are in Italian. The agent answers in the language you write in.
 
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
-- It writes no files, opens no network connections, logs nothing, collects and sends no data, and has no telemetry. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
+- The server writes no files (only the [`init`](#new-project) command does, when you run it), opens no network connections, logs nothing, collects and sends no data, and has no telemetry. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
 - It runs nothing in your project. It only gives instructions to the model: what the model does in the project depends on the client and on the permissions you grant it.
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.3.3"]
+      "args": ["-y", "@agentrica/mcp@0.4.0"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.3.3
+npm install -g --ignore-scripts @agentrica/mcp@0.4.0
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -93,7 +93,7 @@ Number 01 in each department is the director: it coordinates the specialists and
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
@@ -113,11 +113,29 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 
 **What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
 
-**Format of `plan/` and `audit/`.** The panel reads the agentic-starter plan format, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
+**Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 
 - `plan/README.md` with a `## Fasi` section and a `| Fase | File | Contenuto | Stato |` table, the file as a link (`[14-pannello.md](14-pannello.md)`). The open phase is the first one whose status is neither `completata` nor `sospesa`.
 - In the phase file: `# Title`, a `**Obiettivo**: …` line, `## Backlog` with the `| # | Task | Priorità |` table, `## Criteri di accettazione` and `## Fatto` as lists; a task is done when its id appears in bold under «Fatto» (`- **F14-01** …`). `## Rilievi aperti` is a list, with the priority (`P0`–`P3`) in the text; an item that says «risolto» or «chiuso» (resolved, closed; e.g. «Risolto in F6.») stays in the plan but the panel does not show it.
 - `audit/<folder>/<file>.json` with `agente` (e.g. `"AICA-02 · …"`, which gives the department) and a `rilievi` list of objects with `id`, `titolo`, `priorita` and optional `stato`; a finding whose `stato` says «risolto» or «chiuso» is not shown.
+
+## New project
+
+`init` creates a project with Agentrica's way of working, ready for Claude Code:
+
+```sh
+npx -y @agentrica/mcp@0.4.0 init my-project --name "My project"
+```
+
+Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
+
+- `AGENTS.md` and `CLAUDE.md` (rules for agents: tokensave, the Ponytail ladder, efficiency, checks, agencies) and `CONVENTIONS.md` (code, tests, phases, closing and release), with the stack-specific parts marked «da compilare» (to fill in);
+- `plan/` with `README.md` (decisions, glossary, phases) and `00-base.md`, the F0 phase to start from; `audit/` and `docs/`;
+- `agents/` and `.claude/agents/`: the 56 roles of this version and one subagent per role, with the project name;
+- `.github/workflows/ci.yml` (`npm run verify` and `verify:e2e`, skipped until F0 creates them), `.gitignore`, `.nvmrc`, `.env.example`;
+- `.mcp.json` with this server at an exact version and `--panel`, so the panel reads the plan right away.
+
+If even one file already exists, `init` writes nothing and lists them. Outside a git repository it makes the first commit on `main` and leaves `develop` checked out; inside one it does not commit. Then open Claude Code in the folder and ask it to open phase F0. `init` is the only command that writes files: the server stays read-only. It replaces agentic-starter, which is no longer updated.
 
 ## Put to the test
 
@@ -139,6 +157,7 @@ The same catalog can be read from code, without starting the server: `import { l
 
 ## Versions
 
+- **0.4.0**: `init` command that creates a project with rules, phased plan, agencies, subagents, CI and `.mcp.json` (replaces agentic-starter); the server is unchanged.
 - **0.3.3**: `@agentrica/mcp/catalog` export to read departments and agents from code (used by the site, now in a separate repository); agents and server behaviour unchanged.
 - **0.3.2**: the panel has three pages (Sessione, Piano, Rilievi) with a menu counting pending choices and findings; agents and server behaviour unchanged.
 - **0.3.1**: the panel hides closed findings and counts new files separately; the `agente` tool only accepts department codes in ids; common rules with a shared severity scale (P0–P3) and a scale for the software department.

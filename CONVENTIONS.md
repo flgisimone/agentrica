@@ -59,7 +59,8 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
 | `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@agentrica/mcp/catalog` per il sito |
 | `plan/` | decisioni e fasi |
-| `.claude/agents/` | i ruoli come subagent per lavorare al repository |
+| `starter/` | (F18) il modello di progetto che `agentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
+| `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto Agentrica.» |
 | `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
 
 Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve servire anche al server MCP.

@@ -7,7 +7,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.1` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.2` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi.
 
@@ -59,8 +59,9 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F12 | Squadre: `--agents` nell'MCP e regola per i progetti vuoti | completata |
 | F13 | Prove e distribuzione: casi di prova degli agenti, registri MCP | completata |
 | F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost (`--panel`, da 0.3.0) | completata |
-| F15 | Rilievi aperti da F5 a F14 | aperta |
-| F16 | Area personale: accesso Google + TOTP (sospesa) | sospesa |
+| F15 | Rilievi aperti da F5 a F14 (0.3.1) | completata |
+| F16 | Pannello multipagina e pulizia (0.3.2) | completata |
+| F17 | Sito in un repository privato | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 
@@ -79,7 +80,7 @@ npm run stats     # download npm di @agentrica/mcp e stelle su GitHub
 
 Il repository è nato da [agentic-starter](https://github.com/flgisimone/agentic-starter) e ne segue il metodo:
 
-- **una fase alla volta**: un file in `plan/`, un branch `fase/fN-nome` da `develop`, chiusura con la procedura di [CONVENTIONS §13.7](CONVENTIONS.md);
+- **una fase alla volta**: un file in `plan/` con backlog (task `FN-NN` con priorità `P0`–`P3`) e criteri di accettazione confermati dall'utente, un branch `fase/fN-nome` da `develop`, chiusura con la procedura di [CONVENTIONS §13.7](CONVENTIONS.md); il metodo è in [CONVENTIONS §2.6](CONVENTIONS.md);
 - **agenzie su richiesta**: i ruoli sono un modo di lavorare, i subagent si avviano solo per gli audit;
 - **ogni decisione finale è confermata dall'utente**, commit e push compresi.
 

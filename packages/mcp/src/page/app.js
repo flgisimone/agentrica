@@ -160,6 +160,7 @@ function renderPhases({ project }) {
       ? [
           el("h3", {}, inline(open.title), ` — ${open.status}`),
           open.goal && el("p", { class: "goal" }, inline(open.goal)),
+          el("h3", {}, "Backlog"),
           open.tasks.length
             ? table(
                 ["Task", "Descrizione", "Priorità", "Stato"],
@@ -178,15 +179,12 @@ function renderPhases({ project }) {
           open.criteria.length > 0 && el("h3", {}, "Criteri di accettazione"),
           open.criteria.length > 0 && el("ul", { class: "criteria" }, open.criteria.map((c) => el("li", {}, inline(c)))),
         ]
-      : []),
+      : [empty("Nessuna fase in corso: tutte le fasi sono completate, sospese o da aprire.")]),
   );
-  // Aperto solo senza una fase in corso: altrimenti la tabella completa spinge giù i rilievi.
-  const all = $("phases").querySelector("details");
-  const wasOpen = all ? all.open : !open;
   $("phases").replaceChildren(
     project.phases.length === 0
       ? empty("Nessuna fase trovata in plan/README.md.")
-      : el("details", { open: wasOpen }, el("summary", {}, `Tutte le fasi (${project.phases.length})`), table(
+      : table(
           ["Fase", "Contenuto", "Stato"],
           project.phases.map((p) =>
             el(
@@ -197,7 +195,7 @@ function renderPhases({ project }) {
               el("td", {}, p.status),
             ),
           ),
-        )),
+        ),
   );
 }
 
@@ -249,9 +247,34 @@ function renderFindings({ project }) {
   );
 }
 
+function renderCounts({ project, questions }) {
+  const waiting = questions.length;
+  const findings = project.findings.length;
+  $("count-sessione").textContent = waiting ? String(waiting) : "";
+  $("count-rilievi").textContent = String(findings);
+  // Il solo numero non dice cosa conta: il nome completo è per i lettori di schermo.
+  $("count-sessione").parentElement.setAttribute("aria-label", waiting ? `Sessione, ${waiting} da decidere` : "Sessione");
+  $("count-rilievi").parentElement.setAttribute("aria-label", `Rilievi, ${findings} aperti`);
+}
+
+// Una vista per volta, scelta dall'hash: avanti e indietro del browser funzionano senza toccare il server.
+const VIEWS = ["sessione", "piano", "rilievi"];
+
+function showView(moveFocus) {
+  const name = location.hash.slice(1);
+  const current = VIEWS.includes(name) ? name : VIEWS[0];
+  for (const view of document.querySelectorAll(".view")) view.hidden = view.dataset.view !== current;
+  for (const tab of document.querySelectorAll(".tabs a")) {
+    if (tab.dataset.view === current) tab.setAttribute("aria-current", "page");
+    else tab.removeAttribute("aria-current");
+  }
+  if (moveFocus) document.querySelector(`#view-${current} h1`).focus();
+}
+
 function render() {
   if (!state) return;
   renderHeader(state);
+  renderCounts(state);
   renderQuestions(state);
   renderActivity(state);
   renderPhases(state);
@@ -281,6 +304,8 @@ function connect() {
   };
 }
 
+window.addEventListener("hashchange", () => showView(true));
+showView(false);
 connect();
 refresh();
 setInterval(() => document.visibilityState === "visible" && refresh(), REFRESH_MS);

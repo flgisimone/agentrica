@@ -11,34 +11,54 @@
   <body>
     <header class="top">
       <div class="wrap top-row">
-        <h1 class="brand">Agentrica <span aria-hidden="true">·</span> pannello</h1>
+        <p class="brand">Agentrica <span aria-hidden="true">·</span> pannello</p>
         <p class="meta" id="project">Caricamento…</p>
         <p class="link" id="link" role="status">Collegamento in corso…</p>
       </div>
+      <nav class="wrap tabs" aria-label="Sezioni del pannello">
+        <a href="#sessione" data-view="sessione">Sessione <span class="count" id="count-sessione"></span></a>
+        <a href="#piano" data-view="piano">Piano</a>
+        <a href="#rilievi" data-view="rilievi">Rilievi <span class="count" id="count-rilievi"></span></a>
+      </nav>
     </header>
+    <div id="announce" class="sr-only" aria-live="polite"></div>
     <main class="wrap">
       <p class="problems" id="problems" hidden></p>
-      <div class="live">
-        <section aria-labelledby="h-decide" class="card">
-          <h2 id="h-decide">Da decidere</h2>
-          <div id="announce" class="sr-only" aria-live="polite"></div>
-          <div id="questions"></div>
+
+      <div id="view-sessione" class="view" data-view="sessione">
+        <h1 class="sr-only" tabindex="-1">Sessione</h1>
+        <div class="live">
+          <section aria-labelledby="h-decide" class="card">
+            <h2 id="h-decide">Da decidere</h2>
+            <div id="questions"></div>
+          </section>
+          <section aria-labelledby="h-agents" class="card">
+            <h2 id="h-agents">Agenti in uso</h2>
+            <div id="activity"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="view-piano" class="view" data-view="piano" hidden>
+        <h1 class="sr-only" tabindex="-1">Piano</h1>
+        <section aria-labelledby="h-open" class="card">
+          <h2 id="h-open">Fase in corso</h2>
+          <div id="open-phase"></div>
         </section>
-        <section aria-labelledby="h-agents" class="card">
-          <h2 id="h-agents">Agenti in uso</h2>
-          <div id="activity"></div>
+        <section aria-labelledby="h-phases" class="card">
+          <h2 id="h-phases">Tutte le fasi</h2>
+          <div id="phases"></div>
         </section>
       </div>
-      <section aria-labelledby="h-phases" class="card">
-        <h2 id="h-phases">Fasi</h2>
-        <div id="open-phase"></div>
-        <div id="phases"></div>
-      </section>
-      <section aria-labelledby="h-findings" class="card">
-        <h2 id="h-findings">Rilievi</h2>
-        <div id="filters" class="filters" role="group" aria-label="Filtra per reparto"></div>
-        <div id="findings"></div>
-      </section>
+
+      <div id="view-rilievi" class="view" data-view="rilievi" hidden>
+        <h1 class="sr-only" tabindex="-1">Rilievi</h1>
+        <section aria-labelledby="h-findings" class="card">
+          <h2 id="h-findings">Rilievi aperti</h2>
+          <div id="filters" class="filters" role="group" aria-label="Filtra per reparto"></div>
+          <div id="findings"></div>
+        </section>
+      </div>
     </main>
   </body>
 </html>

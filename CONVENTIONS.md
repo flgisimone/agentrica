@@ -25,6 +25,14 @@ Si applica la scala Ponytail di `AGENTS.md`. Niente refactoring estranei, niente
 ### 2.5 Verificare
 Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di accettazione sull'implementazione reale. Non si dichiara superato un controllo che non è stato eseguito.
 
+### 2.6 Fasi e backlog
+Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
+- **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
+- **Backlog.** Una tabella con id `FN-NN`, task e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un task è fatto quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l'evidenza: il pannello locale legge questo formato.
+- **Apertura.** Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
+- **Durante.** Ciò che esce dal perimetro diventa una voce del backlog o un rilievo aperto, non una modifica di passaggio (§14). Le correzioni fuori fase vanno su `fix/nome`.
+- **Chiusura.** Procedura di §13.7; i «Rilievi aperti» restano visibili finché una fase successiva non li chiude con un'evidenza.
+
 ## 3. Scrittura del codice
 
 - **Leggibilità prima di tutto**: nomi che dicono cosa contengono, funzioni brevi con una responsabilità, flusso lineare con uscite anticipate.
@@ -84,7 +92,7 @@ Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve s
 
 ## 10. Accesso e protezione
 
-- Nessun segreto nel codice né nei log. I file `.env*` (tranne `.env.example`) non entrano in git.
+- Nessun segreto nel codice né nei log. I file `.env*` non entrano in git.
 - Il sito è pubblico e statico: niente form, cookie o tracciamento senza una decisione in `plan/README.md` e il passaggio dalla privacy.
 
 ## 11. Interfaccia, coerenza e accessibilità

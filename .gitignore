@@ -15,9 +15,8 @@ next-env.d.ts
 .vscode/*
 !.vscode/extensions.json
 
-# env: si versiona solo l'esempio
+# env: mai in git
 .env*
-!.env.example
 
 # indice locale di tokensave
 .tokensave/

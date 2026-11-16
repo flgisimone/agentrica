@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere i rilievi aperti da F5 a F14 che si possono chiudere, con un'evidenza per ciascuno, così che il pannello mostri solo ciò che resta davvero da fare o è stato accettato.
 
-> **Stato: aperta** (2026-11-15, dopo F14). Fase chiesta dall'utente il 2026-11-15, prima dell'area personale (diventata F16).
+> **Stato: completata** (2026-11-15, dopo F14). 0.3.1 rilasciata su npm; le esecuzioni di F15-03 e la verifica di F15-09 restano all'utente (vedi «Rilievi aperti»). Fase chiesta dall'utente il 2026-11-15, prima dell'area personale (diventata F16, poi eliminata il 2026-11-16).
 
 **Agenzie**: software (QA, Backend, Frontend, Security, Performance, Code Reviewer); cybersecurity (Security Architect, Vulnerability Management) per gli audit di F5; privacy (GDPR Specialist) per i rilievi PRIV; design (UI Designer, Accessibility) per i controlli del sito; business (Product Manager) per la scala di gravità.
 
@@ -12,7 +12,7 @@ Il pannello di F14 mostra 42 rilievi: 10 P2, 31 P3 e uno senza priorità (elenco
 
 ## Decisioni dell'utente all'apertura (2026-11-15)
 
-- **Numero**: questa fase è F15; l'area personale passa a F16 (`16-area-personale.md`).
+- **Numero**: questa fase è F15; l'area personale passa a F16 (poi eliminata il 2026-11-16).
 - **Rischi accettati**: restano aperti e visibili nel pannello, come promemoria. Sono fuori dal perimetro: PRIV-PUB-01 (DPA di Vercel su Hobby, voce di F10 e audit), SEC-REL-03 e SEC-REL-04 (`'unsafe-inline'`, transitivi a range), PRIV-PUB-02 (contatto con issue pubbliche), note legali non riviste da un legale.
 
 ## Backlog
@@ -56,6 +56,7 @@ Confermato dall'utente il 2026-11-15.
 - **F15-06** 768 px guardati (nessuno scorrimento orizzontale); sfondo a 60 fps con circa 0,5 ms di script per fotogramma; `spanInRows` senza scheda sola nell'ultima riga, con test; timeout del primo `goto` non riprodotto; diagramma e cerchio chiusi per decisione. Glifi animati (`star-glyph.tsx`, `globals.css`), con e2e su animazione e «riduci movimento».
 - **F15-07** I reparti della squadra non hanno `director` (`SquadDepartment` in `prompt.ts`), con test.
 - **F15-08** Scala di gravità scritta in `agents/` nel testo confermato.
+- **F15-10** Rilascio 0.3.1 (CONVENTIONS §13.8): PR #8 `develop` → `main`, tag `v0.3.1` su `1b00028`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`. Un primo tag `v0.3.1` era stato creato per errore sul `main` precedente, prima dell'unione della PR: la Release si è fermata al controllo della versione senza pubblicare, il tag è stato cancellato e ricreato. Pubblicazione nel registro MCP con `mcp-publisher publish` a cura dell'utente: `io.github.flgisimone/agentrica` 0.3.1 è `active` e `isLatest` in `registry.modelcontextprotocol.io` (pubblicata il 2026-11-15 alle 22:00 UTC, controllato il 2026-11-16).
 - Il titolo «## Backlog» del file di fase non aveva il formato che il pannello legge (lo segnalava il test sul piano del repository): corretto.
 - Rilievi delle fasi passate aggiornati con «Risolto» o «Chiuso» e il motivo: il pannello passa da 42 a 13 rilievi, tutti rischi accettati o in attesa dell'utente.
 

@@ -70,5 +70,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F14 | [14-pannello.md](14-pannello.md) | Pannello locale su localhost: fasi, backlog, rilievi, agenti in uso e scelte da prendere dalla pagina | completata |
 | F15 | [15-rilievi.md](15-rilievi.md) | Rilievi aperti da F5 a F14: audit di F5, prove degli agenti, ritocchi del sito e dell'MCP, rilascio 0.3.1 | completata |
 | F16 | [16-pannello.md](16-pannello.md) | Pannello multipagina (Sessione, Piano, Rilievi), area personale eliminata, pulizia, metodo a fasi in CONVENTIONS | completata |
+| F17 | [17-sito-privato.md](17-sito-privato.md) | Sito in un repository privato, separato dal pacchetto; questo repository resta pubblico | da aprire |
 
-Ordine: F0 → F16 in sequenza.
+Ordine: F0 → F17 in sequenza.

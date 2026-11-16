@@ -60,5 +60,5 @@ Confermato dall'utente il 2026-11-16.
 
 ## Rilievi aperti
 
-- P3: le tre pagine arrivano agli utenti solo con il rilascio 0.3.2 (CONVENTIONS §13.8), su richiesta dell'utente.
+- Risolto: le tre pagine arrivano agli utenti con il rilascio 0.3.2 (2026-11-16, su richiesta dell'utente).
 - P3: il pannello multipagina non è stato guardato in una sessione vera di Claude Code.

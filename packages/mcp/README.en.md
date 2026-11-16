@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.2
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.3.2"]
+      "args": ["-y", "@agentrica/mcp@0.3.3"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.3.2
+npm install -g --ignore-scripts @agentrica/mcp@0.3.3
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.2 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -93,7 +93,7 @@ Number 01 in each department is the director: it coordinates the specialists and
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.2 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.3.3 --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
@@ -135,8 +135,11 @@ Limits: the defects are few, known and fairly obvious; one model and one run per
 
 The agents' text comes from the `agents/` files of the installed version. To update, change the version in the command (or reinstall with `npm install -g`) and restart the client. Ids and code names do not change.
 
+The same catalog can be read from code, without starting the server: `import { loadCatalog } from "@agentrica/mcp/catalog"` returns departments and agents (with the `Department` and `Agent` types) from the package's `agents/`. The Agentrica site uses it.
+
 ## Versions
 
+- **0.3.3**: `@agentrica/mcp/catalog` export to read departments and agents from code (used by the site, now in a separate repository); agents and server behaviour unchanged.
 - **0.3.2**: the panel has three pages (Sessione, Piano, Rilievi) with a menu counting pending choices and findings; agents and server behaviour unchanged.
 - **0.3.1**: the panel hides closed findings and counts new files separately; the `agente` tool only accepts department codes in ids; common rules with a shared severity scale (P0–P3) and a scale for the software department.
 - **0.3.0**: local panel with `--panel`: phases, backlog, findings, agents in use and choices made from the page (`open_panel` and `ask_user` tools). Without `--panel` nothing changes.

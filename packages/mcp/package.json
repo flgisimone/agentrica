@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "mcpName": "io.github.flgisimone/agentrica",
   "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente e due tool in sola lettura.",
   "license": "MIT",
@@ -12,6 +12,13 @@
   },
   "keywords": ["mcp", "model-context-protocol", "agents", "claude"],
   "type": "module",
+  "exports": {
+    "./catalog": {
+      "types": "./dist/mcp/src/catalog.d.ts",
+      "default": "./dist/mcp/src/catalog.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "agentrica-mcp": "dist/mcp/src/server.js"
   },

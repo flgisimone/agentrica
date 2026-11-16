@@ -1,12 +1,10 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import tseslint from "typescript-eslint";
 
+// Solo TypeScript per Node: il sito, con le regole di Next, è nel repository privato agentrica-site (F17).
 export default defineConfig([
-  ...nextVitals,
-  ...nextTs,
+  ...tseslint.configs.recommended,
   {
-    settings: { next: { rootDir: "apps/site/" } },
     rules: {
       "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_", argsIgnorePattern: "^_" }],
     },
@@ -18,5 +16,5 @@ export default defineConfig([
       "no-restricted-imports": ["error", { patterns: ["next", "next/*", "react", "react/*", "react-dom", "react-dom/*"] }],
     },
   },
-  globalIgnores(["**/.next/**", "**/out/**", "**/build/**", "**/next-env.d.ts", "**/node_modules/**", "test-results/**", "playwright-report/**"]),
+  globalIgnores(["**/dist/**", "**/node_modules/**", "packages/mcp/agents/**"]),
 ]);

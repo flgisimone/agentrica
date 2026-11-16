@@ -9,7 +9,7 @@ Il repository ha due obiettivi, in quest'ordine:
 
 Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.3.3` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
-Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi.
+Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
 ## I reparti
 
@@ -31,8 +31,7 @@ Agentrica non ha persone, clienti o casi di successo: il sito non ne inventa.
 agentrica/
 ├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
-├── apps/site/           # il sito in Next.js (Tailwind, shadcn/ui): landing, reparti, agenti
-├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp: vedi packages/mcp/README.md
+├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp con l'export ./catalog: vedi packages/mcp/README.md
 ├── plan/                # decisioni e fasi del progetto
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
@@ -61,7 +60,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F14 | Pannello locale: agenti in uso e scelte da prendere da una pagina su localhost (`--panel`, da 0.3.0) | completata |
 | F15 | Rilievi aperti da F5 a F14 (0.3.1) | completata |
 | F16 | Pannello multipagina e pulizia (0.3.2) | completata |
-| F17 | Sito in un repository privato | da aprire |
+| F17 | Sito in un repository privato (0.3.3) | completata |
 | F18 | agentic-starter: allineare, eliminare o fondere | da aprire |
 | F19 | File di lavoro fuori dal repository pubblico | da aprire |
 

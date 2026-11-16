@@ -1,4 +1,4 @@
-/* Palette del sito (apps/site/src/app/globals.css), tema scuro; contrasti AA misurati lì sugli stessi fondi. */
+/* Palette del sito (src/app/globals.css nel repository agentrica-site), tema scuro; contrasti AA misurati lì sugli stessi fondi. */
 :root {
   --background: #0b1020;
   --foreground: #e8ebf4;

@@ -3,24 +3,19 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w @agentrica/site",
-    "build": "npm run build -w @agentrica/site",
-    "typecheck": "tsc -p packages/catalog && tsc -p packages/mcp && tsc -p . && npm run typecheck -w @agentrica/site",
+    "typecheck": "tsc -p packages/catalog && tsc -p packages/mcp && tsc -p .",
     "lint": "eslint",
-    "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts apps/site/src/lib/*.test.ts scripts/*.test.ts",
+    "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts scripts/*.test.ts",
     "stats": "node scripts/stats.ts",
-    "verify": "npm run typecheck && npm run lint && npm test && npm run build",
-    "verify:e2e": "playwright test"
+    "verify": "npm run typecheck && npm run lint && npm test"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.14.0",
-    "@playwright/test": "1.65.1",
     "@types/node": "26.6.6",
     "eslint": "10.15.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2"
   }
 }

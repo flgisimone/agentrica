@@ -1,4 +1,5 @@
-# Controlli di ogni push e pull request: npm run verify e npm run verify:e2e (CONVENTIONS §13.5).
+# Controlli di ogni push e pull request: npm run verify e npm run verify:e2e (CONVENTIONS §13.5). Da F17 qui non c'è
+# verify:e2e (il sito e le sue prove sono nel repository agentrica-site): il passo si salta.
 # Nessun deploy da qui. I passi senza il loro file o script si saltano, così la CI regge anche prima di F0.
 # ponytail: con un repository privato e GitHub gratuito il merge non si blocca da solo; va verde prima di unire in main.
 name: CI

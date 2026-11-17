@@ -2,7 +2,7 @@
 
 **Obiettivo**: rendere pubbliche, sul sito, le statistiche dei voti raccolti in F20: media, numero di voti e distribuzione nelle schede degli agenti, classifiche generali e per reparto, commenti pubblicati dopo moderazione.
 
-> **Stato: completata** il 2026-11-17 su `fase/f21-reputazione` (in questo repository e in `agentrica-site`); resta F21-09, il rilascio del sito in `main`, dopo i passi dell'utente su Neon e Vercel (Rilievi aperti). L'utente ha scelto di aprirla subito, senza aspettare la revisione a 4 settimane dalla 0.5.0: la parte pubblica si accende da sola quando i voti superano le soglie, e fino ad allora non si vede nulla. Parte pubblica della bozza «F20 — Community Ratings & Agent Reputation» dell'utente (2026-11-17).
+> **Stato: completata** il 2026-11-17 su `fase/f21-reputazione` (in questo repository e in `agentrica-site`); sito in produzione con la PR #5 di `agentrica-site` (`100a642`). L'utente ha scelto di aprirla subito, senza aspettare la revisione a 4 settimane dalla 0.5.0: la parte pubblica si accende da sola quando i voti superano le soglie, e fino ad allora non si vede nulla. Parte pubblica della bozza «F20 — Community Ratings & Agent Reputation» dell'utente (2026-11-17).
 
 **Agenzie**: business (Product Manager), design (Dashboard e Data Visualization, UX Writer, Accessibility), privacy (GDPR, Legal, Data Governance, DPIA) per la pubblicazione di contenuti di terzi, cybersecurity (AppSec, Cloud Security), software (Backend, Database, Frontend, QA, Security, Code Reviewer).
 
@@ -128,6 +128,7 @@ Ordine: F21-01/02 → conferma dell'utente → F21-03 → F21-04/05/06 → F21-0
 - **F21-06** `npm run ratings`: medie senza i voti esclusi (contati a parte), stato di ogni commento (privato, in attesa, pubblicato, rifiutato), anomalie (5 voti allo stesso agente in meno di un'ora; commenti uguali dopo la normalizzazione) con i codici da escludere. `--moderate` mostra i commenti in attesa con i criteri e chiede approva, rifiuta, salta o esci; `--exclude`, `--include`, `--revoke`, `--delete` (con conferma) con `DATABASE_URL_MODERATOR`. Calcoli e argomenti in `ratings-lib.ts` con test.
 - **F21-07** Note legali: introduzione e descrizione, base giuridica estesa alle statistiche pubbliche, revoca e cancellazione con il codice (30 giorni, sito aggiornato entro un'ora), sottosezione «Cosa pubblichiamo» (`#pubblicazione`) con soglie, commenti e criteri di moderazione, voti anomali; il `ponytail:` chiede la revisione legale anche per F21. README del pacchetto (IT ed EN): voce «Sul sito»; nessun cambio al codice del pacchetto, quindi nessuna nuova versione.
 - **F21-08** Revisioni nella sessione (sezione «Revisioni»), con una correzione.
+- **F21-09** L'utente ha creato i ruoli ed eseguito `002-reputation.sql` su Neon (database `neondb`; dopo un primo tentativo parziale, una versione rieseguibile con `create or replace`) e ha impostato `REPUTATION_READER_URL` su Vercel (Production e Preview, Sensitive). PR #5 di `agentrica-site` con la CI verde, unita in `main`; `develop` riallineato (`100a642`). In produzione: `/`, `/agenti/aisa-02` e `/note-legali` 200, con «Cosa pubblichiamo»; `/reputazione` e `/reputazione/aisa` 404 e nessuna sezione «Reputazione», come atteso sotto le soglie.
 
 ## Verifiche
 
@@ -145,7 +146,8 @@ Ordine: F21-01/02 → conferma dell'utente → F21-03 → F21-04/05/06 → F21-0
 
 ## Rilievi aperti
 
-- (P1) Prima del rilascio (F21-09) l'utente esegue i passi «Reputazione (F21)» di `agentrica-site/db/README.md`: due ruoli, `002-reputation.sql` su Neon, `REPUTATION_READER_URL` su Vercel, `DATABASE_URL_MODERATOR` sul suo computer. Senza lo script SQL, `npm run ratings` fallisce sulle colonne nuove; senza la variabile il sito resta com'è oggi.
+- (P2) Sul computer dell'utente mancano `DATABASE_URL_READONLY` e `DATABASE_URL_MODERATOR` (le password di `ratings_reader` e dei ruoli di F21 vanno reimpostate con `alter role` se perse): senza, `npm run ratings` e la moderazione non partono.
+- (P3) La lettura delle statistiche in produzione non è verificabile finché i voti sono sotto le soglie; un errore di connessione compare nei log di Vercel come `reputation: errore del database`.
 - (P2) Note legali: anche le parti di F21 vanno rilette da un legale (come PRIV-PUB-01 e `#valutazioni` di F20).
 - (P3) Un errore del database resta in cache per un'ora: per quell'ora le statistiche spariscono dal sito (commento `ponytail:` in `reputation-data.ts`).
 - (P3) Il passaggio da 404 a pagina della classifica è provato in locale con `next start`; in produzione su Vercel si vedrà solo quando i voti superano le soglie.

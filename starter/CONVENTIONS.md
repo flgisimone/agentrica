@@ -148,7 +148,7 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
-1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando la CI è verde (`gh pr merge --merge`). Conviene un ruleset su `main` che vieti push diretti e force push.
+1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando la CI è verde (`gh pr merge --merge`). Conviene un ruleset su `main` che vieti push diretti e force push. **Subito dopo, `develop` torna allo stesso commit di `main`**: `git fetch`, su `develop` `git merge --ff-only origin/main`, push di `develop`, e `origin/develop` e `origin/main` devono avere lo stesso hash. Una nota scritta dopo il rilascio va in `main` con un'altra PR, poi si riallinea di nuovo. `develop` e `main` sono sempre allineati.
 2. <!-- Da compilare: hosting, cosa pubblica `main`, passi per le migrazioni, controllo dopo il deploy. -->
 
 Deploy e migrazioni in produzione partono sempre con un ok esplicito, a parte da quello della fase.

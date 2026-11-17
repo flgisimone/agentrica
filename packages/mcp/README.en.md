@@ -97,6 +97,7 @@ You can give an agent a score from 1 to 5 and a comment on what to improve: rati
 
 - **Nothing is sent without your yes.** `rate_agent` first shows a preview of what will be sent and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly that content. With `--panel` you rate from the page, in the "Valuta gli agenti" section.
 - **What is sent.** The agent id, the score, the comment, whether you allow the comment to be published on the site (off by default), the package version and a random rating code. No task, files, paths or project name, no account. Do not write names, personal data or parts of your project in the comment.
+- **On the site.** Every agent with at least 5 ratings shows the average, the number of ratings and their distribution, and a ranking appears once at least 5 agents pass that threshold. A comment appears only if you allowed it to be published and after it is approved (criteria in the [legal notes](https://agentrica.vercel.app/note-legali#valutazioni), in Italian), with the score and the month.
 - **After sending** you get the rating code: with it you can ask for the rating to be deleted or for the comment not to be published. An agent can be rated once per session and once a day from the same network.
 - **If sending fails** (offline, service down) the tool says so and the work goes on; the rating is not stored anywhere.
 - **To drop the tool** and the suggestions, add `--no-ratings` to the command: the server never connects.

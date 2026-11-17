@@ -63,7 +63,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F17 | Sito in un repository privato (0.3.3) | completata |
 | F18 | agentic-starter fuso nel pacchetto: `init` (0.4.0) | completata |
 | F19 | File di lavoro fuori dal repository pubblico: abbandonata | sospesa |
-| F20 | Valutazioni degli agenti dall'MCP e dal pannello, endpoint del sito con database (0.5.0) | in corso |
+| F20 | Valutazioni degli agenti dall'MCP e dal pannello, endpoint del sito con database (0.5.0) | completata |
 | F21 | Reputazione pubblica degli agenti | da decidere |
 
 Il dettaglio è in [plan/README.md](plan/README.md).

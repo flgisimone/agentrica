@@ -2,7 +2,7 @@
 
 **Obiettivo**: chi usa `@agentrica/mcp` può dare a un agente un voto da 1 a 5 e un commento facoltativo, che arrivano al titolare in forma anonima, così si capisce quali agenti funzionano e cosa migliorare. La parte pubblica (classifiche, statistiche nelle schede, commenti pubblicati) è in F21.
 
-> **Stato: in corso** su `fase/f20-valutazioni`. Design deciso con l'utente il 2026-11-17 (analisi in sessione e bozza «F20 — Community Ratings & Agent Reputation» dell'utente); backlog confermato all'apertura (2026-11-17).
+> **Stato: completata** il 2026-11-17 su `fase/f20-valutazioni`; sito in produzione con la PR #4 di `agentrica-site` (`31cd892`), pacchetto 0.5.0 con il tag `v0.5.0`. Design deciso con l'utente il 2026-11-17 (analisi in sessione e bozza «F20 — Community Ratings & Agent Reputation» dell'utente); backlog confermato all'apertura (2026-11-17).
 
 **Agenzie**: business (Product Manager per obiettivo e misura); privacy (GDPR, Legal, Vendor Compliance, Data Governance) prima e dopo; cybersecurity (AppSec, Cloud Security) sull'endpoint pubblico e sui segreti; software (Backend, Database, DevOps, QA, Security, Code Reviewer).
 
@@ -129,6 +129,7 @@ Ordine: F20-01/02 → conferma dell'utente → F20-03/04 → F20-05/06/07/12 →
 - **F20-08** `npm run ratings` (`scripts/ratings.ts`): legge `ratings` con `DATABASE_URL_READONLY` (ruolo in sola lettura) tramite `@neondatabase/serverless` 1.2.0, devDependency esatta della root (scelta dell'utente, 2026-11-17; la 1.2.1 aveva 4 giorni); calcoli puri in `scripts/ratings-lib.ts` (media, distribuzione, versioni dalla più nuova, commenti dal più recente, agenti dalla media più bassa) con test. Senza la variabile si ferma con un messaggio. Lettura reale da fare quando il database esiste (F20-03).
 - **F20-09** README del pacchetto (IT ed EN): «Cosa fa e cosa non fa» con l'unica connessione, sezione «Valutazioni», `rate_agent` fra i tool, `--allow-net` o `--no-ratings` con i permessi minimi, presentazione dell'agente, pannello. Descrizione in `package.json`. Decisioni «Server MCP», «Monitoraggio» e «Privacy dei trasporti» in `plan/README.md`. La voce «Versioni» si scrive al rilascio (F20-11).
 - **F20-10** Revisioni di Code Reviewer, Security e Privacy nella sessione (sezione «Revisioni»), con due correzioni applicate e verificate.
+- **F20-11** Sito in produzione prima del pacchetto (PR #4 di `agentrica-site`, CI verde): in produzione `POST /api/ratings` non valido → 400, job senza segreto → 401, note legali con «Le valutazioni degli agenti». Pacchetto: versione 0.5.0, PR `develop` → `main` e tag `v0.5.0` (§13.8); `@agentrica/mcp` 0.5.0 nel sito arriva con la PR di Dependabot.
 - **F20-12** `introLine` e istruzione di presentazione nella cornice di `agentText`; nel pannello l'agente attivo ha il nome nel colore del reparto e l'etichetta «attivo», e ogni riga dice il reparto. Test in `prompt.test.ts`.
 
 ## Verifiche

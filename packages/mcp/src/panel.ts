@@ -10,6 +10,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readProject } from "./project.ts";
+import { MAX_COMMENT, NOTICE, type SendResult } from "./ratings.ts";
 
 export interface Choice {
   label: string;
@@ -40,6 +41,20 @@ export interface Activity {
   role: string;
   department: string;
   task: string;
+}
+
+/** Le valutazioni viste dal pannello (F20): il server MCP le passa, il pannello non apre connessioni da solo. */
+export interface PanelRatings {
+  isRated(agentId: string): boolean;
+  /** Invia una valutazione confermata nella pagina. */
+  rate(input: RateInput): Promise<SendResult>;
+}
+
+export interface RateInput {
+  agentId: string;
+  rating: number;
+  comment: string;
+  publish: boolean;
 }
 
 export interface Panel {
@@ -121,6 +136,16 @@ export function parseAnswer(question: QuestionInput, body: unknown): Answer | nu
   return { choices: picked, note: note.trim() };
 }
 
+/** Controlla una valutazione dalla pagina: agente fra quelli usati, voto intero 1–5, commento corto, casella booleana. */
+export function parseRate(used: ReadonlySet<string>, body: unknown): RateInput | null {
+  if (typeof body !== "object" || body === null) return null;
+  const { agentId, rating, comment = "", publish = false } = body as Record<string, unknown>;
+  if (typeof agentId !== "string" || !used.has(agentId)) return null;
+  if (typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) return null;
+  if (typeof comment !== "string" || comment.length > MAX_COMMENT || typeof publish !== "boolean") return null;
+  return { agentId, rating, comment: comment.trim(), publish };
+}
+
 /** Apre l'URL nel browser predefinito; se non riesce (es. sessione remota) l'URL resta nella risposta del tool. */
 export function openBrowser(url: string): void {
   const [command, args] =
@@ -134,7 +159,7 @@ export function openBrowser(url: string): void {
   }
 }
 
-export async function startPanel(root: string, pageDir = join(import.meta.dirname, "page")): Promise<Panel> {
+export async function startPanel(root: string, ratings?: PanelRatings, pageDir = join(import.meta.dirname, "page")): Promise<Panel> {
   const token = randomBytes(32).toString("hex");
   const pages = Object.fromEntries(Object.entries(PAGE_FILES).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
   const pending = new Map<string, { question: Question; resolve: (answer: Answer) => void }>();
@@ -178,7 +203,9 @@ export async function startPanel(root: string, pageDir = join(import.meta.dirnam
     if (req.method === "GET" && url.pathname === "/api/state") {
       const project = await readProject(root);
       const questions = [...pending.values()].map((p) => p.question);
-      return send(res, 200, JSON.stringify({ project, questions, activity }), "application/json; charset=utf-8");
+      const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
+      const rating = ratings ? { notice: NOTICE, maxComment: MAX_COMMENT, rated } : null;
+      return send(res, 200, JSON.stringify({ project, questions, activity, rating }), "application/json; charset=utf-8");
     }
     if (req.method === "GET" && url.pathname === "/api/events") {
       res.writeHead(200, { ...SECURITY_HEADERS, "Content-Type": "text/event-stream; charset=utf-8", Connection: "keep-alive" });
@@ -186,6 +213,22 @@ export async function startPanel(root: string, pageDir = join(import.meta.dirnam
       viewers.add(res);
       req.on("close", () => viewers.delete(res));
       return;
+    }
+    if (req.method === "POST" && url.pathname === "/api/rate" && ratings) {
+      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      let body: unknown;
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch {
+        return send(res, 400, "Richiesta non valida.");
+      }
+      const input = parseRate(new Set(activity.map((a) => a.id)), body);
+      if (!input) return send(res, 400, "Valutazione non valida.");
+      // L'invio dalla pagina è la conferma dell'utente: la pagina mostra l'avviso accanto al pulsante.
+      const result = await ratings.rate(input);
+      changed();
+      return send(res, result.ok ? 200 : 502, JSON.stringify(result), "application/json; charset=utf-8");
     }
     if (req.method === "POST" && url.pathname === "/api/answer") {
       if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");

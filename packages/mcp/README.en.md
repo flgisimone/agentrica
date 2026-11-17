@@ -12,7 +12,7 @@ The agent files are in Italian. The agent answers in the language you write in.
 
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
-- The server writes no files (only the [`init`](#new-project) command does, when you run it), opens no network connections, logs nothing, collects and sends no data, and has no telemetry. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
+- The server writes no files (only the [`init`](#new-project) command does, when you run it), logs nothing and has no telemetry. It connects to Agentrica in one case only: when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version. With `--no-ratings` it never connects. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
 - It runs nothing in your project. It only gives instructions to the model: what the model does in the project depends on the client and on the permissions you grant it.
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,16 +36,16 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.4.0"]
+      "args": ["-y", "@agentrica/mcp@0.5.0"]
     }
   }
 }
 ```
 
-**Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect.
+**Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message: to rate agents add `--allow-net`, otherwise add `--no-ratings` at the end of the command.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.4.0
+npm install -g --ignore-scripts @agentrica/mcp@0.5.0
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -83,17 +83,32 @@ The command menu shows only the squad's prompts, and `elenca_agenti` and `agente
 |---|---|---|
 | `elenca_agenti` (list agents) | optional `reparto` (department: `AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent |
 | `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions |
+| `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
 
 For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
 
 Number 01 in each department is the director: it coordinates the specialists and consolidates their findings.
+
+While working, the agent says who it is, for example "AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)": at the start, when it hands over to another agent and in the final summary.
+
+## Ratings
+
+You can give an agent a score from 1 to 5 and a comment on what to improve: ratings are used to fix the role files. When the agent has finished the task it suggests a rating, once per session; if it has been working for more than 30 minutes, the server reminds the model once. You can also ask ("rate AISA-02").
+
+- **Nothing is sent without your yes.** `rate_agent` first shows a preview of what will be sent and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly that content. With `--panel` you rate from the page, in the "Valuta gli agenti" section.
+- **What is sent.** The agent id, the score, the comment, whether you allow the comment to be published on the site (off by default), the package version and a random rating code. No task, files, paths or project name, no account. Do not write names, personal data or parts of your project in the comment.
+- **After sending** you get the rating code: with it you can ask for the rating to be deleted or for the comment not to be published. An agent can be rated once per session and once a day from the same network.
+- **If sending fails** (offline, service down) the tool says so and the work goes on; the rating is not stored anywhere.
+- **To drop the tool** and the suggestions, add `--no-ratings` to the command: the server never connects.
+
+How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
 
 ## Local panel
 
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
@@ -111,7 +126,7 @@ With the panel the model has two more tools:
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
-**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
+**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
 
 **Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 
@@ -124,7 +139,7 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.4.0 init my-project --name "My project"
+npx -y @agentrica/mcp@0.5.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
@@ -157,6 +172,7 @@ The same catalog can be read from code, without starting the server: `import { l
 
 ## Versions
 
+- **0.5.0**: agent ratings (two-step `rate_agent` tool with preview and code, "Valuta gli agenti" section in the panel, suggestion at the end of the work and a reminder after 30 minutes), the server's only connection and only after your confirmation; `--no-ratings` removes it. The agent says who it is (code name, role, department) at the start, at handovers and in the summary.
 - **0.4.0**: `init` command that creates a project with rules, phased plan, agencies, subagents, CI and `.mcp.json` (replaces agentic-starter); the server is unchanged.
 - **0.3.3**: `@agentrica/mcp/catalog` export to read departments and agents from code (used by the site, now in a separate repository); agents and server behaviour unchanged.
 - **0.3.2**: the panel has three pages (Sessione, Piano, Rilievi) with a menu counting pending choices and findings; agents and server behaviour unchanged.

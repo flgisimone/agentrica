@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, findAgent, selectSquad, VERSION } from "./prompt.ts";
+import { agentText, findAgent, introLine, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -40,6 +40,27 @@ test("agentText: cornice, regole comuni e file di ruolo nell'ordine, testi dal c
       assert.ok(language > 0 && language < text.indexOf("## Regole comuni del reparto"), agent.id);
     }
   }
+});
+
+test("agentText: l'agente si presenta con nome in codice, ruolo e reparto, prima delle regole (F20-12)", () => {
+  for (const department of catalog) {
+    for (const agent of department.agents) {
+      const text = agentText({ department, agent });
+      const line = `«${agent.id} · ${agent.star} — ${agent.role}, reparto ${department.code} (${department.name})»`;
+      const at = text.indexOf(`Presentati all'inizio con questa riga: ${line}`);
+      assert.ok(at > 0 && at < text.indexOf("## Regole comuni del reparto"), agent.id);
+      assert.match(text, /Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale\./);
+    }
+  }
+  assert.equal(introLine(findAgent(catalog, "AISA-02")!), "AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)");
+});
+
+test("agentText: la proposta di valutazione c'è solo con le valutazioni attive", () => {
+  const found = findAgent(catalog, "AIWDA-08")!;
+  assert.ok(!agentText(found).includes("rate_agent"));
+  const text = agentText(found, undefined, { ratings: true });
+  assert.match(text, /proponi all'utente di valutarti da 1 a 5 .*\(tool rate_agent, id AIWDA-08\), una volta sola in questa sessione/);
+  assert.ok(text.indexOf("rate_agent") < text.indexOf("## Regole comuni del reparto"));
 });
 
 test("agentText: il compito va in fondo, vuoto si omette", () => {

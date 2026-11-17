@@ -2,7 +2,7 @@
 
 **Obiettivo**: un progetto nuovo si crea con `npx @agentrica/mcp init`, con le regole di oggi e le agenzie del pacchetto; agentic-starter viene archiviato.
 
-> **Stato: in corso** su `fase/f18-starter`. Decisioni dell'utente del 2026-11-16.
+> **Stato: completata** il 2026-11-16 su `fase/f18-starter` (merge `2f5a130` in `develop`, rilascio 0.4.0 da PR #11). Decisioni dell'utente del 2026-11-16.
 
 **Agenzie**: software (Architect, Backend, DevOps, QA, Code Reviewer, nella sessione).
 
@@ -51,7 +51,20 @@ Ordine: F18-01 → F18-02/03 → F18-04 → chiusura in `develop` → F18-05 →
 - **F18-03** `prepack` copia anche `starter/` e `.claude/agents/`; `files` con `starter` e `.claude/agents`. Provato con `npm pack`: 56 subagent, 13 file dello starter, `init` dal tarball installato in un progetto esterno crea 136 file con commit su `main` e `develop` attivo.
 - **F18-04** README del pacchetto (IT e EN): sezione «Nuovo progetto», «Cosa fa e cosa non fa» (scrive solo `init`), formato del pannello «creato da `init`», versione 0.4.0. README: metodo e riga F18, tolto `npm run dev` rimasto da F17. CONVENTIONS §5 con `starter/` e la frase dei subagent; decisione «Starter» e riga F18 in `plan/README.md`; messaggio del pannello senza agentic-starter.
 
+- **F18-05** Rilascio 0.4.0: PR #11 `develop` → `main`, tag `v0.4.0` su `4d70739`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm` (159 file); `io.github.flgisimone/agentrica` 0.4.0 nel registro MCP con `mcp-publisher` (nuovo login GitHub dell'utente, il token era scaduto).
+- **F18-06** agentic-starter: README con il rimando a `npx -y @agentrica/mcp@0.4.0 init` e a `starter/` (`d54fcef` su `main`), repository archiviato su GitHub.
+- **F18-07** `agentrica-site`: `@agentrica/mcp` 0.4.0 a versione esatta; passo 5 «Se parti da zero, crea il progetto» con `mcp.init` dal README della versione installata (test dei comandi esteso); limite «Il server non scrive file (solo init, quando lo lanci tu)». Merge `fase/f18-init` in `develop` con CI verde; rilascio in `main` con PR #2 (`9317441`) dopo l'ok separato dell'utente.
+- Dopo il rilascio, su richiesta dell'utente (`agentrica-site`, PR #3): «Cosa fa» e «Cosa non fa» in due liste con ✓ e ✕; sezione «Prima di usarlo» (sfondo normale, voce nel menu) con i limiti e «Messi alla prova», separata da «Gli agenti nei tuoi progetti»; shell della dimostrazione sticky su desktop; footer a fascia nella landing; link del metodo a `starter/` al posto di agentic-starter archiviato.
+
 ## Verifiche
 
 - `npm run verify` superato: typecheck, lint, 47 test (5 nuovi di `init`).
 - `npm pack` e `init` dal tarball in una cartella temporanea, come sopra; secondo `init` nella stessa cartella: uscita 1, nessun file scritto.
+- Release `v0.4.0` (run 43936249766) verde; `latest` su npm 0.4.0 dopo qualche minuto di elaborazione del registro.
+- `agentrica-site`: `npm run verify` superato (19 test, build di 70 percorsi), `npm run verify:e2e` 61 superati e 1 saltato come prima, `npm audit --omit=dev` 0 vulnerabilità, `npm audit signatures` 159 attestazioni verificate; testo e comando nell'HTML della landing; CI di `develop` verde.
+- Produzione: `agentrica.vercel.app` mostra il passo 5 con `npx -y @agentrica/mcp@0.4.0 init` e il limite aggiornato; `/agenti/aisa-02` risponde 200.
+
+## Rilievi aperti
+
+- **F18-R1** (P3) `docs/AI Multi-Agency System.md` è in due copie (`docs/` e `starter/docs/`). F19 sposta `docs/` fuori dal repository pubblico: resterà solo quella di `starter/`, che però i subagent di Agentrica citano come `docs/…`; da sistemare in F19.
+- **F18-R2** (P2) Rilascio del sito in `main` con la sezione `init`. Risolto il 2026-11-16 (PR #2 di `agentrica-site`).

@@ -91,6 +91,14 @@ ol.activity { list-style: none; margin: 0; padding: 0; }
 ol.activity li { display: grid; grid-template-columns: 3.5em 1fr; gap: 0 8px; padding: 6px 0; border-top: 1px solid var(--border); }
 ol.activity li:first-child { border-top: 0; }
 .dot::before { content: "●"; color: var(--dept); margin-right: 6px; }
+ol.activity li.active strong { color: var(--dept); }
+.now { margin-left: 8px; font-size: 0.8rem; color: var(--background); background: var(--dept); border-radius: 999px; padding: 0 8px; font-weight: 600; }
+.stars { display: flex; flex-wrap: wrap; gap: 6px; }
+.star { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; min-width: 44px; padding: 0 8px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+.star:has(input:checked) { border-color: var(--dept); color: var(--dept); font-weight: 700; }
+.star input { accent-color: var(--dept); }
+label.check { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+#ratings .question + .question, #ratings .sent + .question, #ratings .question + .sent { margin-top: 12px; }
 .task { grid-column: 2; color: var(--muted-foreground); overflow-wrap: anywhere; }
 
 .scroll { overflow-x: auto; }

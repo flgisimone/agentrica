@@ -1,4 +1,4 @@
-// Pagina del pannello: legge /api/state, si aggiorna con /api/events e manda le risposte a /api/answer.
+// Pagina del pannello: legge /api/state, si aggiorna con /api/events e manda le risposte a /api/answer e i voti a /api/rate.
 // I dati del progetto entrano nel DOM solo come testo (textContent), mai come HTML.
 "use strict";
 
@@ -132,16 +132,81 @@ function renderActivity({ activity }) {
       : el(
           "ol",
           { class: "activity" },
-          activity.map((a) =>
+          activity.map((a, i) =>
             el(
               "li",
-              { "data-dept": a.department },
+              { "data-dept": a.department, class: i === 0 ? "active" : null },
               el("time", { datetime: a.time, class: "mono" }, time(a.time)),
-              el("span", { class: "dot" }, el("strong", {}, a.codeName), ` — ${a.role}`),
+              el("span", { class: "dot" }, el("strong", {}, a.codeName), ` — ${a.role}, reparto ${a.department}`, i === 0 && el("span", { class: "now" }, "attivo")),
               a.task && el("span", { class: "task" }, a.task),
             ),
           ),
         ),
+  );
+}
+
+// Un modulo per agente usato, creato una volta sola: un aggiornamento non deve cancellare un commento a metà.
+function renderRatings({ activity, rating }) {
+  const card = $("ratings-card");
+  card.hidden = !rating;
+  if (!rating) return;
+  const box = $("ratings");
+  const agents = [...new Map(activity.map((a) => [a.id, a])).values()];
+  for (const agent of agents) {
+    const node = box.querySelector(`[data-agent="${CSS.escape(agent.id)}"]`);
+    const done = rating.rated.includes(agent.id);
+    if (!node) box.append(done ? ratedNote(agent) : rateForm(agent, rating));
+    else if (done && node.tagName === "FORM" && !node.dataset.sent) node.replaceWith(ratedNote(agent));
+  }
+  box.querySelector(".empty")?.remove();
+  if (!box.querySelector("[data-agent]")) box.append(empty("Quando usi un agente, qui puoi dargli un voto."));
+}
+
+const ratedNote = (agent) => el("p", { class: "sent", "data-agent": agent.id, "data-dept": agent.department }, el("strong", {}, agent.codeName), " — valutato in questa sessione.");
+
+function rateForm(agent, rating) {
+  const name = `r-${agent.id}`;
+  const error = el("p", { class: "error", role: "alert", hidden: true });
+  const stars = [1, 2, 3, 4, 5].map((n) =>
+    el("label", { class: "star" }, el("input", { type: "radio", name, value: String(n) }), el("span", {}, `${n}`)),
+  );
+  const form = el(
+    "form",
+    { class: "question", "data-agent": agent.id, "data-dept": agent.department, onsubmit: (event) => sendRating(event, agent, form, error) },
+    el(
+      "fieldset",
+      {},
+      el("legend", {}, el("span", { class: "dot" }, el("strong", {}, agent.codeName)), ` — ${agent.role}, reparto ${agent.department}. Voto da 1 a 5:`),
+      el("div", { class: "stars" }, stars),
+    ),
+    el("label", { class: "note" }, "Cosa è andato bene o cosa migliorare (facoltativo)", el("textarea", { name: "comment", maxlength: String(rating.maxComment) })),
+    el("label", { class: "check" }, el("input", { type: "checkbox", name: "publish" }), "Puoi pubblicare il mio commento sul sito di Agentrica"),
+    el("p", { class: "hint" }, rating.notice),
+    el("button", { type: "submit", class: "send" }, "Invia la valutazione"),
+    error,
+  );
+  return form;
+}
+
+async function sendRating(event, agent, form, error) {
+  event.preventDefault();
+  const picked = form.querySelector("input[type=radio]:checked");
+  if (!picked) {
+    error.textContent = "Scegli un voto da 1 a 5.";
+    error.hidden = false;
+    return;
+  }
+  const body = { agentId: agent.id, rating: Number(picked.value), comment: form.elements.comment.value, publish: form.elements.publish.checked };
+  const response = await fetch("/api/rate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).catch(() => null);
+  const result = response ? await response.json().catch(() => null) : null;
+  if (!result?.ok) {
+    error.textContent = result?.message ?? (response ? "Valutazione non valida." : "Il pannello non risponde: la sessione è ancora aperta?");
+    error.hidden = false;
+    return;
+  }
+  form.dataset.sent = "true";
+  form.replaceChildren(
+    el("p", { class: "sent", role: "status" }, `Valutazione di ${agent.codeName} inviata, grazie. Codice della valutazione: `, el("code", {}, result.usageId), ". Conservalo per chiedere di cancellarla o di non pubblicare il commento."),
   );
 }
 
@@ -277,6 +342,7 @@ function render() {
   renderCounts(state);
   renderQuestions(state);
   renderActivity(state);
+  renderRatings(state);
   renderPhases(state);
   renderFilters();
   renderFindings(state);

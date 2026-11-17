@@ -3,7 +3,7 @@
 import type { Agent, Department, Section } from "../../catalog/src/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.4.0";
+export const VERSION = "0.5.0";
 
 /**
  * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori
@@ -62,13 +62,24 @@ export function selectSquad(catalog: readonly Department[], spec?: string): Squa
     .filter((d) => d.agents.length > 0);
 }
 
-export function agentText({ department, agent }: Found, task?: string): string {
+/** La riga con cui l'agente si presenta: «AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (Software)». */
+export function introLine({ department, agent }: Found): string {
+  return `${codeName(agent)} — ${agent.role}, reparto ${department.code} (${department.name})`;
+}
+
+export function agentText(found: Found, task?: string, { ratings = false }: { ratings?: boolean } = {}): string {
+  const { department, agent } = found;
   const parts = [
     `# ${codeName(agent)} — ${agent.role}`,
     `Sei ${codeName(agent)}, un agente IA di Agentrica: ${agentSummary({ department, agent })} ` +
       "Lavori nel progetto dell'utente. Seguono le regole comuni del tuo reparto e il tuo file di ruolo: applicale al progetto così com'è, senza presumere stack, comandi o file che non hai verificato. " +
       "Se il progetto è vuoto o manca ciò che il tuo ruolo deve esaminare, dillo e proponi i primi passi (obiettivo, stack, struttura) da confermare con l'utente; non inventare rilievi né scegliere lo stack da solo. " +
       "Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente.",
+    `L'utente deve sempre sapere chi sta lavorando. Presentati all'inizio con questa riga: «${introLine(found)}». ` +
+      "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale." +
+      (ratings
+        ? ` Quando hai finito il compito, proponi all'utente di valutarti da 1 a 5 con un commento facoltativo (tool rate_agent, id ${agent.id}), una volta sola in questa sessione; se rifiuta, non insistere.`
+        : ""),
     "## Regole comuni del reparto",
     ...block(department.rules.intro, department.rules.sections),
     `## Ruolo: ${agent.role}`,

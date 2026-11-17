@@ -10,9 +10,11 @@
     "lint": "eslint",
     "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts scripts/*.test.ts",
     "stats": "node scripts/stats.ts",
+    "ratings": "node scripts/ratings.ts",
     "verify": "npm run typecheck && npm run lint && npm test"
   },
   "devDependencies": {
+    "@neondatabase/serverless": "1.2.0",
     "@types/node": "26.6.6",
     "eslint": "10.15.0",
     "typescript": "6.0.3",

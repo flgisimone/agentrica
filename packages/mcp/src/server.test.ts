@@ -49,10 +49,59 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
   assert.match(content.text, /## Compito\n\nRivedi i confini\.\n$/);
 });
 
-test("due tool in sola lettura", async () => {
+test("due tool in sola lettura e rate_agent, l'unico che apre una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti"]);
-  for (const t of tools) assert.equal(t.annotations?.readOnlyHint, true);
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "rate_agent"]);
+  for (const t of tools.filter((t) => t.name !== "rate_agent")) assert.equal(t.annotations?.readOnlyHint, true, t.name);
+  const rate = tools.find((t) => t.name === "rate_agent")!;
+  assert.equal(rate.annotations?.readOnlyHint, false);
+  assert.equal(rate.annotations?.openWorldHint, true);
+  assert.match(client.getInstructions() ?? "", /rate_agent/);
+});
+
+test("rate_agent: anteprima con codice, poi invio; senza rete un errore chiaro e il lavoro continua", async () => {
+  // Il server gira con --permission senza --allow-net: la conferma prova a inviare e la rete viene negata.
+  const preview = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", rating: 4, comment: "Utile." } });
+  assert.notEqual(preview.isError, true);
+  assert.match(text(preview), /^Anteprima della valutazione di AISA-02 · ALTAIR — Senior Software Architect, reparto AISA \(AI Software\):/);
+  assert.match(text(preview), /commento: Utile\./);
+  const code = /code "([0-9a-f]{8})"/.exec(text(preview))![1]!;
+  const wrong = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-03", code } });
+  assert.equal(wrong.isError, true);
+  const sent = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", code } });
+  assert.equal(sent.isError, true);
+  assert.match(text(sent), /non è raggiungibile/);
+  const used = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", code } });
+  assert.match(text(used), /scaduto o già usato/);
+  const noVote = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02" } });
+  assert.match(text(noVote), /Serve il voto/);
+  for (const rating of [0, 6, 2.5]) {
+    const bad = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", rating } });
+    assert.equal(bad.isError, true, String(rating));
+  }
+  const long = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", rating: 3, comment: "x".repeat(1001) } });
+  assert.equal(long.isError, true);
+  assert.notEqual((await client.callTool({ name: "agente", arguments: { id: "aisa-02" } })).isError, true);
+});
+
+test("--no-ratings: niente rate_agent, niente proposta di valutazione", async () => {
+  const quiet = new Client({ name: "test-senza-voti", version: "0" });
+  await quiet.connect(
+    new StdioClientTransport({
+      command: process.execPath,
+      args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--no-ratings"],
+      cwd,
+      stderr: "pipe",
+    }),
+  );
+  try {
+    const { tools } = await quiet.listTools();
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti"]);
+    assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
+    assert.ok(!text(await quiet.callTool({ name: "agente", arguments: { id: "aisa-02" } })).includes("rate_agent"));
+  } finally {
+    await quiet.close();
+  }
 });
 
 test("elenca_agenti: tutti o un reparto", async () => {
@@ -96,7 +145,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
     for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {

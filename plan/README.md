@@ -75,5 +75,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F17 | [17-sito-privato.md](17-sito-privato.md) | Sito in un repository privato, separato dal pacchetto; questo repository resta pubblico | completata |
 | F18 | [18-starter.md](18-starter.md) | agentic-starter fuso nel pacchetto: `npx @agentrica/mcp init` (0.4.0), starter archiviato, comando sul sito | completata |
 | F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico: abbandonata all'apertura, resta tutto pubblico | sospesa |
+| F20 | [20-valutazioni.md](20-valutazioni.md) | Valutazioni degli agenti: voto e commento dall'MCP e dal pannello, endpoint del sito con database, anonimo e confermato a ogni invio | in corso |
+| F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati, dopo F20 | da decidere |
 
-Ordine: F0 → F19 in sequenza.
+Ordine: F0 → F21 in sequenza.

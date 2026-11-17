@@ -2,13 +2,15 @@
 // Il browser non si apre: il server gira con un PATH vuoto, quindi open/xdg-open non si trovano (errore ignorato).
 import assert from "node:assert/strict";
 import { mkdtempSync, realpathSync, rmSync } from "node:fs";
-import { request } from "node:http";
+import { createServer, request } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { parseAnswer, startPanel } from "./panel.ts";
+import { VERSION } from "./prompt.ts";
+import { parseAnswer, parseRate, startPanel, type RateInput } from "./panel.ts";
 
 const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-")));
 const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
@@ -63,6 +65,69 @@ test("parseAnswer accetta solo etichette della domanda, una sola se la scelta è
   assert.deepEqual(parseAnswer({ ...question, multiple: true }, { choices: ["B", "B", "A (Consigliata)"] })?.choices, ["B", "A (Consigliata)"]);
 });
 
+test("parseRate: agente usato, voto intero 1–5, commento fino a 1000 caratteri, casella booleana", () => {
+  const used = new Set(["AISA-02"]);
+  assert.deepEqual(parseRate(used, { agentId: "AISA-02", rating: 5, comment: " ok ", publish: true }), { agentId: "AISA-02", rating: 5, comment: "ok", publish: true });
+  assert.deepEqual(parseRate(used, { agentId: "AISA-02", rating: 1 }), { agentId: "AISA-02", rating: 1, comment: "", publish: false });
+  for (const body of [
+    { agentId: "AISA-03", rating: 3 },
+    { agentId: "AISA-02", rating: 0 },
+    { agentId: "AISA-02", rating: 6 },
+    { agentId: "AISA-02", rating: 2.5 },
+    { agentId: "AISA-02", rating: "3" },
+    { agentId: "AISA-02", rating: 3, comment: "x".repeat(1001) },
+    { agentId: "AISA-02", rating: 3, publish: "sì" },
+    null,
+  ]) {
+    assert.equal(parseRate(used, body), null, JSON.stringify(body));
+  }
+});
+
+test("valutazioni nel pannello: stato, difese e invio con le valutazioni del server", async () => {
+  const sent: RateInput[] = [];
+  const rated = new Set<string>();
+  const panel = await startPanel(root, {
+    isRated: (id) => rated.has(id),
+    rate: async (input) => {
+      sent.push(input);
+      rated.add(input.agentId);
+      return { ok: true, usageId: "00000000-0000-4000-8000-000000000000" };
+    },
+  });
+  const base = new URL(panel.url).origin;
+  try {
+    const cookie = await login(panel.url);
+    const state = async () => JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
+    panel.record({ id: "AISA-02", codeName: "AISA-02 · ALTAIR", role: "Senior Software Architect", department: "AISA", task: "" });
+    assert.match((await state()).rating.notice, /note-legali#valutazioni/);
+    assert.deepEqual((await state()).rating.rated, []);
+    const json = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
+    const rate = (headers: Record<string, string>, body: unknown) => call(`${base}/api/rate`, { method: "POST", headers, body: JSON.stringify(body) });
+    const good = { agentId: "AISA-02", rating: 4, comment: "Chiaro", publish: false };
+    assert.equal((await rate({ ...json, Origin: "http://evil.example" }, good)).status, 403);
+    assert.equal((await rate({ ...json, "Content-Type": "text/plain" }, good)).status, 415);
+    assert.equal((await rate(json, { ...good, agentId: "AISA-03" })).status, 400, "agente non usato");
+    assert.equal(sent.length, 0);
+    const ok = await rate(json, good);
+    assert.equal(ok.status, 200);
+    assert.equal(JSON.parse(ok.body).usageId, "00000000-0000-4000-8000-000000000000");
+    assert.deepEqual(sent, [good]);
+    assert.deepEqual((await state()).rating.rated, ["AISA-02"]);
+  } finally {
+    await panel.close();
+  }
+  const without = await startPanel(root);
+  try {
+    const cookie = await login(without.url);
+    const origin = new URL(without.url).origin;
+    assert.equal(JSON.parse((await call(`${origin}/api/state`, { headers: { Cookie: cookie } })).body).rating, null);
+    const headers = { Cookie: cookie, Origin: origin, "Content-Type": "application/json" };
+    assert.equal((await call(`${origin}/api/rate`, { method: "POST", headers, body: "{}" })).status, 404, "senza valutazioni la rotta non c'è");
+  } finally {
+    await without.close();
+  }
+});
+
 test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async () => {
   const panel = await startPanel(root);
   const base = new URL(panel.url).origin;
@@ -114,20 +179,32 @@ test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async (
   }
 });
 
-test("con --panel: open_panel, ask_user con risposta dalla pagina e agenti in uso", async () => {
+test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso e voto fino all'endpoint", async () => {
+  // Endpoint finto delle valutazioni: riceve ciò che il server invierebbe al sito.
+  const received: Record<string, unknown>[] = [];
+  const endpoint = createServer((req, res) => {
+    let body = "";
+    req.on("data", (chunk: Buffer) => (body += chunk.toString()));
+    req.on("end", () => {
+      received.push(JSON.parse(body));
+      res.writeHead(201).end();
+    });
+  });
+  await new Promise<void>((resolve) => endpoint.listen(0, "127.0.0.1", resolve));
+  const ratingsUrl = `http://127.0.0.1:${(endpoint.address() as AddressInfo).port}/api/ratings`;
   const client = new Client({ name: "test", version: "0" });
   await client.connect(
     new StdioClientTransport({
       command: process.execPath,
       args: [join(import.meta.dirname, "server.ts"), "--panel", "--agents", "aisa"],
       cwd: repo,
-      env: { PATH: root },
+      env: { PATH: root, AGENTRICA_RATINGS_URL: ratingsUrl },
       stderr: "pipe",
     }),
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "open_panel"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "open_panel", "rate_agent"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;
@@ -149,7 +226,16 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina e agenti in us
       ((await result).content as { text: string }[])[0]!.text,
       "L'utente ha scelto: A (Consigliata).\nNota dell'utente: procedi",
     );
+
+    const vote = JSON.stringify({ agentId: "AISA-02", rating: 5, comment: "Ottimo", publish: true });
+    const voted = await call(`${base}/api/rate`, { method: "POST", headers, body: vote });
+    assert.equal(voted.status, 200);
+    const { usageId } = JSON.parse(voted.body);
+    assert.deepEqual(received, [{ usageId, agentId: "AISA-02", rating: 5, comment: "Ottimo", publish: true, mcpVersion: VERSION }]);
+    const again = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", rating: 1 } });
+    assert.equal(again.isError, true, "già valutato dal pannello");
   } finally {
     await client.close();
+    endpoint.close();
   }
 });

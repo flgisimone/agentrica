@@ -21,6 +21,13 @@ export interface Rating {
   mcpVersion: string;
 }
 
+export interface RatingInput {
+  agentId: string;
+  rating: number;
+  comment?: string | undefined;
+  publish?: boolean | undefined;
+}
+
 export type SendResult = { ok: true; usageId: string } | { ok: false; message: string };
 
 export interface RatingsOptions {
@@ -42,6 +49,15 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
   const reminded = new Set<string>();
   const drafts = new Map<string, { rating: Rating; expires: number }>();
 
+  const build = (input: RatingInput): Rating => ({
+    usageId: usageId(input.agentId),
+    agentId: input.agentId,
+    rating: input.rating,
+    comment: (input.comment ?? "").trim(),
+    publish: input.publish ?? false,
+    mcpVersion: version,
+  });
+
   const usageId = (agentId: string) => {
     let id = usage.get(agentId);
     if (!id) usage.set(agentId, (id = randomUUID()));
@@ -57,17 +73,13 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
 
     isRated: (agentId: string) => rated.has(agentId),
 
+    /** La valutazione senza codice: per il pannello, dove l'invio dalla pagina è già la conferma. */
+    build,
+
     /** Primo passo: prepara il contenuto e restituisce il codice da usare per inviarlo. */
-    draft(input: { agentId: string; rating: number; comment?: string | undefined; publish?: boolean | undefined }): { code: string; rating: Rating } {
+    draft(input: RatingInput): { code: string; rating: Rating } {
       for (const [code, entry] of drafts) if (entry.expires <= now()) drafts.delete(code);
-      const rating: Rating = {
-        usageId: usageId(input.agentId),
-        agentId: input.agentId,
-        rating: input.rating,
-        comment: (input.comment ?? "").trim(),
-        publish: input.publish ?? false,
-        mcpVersion: version,
-      };
+      const rating = build(input);
       const code = randomBytes(4).toString("hex");
       drafts.set(code, { rating, expires: now() + CODE_TTL_MS });
       return { code, rating };

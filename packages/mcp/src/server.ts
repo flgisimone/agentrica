@@ -13,7 +13,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
 import { agentSummary, agentText, codeName, findAgent, introLine, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
-import { createRatings, MAX_COMMENT, previewText, RATINGS_URL, type Ratings } from "./ratings.ts";
+import { createRatings, MAX_COMMENT, previewText, RATINGS_URL, type RatingInput, type Ratings } from "./ratings.ts";
 
 // Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
 // contenere argomenti della configurazione del client: i caratteri di controllo (a capo, escape) diventano \uXXXX.
@@ -59,9 +59,11 @@ const all = catalog.flatMap((department) => department.agents.map((agent) => ({ 
 const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const codes = catalog.map((d) => d.code) as [DepartmentCode, ...DepartmentCode[]];
 
-// AGENTRICA_RATINGS_URL serve solo ai test (un endpoint finto); in uso resta l'URL fisso del sito.
+// AGENTRICA_RATINGS_URL serve solo ai test (un endpoint finto) e vale solo su 127.0.0.1: un .mcp.json di un progetto
+// non può dirottare le valutazioni verso un altro server. In uso resta l'URL fisso del sito.
+const testUrl = process.env.AGENTRICA_RATINGS_URL;
 const ratings: Ratings | undefined = withRatings
-  ? createRatings({ version: VERSION, url: process.env.AGENTRICA_RATINGS_URL ?? RATINGS_URL })
+  ? createRatings({ version: VERSION, url: testUrl && /^http:\/\/127\.0\.0\.1:\d+\//.test(testUrl) ? testUrl : RATINGS_URL })
   : undefined;
 
 let panel: Panel | undefined;
@@ -69,7 +71,7 @@ if (withPanel) {
   try {
     const panelRatings = ratings && {
       isRated: ratings.isRated,
-      rate: (input: { agentId: string; rating: number; comment: string; publish: boolean }) => ratings.send(ratings.draft(input).rating),
+      rate: (input: RatingInput) => ratings.send(ratings.build(input)),
     };
     panel = await startPanel(realpathSync(process.cwd()), panelRatings);
   } catch (error) {

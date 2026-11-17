@@ -128,9 +128,28 @@ Ordine: F20-01/02 → conferma dell'utente → F20-03/04 → F20-05/06/07/12 →
 - **F20-07** Pannello: sezione «Valuta gli agenti» con un modulo per agente usato (voti 1–5, commento, casella di pubblicazione, avviso), creato una volta sola perché l'aggiornamento non cancelli un commento a metà; rotta `POST /api/rate` con le difese di `/api/answer` e `parseRate`; il pannello non apre connessioni, invia tramite il server. Test in `panel.test.ts`, anche il giro pagina → server → endpoint finto con il payload esatto. Provato nel browser con Playwright a 1280 e 390 px (i voti vanno a capo su mobile).
 - **F20-08** `npm run ratings` (`scripts/ratings.ts`): legge `ratings` con `DATABASE_URL_READONLY` (ruolo in sola lettura) tramite `@neondatabase/serverless` 1.2.0, devDependency esatta della root (scelta dell'utente, 2026-11-17; la 1.2.1 aveva 4 giorni); calcoli puri in `scripts/ratings-lib.ts` (media, distribuzione, versioni dalla più nuova, commenti dal più recente, agenti dalla media più bassa) con test. Senza la variabile si ferma con un messaggio. Lettura reale da fare quando il database esiste (F20-03).
 - **F20-09** README del pacchetto (IT ed EN): «Cosa fa e cosa non fa» con l'unica connessione, sezione «Valutazioni», `rate_agent` fra i tool, `--allow-net` o `--no-ratings` con i permessi minimi, presentazione dell'agente, pannello. Descrizione in `package.json`. Decisioni «Server MCP», «Monitoraggio» e «Privacy dei trasporti» in `plan/README.md`. La voce «Versioni» si scrive al rilascio (F20-11).
+- **F20-10** Revisioni di Code Reviewer, Security e Privacy nella sessione (sezione «Revisioni»), con due correzioni applicate e verificate.
 - **F20-12** `introLine` e istruzione di presentazione nella cornice di `agentText`; nel pannello l'agente attivo ha il nome nel colore del reparto e l'etichetta «attivo», e ogni riga dice il reparto. Test in `prompt.test.ts`.
 
+## Verifiche
+
+- `npm run verify` verde in questo repository (65 test: unitari di valutazioni, prompt, pannello, server MCP con un client vero; script `ratings`); `npm pack --dry-run` con `ratings.js` e la pagina del pannello, versione 0.5.0.
+- `agentrica-site`: `npm run verify` (typecheck, lint, test, build) verde; spec e2e di pubblicazione verde su computer e telefono; prove locali della route (415, 400, 413, 405, nessun CORS, 401 del job); prova reale sull'anteprima 201/409/429.
+- Schema SQL provato su Postgres 17 (PGlite).
+- Pannello provato nel browser a 1280 e 390 px.
+
+## Revisioni (F20-10, ruoli nella sessione)
+
+- **Code Reviewer — APPROVE** dopo una correzione: dal pannello il server preparava anche un codice d'anteprima mai usato, valido 10 minuti; ora il pannello usa `build` senza codice.
+- **Security (software)** — una correzione: `AGENTRICA_RATINGS_URL` accettava qualsiasi indirizzo, quindi un `.mcp.json` di un progetto poteva dirottare le valutazioni; ora vale solo `http://127.0.0.1:porta/`. Verificati: SQL solo parametrico e fisso, nessun CORS, limiti di dimensione, confronto a tempo costante del segreto del job, nessun dato della richiesta nei log. Resta il rischio accettato delle credenziali del proprietario nella route.
+- **Privacy (verifica delle misure)** — conformi ai requisiti di F20-02: nessun IP salvato (solo hash con sale giornaliero, cancellato in giornata), commento fuori dai log, cancellazione a 12 mesi (job solo in produzione, dove stanno i dati), avviso prima dell'invio, informativa `#valutazioni`, codice della valutazione per i diritti, `--no-ratings`. Aperti: DPA di Neon e revisione legale.
+
 ## Rilievi aperti
+
+- (P2) DPA di Neon da verificare: controparte (Neon o Databricks) e copertura dei trasferimenti fuori dallo SEE; poi aggiornare F20-02 e le note legali se serve.
+- (P2) Note legali, sezione `#valutazioni`: testo non rivisto da un legale (come il resto della pagina, PRIV-PUB-01).
+- (P3) Con F21 un modello manipolato da un file del progetto potrebbe mettere dati del progetto nel commento con `publish: true`: la moderazione di F21 deve tenerne conto (l'anteprima mostra il testo all'utente, ma la conferma dipende dal modello).
+- (P3) Il pannello tiene le ultime 20 chiamate: un agente usato molto prima non compare più fra quelli da valutare nella pagina (resta `rate_agent`).
 
 - (P2) Route e job con le credenziali del proprietario del database (rischio accettato, Decisioni). Da rivedere in F20-10 con Security; per tornare al privilegio minimo servono le stringhe di `ratings_writer` e `ratings_purger` in variabili Sensitive.
 - (P3) Variabili `RATINGS_WRITER_URL` e `RATINGS_PURGER_URL` su Vercel non più usate: da cancellare.

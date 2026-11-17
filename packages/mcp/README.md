@@ -22,7 +22,7 @@ Serve Node 22 o successivo, con npm.
 **Claude Code**, dalla cartella del tuo progetto:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0
 ```
 
 Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicata finché non la cambi tu: un aggiornamento dei ruoli non arriva senza che tu lo scelga.
@@ -34,7 +34,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.4.0"]
+      "args": ["-y", "@agentrica/mcp@0.5.0"]
     }
   }
 }
@@ -43,7 +43,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
 **Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro. Con questi permessi l'invio di una [valutazione](#valutazioni) fallisce con un messaggio chiaro: se vuoi votare gli agenti aggiungi `--allow-net`, altrimenti aggiungi `--no-ratings` in fondo al comando.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.4.0
+npm install -g --ignore-scripts @agentrica/mcp@0.5.0
 npm root -g
 ```
 
@@ -70,7 +70,7 @@ Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 **Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --agents aisa,aiwda-08
 ```
 
 Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti` e `agente` vedono solo quelli. Senza `--agents` ci sono tutti i 56 agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
@@ -106,7 +106,7 @@ Come trattiamo le valutazioni: [note legali](https://agentrica.vercel.app/note-l
 Con `--panel` il server apre anche una pagina sul tuo computer da cui segui il progetto e prendi le scelte che l'agente ti chiede, invece di rispondere nel terminale:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --panel
 ```
 
 Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha tre pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
@@ -137,7 +137,7 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 `init` crea un progetto con il metodo di lavoro di Agentrica, pronto per Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.4.0 init mio-progetto --name "Mio progetto"
+npx -y @agentrica/mcp@0.5.0 init mio-progetto --name "Mio progetto"
 ```
 
 Senza cartella usa quella corrente; senza `--name` il nome è quello della cartella. Scrive:
@@ -170,6 +170,7 @@ Lo stesso catalogo si legge anche da codice, senza avviare il server: `import { 
 
 ## Versioni
 
+- **0.5.0**: valutazione degli agenti (tool `rate_agent` in due passi con anteprima e codice, sezione «Valuta gli agenti» nel pannello, proposta a fine lavoro e promemoria dopo 30 minuti), unica connessione del server e solo dopo la conferma; `--no-ratings` la toglie. L'agente dice chi è (nome in codice, ruolo, reparto) all'inizio, ai cambi e nel riepilogo.
 - **0.4.0**: comando `init` che crea un progetto con regole, piano a fasi, agenzie, subagent, CI e `.mcp.json` (prende il posto di agentic-starter); il server è invariato.
 - **0.3.3**: export `@agentrica/mcp/catalog` per leggere reparti e agenti da codice (lo usa il sito, ora in un repository a parte); agenti e comportamento del server invariati.
 - **0.3.2**: pannello in tre pagine (Sessione, Piano, Rilievi) con menu e contatori delle scelte in attesa e dei rilievi; agenti e comportamento del server invariati.

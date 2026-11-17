@@ -24,7 +24,7 @@ You need Node 22 or later, with npm.
 **Claude Code**, from your project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0
 ```
 
 On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
@@ -36,7 +36,7 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.4.0"]
+      "args": ["-y", "@agentrica/mcp@0.5.0"]
     }
   }
 }
@@ -45,7 +45,7 @@ On first start npx downloads the package from npm. The version stays the one you
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message: to rate agents add `--allow-net`, otherwise add `--no-ratings` at the end of the command.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.4.0
+npm install -g --ignore-scripts @agentrica/mcp@0.5.0
 npm root -g
 ```
 
@@ -72,7 +72,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --agents aisa,aiwda-08
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -108,7 +108,7 @@ How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.4.0 --panel
+claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
@@ -139,7 +139,7 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.4.0 init my-project --name "My project"
+npx -y @agentrica/mcp@0.5.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
@@ -172,6 +172,7 @@ The same catalog can be read from code, without starting the server: `import { l
 
 ## Versions
 
+- **0.5.0**: agent ratings (two-step `rate_agent` tool with preview and code, "Valuta gli agenti" section in the panel, suggestion at the end of the work and a reminder after 30 minutes), the server's only connection and only after your confirmation; `--no-ratings` removes it. The agent says who it is (code name, role, department) at the start, at handovers and in the summary.
 - **0.4.0**: `init` command that creates a project with rules, phased plan, agencies, subagents, CI and `.mcp.json` (replaces agentic-starter); the server is unchanged.
 - **0.3.3**: `@agentrica/mcp/catalog` export to read departments and agents from code (used by the site, now in a separate repository); agents and server behaviour unchanged.
 - **0.3.2**: the panel has three pages (Sessione, Piano, Rilievi) with a menu counting pending choices and findings; agents and server behaviour unchanged.

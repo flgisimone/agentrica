@@ -2,7 +2,7 @@
   "name": "@agentrica/mcp",
   "version": "0.4.0",
   "mcpName": "io.github.flgisimone/agentrica",
-  "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente e due tool in sola lettura.",
+  "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente, due tool in sola lettura e un tool per valutare gli agenti.",
   "license": "MIT",
   "author": "Giulio Simone Floresta",
   "repository": {

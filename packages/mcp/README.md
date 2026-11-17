@@ -10,7 +10,7 @@ Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA
 
 - Il server gira solo in locale: lo avvia il client sul tuo computer e i due comunicano con stdio. Il server non ha una parte remota.
 - Come contenuto legge solo i file di `agents/` inclusi nel pacchetto, una volta all'avvio. Il testo che arriva al modello è quello di quei file: puoi leggerlo prima di usarlo.
-- Il server non scrive file (lo fa solo il comando [`init`](#nuovo-progetto), quando lo lanci tu), non apre connessioni di rete, non registra, non raccoglie e non invia dati, non ha telemetria. Con `--panel` apre una pagina solo sul tuo computer: vedi [Pannello locale](#pannello-locale).
+- Il server non scrive file (lo fa solo il comando [`init`](#nuovo-progetto), quando lo lanci tu), non registra e non ha telemetria. Apre una connessione verso Agentrica in un caso solo: quando confermi la [valutazione di un agente](#valutazioni), e invia solo voto, commento e versione. Con `--no-ratings` non si collega mai. Con `--panel` apre una pagina solo sul tuo computer: vedi [Pannello locale](#pannello-locale).
 - Non esegue niente nel tuo progetto. Dà soltanto istruzioni al modello: quello che il modello fa nel progetto dipende dal client e dai permessi che gli concedi.
 - **Dove vanno i dati.** Il testo dell'agente, il compito e i file che il modello legge nel tuo progetto vanno al fornitore del modello attraverso il tuo client, secondo le condizioni di quel fornitore. Agentrica non li riceve. Nel compito non inserire dati personali, segreti o dati di clienti che non servono.
 - Gli agenti sono IA: le loro conclusioni sono proposte da verificare. Gli agenti di privacy e sicurezza non sostituiscono un DPO, un avvocato o un responsabile della sicurezza, e i loro rilievi non sono una certificazione di conformità.
@@ -40,7 +40,7 @@ Al primo avvio npx scarica il pacchetto da npm. La versione resta quella indicat
 }
 ```
 
-**Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro.
+**Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro. Con questi permessi l'invio di una [valutazione](#valutazioni) fallisce con un messaggio chiaro: se vuoi votare gli agenti aggiungi `--allow-net`, altrimenti aggiungi `--no-ratings` in fondo al comando.
 
 ```sh
 npm install -g --ignore-scripts @agentrica/mcp@0.4.0
@@ -81,12 +81,25 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti
 |---|---|---|
 | `elenca_agenti` | `reparto` facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente |
 | `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente |
+| `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 
 Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
 
 Il numero 01 di ogni reparto è il direttore: coordina gli specialisti e consolida i loro rilievi.
 
-I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi.
+I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi. Durante il lavoro l'agente dice chi è, per esempio «AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)»: all'inizio, quando passa a un altro agente e nel riepilogo finale.
+
+## Valutazioni
+
+Puoi dare a un agente un voto da 1 a 5 e un commento su cosa migliorare: servono a correggere i file di ruolo. Quando l'agente ha finito il compito te lo propone, una volta per sessione; se lavora da più di 30 minuti, il server lo ricorda al modello una volta. Puoi anche chiederlo tu («valuta AISA-02»).
+
+- **Niente parte senza il tuo sì.** `rate_agent` prima mostra l'anteprima di ciò che parte e un codice valido 10 minuti; il modello te la mostra e invia solo con il codice, esattamente quel contenuto. Con `--panel` voti dalla pagina, nella sezione «Valuta gli agenti».
+- **Cosa parte.** Id dell'agente, voto, commento, se permetti di pubblicare il commento sul sito (spento di default), versione del pacchetto e un codice casuale della valutazione. Niente compito, file, percorsi o nome del progetto, niente account. Nel commento non scrivere nomi, dati personali o parti del progetto.
+- **Dopo l'invio** ricevi il codice della valutazione: con quello puoi chiedere di cancellarla o di non pubblicare il commento. Un agente si valuta una volta per sessione e una volta al giorno dalla stessa rete.
+- **Se l'invio non riesce** (offline, servizio giù) il tool lo dice e il lavoro continua; il voto non resta salvato da nessuna parte.
+- **Per non avere il tool** né le proposte, aggiungi `--no-ratings` al comando: il server non si collega mai.
+
+Come trattiamo le valutazioni: [note legali](https://agentrica.vercel.app/note-legali#valutazioni).
 
 ## Pannello locale
 
@@ -111,7 +124,7 @@ Con il pannello il modello ha due tool in più:
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
-**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1`, legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
+**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1`, legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
 
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 

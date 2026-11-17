@@ -13,6 +13,14 @@
 - Commenti pubblici solo dopo approvazione, con segnalazione e rimozione; i voti negativi non si eliminano.
 - Pagina «Community Reputation» e API pubbliche aggregate.
 
+## Backlog
+
+Si scrive all'apertura, dopo la revisione a 4 settimane dalla 0.5.0.
+
+## Criteri di accettazione
+
+Si scrivono all'apertura.
+
 ## Da decidere all'apertura
 
 - Moderazione: chi, con quale strumento, in quanto tempo; serve un'area di amministrazione (l'area personale è stata eliminata in F16).

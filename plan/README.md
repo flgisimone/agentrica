@@ -45,6 +45,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Area personale | Eliminata (era F16, sospesa dal 2026-11-15): account, accesso Google + TOTP e pannello `/admin` non hanno uno scopo per gli utenti. Il file resta nella storia di git; si riparte da capo se serve un MCP remoto | Scelta dell'utente (2026-11-16) |
 | Starter | Da F18 un progetto nuovo si crea con `npx @agentrica/mcp init`: copia `starter/` (regole generali di Agentrica), gli `agents/` e i subagent del pacchetto con il nome del progetto, `.mcp.json` con il pannello e, fuori da un repository, git su `main` e `develop`. agentic-starter è archiviato; gamoey, kitty-3d e oneoffice restano come sono | Scelta dell'utente (2026-11-16, F18) |
 | File di lavoro | `plan/`, `audit/`, `docs/` ed `examples/` restano nel repository pubblico (F19 abbandonata all'apertura) | Scelta dell'utente (2026-11-16, F19) |
+| Reputazione | Da F21 il sito pubblica, con ISR a un'ora, le statistiche degli agenti con almeno 5 voti (media bayesiana per la classifica, attiva con almeno 5 agenti) e i commenti con consenso approvati con `npm run ratings -- --moderate`; sotto le soglie non si vede nulla. Lettura con il ruolo `reputation_reader`, moderazione con `ratings_moderator`; voti anomali esclusi dalle medie, non cancellati | Scelta dell'utente (2026-11-17, F21) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento. Applicata in F20: le valutazioni hanno voce di registro, bilanciamento e screening DPIA in `20-valutazioni.md` | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -76,6 +77,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F18 | [18-starter.md](18-starter.md) | agentic-starter fuso nel pacchetto: `npx @agentrica/mcp init` (0.4.0), starter archiviato, comando sul sito | completata |
 | F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico: abbandonata all'apertura, resta tutto pubblico | sospesa |
 | F20 | [20-valutazioni.md](20-valutazioni.md) | Valutazioni degli agenti: voto e commento dall'MCP e dal pannello, endpoint del sito con database, anonimo e confermato a ogni invio | completata |
-| F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati, dopo F20 | da decidere |
+| F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati; si accende sopra le soglie | completata |
 
 Ordine: F0 → F21 in sequenza.

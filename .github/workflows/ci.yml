@@ -22,7 +22,9 @@ env:
   TZ: Europe/Rome
 
 jobs:
-  verify:
+  # Un job per sistema; il controllo richiesto dal ruleset di main si chiama «verify» ed è il job in fondo.
+  tests:
+    name: verify (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -72,3 +74,11 @@ jobs:
           name: playwright-report
           path: test-results/
           retention-days: 3
+
+  # Il controllo «verify» richiesto per unire in main: verde solo se i tre sistemi sono verdi.
+  verify:
+    needs: tests
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.tests.result }}" = success

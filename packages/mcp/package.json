@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "mcpName": "io.github.flgisimone/agentrica",
   "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente, due tool in sola lettura e un tool per valutare gli agenti.",
   "license": "MIT",
@@ -17,7 +17,8 @@
       "types": "./dist/mcp/src/catalog.d.ts",
       "default": "./dist/mcp/src/catalog.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./CHANGELOG.md": "./CHANGELOG.md"
   },
   "bin": {
     "agentrica-mcp": "dist/mcp/src/server.js"
@@ -27,7 +28,8 @@
     "agents",
     "starter",
     ".claude/agents",
-    "README.en.md"
+    "README.en.md",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=22"

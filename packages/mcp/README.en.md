@@ -14,22 +14,50 @@ The agent files are in Italian. The agent answers in the language you write in.
 
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
-- The server writes no files (only the [`init`](#new-project) command does, when you run it), logs nothing and has no telemetry. It connects to Agentrica in one case only: when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version. With `--no-ratings` it never connects. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
+- The server writes no files (only the [`init`](#new-project) command does, when you run it), logs nothing and has no telemetry. It connects to the internet in two cases:
+  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version; `--no-ratings` turns it off;
+  - to the npm registry, at startup, to find out whether there is a [new version](#updating-and-uninstalling): a request with no data, npm only sees your IP address and program, as when npx downloads the package; `--no-update-check` turns it off.
+
+  With `--no-ratings --no-update-check` it never connects. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
 - It runs nothing in your project. It only gives instructions to the model: what the model does in the project depends on the client and on the permissions you grant it.
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
 
 ## Installation
 
-You need Node 22 or later, with npm.
+You need Node 22 or later, with npm. The commands are the same on Mac, Windows (PowerShell or cmd) and Linux.
 
-**Claude Code**, from your project folder:
+**On the whole computer (recommended)**, for Claude Code:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0
+npx -y @agentrica/mcp@0.6.0 install
 ```
 
-On first start npx downloads the package from npm. The version stays the one you set until you change it: role updates do not arrive unless you choose them.
+It installs the package with `npm install -g` and registers it in Claude Code with `user` scope: every project you open already has Agentrica. The server starts with `node` from npm's global folder: it starts fast and also works offline. Restart Claude Code and check with `claude mcp list`.
+
+**Without installing anything**, for Claude Code:
+
+```sh
+npx -y @agentrica/mcp@0.6.0 add
+```
+
+It registers the server started with npx (on Windows `cmd /c npx`), which downloads the package to its cache on first start. The scope is `user`, all your projects; with `--project` it writes `.mcp.json` in the current folder, to share with your team (it works on the system it was created on), with `--local` it applies to the current project and to you only. For your team, from the project folder:
+
+```sh
+npx -y @agentrica/mcp@0.6.0 add --project
+```
+
+The server options (`--agents`, `--panel`, `--no-ratings`, `--no-update-check`) go at the end of `install` and `add`, which pass them to the server. Run again, they replace Agentrica's registration in the same scope. If Node 22, npm or the `claude` command are missing, they say so and print the commands to run by hand.
+
+The version stays the one you set until you change it: role updates do not arrive unless you choose them. See [Updating and uninstalling](#updating-and-uninstalling).
+
+**By hand in Claude Code**, without `install` or `add`:
+
+```sh
+claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.6.0
+```
+
+On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.6.0`.
 
 **Other MCP clients**: add the server to the client configuration, usually a JSON file like this:
 
@@ -38,23 +66,42 @@ On first start npx downloads the package from npm. The version stays the one you
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.5.0"]
+      "args": ["-y", "@agentrica/mcp@0.6.0"]
     }
   }
 }
 ```
 
-**Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message: to rate agents add `--allow-net`, otherwise add `--no-ratings` at the end of the command.
+On Windows:
+
+```json
+{
+  "mcpServers": {
+    "agentrica": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.6.0"]
+    }
+  }
+}
+```
+
+**Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message and the version check does not run: to rate agents add `--allow-net`, otherwise add `--no-ratings --no-update-check` at the end of the command.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.5.0
+npm install -g --ignore-scripts @agentrica/mcp@0.6.0
 npm root -g
 ```
 
 With the folder printed by `npm root -g` in place of `/global/folder`:
 
 ```sh
-claude mcp add agentrica -- node --permission --allow-fs-read=/global/folder/@agentrica/mcp /global/folder/@agentrica/mcp/dist/mcp/src/server.js
+claude mcp add --scope user agentrica -- node --permission --allow-fs-read=/global/folder/@agentrica/mcp /global/folder/@agentrica/mcp/dist/mcp/src/server.js
+```
+
+On Windows the folder is usually `C:\Users\<name>\AppData\Roaming\npm\node_modules`; if it contains spaces, quote the path and the whole option:
+
+```sh
+claude mcp add --scope user agentrica -- node --permission "--allow-fs-read=C:\Users\<name>\AppData\Roaming\npm\node_modules\@agentrica\mcp" "C:\Users\<name>\AppData\Roaming\npm\node_modules\@agentrica\mcp\dist\mcp\src\server.js"
 ```
 
 **Provenance.** The package is published by the repository CI with provenance: npm shows which commit it was built from, and `npm audit signatures` in your project verifies its signature.
@@ -63,18 +110,20 @@ claude mcp add agentrica -- node --permission --allow-fs-read=/global/folder/@ag
 
 ## Usage
 
-**Prompts.** Each agent is a prompt named after its lowercase id (`aisa-02`, `aica-01`…) with one optional argument, `compito` (the task). In Claude Code prompts become commands:
+**Prompts.** Each agent is a prompt named after its lowercase id and its department (`aisa-02-software`, `aica-01-cybersecurity`, `aibpd-01-business`, `aipca-02-privacy`, `aiwda-08-design`) with one optional argument, `compito` (the task). In Claude Code prompts become commands, and the menu shows the department:
 
 ```
-/mcp__agentrica__aisa-02 "Review the boundaries between the modules in src/"
+/mcp__agentrica__aisa-02-software "Review the boundaries between the modules in src/"
 ```
+
+Up to 0.5.0 the name was the id alone (`aisa-02`).
 
 Put the task in quotes: Claude Code splits arguments on spaces.
 
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --agents aisa,aiwda-08
+npx -y @agentrica/mcp@0.6.0 install --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -95,14 +144,16 @@ While working, the agent says who it is, for example "AISA-02 · ALTAIR — Seni
 
 ## Ratings
 
-You can give an agent a score from 1 to 5 and a comment on what to improve: ratings are used to fix the role files. When the agent has finished the task it suggests a rating, once per session; if it has been working for more than 30 minutes, the server reminds the model once. You can also ask ("rate AISA-02").
+You can give an agent a score from 1 to 5 and a comment on what to improve: ratings are used to fix the role files.
 
-- **Nothing is sent without your yes.** `rate_agent` first shows a preview of what will be sent and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly that content. With `--panel` you rate from the page, in the "Valuta gli agenti" section.
+- **The form.** If the client shows forms (MCP elicitation, like Claude Code), the server asks you itself, with a form: score, comment and whether to publish it. It asks when you load another agent, for the previous one, which has finished, and after 30 minutes of use. Once per agent per session: if you decline, it does not ask again for that agent. Submitting the form is the confirmation, and only what is in the form is sent.
+- **Without forms.** With clients that do not show forms, the agent suggests a rating when it has finished the task, once per session; if it has been working for more than 30 minutes, the server reminds the model once. `rate_agent` first shows a preview of what will be sent and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly that content.
+- You can also ask ("rate AISA-02"), or rate from the panel (`--panel`), in the "Valuta gli agenti" section.
 - **What is sent.** The agent id, the score, the comment, whether you allow the comment to be published on the site (off by default), the package version and a random rating code. No task, files, paths or project name, no account. Do not write names, personal data or parts of your project in the comment.
 - **On the site.** Every agent with at least 5 ratings shows the average, the number of ratings and their distribution, and a ranking appears once at least 5 agents pass that threshold. A comment appears only if you allowed it to be published and after it is approved (criteria in the [legal notes](https://agentrica.vercel.app/note-legali#valutazioni), in Italian), with the score and the month.
 - **After sending** you get the rating code: with it you can ask for the rating to be deleted or for the comment not to be published. An agent can be rated once per session and once a day from the same network.
 - **If sending fails** (offline, service down) the tool says so and the work goes on; the rating is not stored anywhere.
-- **To drop the tool** and the suggestions, add `--no-ratings` to the command: the server never connects.
+- **To drop the tool**, the form and the suggestions, add `--no-ratings` to the command: the server no longer connects to Agentrica.
 
 How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
 
@@ -111,12 +162,12 @@ How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp@0.5.0 --panel
+npx -y @agentrica/mcp@0.6.0 install --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
 
-- **Sessione** (session): pending choices (*Da decidere*, to decide), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agenti in uso*, agents in use), with the start of the task;
+- **Sessione** (session): pending choices (*Da decidere*, to decide), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agenti in uso*, agents in use), with the department and the start of the task;
 - **Piano** (plan): the open phase with backlog and acceptance criteria, and all project phases;
 - **Rilievi** (findings): open findings from phases and audits, by priority and department.
 
@@ -142,7 +193,7 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.5.0 init my-project --name "My project"
+npx -y @agentrica/mcp@0.6.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
@@ -151,7 +202,7 @@ Without a folder it uses the current one; without `--name` the name is the folde
 - `plan/` with `README.md` (decisions, glossary, phases) and `00-base.md`, the F0 phase to start from; `audit/` and `docs/`;
 - `agents/` and `.claude/agents/`: the 56 roles of this version and one subagent per role, with the project name;
 - `.github/workflows/ci.yml` (`npm run verify` and `verify:e2e`, skipped until F0 creates them), `.gitignore`, `.nvmrc`, `.env.example`;
-- `.mcp.json` with this server at an exact version and `--panel`, so the panel reads the plan right away.
+- `.mcp.json` with this server at an exact version and `--panel`, so the panel reads the plan right away (on Windows with `cmd /c npx`).
 
 If even one file already exists, `init` writes nothing and lists them. Outside a git repository it makes the first commit on `main` and leaves `develop` checked out; inside one it does not commit. Then open Claude Code in the folder and ask it to open phase F0. `init` is the only command that writes files: the server stays read-only. It replaces agentic-starter, which is no longer updated.
 
@@ -167,23 +218,27 @@ Three agents tested on 2026-11-15 against three small projects with planted, doc
 
 Limits: the defects are few, known and fairly obvious; one model and one run per case; a result like this says nothing about how an agent does on a large project. Projects, expected defects, counting rules and the agents' full reports (in Italian) are in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): you can repeat the tests.
 
-## Updates
+## Updating and uninstalling
 
-The agents' text comes from the `agents/` files of the installed version. To update, change the version in the command (or reinstall with `npm install -g`) and restart the client. Ids and code names do not change.
+The agents' text comes from the `agents/` files of the installed version. When a new version is out the server tells you once per session, in a tool response and in the panel, with the right command for how you installed it. Ids and code names do not change.
+
+- **Installed with `install`**: run `install` again with the new version, e.g. `npx -y @agentrica/mcp@<version> install`, then restart Claude Code.
+- **With `add` or `init`**: run `add` again with the new version, or change the version in the server command or in `.mcp.json`, then restart the client.
+
+To uninstall:
+
+```sh
+claude mcp remove agentrica --scope user
+npm uninstall -g @agentrica/mcp
+```
+
+The second command is needed only if you used `install`; with `add --project` or `--local` use that scope instead of `user`.
 
 The same catalog can be read from code, without starting the server: `import { loadCatalog } from "@agentrica/mcp/catalog"` returns departments and agents (with the `Department` and `Agent` types) from the package's `agents/`. The Agentrica site uses it.
 
 ## Versions
 
-- **0.5.0**: agent ratings (two-step `rate_agent` tool with preview and code, "Valuta gli agenti" section in the panel, suggestion at the end of the work and a reminder after 30 minutes), the server's only connection and only after your confirmation; `--no-ratings` removes it. The agent says who it is (code name, role, department) at the start, at handovers and in the summary.
-- **0.4.0**: `init` command that creates a project with rules, phased plan, agencies, subagents, CI and `.mcp.json` (replaces agentic-starter); the server is unchanged.
-- **0.3.3**: `@agentrica/mcp/catalog` export to read departments and agents from code (used by the site, now in a separate repository); agents and server behaviour unchanged.
-- **0.3.2**: the panel has three pages (Sessione, Piano, Rilievi) with a menu counting pending choices and findings; agents and server behaviour unchanged.
-- **0.3.1**: the panel hides closed findings and counts new files separately; the `agente` tool only accepts department codes in ids; common rules with a shared severity scale (P0–P3) and a scale for the software department.
-- **0.3.0**: local panel with `--panel`: phases, backlog, findings, agents in use and choices made from the page (`open_panel` and `ask_user` tools). Without `--panel` nothing changes.
-- **0.2.1**: name `io.github.flgisimone/agentrica` for the official MCP registry; agents and behaviour unchanged.
-- **0.2.0**: `--agents` argument to load only a squad of agents or departments; in an empty project, or when what the role must examine is missing, the agent says so and proposes first steps to confirm, without inventing findings.
-- **0.1.0**: first published version. 56 agents in five departments, one prompt per agent and the `elenca_agenti` and `agente` tools.
+What changed in each version, with its date, is in [CHANGELOG.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.md) (in Italian). 0.6.0 renames the prompts (`aisa-02` becomes `aisa-02-software`).
 
 ## License
 

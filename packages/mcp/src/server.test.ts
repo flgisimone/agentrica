@@ -33,20 +33,21 @@ after(async () => {
 
 const text = (result: Record<string, unknown>) => (result.content as { type: string; text: string }[])[0]!.text;
 
-test("56 prompt con id in minuscolo e argomento compito facoltativo", async () => {
+test("56 prompt con id in minuscolo e reparto, argomento compito facoltativo", async () => {
   const { prompts } = await client.listPrompts();
   assert.equal(prompts.length, 56);
-  const altair = prompts.find((p) => p.name === "aisa-02");
+  const altair = prompts.find((p) => p.name === "aisa-02-software");
   assert.equal(altair?.title, "AISA-02 · ALTAIR — Senior Software Architect");
   assert.deepEqual(altair?.arguments?.map((a) => [a.name, a.required ?? false]), [["compito", false]]);
 });
 
 test("un prompt con compito restituisce il testo dell'agente", async () => {
-  const { messages } = await client.getPrompt({ name: "aisa-02", arguments: { compito: "Rivedi i confini." } });
+  const { messages } = await client.getPrompt({ name: "aisa-02-software", arguments: { compito: "Rivedi i confini." } });
   assert.equal(messages.length, 1);
   const content = messages[0]!.content as { type: string; text: string };
   assert.match(content.text, /^# AISA-02 · ALTAIR — Senior Software Architect\n/);
-  assert.match(content.text, /## Compito\n\nRivedi i confini\.\n$/);
+  // Il client di prova non ha l'elicitation: in fondo, dopo il compito, c'è l'invito a valutare (F23-03).
+  assert.match(content.text, /## Compito\n\nRivedi i confini\.\n\n## Valutazione\n\n.*rate_agent, id AISA-02.*\n$/);
 });
 
 test("due tool in sola lettura e rate_agent, l'unico che apre una connessione", async () => {
@@ -136,7 +137,7 @@ test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
   assert.notEqual(ok.isError, true);
   const long = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_001) } });
   assert.equal(long.isError, true);
-  await assert.rejects(client.getPrompt({ name: "aisa-02", arguments: { compito: "x".repeat(20_001) } }));
+  await assert.rejects(client.getPrompt({ name: "aisa-02-software", arguments: { compito: "x".repeat(20_001) } }));
 });
 
 test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr, codice 1", () => {
@@ -145,13 +146,14 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "update.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
     for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {
       copyFileSync(join(catalogSrc, file), join(root, "packages", "catalog", "src", file));
     }
-    symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"));
+    // "junction": su Windows un link a una cartella senza permessi di amministratore; altrove si ignora.
+    symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"), "junction");
     // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
     const run = spawnSync(process.execPath, [join(src, "server.ts")], { cwd: repo, input: "", encoding: "utf8" });
     assert.equal(run.status, 1);
@@ -174,8 +176,8 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
   try {
     const { prompts } = await squad.listPrompts();
     assert.equal(prompts.length, 11);
-    assert.equal(prompts[0]!.name, "aisa-02");
-    assert.ok(prompts.slice(1).every((p) => p.name.startsWith("aiwda-")));
+    assert.equal(prompts[0]!.name, "aisa-02-software");
+    assert.ok(prompts.slice(1).every((p) => /^aiwda-\d{2}-design$/.test(p.name)));
     assert.match(squad.getInstructions() ?? "", /^Agentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
     const list = text(await squad.callTool({ name: "elenca_agenti", arguments: {} }));
     assert.equal(list.match(/^- /gm)?.length, 11);

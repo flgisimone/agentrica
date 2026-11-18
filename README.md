@@ -9,7 +9,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.5.0` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.6.0 install` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
@@ -68,6 +68,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F20 | Valutazioni degli agenti dall'MCP e dal pannello, endpoint del sito con database (0.5.0) | completata |
 | F21 | Reputazione pubblica degli agenti: statistiche, classifiche e commenti moderati sul sito, sopra le soglie | completata |
 | F22 | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
+| F23 | Avvisi e installazione: `install` e `add` su Mac, Windows e Linux, valutazione con il modulo del client, avviso di versione nuova, reparto nei comandi, CHANGELOG (0.6.0) | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

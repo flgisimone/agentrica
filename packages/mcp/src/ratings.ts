@@ -1,4 +1,5 @@
-// Valutazioni degli agenti (F20): anteprima con codice monouso, invio all'endpoint del sito, promemoria.
+// Valutazioni degli agenti (F20): anteprima con codice monouso, invio all'endpoint del sito, promemoria. Da F23 anche il
+// modulo dell'elicitation MCP: inviare il modulo vale come conferma, e parte solo ciò che c'è nel modulo.
 // È l'unico punto del server che apre una connessione, e solo dopo la conferma dell'utente: l'invio parte con il codice
 // dell'anteprima e manda esattamente il contenuto mostrato. Niente compito, file o percorsi: solo i campi di Rating.
 // Tutto resta in memoria (nessun file); i tempi e fetch si passano dall'esterno per i test.
@@ -47,6 +48,8 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
   const loadedAt = new Map<string, number>();
   const rated = new Set<string>();
   const reminded = new Set<string>();
+  // Agenti per cui il server ha già mostrato il modulo (F23): una volta per agente, un rifiuto basta.
+  const asked = new Set<string>();
   const drafts = new Map<string, { rating: Rating; expires: number }>();
 
   const build = (input: RatingInput): Rating => ({
@@ -72,6 +75,16 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
     },
 
     isRated: (agentId: string) => rated.has(agentId),
+
+    /** Il modulo si può mostrare per questo agente? Se sì, da qui in poi conta come mostrato. */
+    claimAsk(agentId: string): boolean {
+      if (!loadedAt.has(agentId) || rated.has(agentId) || asked.has(agentId)) return false;
+      asked.add(agentId);
+      return true;
+    },
+
+    /** Il client non ha mostrato il modulo: torna possibile il promemoria (e un altro modulo). */
+    unclaimAsk: (agentId: string) => void asked.delete(agentId),
 
     /** La valutazione senza codice: per il pannello, dove l'invio dalla pagina è già la conferma. */
     build,
@@ -121,7 +134,7 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
 
     /** Agenti caricati da almeno 30 minuti, non valutati e non ancora ricordati: si ricordano una volta sola. */
     due(): string[] {
-      const ids = [...loadedAt].filter(([id, at]) => now() - at >= REMINDER_AFTER_MS && !rated.has(id) && !reminded.has(id)).map(([id]) => id);
+      const ids = [...loadedAt].filter(([id, at]) => now() - at >= REMINDER_AFTER_MS && !rated.has(id) && !reminded.has(id) && !asked.has(id)).map(([id]) => id);
       for (const id of ids) reminded.add(id);
       return ids;
     },
@@ -143,4 +156,36 @@ export function previewText(name: string, code: string, rating: Rating): string 
     "",
     `Mostra questa anteprima all'utente e chiedigli se inviarla. Solo dopo il suo sì richiama rate_agent con code "${code}" (valido 10 minuti, una volta). Se dice no, non fare nulla.`,
   ].join("\n");
+}
+
+/** Campi del modulo di valutazione (elicitation MCP): solo tipi semplici, la pubblicazione parte spenta. */
+export const RATING_FORM = {
+  type: "object" as const,
+  properties: {
+    // Una scelta e non un numero: Claude Code mostra un intero come campo di testo libero (prova F23-01).
+    rating: {
+      type: "string" as const,
+      title: "Voto",
+      enum: ["5", "4", "3", "2", "1"],
+      enumNames: ["5 · benissimo", "4 · bene", "3 · così così", "2 · male", "1 · malissimo"],
+    },
+    comment: { type: "string" as const, title: "Commento (facoltativo)", description: "Cosa è andato bene o cosa migliorare", maxLength: MAX_COMMENT },
+    publish: { type: "boolean" as const, title: "Pubblica il commento sul sito di Agentrica", default: false },
+  },
+  required: ["rating"],
+};
+
+/** Il testo in cima al modulo: chi si valuta e cosa parte. */
+export function formMessage(name: string): string {
+  return `Valuta ${name}. Invia il modulo per mandare la valutazione ad Agentrica, in forma anonima; rifiuta e non te la chiediamo più per questo agente. ${NOTICE}`;
+}
+
+/** La risposta del modulo, validata come il resto: voto intero 1–5, commento al più MAX_COMMENT, booleano. */
+export function parseForm(agentId: string, content: Record<string, unknown> | undefined): RatingInput | undefined {
+  if (!content) return undefined;
+  const { comment = "", publish = false } = content;
+  const rating = typeof content.rating === "string" && /^[1-5]$/.test(content.rating) ? Number(content.rating) : undefined;
+  if (rating === undefined) return undefined;
+  if (typeof comment !== "string" || comment.length > MAX_COMMENT || typeof publish !== "boolean") return undefined;
+  return { agentId, rating, comment, publish };
 }

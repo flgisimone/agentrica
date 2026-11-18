@@ -5,7 +5,7 @@ import { mkdtempSync, realpathSync, rmSync } from "node:fs";
 import { createServer, request } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -120,11 +120,24 @@ test("valutazioni nel pannello: stato, difese e invio con le valutazioni del ser
   try {
     const cookie = await login(without.url);
     const origin = new URL(without.url).origin;
-    assert.equal(JSON.parse((await call(`${origin}/api/state`, { headers: { Cookie: cookie } })).body).rating, null);
+    const empty = JSON.parse((await call(`${origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    assert.equal(empty.rating, null);
+    assert.equal(empty.update, null);
     const headers = { Cookie: cookie, Origin: origin, "Content-Type": "application/json" };
     assert.equal((await call(`${origin}/api/rate`, { method: "POST", headers, body: "{}" })).status, 404, "senza valutazioni la rotta non c'è");
   } finally {
     await without.close();
+  }
+});
+
+test("avviso di versione nuova nello stato, per il banner (F23)", async () => {
+  const panel = await startPanel(root, undefined, () => "È uscita la versione 9.9.9 di Agentrica.");
+  try {
+    const cookie = await login(panel.url);
+    const state = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    assert.equal(state.update, "È uscita la versione 9.9.9 di Agentrica.");
+  } finally {
+    await panel.close();
   }
 });
 
@@ -149,7 +162,7 @@ test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async (
     assert.equal((await call(`${base}/api/state`, { headers: { Cookie: "agentrica_panel_1=x" } })).status, 403);
 
     const state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
-    assert.equal(state.project.name, root.split("/").pop());
+    assert.equal(state.project.name, basename(root));
     assert.match(state.project.problems[0], /Non trovo plan\/README\.md/);
 
     const json = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
@@ -196,7 +209,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
   await client.connect(
     new StdioClientTransport({
       command: process.execPath,
-      args: [join(import.meta.dirname, "server.ts"), "--panel", "--agents", "aisa"],
+      args: [join(import.meta.dirname, "server.ts"), "--panel", "--agents", "aisa", "--no-update-check"],
       cwd: repo,
       env: { PATH: root, AGENTRICA_RATINGS_URL: ratingsUrl },
       stderr: "pipe",
@@ -209,15 +222,15 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;
     const cookie = await login(url);
-    await client.getPrompt({ name: "aisa-02", arguments: { compito: "Rivedi   i confini\ndel modulo." } });
+    await client.getPrompt({ name: "aisa-02-software", arguments: { compito: "Rivedi   i confini\ndel modulo." } });
 
     const result = client.callTool({ name: "ask_user", arguments: question });
-    let state: { questions: { id: string }[]; activity: { id: string; task: string }[]; project: { problems: string[] } };
+    let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string }[]; project: { problems: string[] } };
     do {
       state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     } while (state.questions.length === 0);
     assert.deepEqual(state.project.problems, [], "il piano di questo repository si legge");
-    assert.deepEqual(state.activity.map((a) => [a.id, a.task]), [["AISA-02", "Rivedi i confini del modulo."]]);
+    assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.task]), [["AISA-02", "AISA · Software", "Rivedi i confini del modulo."]]);
 
     const headers = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
     const body = JSON.stringify({ id: state.questions[0]!.id, choices: ["A (Consigliata)"], note: "procedi" });

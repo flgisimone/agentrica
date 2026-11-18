@@ -1,4 +1,4 @@
-// Pagina del pannello: legge /api/state, si aggiorna con /api/events e manda le risposte a /api/answer e i voti a /api/rate.
+// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer e i voti a /api/rate.
 // I dati del progetto entrano nel DOM solo come testo (textContent), mai come HTML.
 "use strict";
 
@@ -33,7 +33,10 @@ function inline(text) {
 const time = (iso) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 const empty = (text) => el("p", { class: "empty" }, text);
 
-function renderHeader({ project }) {
+function renderHeader({ project, update }) {
+  const banner = $("update");
+  banner.hidden = !update;
+  banner.textContent = update ?? "";
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
   const files = project.git
     ? [

@@ -27,7 +27,7 @@ test("i subagent di Agentrica nominano il progetto una volta sola, nella frase c
 });
 
 test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, senza segnaposto", () => {
-  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01");
+  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01", "linux");
   const agents = readdirSync(AGENTS_DIR, { recursive: true }).filter((f) => String(f).endsWith(".md")).length;
   assert.equal([...files.keys()].filter((file) => file.startsWith("agents/")).length, agents);
   assert.ok(files.has(".gitignore") && !files.has("gitignore"));

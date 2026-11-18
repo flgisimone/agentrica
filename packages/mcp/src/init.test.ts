@@ -27,7 +27,7 @@ test("i subagent di Agentrica nominano il progetto una volta sola, nella frase c
 });
 
 test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, senza segnaposto", () => {
-  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01");
+  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01", "linux");
   const agents = readdirSync(AGENTS_DIR, { recursive: true }).filter((f) => String(f).endsWith(".md")).length;
   assert.equal([...files.keys()].filter((file) => file.startsWith("agents/")).length, agents);
   assert.ok(files.has(".gitignore") && !files.has("gitignore"));
@@ -36,6 +36,8 @@ test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, s
   assert.match(files.get("CONVENTIONS.md")!, /### 2\.6 Fasi e backlog/);
   assert.match(files.get(".claude/agents/software/sw-cto.md")!, /del progetto Prova App\./);
   assert.deepEqual(JSON.parse(files.get(".mcp.json")!).mcpServers.agentrica.args, ["-y", `@agentrica/mcp@${VERSION}`, "--panel"]);
+  const windows = JSON.parse(projectFiles("X", "C:\\x", "2026-01-01", "win32").get(".mcp.json")!).mcpServers.agentrica;
+  assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@agentrica/mcp@${VERSION}`, "--panel"]);
   for (const [file, text] of files) {
     assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
     if (file.startsWith(".claude/")) assert.doesNotMatch(text, /Agentrica/, file);

@@ -67,6 +67,7 @@ h1:focus { outline: none; }
 h2 { font-size: 1.15rem; margin: 0 0 12px; }
 h3 { font-size: 1rem; margin: 16px 0 8px; }
 .empty, .hint { color: var(--muted-foreground); margin: 0; }
+.update { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--aisa); border-radius: var(--radius); }
 .problems { margin: 0; padding: 12px 16px; border: 1px solid var(--destructive); border-radius: var(--radius); white-space: pre-line; }
 
 .question { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; background: var(--secondary); }

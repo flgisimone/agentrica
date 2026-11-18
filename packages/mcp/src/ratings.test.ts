@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createRatings, NOTICE, previewText, REMINDER_AFTER_MS, type Rating } from "./ratings.ts";
+import { createRatings, formMessage, MAX_COMMENT, NOTICE, parseForm, previewText, RATING_FORM, REMINDER_AFTER_MS, type Rating } from "./ratings.ts";
 
 /** fetch finto: registra le richieste e risponde con lo stato dato (o fallisce come la rete assente). */
 function fakeFetch(status: number | "offline") {
@@ -113,4 +113,32 @@ test("anteprima: campi, avviso con l'informativa, codice e istruzione di chieder
   assert.match(NOTICE, /note-legali#valutazioni/);
   assert.ok(text.includes(`code "${code}"`));
   assert.match(text, /Solo dopo il suo sì/);
+});
+
+test("modulo (F23): una volta per agente caricato e non valutato; dopo il modulo niente promemoria", async () => {
+  const { ratings, advance } = setup();
+  assert.equal(ratings.claimAsk("AISA-02"), false, "non caricato");
+  ratings.loaded("AISA-02");
+  ratings.loaded("AISA-03");
+  assert.equal(ratings.claimAsk("AISA-02"), true);
+  assert.equal(ratings.claimAsk("AISA-02"), false, "già mostrato, anche se rifiutato");
+  await ratings.send(ratings.build({ agentId: "AISA-03", rating: 5 }));
+  assert.equal(ratings.claimAsk("AISA-03"), false, "già valutato");
+  advance(REMINDER_AFTER_MS);
+  assert.deepEqual(ratings.due(), []);
+});
+
+test("parseForm: voto intero 1–5, commento al più MAX_COMMENT, booleano; altrimenti niente", () => {
+  assert.deepEqual(parseForm("AISA-02", { rating: "4" }), { agentId: "AISA-02", rating: 4, comment: "", publish: false });
+  assert.deepEqual(parseForm("AISA-02", { rating: "1", comment: "Ok", publish: true }), { agentId: "AISA-02", rating: 1, comment: "Ok", publish: true });
+  for (const bad of [undefined, {}, { rating: "0" }, { rating: "6" }, { rating: "2.5" }, { rating: 4 }, { rating: " 4" }, { rating: "4", comment: 3 }, { rating: "4", comment: "x".repeat(MAX_COMMENT + 1) }, { rating: "4", publish: "true" }]) {
+    assert.equal(parseForm("AISA-02", bad), undefined, JSON.stringify(bad));
+  }
+});
+
+test("modulo: avviso uguale all'anteprima, pubblicazione spenta, solo campi semplici", () => {
+  assert.ok(formMessage("AISA-02 · ALTAIR").includes(NOTICE));
+  assert.equal(RATING_FORM.properties.publish.default, false);
+  assert.deepEqual(RATING_FORM.required, ["rating"]);
+  assert.equal(RATING_FORM.properties.comment.maxLength, MAX_COMMENT);
 });

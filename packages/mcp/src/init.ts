@@ -5,7 +5,7 @@
 // sola lettura. Se anche un solo file esiste già non scrive nulla.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
 import { AGENTS_DIR } from "./catalog.ts";
 import { VERSION } from "./prompt.ts";
@@ -22,22 +22,25 @@ const RENAMED: Record<string, string> = { gitignore: ".gitignore" };
 function filesIn(dir: string): string[] {
   return readdirSync(dir, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name !== ".DS_Store")
-    .map((entry) => relative(dir, join(entry.parentPath, entry.name)))
+    // Percorsi con «/» anche su Windows: sono le chiavi dei file del progetto.
+    .map((entry) => relative(dir, join(entry.parentPath, entry.name)).split(sep).join("/"))
     .sort();
 }
 
 /** I file del progetto nuovo, per percorso relativo, con i segnaposto già sostituiti. */
-export function projectFiles(name: string, path: string, date: string): Map<string, string> {
+export function projectFiles(name: string, path: string, date: string, platform: NodeJS.Platform = process.platform): Map<string, string> {
   const values: Record<string, string> = { "{{PROJECT_NAME}}": name, "{{PROJECT_PATH}}": path, "{{DATE}}": date };
   const fill = (text: string) => Object.entries(values).reduce((out, [key, value]) => out.split(key).join(value), text);
   const files = new Map<string, string>();
   for (const file of filesIn(STARTER_DIR)) files.set(RENAMED[file] ?? file, fill(readFileSync(join(STARTER_DIR, file), "utf8")));
-  for (const file of filesIn(AGENTS_DIR)) files.set(join("agents", file), readFileSync(join(AGENTS_DIR, file), "utf8"));
+  for (const file of filesIn(AGENTS_DIR)) files.set(`agents/${file}`, readFileSync(join(AGENTS_DIR, file), "utf8"));
   for (const file of filesIn(SUBAGENTS_DIR)) {
     const text = readFileSync(join(SUBAGENTS_DIR, file), "utf8");
-    files.set(join(".claude", "agents", file), text.split(SUBAGENT_PROJECT).join(`del progetto ${name}.`));
+    files.set(`.claude/agents/${file}`, text.split(SUBAGENT_PROJECT).join(`del progetto ${name}.`));
   }
-  const server = { command: "npx", args: ["-y", `@agentrica/mcp@${VERSION}`, "--panel"] };
+  // Su Windows npx è npx.cmd, che Claude Code non avvia senza cmd /c (F23).
+  const npx = ["-y", `@agentrica/mcp@${VERSION}`, "--panel"];
+  const server = platform === "win32" ? { command: "cmd", args: ["/c", "npx", ...npx] } : { command: "npx", args: npx };
   files.set(".mcp.json", `${JSON.stringify({ mcpServers: { agentrica: server } }, null, 2)}\n`);
   return files;
 }

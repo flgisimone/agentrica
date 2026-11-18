@@ -79,5 +79,9 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F20 | [20-valutazioni.md](20-valutazioni.md) | Valutazioni degli agenti: voto e commento dall'MCP e dal pannello, endpoint del sito con database, anonimo e confermato a ogni invio | completata |
 | F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati; si accende sopra le soglie | completata |
 | F22 | [22-vetrina.md](22-vetrina.md) | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
+| F23 | [23-avvisi.md](23-avvisi.md) | Avvisi e installazione: valutazione proposta dal server con l'elicitation, avviso di versione nuova dal registro npm, comando `install` che installa sul PC e rende Agentrica disponibile in ogni progetto, uguale su Mac, Windows e Linux, pagina `/installa` nel sito, reparto nel nome dei comandi e nel pannello, `CHANGELOG.md` e pagina `/rilasci`, rilascio 0.6.0 | in corso |
+| F24 | [24-modelli.md](24-modelli.md) | Modelli e consumo: misura di Opus, Sonnet e Haiku sui casi di prova, modello per ruolo nei subagent e consigliato dall'MCP; token spesi e risparmiati con grafici nel pannello e, anonimi, sul sito | da aprire |
+| F25 | [25-biblioteca.md](25-biblioteca.md) | Biblioteca degli agenti: schede con fonte e data per i cinque reparti, tool nell'MCP, ciclo di studio con rilevatore settimanale | da aprire |
+| F26 | [26-progetti.md](26-progetti.md) | Progetti degli utenti: vetrina da issue GitHub e topic `agentrica`, pagina `/progetti` e anteprima in home; via «Messi alla prova», i casi restano come prova interna | da aprire |
 
-Ordine: F0 → F22 in sequenza.
+Ordine: F0 → F26 in sequenza.

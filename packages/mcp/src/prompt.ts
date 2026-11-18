@@ -3,7 +3,7 @@
 import type { Agent, Department, Section } from "../../catalog/src/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.5.0";
+export const VERSION = "0.6.0";
 
 /**
  * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori
@@ -29,6 +29,11 @@ export function findAgent(catalog: readonly SquadDepartment[], id: string): Foun
 /** «AISA-02 · ALTAIR». */
 export function codeName(agent: Agent): string {
   return `${agent.id} · ${agent.star}`;
+}
+
+/** Nome del prompt (da 0.6.0): id in minuscolo e reparto, «aisa-02-software», così il menu dei comandi mostra il reparto. */
+export function promptName({ department, agent }: Found): string {
+  return `${agent.id.toLowerCase()}-${department.short.toLowerCase()}`;
 }
 
 /** Una riga per agente, per l'elenco dei prompt e il tool elenca_agenti. */
@@ -76,10 +81,7 @@ export function agentText(found: Found, task?: string, { ratings = false }: { ra
       "Se il progetto è vuoto o manca ciò che il tuo ruolo deve esaminare, dillo e proponi i primi passi (obiettivo, stack, struttura) da confermare con l'utente; non inventare rilievi né scegliere lo stack da solo. " +
       "Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente.",
     `L'utente deve sempre sapere chi sta lavorando. Presentati all'inizio con questa riga: «${introLine(found)}». ` +
-      "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale." +
-      (ratings
-        ? ` Quando hai finito il compito, proponi all'utente di valutarti da 1 a 5 con un commento facoltativo (tool rate_agent, id ${agent.id}), una volta sola in questa sessione; se rifiuta, non insistere.`
-        : ""),
+      "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale.",
     "## Regole comuni del reparto",
     ...block(department.rules.intro, department.rules.sections),
     `## Ruolo: ${agent.role}`,
@@ -87,6 +89,14 @@ export function agentText(found: Found, task?: string, { ratings = false }: { ra
   ];
   const trimmed = task?.trim();
   if (trimmed) parts.push("## Compito", trimmed);
+  // In fondo (F23-03), dopo il compito: è l'ultima cosa che il modello legge. Solo se il client non ha l'elicitation;
+  // con l'elicitation la valutazione la chiede il server con un modulo.
+  if (ratings) {
+    parts.push(
+      "## Valutazione",
+      `Quando hai finito il compito, proponi all'utente di valutarti da 1 a 5 con un commento facoltativo (tool rate_agent, id ${agent.id}), una volta sola in questa sessione; se rifiuta, non insistere.`,
+    );
+  }
   return parts.join("\n\n") + "\n";
 }
 

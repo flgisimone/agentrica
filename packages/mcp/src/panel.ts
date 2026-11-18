@@ -159,7 +159,9 @@ export function openBrowser(url: string): void {
   }
 }
 
-export async function startPanel(root: string, ratings?: PanelRatings, pageDir = join(import.meta.dirname, "page")): Promise<Panel> {
+/** `update` dà l'avviso di versione nuova (F23), se c'è: il pannello lo mostra in un banner. */
+export async function startPanel(root: string, ratings?: PanelRatings, update: () => string | undefined = () => undefined): Promise<Panel> {
+  const pageDir = join(import.meta.dirname, "page");
   const token = randomBytes(32).toString("hex");
   const pages = Object.fromEntries(Object.entries(PAGE_FILES).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
   const pending = new Map<string, { question: Question; resolve: (answer: Answer) => void }>();
@@ -205,7 +207,7 @@ export async function startPanel(root: string, ratings?: PanelRatings, pageDir =
       const questions = [...pending.values()].map((p) => p.question);
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
       const rating = ratings ? { notice: NOTICE, maxComment: MAX_COMMENT, rated } : null;
-      return send(res, 200, JSON.stringify({ project, questions, activity, rating }), "application/json; charset=utf-8");
+      return send(res, 200, JSON.stringify({ project, questions, activity, rating, update: update() ?? null }), "application/json; charset=utf-8");
     }
     if (req.method === "GET" && url.pathname === "/api/events") {
       res.writeHead(200, { ...SECURITY_HEADERS, "Content-Type": "text/event-stream; charset=utf-8", Connection: "keep-alive" });

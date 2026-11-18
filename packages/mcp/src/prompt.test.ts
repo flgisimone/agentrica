@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, findAgent, introLine, selectSquad, VERSION } from "./prompt.ts";
+import { agentText, findAgent, introLine, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -60,7 +60,20 @@ test("agentText: la proposta di valutazione c'è solo con le valutazioni attive"
   assert.ok(!agentText(found).includes("rate_agent"));
   const text = agentText(found, undefined, { ratings: true });
   assert.match(text, /proponi all'utente di valutarti da 1 a 5 .*\(tool rate_agent, id AIWDA-08\), una volta sola in questa sessione/);
-  assert.ok(text.indexOf("rate_agent") < text.indexOf("## Regole comuni del reparto"));
+  // In fondo, anche dopo il compito (F23-03).
+  assert.ok(text.indexOf("rate_agent") > text.indexOf(`## Ruolo: ${found.agent.role}`));
+  assert.ok(agentText(found, "Rivedi il menu.", { ratings: true }).endsWith("una volta sola in questa sessione; se rifiuta, non insistere.\n"));
+});
+
+test("promptName: id in minuscolo e nome breve del reparto, uno per agente", () => {
+  assert.equal(promptName(findAgent(catalog, "AISA-02")!), "aisa-02-software");
+  assert.equal(promptName(findAgent(catalog, "AIBPD-01")!), "aibpd-01-business");
+  assert.equal(promptName(findAgent(catalog, "AICA-03")!), "aica-03-cybersecurity");
+  assert.equal(promptName(findAgent(catalog, "AIPCA-02")!), "aipca-02-privacy");
+  assert.equal(promptName(findAgent(catalog, "AIWDA-04")!), "aiwda-04-design");
+  const names = catalog.flatMap((department) => department.agents.map((agent) => promptName({ department, agent })));
+  assert.equal(new Set(names).size, 56);
+  for (const name of names) assert.match(name, /^[a-z]+-\d{2}-[a-z]+$/);
 });
 
 test("agentText: il compito va in fondo, vuoto si omette", () => {
@@ -107,4 +120,13 @@ test("selectSquad: nomi sconosciuti o elenco vuoto sono errori che li nominano",
   assert.throws(() => selectSquad(catalog, "\u001b[31m"), /"\\u001b\[31m"/);
   assert.throws(() => selectSquad(catalog, ""), /--agents è vuoto/);
   assert.throws(() => selectSquad(catalog, " , "), /--agents è vuoto/);
+});
+
+test("CHANGELOG.md: la prima voce è VERSION, ogni voce «## x.y.z — AAAA-MM-GG» con i tipi ammessi, dalla 0.1.0", () => {
+  const text = readFileSync(join(import.meta.dirname, "..", "CHANGELOG.md"), "utf8");
+  const versions = [...text.matchAll(/^## (.+)$/gm)].map((m) => m[1]!);
+  for (const line of versions) assert.match(line, /^\d+\.\d+\.\d+ — \d{4}-\d{2}-\d{2}$/, line);
+  assert.equal(versions[0]!.split(" ")[0], VERSION);
+  assert.equal(versions.at(-1)!.split(" ")[0], "0.1.0");
+  for (const [, kind] of text.matchAll(/^### (.+)$/gm)) assert.ok(["Nuovo", "Cambiato", "Corretto", "Incompatibile"].includes(kind!), kind!);
 });

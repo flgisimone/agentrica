@@ -138,14 +138,17 @@ Confermato dall'utente all'apertura (2026-11-18).
   - `npx -y --package <tgz> agentrica-mcp install --from <tgz>` ha installato il pacchetto in `~/.nvm/.../lib/node_modules` e l'ha registrato con ambito user: `claude mcp get agentrica` dà «✔ Connected»;
   - rilanciato con `--panel`, ha sostituito la registrazione;
   - `add --local` registra `npx -y @agentrica/mcp@0.6.0`, che non si connette finché la 0.6.0 non è su npm.
-- Non fatte: CI su Mac e Windows (parte con il push), prova su Windows, modulo vero di `agentrica-dev` al cambio d'agente.
+- Modulo al cambio d'agente in una sessione reale (Claude Code 2.1.327, `agentrica-dev` dai sorgenti, 2026-11-18):
+  - AISA-02 si carica senza modulo; caricando AISA-03 compare il modulo per AISA-02, con il voto a scelta e la pubblicazione spenta;
+  - dopo il rifiuto, ricaricando AISA-02 compare solo quello per AISA-03, e ricaricando AISA-03 nessuno;
+  - il testo dell'agente non propone `rate_agent`.
+- CI di `develop` verde su `ubuntu-latest`, `macos-latest` e `windows-latest` dopo `fix/f23-ci-windows`: su Windows la prova di `init` riceveva giustamente `cmd /c npx` e ora indica il sistema.
+- Non fatta: prova su Windows con Claude Code (F23-10).
 
 ## Rilievi aperti
 
 - **F23-10** Prova reale di `install` e `add` su Windows (PowerShell e cmd) con Claude Code: prima del rilascio con `npx -y --package <file .tgz> agentrica-mcp install --from <file .tgz>`, oppure subito dopo. Su Mac `install` è provato, `add` si connette solo dopo la pubblicazione. Su Windows è da provare il passaggio per `cmd.exe` quando `claude` o `npm` sono file `.cmd`. P1.
-- La CI su `macos-latest` e `windows-latest` gira per la prima volta con il push: se fallisce, una correzione su `fix/` prima del rilascio. P1.
 - Il sito resta su `@agentrica/mcp` 0.5.0 in `package.json` e il lavoro di F23 resta sul branch `fase/f23-avvisi` di `agentrica-site`: con la 0.5.0 le sue prove non passano (comandi `install` e `add`, CHANGELOG). Dopo la pubblicazione della 0.6.0 si alza la versione su quel branch, si rilanciano `verify` ed e2e, poi merge in `develop` e, su richiesta, in `main`. La data della 0.6.0 nel CHANGELOG va corretta se il rilascio slitta. P1.
-- Criterio di accettazione da verificare in una sessione reale: caricando un secondo agente compare il modulo per il primo (provato con il server di prova e con le prove automatiche, non ancora con `agentrica-dev` o con la 0.6.0). P1.
 - Con `add --local` dopo `install` Claude Code avvisa che «agentrica» è in due ambiti con comandi diversi. `add` e `install` potrebbero dirlo da soli. P3.
 - Le schede sono due («Mac e Linux», «Windows») e non tre, perché su Mac e Linux i comandi sono uguali. Da confermare con l'utente. P3.
 - Le note legali sul controllo della versione vanno rilette da un legale, come il resto (commento `ponytail:` nella pagina). P3.

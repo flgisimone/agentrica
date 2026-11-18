@@ -78,5 +78,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F19 | [19-file-privati.md](19-file-privati.md) | Piano, audit, documenti e prove fuori dal repository pubblico: abbandonata all'apertura, resta tutto pubblico | sospesa |
 | F20 | [20-valutazioni.md](20-valutazioni.md) | Valutazioni degli agenti: voto e commento dall'MCP e dal pannello, endpoint del sito con database, anonimo e confermato a ogni invio | completata |
 | F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati; si accende sopra le soglie | completata |
+| F22 | [22-vetrina.md](22-vetrina.md) | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
 
-Ordine: F0 → F21 in sequenza.
+Ordine: F0 → F22 in sequenza.

@@ -1,5 +1,7 @@
 # Agentrica MCP
 
+[![Agentrica MCP on mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+
 [Italiano](README.md)
 
 The Agentrica MCP server: the 56 AI agents of the five departments (AIBPD, AICA, AIPCA, AISA, AIWDA), usable in your project from Claude Code or any MCP client.

@@ -2,7 +2,7 @@
 
 **Obiettivo**: la proposta di valutare un agente arriva davvero all'utente, senza che debba chiederla; chi usa una versione vecchia di `@agentrica/mcp` sa che ne esiste una nuova e come aggiornare; l'installazione è un solo comando, uguale su Mac, Windows e Linux, e il sito spiega chiaramente tutte le modalità di installazione e le funzioni del server. In più il reparto di ogni agente si legge nel menu dei comandi e nel pannello, e il sito raccoglie la cronistoria dei rilasci.
 
-> **Stato: completata** (2026-11-18), con la prova su Windows e il rilascio 0.6.0 ancora da fare (Rilievi aperti). Nata dalle segnalazioni degli utenti del 2026-11-18 (la proposta di valutazione compare solo se la si chiede; nessun avviso di versione nuova). Decisioni con l'utente il 2026-11-18; backlog e proposte confermati all'apertura, lo stesso giorno.
+> **Stato: completata** (2026-11-18) e rilasciata lo stesso giorno: `@agentrica/mcp` 0.6.0 su npm con provenance, sito in produzione. Resta la prova su Windows (Rilievi aperti). Nata dalle segnalazioni degli utenti del 2026-11-18 (la proposta di valutazione compare solo se la si chiede; nessun avviso di versione nuova). Decisioni con l'utente il 2026-11-18; backlog e proposte confermati all'apertura, lo stesso giorno.
 
 **Agenzie**: privacy (GDPR, Vendor Compliance) per la connessione nuova verso npm e il modulo di valutazione; cybersecurity (AppSec) sulla risposta del registro, che è un dato esterno; design (Information Architect per pagina e menu, UX Writer per i testi del modulo, dell'avviso e della pagina, UI Designer, Accessibility per le schede) prima e dopo; software (Backend, Frontend per il sito, DevOps per la CI su tre sistemi, QA, Security, Code Reviewer).
 
@@ -143,12 +143,14 @@ Confermato dall'utente all'apertura (2026-11-18).
   - dopo il rifiuto, ricaricando AISA-02 compare solo quello per AISA-03, e ricaricando AISA-03 nessuno;
   - il testo dell'agente non propone `rate_agent`.
 - CI di `develop` verde su `ubuntu-latest`, `macos-latest` e `windows-latest` dopo `fix/f23-ci-windows`: su Windows la prova di `init` riceveva giustamente `cmd /c npx` e ora indica il sistema.
+- Rilascio (2026-11-18): PR #17 in `main`, tag `v0.6.0`, `release.yml` verde, 0.6.0 su npm come `latest` con provenance SLSA. Dal registro, sul Mac: `npx -y @agentrica/mcp@0.6.0 add --local` registra un server «✔ Connected» (poi rimosso).
+- Sito: `@agentrica/mcp` 0.6.0, `verify` ed e2e (83) verdi, PR #7 di `agentrica-site` in `main`; `/installa` e `/rilasci` online, la home con il comando `install` della 0.6.0.
+- Nel rilascio il ruleset di `main` aspettava il controllo `verify`, che con la matrice non arrivava più: `ci.yml` ha ora i job `verify (<sistema>)` e un job `verify` che passa solo se passano tutti e tre (`fix/ci-verify-matrice`).
 - Non fatta: prova su Windows con Claude Code (F23-10).
 
 ## Rilievi aperti
 
-- **F23-10** Prova reale di `install` e `add` su Windows (PowerShell e cmd) con Claude Code: prima del rilascio con `npx -y --package <file .tgz> agentrica-mcp install --from <file .tgz>`, oppure subito dopo. Su Mac `install` è provato, `add` si connette solo dopo la pubblicazione. Su Windows è da provare il passaggio per `cmd.exe` quando `claude` o `npm` sono file `.cmd`. P1.
-- Il sito resta su `@agentrica/mcp` 0.5.0 in `package.json` e il lavoro di F23 resta sul branch `fase/f23-avvisi` di `agentrica-site`: con la 0.5.0 le sue prove non passano (comandi `install` e `add`, CHANGELOG). Dopo la pubblicazione della 0.6.0 si alza la versione su quel branch, si rilanciano `verify` ed e2e, poi merge in `develop` e, su richiesta, in `main`. La data della 0.6.0 nel CHANGELOG va corretta se il rilascio slitta. P1.
+- **F23-10** Prova reale di `npx -y @agentrica/mcp@0.6.0 install` e `add` su Windows (PowerShell e cmd) con Claude Code. Sul Mac sono provati entrambi. Su Windows è da provare il passaggio per `cmd.exe` quando `claude` o `npm` sono file `.cmd`. P1.
 - Con `add --local` dopo `install` Claude Code avvisa che «agentrica» è in due ambiti con comandi diversi. `add` e `install` potrebbero dirlo da soli. P3.
 - Le schede sono due («Mac e Linux», «Windows») e non tre, perché su Mac e Linux i comandi sono uguali. Da confermare con l'utente. P3.
 - Le note legali sul controllo della versione vanno rilette da un legale, come il resto (commento `ponytail:` nella pagina). P3.

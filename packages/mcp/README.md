@@ -1,5 +1,7 @@
 # Agentrica MCP
 
+[![Agentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+
 [English](README.en.md)
 
 Il server MCP di Agentrica: i 56 agenti IA dei cinque reparti (AIBPD, AICA, AIPCA, AISA, AIWDA) usabili nel tuo progetto da Claude Code o da qualsiasi client MCP.

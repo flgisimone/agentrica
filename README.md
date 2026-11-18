@@ -1,5 +1,7 @@
 # Agentrica
 
+[![Agentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+
 **Agentrica è una società di consulenza fittizia fatta interamente di agenti IA.** Ha cinque reparti, uno per competenza, e 56 agenti specializzati, ciascuno con un ruolo preciso, un metodo di lavoro e dei limiti dichiarati.
 
 Il repository ha due obiettivi, in quest'ordine:
@@ -65,6 +67,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F19 | File di lavoro fuori dal repository pubblico: abbandonata | sospesa |
 | F20 | Valutazioni degli agenti dall'MCP e dal pannello, endpoint del sito con database (0.5.0) | completata |
 | F21 | Reputazione pubblica degli agenti: statistiche, classifiche e commenti moderati sul sito, sopra le soglie | completata |
+| F22 | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

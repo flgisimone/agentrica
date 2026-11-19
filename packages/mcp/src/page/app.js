@@ -1,4 +1,4 @@
-// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer e i voti a /api/rate.
+// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer, i voti a /api/rate e, da F27, i totali di token a /api/share.
 // I dati del progetto entrano nel DOM solo come testo (textContent), mai come HTML.
 "use strict";
 
@@ -398,6 +398,45 @@ async function renderUsage() {
   $("usage-session").replaceChildren(usageTable(report.bySession.slice(0, 15), short, "Sessione"));
 }
 
+// Totali di token (F27): l'anteprima mostra le righe esatte; «Conferma l'invio» manda solo il codice dell'anteprima.
+const post = (path, body) =>
+  fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    .then((r) => r.json())
+    .catch(() => null);
+
+async function previewShare() {
+  const preview = await post("/api/share/preview", {});
+  if (!preview) {
+    $("share-body").replaceChildren(el("p", { class: "error", role: "alert" }, "Il pannello non risponde: la sessione è ancora aperta?"));
+    return;
+  }
+  if (preview.rows.length === 0) {
+    $("share-body").replaceChildren(empty("Nessun consumo negli ultimi 30 giorni: non c'è nulla da inviare."));
+    return;
+  }
+  const status = el("p", { role: "status" });
+  const confirm = el("button", { type: "button", class: "send" }, "Conferma l'invio");
+  confirm.addEventListener("click", async () => {
+    confirm.disabled = true;
+    const result = await post("/api/share", { code: preview.code });
+    status.className = result?.ok ? "sent" : "error";
+    status.textContent = result?.ok ? `Totali inviati (${result.rows} righe), grazie.` : (result?.message ?? "Il pannello non risponde: la sessione è ancora aperta?");
+  });
+  $("share-body").replaceChildren(
+    el("p", {}, `${preview.rows.length} righe degli ultimi 30 giorni, versione ${preview.version}. Partono esattamente queste:`),
+    table(
+      ["Giorno", "Agente", "Modello", "Effort", "Ingresso", "Uscita", "Letti dalla cache", "Scritti in cache"],
+      preview.rows.map((r) =>
+        el("tr", {}, el("th", { scope: "row", class: "mono" }, r.day), ...[r.agent, r.model, r.effort].map((v) => el("td", {}, v)), ...[r.input, r.output, r.cacheRead, r.cacheWrite].map((v) => el("td", {}, nf.format(v)))),
+      ),
+    ),
+    ...(preview.omitted > 0 ? [el("p", { class: "hint" }, `${preview.omitted} righe più vecchie restano fuori: al più 300 per invio.`)] : []),
+    el("p", { class: "hint" }, preview.notice),
+    confirm,
+    status,
+  );
+}
+
 // Una vista per volta, scelta dall'hash: avanti e indietro del browser funzionano senza toccare il server.
 const VIEWS = ["sessione", "piano", "rilievi", "consumo"];
 
@@ -411,6 +450,7 @@ function showView(moveFocus) {
   }
   if (moveFocus) document.querySelector(`#view-${current} h1`).focus();
   if (current === "consumo") renderUsage();
+  if (state) $("share").hidden = !state.rating;
 }
 
 function render() {
@@ -423,6 +463,7 @@ function render() {
   renderPhases(state);
   renderFilters();
   renderFindings(state);
+  $("share").hidden = !state.rating;
 }
 
 async function refresh() {
@@ -449,6 +490,7 @@ function connect() {
 
 window.addEventListener("hashchange", () => showView(true));
 $("usage-refresh").addEventListener("click", renderUsage);
+$("share-preview").addEventListener("click", previewShare);
 showView(false);
 connect();
 refresh();

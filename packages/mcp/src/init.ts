@@ -7,13 +7,12 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
-import { AGENTS_DIR } from "./catalog.ts";
+import { AGENTS_DIR, SUBAGENTS_DIR } from "./catalog.ts";
 import { VERSION } from "./prompt.ts";
 
 // starter/, agents/ e .claude/agents/ stanno nella root del repository e, copiati da prepack, in quella del pacchetto.
 const ROOT = dirname(AGENTS_DIR);
 const STARTER_DIR = join(ROOT, "starter");
-const SUBAGENTS_DIR = join(ROOT, ".claude", "agents");
 /** I subagent di Agentrica nominano il progetto solo in questa frase (lo controlla init.test.ts). */
 export const SUBAGENT_PROJECT = "del progetto Agentrica.";
 // npm non pubblica i file .gitignore: in starter/ si chiama gitignore (e non vale per il repository di Agentrica).

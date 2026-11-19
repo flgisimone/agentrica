@@ -15,7 +15,7 @@ The agent files are in Italian. The agent answers in the language you write in.
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
 - The server writes no files (only the [`init`](#new-project) command does, when you run it), logs nothing and has no telemetry. It connects to the internet in two cases:
-  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version; `--no-ratings` turns it off;
+  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version, or when you confirm sending your [token totals](#token-totals), and it sends only token counts per day, agent, model and effort; `--no-ratings` turns both off;
   - to the npm registry, at startup, to find out whether there is a [new version](#updating-and-uninstalling): a request with no data, npm only sees your IP address and program, as when npx downloads the package; `--no-update-check` turns it off.
 
   With `--no-ratings --no-update-check` it never connects. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
@@ -136,6 +136,7 @@ The command menu shows only the squad's prompts, and `elenca_agenti` and `agente
 | `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions, with the index of the department's library |
 | `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
+| `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
 
 For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
 
@@ -157,6 +158,17 @@ You can give an agent a score from 1 to 5 and a comment on what to improve: rati
 - **To drop the tool**, the form and the suggestions, add `--no-ratings` to the command: the server no longer connects to Agentrica.
 
 How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
+
+## Token totals
+
+You can send Agentrica your project's token totals: the site adds them to other users' totals on the [token usage page](https://agentrica.vercel.app/consumo) (in Italian), next to the results measured in our trials.
+
+- **How.** Ask the agent ("send the token totals to Agentrica"): `share_usage` first shows the preview, row by row, and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly those rows. At the end of a session the agent may suggest it once, together with the rating. With `--panel` there is also the «Prepara l'anteprima» (prepare the preview) button in the Consumo view: confirming on the page counts as your yes.
+- **What is sent.** The last 30 days, at most 300 rows: for each Claude Code session, day, agent, model and effort, the input, output, cache-read and cache-write tokens, plus the package version. The agent is the Agentrica id (e.g. `AISA-02`), `sessione` for the main conversation or `altro` (other) for your own subagents, whose names are not sent; the model is `opus`, `sonnet`, `haiku` or `altro`. Each row has a key, a SHA-256 fingerprint computed on your computer: the site uses it to replace a row already sent instead of counting it twice. No text, files, paths, project name or session id.
+- **On the site** only sums by month, model and agent appear, once there are at least 10 submissions, labelled as declared by users. At most 5 submissions a day from the same network.
+- **If sending fails** the tool says so and the work goes on; nothing is stored. `--no-ratings` removes this tool too.
+
+How the totals are handled: [legal notes](https://agentrica.vercel.app/note-legali#consumo) (in Italian).
 
 ## Library
 
@@ -189,7 +201,7 @@ With the panel the model has two more tools:
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
-**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
+**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings and token totals you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
 
 **Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 

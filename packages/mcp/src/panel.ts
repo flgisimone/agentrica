@@ -11,6 +11,7 @@ import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readProject } from "./project.ts";
 import { MAX_COMMENT, NOTICE, type SendResult } from "./ratings.ts";
+import { SHARE_NOTICE, type SharePayload, type ShareResult } from "./share.ts";
 import { usageReport } from "./usage.ts";
 
 export interface Choice {
@@ -49,6 +50,9 @@ export interface PanelRatings {
   isRated(agentId: string): boolean;
   /** Invia una valutazione confermata nella pagina. */
   rate(input: RateInput): Promise<SendResult>;
+  /** Totali di token (F27): fissa le righe e dà il codice; la conferma nella pagina le invia. */
+  previewShare(): Promise<{ code: string; payload: SharePayload; omitted: number }>;
+  confirmShare(code: string): Promise<ShareResult>;
 }
 
 export interface RateInput {
@@ -235,6 +239,25 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
       // L'invio dalla pagina è la conferma dell'utente: la pagina mostra l'avviso accanto al pulsante.
       const result = await ratings.rate(input);
       changed();
+      return send(res, result.ok ? 200 : 502, JSON.stringify(result), "application/json; charset=utf-8");
+    }
+    // Totali di token (F27): l'anteprima fissa le righe nel server; la conferma manda solo il codice, quindi parte
+    // esattamente ciò che la pagina ha mostrato.
+    if (req.method === "POST" && (url.pathname === "/api/share/preview" || url.pathname === "/api/share") && ratings) {
+      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      let body: { code?: unknown };
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch {
+        return send(res, 400, "Richiesta non valida.");
+      }
+      if (url.pathname === "/api/share/preview") {
+        const { code, payload, omitted } = await ratings.previewShare();
+        return send(res, 200, JSON.stringify({ code, rows: payload.rows, omitted, version: payload.mcpVersion, notice: SHARE_NOTICE }), "application/json; charset=utf-8");
+      }
+      if (typeof body?.code !== "string" || !/^[0-9a-f]{8}$/.test(body.code)) return send(res, 400, "Codice non valido.");
+      const result = await ratings.confirmShare(body.code);
       return send(res, result.ok ? 200 : 502, JSON.stringify(result), "application/json; charset=utf-8");
     }
     if (req.method === "POST" && url.pathname === "/api/answer") {

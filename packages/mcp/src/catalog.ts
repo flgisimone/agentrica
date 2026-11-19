@@ -1,6 +1,7 @@
 // Export pubblico «@agentrica/mcp/catalog»: il catalogo letto dagli agents/ di questo pacchetto. Lo usa il sito, che vive
 // in un repository privato (F17) e installa il pacchetto a versione esatta. Non importa l'SDK né zod.
-import { join } from "node:path";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { loadCatalog as loadFrom, type Department } from "../../catalog/src/index.ts";
 
 export { DEPARTMENTS, type Agent, type Department, type DepartmentCode, type DepartmentInfo, type Section } from "../../catalog/src/index.ts";
@@ -15,4 +16,21 @@ export const AGENTS_DIR = join(import.meta.dirname, "..", "..", "..", "agents");
 /** Reparti e agenti dagli agents/ del pacchetto. */
 export function loadCatalog(): Department[] {
   return loadFrom(AGENTS_DIR);
+}
+
+/** I subagent di .claude/agents/, nella root del repository e, copiati da prepack, in quella del pacchetto. */
+export const SUBAGENTS_DIR = join(dirname(AGENTS_DIR), ".claude", "agents");
+
+/** Nome di ogni subagent di Agentrica → id del suo agente, dal file di ruolo che il subagent nomina (F27). */
+export function subagentIds(departments: readonly Department[], dir = SUBAGENTS_DIR): Map<string, string> {
+  const bySource = new Map(departments.flatMap((d) => d.agents.map((a) => [a.source, a.id] as const)));
+  const ids = new Map<string, string>();
+  for (const entry of readdirSync(dir, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
+    const text = readFileSync(join(entry.parentPath, entry.name), "utf8");
+    const name = /^name: ([\w-]+)$/m.exec(text)?.[1];
+    const id = bySource.get(/`(agents\/[^`]+\.md)`/.exec(text)?.[1] ?? "");
+    if (name && id) ids.set(name, id);
+  }
+  return ids;
 }

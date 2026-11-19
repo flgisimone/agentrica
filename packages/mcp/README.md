@@ -13,7 +13,7 @@ Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA
 - Il server gira solo in locale: lo avvia il client sul tuo computer e i due comunicano con stdio. Il server non ha una parte remota.
 - Come contenuto legge solo i file di `agents/` inclusi nel pacchetto, una volta all'avvio. Il testo che arriva al modello è quello di quei file: puoi leggerlo prima di usarlo.
 - Il server non scrive file (lo fa solo il comando [`init`](#nuovo-progetto), quando lo lanci tu), non registra e non ha telemetria. Si collega a internet in due casi:
-  - verso Agentrica, quando confermi la [valutazione di un agente](#valutazioni), e invia solo voto, commento e versione; `--no-ratings` lo spegne;
+  - verso Agentrica, quando confermi la [valutazione di un agente](#valutazioni), e invia solo voto, commento e versione, o quando confermi l'invio dei [totali di token](#totali-di-token), e invia solo numeri di token per giorno, agente, modello ed effort; `--no-ratings` spegne entrambi;
   - verso il registro npm, all'avvio, per sapere se c'è una [versione nuova](#aggiornare-e-disinstallare): è una richiesta senza dati, npm vede solo indirizzo IP e programma, come quando npx scarica il pacchetto; `--no-update-check` lo spegne.
 
   Con `--no-ratings --no-update-check` non si collega mai. Con `--panel` apre una pagina solo sul tuo computer: vedi [Pannello locale](#pannello-locale).
@@ -134,6 +134,7 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti
 | `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente, con l'indice della biblioteca del reparto |
 | `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
+| `share_usage` | nessuno; poi `code` | l'anteprima dei totali di token del progetto e un codice; con il codice, l'invio (vedi [Totali di token](#totali-di-token)) |
 
 Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
 
@@ -175,6 +176,17 @@ Puoi dare a un agente un voto da 1 a 5 e un commento su cosa migliorare: servono
 
 Come trattiamo le valutazioni: [note legali](https://agentrica.vercel.app/note-legali#valutazioni).
 
+## Totali di token
+
+Puoi inviare ad Agentrica i totali di token del progetto: il sito li somma a quelli degli altri utenti nella pagina [Consumo di token](https://agentrica.vercel.app/consumo), accanto ai risultati misurati nelle nostre prove.
+
+- **Come.** Chiedilo all'agente («invia i totali di token ad Agentrica»): `share_usage` prima mostra l'anteprima, riga per riga, e un codice valido 10 minuti; il modello te la mostra e invia solo con il codice, esattamente quelle righe. A fine sessione l'agente può proportelo una volta, insieme alla valutazione. Con `--panel` c'è anche il pulsante «Prepara l'anteprima» nella vista Consumo: la conferma dalla pagina vale come sì.
+- **Cosa parte.** Gli ultimi 30 giorni, al più 300 righe: per ogni sessione di Claude Code, giorno, agente, modello ed effort, i token in ingresso, in uscita, letti e scritti in cache, più la versione del pacchetto. L'agente è l'id di Agentrica (es. `AISA-02`), `sessione` per la conversazione principale o `altro` per i tuoi subagent, di cui non parte il nome; il modello è `opus`, `sonnet`, `haiku` o `altro`. Ogni riga ha una chiave, un'impronta SHA-256 calcolata sul tuo computer: serve al sito per sostituire una riga già inviata invece di contarla due volte. Niente testi, file, percorsi, nome del progetto né id di sessione.
+- **Sul sito** compaiono solo somme per mese, modello e agente, quando ci sono almeno 10 invii, indicate come dichiarate dagli utenti. Al più 5 invii al giorno dalla stessa rete.
+- **Se l'invio non riesce** il tool lo dice e il lavoro continua; nulla resta salvato. `--no-ratings` toglie anche questo tool.
+
+Come trattiamo i totali: [note legali](https://agentrica.vercel.app/note-legali#consumo).
+
 ## Biblioteca
 
 Le conoscenze di un modello si fermano alla sua data di addestramento. Ogni reparto ha una biblioteca di schede con nozioni recenti (standard, norme, release), ciascuna verificata su una fonte ammessa di livello 1 (enti di standard, autorità, testi normativi) o 2 (documentazione ufficiale dei produttori), con versione, data di verifica e data entro cui ricontrollarla. Per esempio OWASP Top 10:2025, TypeScript 7.0, le date dell'AI Act dopo l'AI Omnibus, WCAG 2.2.
@@ -207,7 +219,7 @@ Con il pannello il modello ha due tool in più:
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
-**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
+**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
 
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 

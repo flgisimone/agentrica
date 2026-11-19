@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
-import { claudeProjectDir, family, groupTotals, MAIN, parseLine, readUsage, totals, usageReport } from "./usage.ts";
+import { claudeProjectDir, family, groupTotals, MAIN, MAX_SHARE_ROWS, parseLine, readUsage, shareRows, totals, usageReport, type Usage } from "./usage.ts";
 
 const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-")));
 const outside = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-out-")));
@@ -124,4 +124,49 @@ test("gruppi per agente, modello e giorno", async () => {
   assert.equal(report.total.requests, 2);
   assert.equal(report.byModel.length, 2);
   assert.equal(report.prices.date, "2026-11-03");
+});
+
+const usage = (over: Partial<Usage>): Usage => ({
+  day: "2026-11-18", session: "s1", agent: MAIN, model: "claude-opus-5-5", effort: "medium",
+  input: 1, output: 2, thinking: 0, cacheRead: 3, cacheWrite5m: 4, cacheWrite1h: 5, ...over,
+});
+const ids = new Map([["sw-architect", "AISA-02"]]);
+
+test("shareRows: una riga per sessione, giorno, agente, modello ed effort, con le somme e la chiave", () => {
+  const { rows, omitted } = shareRows(
+    [usage({}), usage({ input: 10 }), usage({ session: "s2" }), usage({ agent: "sw-architect", model: "claude-haiku-5-5", effort: "low" })],
+    ids,
+    "2026-11-19",
+  );
+  assert.equal(omitted, 0);
+  assert.equal(rows.length, 3);
+  const main = rows.filter((r) => r.agent === MAIN);
+  assert.equal(main.length, 2, "due sessioni, due righe");
+  const s1 = main.find((r) => r.input === 11)!;
+  assert.deepEqual({ ...s1, key: undefined }, { key: undefined, day: "2026-11-18", agent: MAIN, model: "opus", effort: "medium", input: 11, output: 4, cacheRead: 6, cacheWrite: 18 });
+  assert.match(s1.key, /^[0-9a-f]{64}$/);
+  assert.notEqual(main[0]!.key, main[1]!.key);
+  assert.deepEqual(rows.find((r) => r.agent === "AISA-02")!.model, "haiku");
+  // La stessa riga ha la stessa chiave a ogni lettura: il sito la sostituisce invece di sommarla.
+  assert.equal(shareRows([usage({})], ids, "2026-11-19").rows[0]!.key, shareRows([usage({ input: 99 })], ids, "2026-11-19").rows[0]!.key);
+});
+
+test("shareRows: nomi dei subagent dell'utente, modelli ed effort sconosciuti diventano «altro»; niente session id", () => {
+  const { rows } = shareRows([usage({ agent: "il-mio-progetto-segreto", model: "gpt-x", effort: "turbo", session: "abc-123" })], ids, "2026-11-19");
+  assert.deepEqual([rows[0]!.agent, rows[0]!.model, rows[0]!.effort], ["altro", "altro", "altro"]);
+  assert.ok(!JSON.stringify(rows).includes("segreto") && !JSON.stringify(rows).includes("abc-123"));
+});
+
+test("shareRows: solo gli ultimi 30 giorni, senza righe vuote, al più 300 dalle più recenti", () => {
+  const { rows } = shareRows(
+    [usage({ day: "2026-10-20" }), usage({ day: "2026-10-21" }), usage({ day: "2026-11-20" }), usage({ day: "sconosciuto" }), usage({ day: "2026-11-01", input: 0, output: 0, cacheRead: 0, cacheWrite5m: 0, cacheWrite1h: 0 })],
+    ids,
+    "2026-11-19",
+  );
+  assert.deepEqual(rows.map((r) => r.day), ["2026-10-21"]);
+  const many = Array.from({ length: MAX_SHARE_ROWS + 5 }, (_, i) => usage({ session: `s${i}`, day: i < 5 ? "2026-11-01" : "2026-11-18" }));
+  const cut = shareRows(many, ids, "2026-11-19");
+  assert.equal(cut.rows.length, MAX_SHARE_ROWS);
+  assert.equal(cut.omitted, 5);
+  assert.ok(cut.rows.every((r) => r.day === "2026-11-18"), "restano fuori le più vecchie");
 });

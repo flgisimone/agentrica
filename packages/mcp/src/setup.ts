@@ -35,11 +35,12 @@ export interface SetupDeps {
  * Su Windows npm e (se installato con npm) claude sono file .cmd, che Node non avvia senza shell: si passa da
  * cmd.exe con ogni argomento fra virgolette. Gli argomenti sono nostri; con " o % (che cmd espande anche fra
  * virgolette) il comando non parte e si stampa quello da lanciare a mano.
+ * Il nome del comando resta senza virgolette: con `"npm"` cmd dà al .cmd un %~dp0 sbagliato (la cartella corrente
+ * invece della sua), e npm.cmd cerca node_modules\npm\bin\npm-cli.js nel progetto dell'utente.
  */
 export function cmdLine(command: string, args: string[]): string | undefined {
-  const all = [command, ...args];
-  if (all.some((arg) => /["%\r\n]/.test(arg))) return undefined;
-  return `"${all.map((arg) => `"${arg}"`).join(" ")}"`;
+  if (!/^[A-Za-z0-9._-]+$/.test(command) || args.some((arg) => /["%\r\n]/.test(arg))) return undefined;
+  return `"${[command, ...args.map((arg) => `"${arg}"`)].join(" ")}"`;
 }
 
 function realRun(platform: NodeJS.Platform) {

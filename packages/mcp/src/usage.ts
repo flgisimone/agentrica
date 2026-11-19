@@ -1,6 +1,7 @@
 // Consumo di token del progetto (F24): legge i file che Claude Code salva in ~/.claude/projects/<progetto>/ e ne
 // estrae solo numeri, modello, effort e giorno di ogni risposta. I testi delle conversazioni non escono da qui:
 // di ogni riga si tengono i campi elencati in `Usage`, il resto si scarta subito.
+import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { lstat, readdir, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -238,4 +239,54 @@ export async function usageReport(root: string, dir = claudeProjectDir(root)): P
     bySession: groupTotals(records, "session"),
     byDay: groupTotals(records, "day"),
   };
+}
+
+/** Una riga dei totali che si possono inviare ad Agentrica (F27): solo questi campi, con valori da elenchi chiusi. */
+export interface ShareRow {
+  /** SHA-256 di sessione, giorno, agente, modello ed effort: il sito sostituisce la riga con la stessa chiave. */
+  key: string;
+  day: string;
+  /** Id di Agentrica (es. AISA-02), «sessione» per la conversazione principale, «altro» per gli altri subagent. */
+  agent: string;
+  model: Family | "altro";
+  effort: string;
+  input: number;
+  output: number;
+  cacheRead: number;
+  cacheWrite: number;
+}
+
+export const SHARE_DAYS = 30;
+export const MAX_SHARE_ROWS = 300;
+export const SHARE_EFFORTS = ["low", "medium", "high", "xhigh", "max", "predefinito", "altro"] as const;
+const OTHER = "altro";
+
+/**
+ * Le righe da inviare: gli ultimi SHARE_DAYS giorni fino a `today` (AAAA-MM-GG), una per sessione, giorno, agente,
+ * modello ed effort, dalle più recenti, al più MAX_SHARE_ROWS (`omitted` dice quante restano fuori). `agentIds` porta
+ * il nome di un subagent all'id di Agentrica: i nomi dei subagent dell'utente diventano «altro» e non partono.
+ */
+export function shareRows(records: readonly Usage[], agentIds: ReadonlyMap<string, string>, today: string): { rows: ShareRow[]; omitted: number } {
+  const from = new Date(Date.parse(`${today}T00:00:00Z`) - (SHARE_DAYS - 1) * 86_400_000).toISOString().slice(0, 10);
+  const groups = new Map<string, ShareRow>();
+  for (const u of records) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(u.day) || u.day < from || u.day > today) continue;
+    const agent = u.agent === MAIN ? MAIN : (agentIds.get(u.agent) ?? OTHER);
+    const model = family(u.model) ?? OTHER;
+    const effort = (SHARE_EFFORTS as readonly string[]).includes(u.effort) ? u.effort : OTHER;
+    const id = [u.session, u.day, agent, model, effort].join("\n");
+    let row = groups.get(id);
+    if (!row) {
+      const key = createHash("sha256").update(id).digest("hex");
+      groups.set(id, (row = { key, day: u.day, agent, model, effort, input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }));
+    }
+    row.input += u.input;
+    row.output += u.output;
+    row.cacheRead += u.cacheRead;
+    row.cacheWrite += u.cacheWrite5m + u.cacheWrite1h;
+  }
+  const rows = [...groups.values()]
+    .filter((r) => r.input + r.output + r.cacheRead + r.cacheWrite > 0)
+    .sort((a, b) => b.day.localeCompare(a.day) || a.agent.localeCompare(b.agent) || a.model.localeCompare(b.model) || a.key.localeCompare(b.key));
+  return { rows: rows.slice(0, MAX_SHARE_ROWS), omitted: Math.max(0, rows.length - MAX_SHARE_ROWS) };
 }

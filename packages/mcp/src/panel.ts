@@ -11,6 +11,7 @@ import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readProject } from "./project.ts";
 import { MAX_COMMENT, NOTICE, type SendResult } from "./ratings.ts";
+import { usageReport } from "./usage.ts";
 
 export interface Choice {
   label: string;
@@ -208,6 +209,10 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
       const rating = ratings ? { notice: NOTICE, maxComment: MAX_COMMENT, rated } : null;
       return send(res, 200, JSON.stringify({ project, questions, activity, rating, update: update() ?? null }), "application/json; charset=utf-8");
+    }
+    // Consumo di token dai file di Claude Code del progetto (F24): si legge solo quando la pagina apre la vista.
+    if (req.method === "GET" && url.pathname === "/api/usage") {
+      return send(res, 200, JSON.stringify(await usageReport(root)), "application/json; charset=utf-8");
     }
     if (req.method === "GET" && url.pathname === "/api/events") {
       res.writeHead(200, { ...SECURITY_HEADERS, "Content-Type": "text/event-stream; charset=utf-8", Connection: "keep-alive" });

@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    env_file: .env
+    depends_on: [db, redis]
+    networks: [interna]
+  db:
+    image: postgres:17.6
+    environment:
+      POSTGRES_USER: fatture
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - dati:/var/lib/postgresql/data
+    networks: [interna]
+  redis:
+    image: redis:8.2
+    networks: [interna]
+  nginx:
+    image: nginx:1.29
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on: [app]
+    networks: [interna]
+networks:
+  interna:
+volumes:
+  dati:

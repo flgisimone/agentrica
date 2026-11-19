@@ -1,10 +1,10 @@
 // Catalogo di Agentrica: reparti e agenti letti dai file di agents/.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { DEPARTMENTS, type DepartmentCode, type DepartmentInfo } from "./departments.ts";
+import { DEPARTMENTS, type DepartmentCode, type DepartmentInfo, type Model } from "./departments.ts";
 import { parseRole, type Section } from "./markdown.ts";
 
-export { DEPARTMENTS, type DepartmentCode, type DepartmentInfo } from "./departments.ts";
+export { DEPARTMENTS, type DepartmentCode, type DepartmentInfo, type Model } from "./departments.ts";
 export type { Section } from "./markdown.ts";
 
 export interface Agent {
@@ -23,9 +23,11 @@ export interface Agent {
   sections: Section[];
   /** Percorso del file rispetto alla root del repository. */
   source: string;
+  /** Modello consigliato (F24); «inherit» se il ruolo non è stato misurato. */
+  model: Model;
 }
 
-export interface Department extends Omit<DepartmentInfo, "stars"> {
+export interface Department extends Omit<DepartmentInfo, "stars" | "models"> {
   /** Sigla in minuscolo, per l'indirizzo della pagina: es. «aisa». */
   slug: string;
   /** Introduzione del README. */
@@ -92,6 +94,7 @@ function loadDepartment(agentsDir: string, info: DepartmentInfo): Department {
       intro,
       sections,
       source: `agents/${info.folder}/${match[0]}`,
+      model: info.models?.[number] ?? "inherit",
     };
   });
 
@@ -103,7 +106,7 @@ function loadDepartment(agentsDir: string, info: DepartmentInfo): Department {
   };
   const { intro, sections } = parseRole(readFileSync(join(folder, "00-common-rules.md"), "utf8"));
 
-  const { stars: _stars, ...rest } = info;
+  const { stars: _stars, models: _models, ...rest } = info;
   return {
     ...rest,
     slug: info.code.toLowerCase(),

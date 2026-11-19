@@ -164,6 +164,11 @@ test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async (
     const state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     assert.equal(state.project.name, basename(root));
     assert.match(state.project.problems[0], /Non trovo plan\/README\.md/);
+    // Consumo (F24): stesso cookie delle altre rotte; un progetto senza file di Claude Code dà zero risposte.
+    assert.equal((await call(`${base}/api/usage`, { headers: { Cookie: "agentrica_panel_1=x" } })).status, 403);
+    const usage = JSON.parse((await call(`${base}/api/usage`, { headers: { Cookie: cookie } })).body);
+    assert.equal(usage.total.requests, 0);
+    assert.equal(usage.prices.date, "2026-11-03");
 
     const json = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
     const post = (headers: Record<string, string>, body = "{}") => call(`${base}/api/answer`, { method: "POST", headers, body });

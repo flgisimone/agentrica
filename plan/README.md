@@ -47,6 +47,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Starter | Da F18 un progetto nuovo si crea con `npx @agentrica/mcp init`: copia `starter/` (regole generali di Agentrica), gli `agents/` e i subagent del pacchetto con il nome del progetto, `.mcp.json` con il pannello e, fuori da un repository, git su `main` e `develop`. agentic-starter è archiviato; gamoey, kitty-3d e oneoffice restano come sono | Scelta dell'utente (2026-11-16, F18) |
 | File di lavoro | `plan/`, `audit/`, `docs/` ed `examples/` restano nel repository pubblico (F19 abbandonata all'apertura) | Scelta dell'utente (2026-11-16, F19) |
 | Reputazione | Da F21 il sito pubblica, con ISR a un'ora, le statistiche degli agenti con almeno 5 voti (media bayesiana per la classifica, attiva con almeno 5 agenti) e i commenti con consenso approvati con `npm run ratings -- --moderate`; sotto le soglie non si vede nulla. Lettura con il ruolo `reputation_reader`, moderazione con `ratings_moderator`; voti anomali esclusi dalle medie, non cancellati | Scelta dell'utente (2026-11-17, F21) |
+| Modelli | Da F24 il modello consigliato sta nel catalogo (`models` in `departments.ts`), solo per ruoli misurati sui casi di `examples/` con la soglia «difetti di Opus meno uno, nessun falso in più»: Haiku per AISA-08, Sonnet per AICA-04, AIPCA-02, AISA-09, AIBPD-05, `inherit` gli altri. Lo dicono i subagent (`model:`), `elenca_agenti` e il testo dell'agente; la scelta resta all'utente. Il pannello mostra i token dai file di Claude Code del progetto | Scelta dell'utente (2026-11-19, F24) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento. Applicata in F20: le valutazioni hanno voce di registro, bilanciamento e screening DPIA in `20-valutazioni.md` | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
 
 ## Glossario
@@ -81,8 +82,9 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F21 | [21-reputazione.md](21-reputazione.md) | Reputazione pubblica: statistiche nelle schede, classifiche, commenti moderati; si accende sopra le soglie | completata |
 | F22 | [22-vetrina.md](22-vetrina.md) | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
 | F23 | [23-avvisi.md](23-avvisi.md) | Avvisi e installazione: valutazione proposta dal server con l'elicitation, avviso di versione nuova dal registro npm, comando `install` che installa sul PC e rende Agentrica disponibile in ogni progetto, uguale su Mac, Windows e Linux, pagina `/installa` nel sito, reparto nel nome dei comandi e nel pannello, `CHANGELOG.md` e pagina `/rilasci`, rilascio 0.6.0 | completata |
-| F24 | [24-modelli.md](24-modelli.md) | Modelli e consumo: misura di Opus, Sonnet e Haiku sui casi di prova, modello per ruolo nei subagent e consigliato dall'MCP; token spesi e risparmiati con grafici nel pannello e, anonimi, sul sito | da aprire |
+| F24 | [24-modelli.md](24-modelli.md) | Modelli e consumo: misura di Opus, Sonnet e Haiku sui casi di prova, modello per ruolo nei subagent e consigliato dall'MCP; token spesi e risparmiati con grafici nel pannello | completata |
 | F25 | [25-biblioteca.md](25-biblioteca.md) | Biblioteca degli agenti: schede con fonte e data per i cinque reparti, tool nell'MCP, ciclo di studio con rilevatore settimanale | da aprire |
 | F26 | [26-progetti.md](26-progetti.md) | Progetti degli utenti: vetrina da issue GitHub e topic `agentrica`, pagina `/progetti` e anteprima in home; via «Messi alla prova», i casi restano come prova interna | da aprire |
+| F27 | [27-consumo-sito.md](27-consumo-sito.md) | Consumo sul sito: invio anonimo e confermato dei totali di token, endpoint con somme, frase e grafici sul sito sopra una soglia (da F24) | da aprire |
 
-Ordine: F0 → F26 in sequenza.
+Ordine: F0 → F26 in sequenza, poi F27.

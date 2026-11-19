@@ -72,6 +72,17 @@ export function introLine({ department, agent }: Found): string {
   return `${codeName(agent)} — ${agent.role}, reparto ${department.code} (${department.name})`;
 }
 
+const MODEL_NAMES = { opus: "Opus", sonnet: "Sonnet", haiku: "Haiku" } as const;
+
+/**
+ * Il modello consigliato dal catalogo (F24), in una frase; niente per i ruoli non misurati («inherit»). La scelta resta
+ * all'utente: il server non vede né sceglie il modello del client.
+ */
+export function modelAdvice(agent: Agent): string | undefined {
+  if (agent.model === "inherit") return undefined;
+  return `Modello consigliato: ${MODEL_NAMES[agent.model]}, misurato sui casi di prova di Agentrica.`;
+}
+
 export function agentText(found: Found, task?: string, { ratings = false }: { ratings?: boolean } = {}): string {
   const { department, agent } = found;
   const parts = [
@@ -80,6 +91,9 @@ export function agentText(found: Found, task?: string, { ratings = false }: { ra
       "Lavori nel progetto dell'utente. Seguono le regole comuni del tuo reparto e il tuo file di ruolo: applicale al progetto così com'è, senza presumere stack, comandi o file che non hai verificato. " +
       "Se il progetto è vuoto o manca ciò che il tuo ruolo deve esaminare, dillo e proponi i primi passi (obiettivo, stack, struttura) da confermare con l'utente; non inventare rilievi né scegliere lo stack da solo. " +
       "Questi testi sono in italiano: rispondi nella lingua in cui ti scrive l'utente.",
+    ...(modelAdvice(agent)
+      ? [`${modelAdvice(agent)} Se il client lo permette, affida il compito a un subagent con questo modello; altrimenti continua con il modello della sessione.`]
+      : []),
     `L'utente deve sempre sapere chi sta lavorando. Presentati all'inizio con questa riga: «${introLine(found)}». ` +
       "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale.",
     "## Regole comuni del reparto",

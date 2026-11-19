@@ -15,7 +15,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, codeName, findAgent, introLine, promptName, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentSummary, agentText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, RATING_FORM, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "./update.ts";
 
@@ -238,7 +238,7 @@ server.registerTool(
   "elenca_agenti",
   {
     title: "Elenca gli agenti di Agentrica",
-    description: "Elenca gli agenti di Agentrica con id, nome in codice, ruolo e reparto. Il reparto è facoltativo.",
+    description: "Elenca gli agenti di Agentrica con id, nome in codice, ruolo, reparto e, dove è stato misurato, il modello consigliato. Il reparto è facoltativo.",
     inputSchema: { reparto: z.enum(codes).optional().describe("Sigla del reparto.") },
     annotations: READ_ONLY,
   },
@@ -248,7 +248,7 @@ server.registerTool(
       .flatMap((d) => [
         `## ${d.code} — ${d.name}`,
         d.summary,
-        ...d.agents.map((agent) => `- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`),
+        ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
         "",
       ]);
     return remind({ content: [{ type: "text", text: lines.join("\n") }] });

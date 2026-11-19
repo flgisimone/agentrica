@@ -125,6 +125,16 @@ details + details { border-top: 1px solid var(--border); }
 .hint { margin-top: 12px; font-size: 0.9rem; }
 .prio-P0 { color: var(--destructive); }
 
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 12px 0 0; }
+.tile { display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--secondary); }
+.tile-label, .tile-note { color: var(--muted-foreground); font-size: 0.85rem; }
+.tile-value { font-size: 1.4rem; }
+.refresh { margin-top: 12px; background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 4px 12px; }
+.bar-cell { position: relative; min-width: 160px; }
+.bar { position: absolute; inset: 6px auto 6px 0; width: calc(var(--w) * 0.9); background: var(--aisa); opacity: 0.35; border-radius: 4px; }
+.bar-value { position: relative; font-variant-numeric: tabular-nums; padding-left: 6px; }
+td { font-variant-numeric: tabular-nums; }
+
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (prefers-reduced-motion: no-preference) { .option, .filters button { transition: background-color 120ms; } }

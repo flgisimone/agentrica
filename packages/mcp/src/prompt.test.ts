@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, findAgent, introLine, promptName, selectSquad, VERSION } from "./prompt.ts";
+import { agentText, findAgent, introLine, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -129,4 +129,41 @@ test("CHANGELOG.md: la prima voce è VERSION, ogni voce «## x.y.z — AAAA-MM-G
   assert.equal(versions[0]!.split(" ")[0], VERSION);
   assert.equal(versions.at(-1)!.split(" ")[0], "0.1.0");
   for (const [, kind] of text.matchAll(/^### (.+)$/gm)) assert.ok(["Nuovo", "Cambiato", "Corretto", "Incompatibile"].includes(kind!), kind!);
+});
+
+// F24-08: il testo di un agente entra nel contesto a ogni uso. Oggi il più lungo (AIWDA-01) è di 7,1 KB; la soglia di
+// 8 KB è quella di SEC-ARCH-01 per un file di agents/. Chi la supera (es. la biblioteca di F25) la cambia con una decisione.
+test("agentText: nessun agente supera gli 8 KB, con la proposta di valutazione", () => {
+  const big = selectSquad(catalog).flatMap((department) =>
+    department.agents.map((agent) => ({ id: agent.id, bytes: Buffer.byteLength(agentText({ department, agent }, undefined, { ratings: true })) })),
+  );
+  assert.equal(big.length, 56);
+  assert.deepEqual(big.filter((a) => a.bytes > 8192), []);
+});
+
+// F24-06: il modello consigliato viene dal catalogo, solo per i ruoli misurati; i subagent di .claude/agents/ (copiati
+// anche da init) hanno lo stesso modello del catalogo per il loro file di ruolo.
+test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell'agente", () => {
+  const qa = findAgent(catalog, "aisa-08")!;
+  assert.equal(qa.agent.model, "haiku");
+  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di Agentrica\. Se il client lo permette/);
+  const architect = findAgent(catalog, "aisa-02")!;
+  assert.equal(architect.agent.model, "inherit");
+  assert.equal(modelAdvice(architect.agent), undefined);
+  assert.doesNotMatch(agentText(architect), /Modello consigliato/);
+  const measured = catalog.flatMap((d) => d.agents.filter((a) => a.model !== "inherit").map((a) => `${a.id}:${a.model}`));
+  assert.deepEqual(measured, ["AIBPD-05:sonnet", "AICA-04:sonnet", "AIPCA-02:sonnet", "AISA-08:haiku", "AISA-09:sonnet"]);
+});
+
+test("subagent: model: uguale al modello consigliato del catalogo per il file di ruolo", () => {
+  const dir = join(import.meta.dirname, "..", "..", "..", ".claude", "agents");
+  const files = readdirSync(dir, { recursive: true, encoding: "utf8" }).filter((f) => f.endsWith(".md"));
+  assert.equal(files.length, 56);
+  for (const file of files) {
+    const text = readFileSync(join(dir, file), "utf8");
+    const source = /`(agents\/[^`]+\/\d\d-[^`]+\.md)`/.exec(text)?.[1];
+    const agent = catalog.flatMap((d) => d.agents).find((a) => a.source === source);
+    assert.ok(agent, `${file}: file di ruolo non trovato`);
+    assert.equal(/^model: (\w+)$/m.exec(text)?.[1], agent.model, file);
+  }
 });

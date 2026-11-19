@@ -19,4 +19,4 @@
 | A7 | Errori segnalati solo con il bordo rosso: nessun testo, nessun `aria-invalid`, niente annunci | `app.js`, `style.css` | 1.4.1, 3.3.1 |
 | A8 | Il messaggio di conferma compare senza essere annunciato né ricevere il focus | `app.js`, `#done` | 4.1.3 |
 
-Accettabili ma non richiesti: `autocomplete` mancante su nome ed email (1.3.5), invio con Invio da tastiera non gestito, bordo dei campi #ccc a 1,6:1 (1.4.11) e obbligatorietà dei campi non indicata (3.3.2), questi due extra validi del 2026-11-15.
+Accettabili ma non richiesti: `autocomplete` mancante su nome ed email (1.3.5), invio con Invio da tastiera non gestito, bordo dei campi #ccc a 1,6:1 (1.4.11) e obbligatorietà dei campi non indicata (3.3.2), questi due extra validi del 2026-11-15. Extra valido del 2026-11-19: `form { display: grid }` in `style.css` vince su `[hidden]`, quindi dopo l'invio il modulo resta visibile.

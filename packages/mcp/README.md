@@ -130,7 +130,7 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti
 
 | Tool | Input | Cosa restituisce |
 |---|---|---|
-| `elenca_agenti` | `reparto` facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente |
+| `elenca_agenti` | `reparto` facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
 | `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 
@@ -139,6 +139,25 @@ Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica
 Il numero 01 di ogni reparto è il direttore: coordina gli specialisti e consolida i loro rilievi.
 
 I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi. Durante il lavoro l'agente dice chi è, per esempio «AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)»: all'inizio, quando passa a un altro agente e nel riepilogo finale.
+
+## Modelli consigliati
+
+Il server non sceglie il modello: lo usa il tuo client. Per alcuni agenti però consigliamo un modello più piccolo di Opus, perché sugli stessi casi di prova trova gli stessi difetti senza falsi in più e costa meno (dei limiti dell'abbonamento, o in dollari con l'API).
+
+| Agente | Modello consigliato | Costo sul compito rispetto a Opus |
+|---|---|---|
+| AISA-08 · DENEB, QA | Haiku | −96% |
+| AISA-09 · REGULUS, Application Security | Sonnet | −52% |
+| AICA-04 · ALNILAM, Cloud Security | Sonnet | −52% |
+| AIPCA-02 · ALIOTH, GDPR | Sonnet | −52% |
+| AIBPD-05 · ALGIEBA, Business Analyst | Sonnet | −52% |
+
+Gli altri 51 agenti non sono stati misurati: lavorano con il modello della tua sessione. Il costo è la media sui casi di prova del 2026-11-19 (prezzi API del 2026-11-03); misure, casi e rapporti sono in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md).
+
+- **Dove si vede.** In `elenca_agenti` e in testa al testo dell'agente («Modello consigliato: Sonnet…»): se il client lo permette, il modello affida il compito a un subagent con quel modello.
+- **Subagent.** I subagent copiati da [`init`](#nuovo-progetto) in `.claude/agents/` hanno già `model:` con il modello consigliato (gli altri `inherit`). Per cambiarlo modifica quella riga (`opus`, `sonnet`, `haiku` o `inherit`).
+- **Sessione.** In Claude Code il modello della sessione si cambia con `/model`.
+- **Riesame.** Le regole dei reparti chiedono a un agente su un modello più piccolo di proporre il riesame su Opus quando trova un rilievo P0 o P1 o non è sicuro.
 
 ## Valutazioni
 
@@ -163,11 +182,12 @@ Con `--panel` il server apre anche una pagina sul tuo computer da cui segui il p
 npx -y @agentrica/mcp@0.6.0 install --panel
 ```
 
-Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha tre pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
+Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha quattro pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
 
 - **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), con il reparto e l'inizio del compito;
 - **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
-- **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto.
+- **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
+- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella.
 
 Con il pannello il modello ha due tool in più:
 
@@ -178,7 +198,7 @@ Con il pannello il modello ha due tool in più:
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
-**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
+**Cosa cambia con `--panel`.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il permission model di Node consigliato sopra non si usa con `--panel`, che ha bisogno della rete locale e di `git`.
 
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 

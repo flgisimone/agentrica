@@ -2,7 +2,7 @@
 
 **Obiettivo**: ogni agente lavora con il modello più adatto al suo compito, così si consumano meno token (e meno dei limiti dell'abbonamento) senza perdere qualità. La scelta si fa misurando sugli stessi casi di prova, non a intuito. I token spesi e risparmiati si vedono, con i grafici, nel pannello di chi usa Agentrica e, in forma anonima, sul sito.
 
-> **Stato: da aprire**. Analisi e decisioni con l'utente il 2026-11-18; backlog da confermare all'apertura. Viene dopo F23 e prima della biblioteca (F25), che aggiungerà testo ai prompt.
+> **Stato: completata** (aperta il 2026-11-18, chiusa il 2026-11-19). Analisi e decisioni con l'utente il 2026-11-18; all'apertura, lo stesso giorno, la fase è divisa: qui misura, modelli per ruolo e consumo nel pannello locale; l'invio anonimo dei totali e le misure sul sito passano a [F27](27-consumo-sito.md). Viene dopo F23 e prima della biblioteca (F25), che aggiungerà testo ai prompt.
 
 **Agenzie**: business (Product Manager per misura e soglie); privacy (GDPR, Data Governance, DPIA, Legal) per l'invio anonimo dei totali e la lettura dei file di Claude Code; cybersecurity (AppSec, Cloud Security) per l'endpoint e per la lettura fuori dalla cartella del progetto; design (Dashboard e Data Visualization, UX Writer, Accessibility) per i grafici del pannello e del sito; software (Architect per dove vive il modello consigliato, QA per casi e conteggi, Backend per catalogo, MCP ed endpoint, Database, Frontend, Code Reviewer).
 
@@ -28,7 +28,16 @@
 | Frase sul sito | Nella forma «Con Agentrica sono stati usati X token; la cache ne ha fatti pagare Y in meno; nelle nostre prove la scelta del modello ha ridotto il consumo del Z%», con i grafici. Ogni numero dice da dove viene |
 | Ordine | Dopo F23 e prima della biblioteca (F25) |
 
-## Proposte da confermare all'apertura
+## Decisioni all'apertura (2026-11-18)
+
+| Tema | Decisione |
+|---|---|
+| Perimetro | F24-01…F24-11: misura, modelli per ruolo, consumo nel pannello locale, nessuna connessione nuova. Invio anonimo, endpoint e sito (ex F24-12…F24-15) in [F27](27-consumo-sito.md) |
+| Esecuzioni | Le esegue la sessione di sviluppo con un subagent per configurazione (Opus effort medio, Opus effort basso, Sonnet, Haiku), con il testo dell'agente dato dal server MCP e il progetto copiato fuori dal repository; token dai file di Claude Code dei subagent |
+| Piano delle misure | Completo: i 4 casi esistenti e 3 nuovi (AIBPD, AICA, un QA candidato a Haiku), 4 configurazioni, 2 esecuzioni ciascuna: 56 esecuzioni |
+| Proposte | Confermate come scritte qui sotto: tabella di partenza, prima lo sforzo poi il modello, soglia, passaggio al modello superiore, modello nel catalogo, costo della misura, prezzi con data. L'invio dei totali passa a F27 |
+
+## Proposte confermate all'apertura
 
 - **Tabella di partenza da verificare con la misura**:
 
@@ -43,24 +52,24 @@
 - **Passaggio al modello superiore**: se uno specialista su Sonnet o Haiku trova un rilievo P0 o P1, o dichiara di non essere sicuro, il riesame passa al direttore o al revisore su Opus.
 - **Dove vive il modello consigliato**: nel catalogo (`packages/catalog/src/departments.ts`, accanto ai nomi in codice), così subagent, server MCP e sito leggono la stessa fonte. Nel testo dell'agente diventa una riga come «Modello consigliato: Sonnet; se il client lo permette, affida il compito a un subagent con quel modello».
 - **Costo della misura**: le esecuzioni consumano i limiti dell'abbonamento. Il piano delle esecuzioni (ruoli, casi, ripetizioni) si conferma con l'utente prima di lanciarle.
-- **Invio dei totali**: un tool o un pulsante del pannello (come «Valuta») prepara l'anteprima dei totali dall'ultimo invio, e l'utente conferma. Si può proporre a fine sessione insieme alla valutazione; con `--no-ratings` o un flag apposito non si propone mai.
+- **Invio dei totali**: passa a [F27](27-consumo-sito.md).
 - **Prezzi**: una tabella dei prezzi con data nel pacchetto, per le stime in dollari equivalenti; con l'abbonamento i grafici mostrano soprattutto i token.
 
 ## Requisiti da definire all'apertura
 
-- Privacy: voce di registro, base giuridica, bilanciamento e screening DPIA per i totali anonimi, come per le valutazioni in F20. Note legali e README aggiornati. Conservazione e aggregazione: sul sito solo somme, mai il singolo invio.
-- Cybersecurity: il pannello legge solo la cartella di Claude Code del progetto corrente, senza seguire link simbolici che escono e con un limite di dimensione, ed estrae solo i campi numerici. L'endpoint ha validazione stretta, limiti di frequenza come quello delle valutazioni ed esclusione dalle somme degli invii fuori scala, senza cancellarli.
+- Privacy dei totali anonimi: in [F27](27-consumo-sito.md). Per la lettura locale: solo campi numerici, nessun testo delle conversazioni esce dal pannello.
+- Cybersecurity: il pannello legge solo la cartella di Claude Code del progetto corrente, senza seguire link simbolici che escono e con un limite di dimensione, ed estrae solo i campi numerici.
 - Design: grafici leggibili e accessibili (tabella equivalente, contrasto, niente informazione affidata solo al colore). Le stime hanno un'etichetta visibile che le distingue dalle misure.
 
 ## Backlog
 
-Proposta da confermare all'apertura.
+Confermato all'apertura (2026-11-18). Le voci F24-12…F24-15 della proposta sono in [F27](27-consumo-sito.md).
 
 | ID | Attività | Priorità |
 |---|---|---|
 | F24-01 | `examples/` come prova interna: README con lo scopo (confronto di modelli e versioni), procedura ripetibile, formato dei risultati con data, modello, effort e versione | P1 |
-| F24-02 | Casi nuovi per i ruoli rappresentativi senza casi: almeno uno per reparto e uno per i candidati a Haiku | P1 |
-| F24-03 | Misura: Opus (effort predefinito e più basso), Sonnet e Haiku sui ruoli rappresentativi, due esecuzioni per caso, con risultati in `examples/risultati/` | P0 |
+| F24-02 | Casi nuovi per i ruoli rappresentativi senza casi: AIBPD-05 Business Analyst, AICA-04 Cloud Security, AISA-08 QA (candidato a Haiku) | P1 |
+| F24-03 | Misura: Opus (effort medio e basso), Sonnet e Haiku sui 7 casi, due esecuzioni per caso, con risultati in `examples/risultati/` | P0 |
 | F24-04 | Tabella dei modelli per ruolo, decisa con l'utente dai risultati | P0 |
 | F24-05 | `model:` nei subagent di `.claude/agents/` (anche quelli copiati da `init`), secondo la tabella | P1 |
 | F24-06 | Modello consigliato nel catalogo, in `elenca_agenti` e nel testo dell'agente, con test | P1 |
@@ -69,10 +78,14 @@ Proposta da confermare all'apertura.
 | F24-09 | README del pacchetto: modelli consigliati e come si cambiano | P2 |
 | F24-10 | Lettura dei token dai file di Claude Code del progetto: spesi, cache, per agente, modello e giorno, risparmio della cache e stima del modello; con test su file finti | P0 |
 | F24-11 | Pannello: pagina o sezione «Consumo» con i grafici e la tabella equivalente | P1 |
-| F24-12 | Invio anonimo confermato dei totali (tool e pulsante del pannello, anteprima, flag per spegnerlo), con test | P1 |
-| F24-13 | Endpoint e tabella dei totali nel sito, somme per agente, modello e mese, limiti di plausibilità; requisiti privacy e cyber | P1 |
-| F24-14 | Sito: misure di consumo con la frase, i grafici e i risultati delle prove di F24; nascoste sotto una soglia di invii, come la reputazione | P1 |
-| F24-15 | Note legali, README e e2e del sito per le misure | P1 |
+
+## Decisioni dai risultati (2026-11-19)
+
+| Tema | Decisione |
+|---|---|
+| Modelli per ruolo | Regola prudente: Haiku ad AISA-08 QA (risultato facile da controllare); Sonnet ad AICA-04, AIPCA-02, AISA-09, AIBPD-05; AIWDA-08 resta `inherit`, perché Sonnet non passa la soglia e Haiku su un ruolo di giudizio ha solo due prove |
+| Ruoli non misurati | Restano `inherit`; le misure di altri ruoli sono un rilievo aperto |
+| Scheda di AIBPD-05 | Chiarita: un affinamento su T1–T3 non è falso; i conteggi del 2026-11-19 restano, annotati |
 
 ## Criteri di accettazione
 
@@ -80,6 +93,34 @@ Proposta da confermare all'apertura.
 - `elenca_agenti` e il testo dell'agente mostrano il modello consigliato, che viene dal catalogo; i subagent hanno lo stesso modello.
 - Il consumo di token sul compito finito è riportato per ogni configurazione provata (dati di Claude Code), senza stime inventate.
 - Il pannello mostra i token spesi e risparmiati della sessione e del progetto, con i grafici. Le somme coincidono con quelle calcolate a mano su un file di Claude Code di prova; le stime sono etichettate come tali.
-- Un invio parte solo dopo la conferma e contiene esattamente l'anteprima; con il flag spento non si propone.
-- Il sito mostra la frase e i grafici solo sopra la soglia; i totali sono indicati come dichiarati dagli utenti e i risultati delle prove come misurati.
 - `npm run verify` verde.
+
+## Fatto
+
+- **F24-01** [`examples/README.md`](../examples/README.md): scopo (prova interna per modelli e versioni), sezione «Confronto di modelli» con la procedura ripetibile (`npm run agent-text`, un subagent per esecuzione, token per `requestId`, valutatore unico) e il formato dei risultati.
+- **F24-02** Tre casi nuovi con difetti, trappole e accettabili: [AIBPD-05](../examples/casi/aibpd-05-requisiti-abbonamenti.md), [AICA-04](../examples/casi/aica-04-config-deploy.md), [AISA-08](../examples/casi/aisa-08-calcolo-sconti.md), con i progetti in `examples/progetti/`.
+- **F24-03** 56 esecuzioni (7 casi × 4 configurazioni × 2) e 4 conteggi dello stesso valutatore: [`2026-11-19-modelli.md`](../examples/risultati/2026-11-19-modelli.md), con i 56 rapporti. Opus effort medio trova tutto; sul compito finito Opus effort basso costa −23%, Sonnet −52%, Haiku −96%, con più token (+4%, +22%, +64%).
+- **F24-04** Tabella dei modelli decisa con l'utente (sopra).
+- **F24-05** `model:` nei 56 subagent di `.claude/agents/`: `haiku` per `sw-qa-engineer`, `sonnet` per `sw-security-engineer`, `sec-cloud-security-engineer`, `privacy-gdpr-specialist`, `biz-business-analyst-requirements-strategist`, `inherit` gli altri; `init` li copia così. Test che confronta ogni subagent con il catalogo.
+- **F24-06** `Model` e `models` in [`departments.ts`](../packages/catalog/src/departments.ts), `agent.model` nel catalogo; `modelAdvice` nel testo dell'agente e in `elenca_agenti`; test.
+- **F24-07** Regola di riesame nelle regole comuni dei cinque reparti (sezione «Dati del progetto e segnalazioni»): su un modello più piccolo, P0/P1 o incertezza → riesame del direttore o di un revisore su Opus.
+- **F24-08** Test: nessun testo di agente oltre 8 KB (oggi il più lungo, AIWDA-01, è 7,1 KB).
+- **F24-09** README del pacchetto: sezione «Modelli consigliati», `elenca_agenti`, pagina «Consumo» e cosa legge il pannello.
+- **F24-10** [`usage.ts`](../packages/mcp/src/usage.ts): legge `~/.claude/projects/<progetto>/` (sessioni e subagent con il tipo dal `.meta.json`), solo numeri, modello, effort e giorno; righe deduplicate per `requestId`; link simbolici e file oltre 64 MB saltati; totali per agente, modello, sessione e giorno, risparmio della cache misurato e del modello stimato; prezzi con data. Test su file finti con le somme fatte a mano.
+- **F24-11** Pannello: rotta `/api/usage` (stesso cookie delle altre, letta solo all'apertura della vista) e pagina «Consumo» con riepilogo e quattro tabelle con barra, stime etichettate. Provata in Chromium sui dati di questo progetto: nessun errore in console, nessuno scroll orizzontale a 375 px.
+
+## Verifiche
+
+- `npm run verify` verde: 102 test.
+- Pannello «Consumo» provato in Chromium (Playwright del repository del sito) sui file reali di questo progetto: 2564 risposte lette in meno di mezzo secondo, nessun file escluso.
+- `npm pack --dry-run`: `usage.js` e la pagina sono nel pacchetto.
+- Non fatto: la prova del pannello in un client diverso da Claude Code (senza file di Claude Code la pagina lo dice); il rilascio, che è a parte (CONVENTIONS §13.8) e vuole la voce 0.7.0 in `CHANGELOG.md`.
+
+## Rilievi aperti
+
+- P2 · Misure dei 50 ruoli non provati, in particolare i direttori e gli specialisti simili a quelli passati (altri cyber e privacy su Sonnet): stessi metodo e soglia, con casi nuovi.
+- P2 · AIWDA-08: Sonnet cita criteri WCAG sbagliati (2.4.11/2.4.13, 3.3.7); da valutare un chiarimento nel file di ruolo prima di rimisurare.
+- P3 · Nelle esecuzioni che scrivono il rapporto in un file la firma con il nome in codice manca spesso: effetto del metodo, da evitare nelle prossime prove facendo restituire il rapporto.
+- P3 · Un'esecuzione Haiku ha usato `pkill -f "node server.js"`: valutare una regola comune («ferma solo i processi che hai avviato tu, per PID»).
+- P3 · Il limite delle cinque ore ha fermato 27 esecuzioni (532k token spesi senza risultato): nelle prossime misure, gruppi da 7.
+

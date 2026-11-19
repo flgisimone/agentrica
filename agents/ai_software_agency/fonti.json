@@ -1,0 +1,241 @@
+[
+  {
+    "id": "tc39",
+    "name": "TC39 ed ECMAScript (ECMA-262)",
+    "level": 1,
+    "url": "https://tc39.es/",
+    "domains": [
+      "tc39.es"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "whatwg",
+    "name": "WHATWG Living Standards",
+    "level": 1,
+    "url": "https://spec.whatwg.org/",
+    "domains": [
+      "whatwg.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "w3c-tr",
+    "name": "W3C Standards and Drafts",
+    "level": 1,
+    "url": "https://www.w3.org/TR/",
+    "domains": [
+      "w3.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "ietf-rfc",
+    "name": "RFC Editor (RFC IETF)",
+    "level": 1,
+    "url": "https://www.rfc-editor.org/",
+    "domains": [
+      "rfc-editor.org"
+    ],
+    "update": "rss",
+    "feed": "https://www.rfc-editor.org/rfcrss.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "mcp-spec",
+    "name": "Model Context Protocol, specifica",
+    "level": 1,
+    "url": "https://modelcontextprotocol.io/specification",
+    "domains": [
+      "modelcontextprotocol.io",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nodejs",
+    "name": "Node.js, documentazione e release",
+    "level": 2,
+    "url": "https://nodejs.org/en/about/previous-releases",
+    "domains": [
+      "nodejs.org"
+    ],
+    "update": "rss",
+    "feed": "https://nodejs.org/en/feed/blog.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript, documentazione e release notes",
+    "level": 2,
+    "url": "https://www.typescriptlang.org/docs/",
+    "domains": [
+      "typescriptlang.org",
+      "microsoft.com",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/microsoft/TypeScript/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "react",
+    "name": "React, documentazione e blog",
+    "level": 2,
+    "url": "https://react.dev/",
+    "domains": [
+      "react.dev"
+    ],
+    "update": "rss",
+    "feed": "https://react.dev/rss.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nextjs",
+    "name": "Next.js, documentazione e blog",
+    "level": 2,
+    "url": "https://nextjs.org/docs",
+    "domains": [
+      "nextjs.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "npm",
+    "name": "npm, documentazione e release della CLI",
+    "level": 2,
+    "url": "https://docs.npmjs.com/",
+    "domains": [
+      "npmjs.com",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/npm/cli/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright, documentazione e release notes",
+    "level": 2,
+    "url": "https://playwright.dev/docs/release-notes",
+    "domains": [
+      "playwright.dev",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/microsoft/playwright/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "tailwind",
+    "name": "Tailwind CSS, documentazione e release",
+    "level": 2,
+    "url": "https://tailwindcss.com/docs",
+    "domains": [
+      "tailwindcss.com",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/tailwindlabs/tailwindcss/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "shadcn-ui",
+    "name": "shadcn/ui, documentazione e changelog",
+    "level": 2,
+    "url": "https://ui.shadcn.com/docs",
+    "domains": [
+      "shadcn.com"
+    ],
+    "update": "rss",
+    "feed": "https://ui.shadcn.com/rss.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "semver",
+    "name": "Semantic Versioning",
+    "level": 1,
+    "url": "https://semver.org/",
+    "domains": [
+      "semver.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "mdn",
+    "name": "MDN Web Docs",
+    "level": 2,
+    "url": "https://developer.mozilla.org/",
+    "domains": [
+      "mozilla.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "vercel-docs",
+    "name": "Vercel, documentazione e changelog",
+    "level": 2,
+    "url": "https://vercel.com/docs",
+    "domains": [
+      "vercel.com"
+    ],
+    "update": "rss",
+    "feed": "https://vercel.com/atom",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "neon-docs",
+    "name": "Neon, documentazione e changelog",
+    "level": 2,
+    "url": "https://neon.com/docs",
+    "domains": [
+      "neon.com"
+    ],
+    "update": "rss",
+    "feed": "https://neon.com/docs/changelog/rss.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "web-dev",
+    "name": "web.dev",
+    "level": 3,
+    "url": "https://web.dev/",
+    "domains": [
+      "web.dev"
+    ],
+    "update": "rss",
+    "feed": "https://web.dev/static/blog/feed.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  }
+]

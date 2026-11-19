@@ -2,9 +2,11 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { DEPARTMENTS, type DepartmentCode, type DepartmentInfo, type Model } from "./departments.ts";
+import { parseCard, parseSources, type Card, type Source } from "./library.ts";
 import { parseRole, type Section } from "./markdown.ts";
 
 export { DEPARTMENTS, type DepartmentCode, type DepartmentInfo, type Model } from "./departments.ts";
+export { isExpired, type Card, type Source, type SourceLevel } from "./library.ts";
 export type { Section } from "./markdown.ts";
 
 export interface Agent {
@@ -40,6 +42,8 @@ export interface Department extends Omit<DepartmentInfo, "stars" | "models"> {
   rules: { intro: string; sections: Section[] };
   agents: Agent[];
   director: Agent;
+  /** Schede della biblioteca (F25), in ordine di numero; vuota se il reparto non ha biblioteca/. */
+  library: Card[];
 }
 
 const WORKFLOW = "Flusso di lavoro";
@@ -106,6 +110,8 @@ function loadDepartment(agentsDir: string, info: DepartmentInfo): Department {
   };
   const { intro, sections } = parseRole(readFileSync(join(folder, "00-common-rules.md"), "utf8"));
 
+  const library = loadLibrary(folder, info, new Set(agents.map((a) => a.id)));
+
   const { stars: _stars, models: _models, ...rest } = info;
   return {
     ...rest,
@@ -116,5 +122,30 @@ function loadDepartment(agentsDir: string, info: DepartmentInfo): Department {
     rules: { intro, sections },
     agents,
     director: agents[0]!,
+    library,
   };
+}
+
+const LIBRARY = "biblioteca";
+const SOURCES = "fonti.json";
+
+/** Le fonti ammesse di un reparto, da fonti.json; vuoto se il file non c'è. Contengono URL: mai al modello. */
+export function loadSources(agentsDir: string, info: DepartmentInfo): Source[] {
+  const path = join(agentsDir, info.folder, SOURCES);
+  if (!existsSync(path)) return [];
+  return parseSources(readFileSync(path, "utf8"), `agents/${info.folder}/${SOURCES}`);
+}
+
+function loadLibrary(folder: string, info: DepartmentInfo, roles: ReadonlySet<string>): Card[] {
+  const dir = join(folder, LIBRARY);
+  if (!existsSync(dir)) return [];
+  const sources = loadSources(dirname(folder), info);
+  const files = readdirSync(dir).filter((file) => file.endsWith(".md")).sort();
+  const cards = files.map((file) => parseCard(readFileSync(join(dir, file), "utf8"), file, `agents/${info.folder}/${LIBRARY}/${file}`, sources, roles));
+  cards.forEach((card, index) => {
+    if (card.number !== index + 1) throw new Error(`${info.code}: numerazione delle schede non continua a ${card.path}`);
+  });
+  const ids = new Set(cards.map((c) => c.id));
+  if (ids.size !== cards.length) throw new Error(`${info.code}: due schede con lo stesso nome`);
+  return cards;
 }

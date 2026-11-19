@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Server MCP di Agentrica su stdio: un prompt per agente e due tool (elenca_agenti, agente).
+// Server MCP di Agentrica su stdio: un prompt per agente e tre tool in sola lettura (elenca_agenti, agente e, da F25,
+// library, che dà le schede della biblioteca del reparto; gli URL delle fonti restano in fonti.json, mai al modello).
 // Con --agents (es. --agents aisa,aiwda-08) prompt e tool vedono solo la squadra; senza, tutti gli agenti.
 // Legge solo i file di agents/ all'avvio; non scrive file e non registra dati (scrive solo init). Due connessioni:
 // l'invio di una valutazione (F20, ratings.ts), solo dopo la conferma dell'utente, e da F23 il controllo della versione
@@ -15,7 +16,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentSummary, agentText, cardText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, RATING_FORM, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "./update.ts";
 
@@ -180,6 +181,7 @@ const server = new McpServer(
     instructions:
       `Agentrica: ${count(all.length, "agente IA", "agenti IA")} in ${count(catalog.length, "reparto", "reparti")} (${codes.join(", ")}). ` +
       "Per scegliere un agente usa elenca_agenti; per lavorare come quell'agente carica le sue istruzioni con agente. " +
+      "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${promptName(all[0]!)}; il tool agente vuole l'id, es. ${all[0]!.agent.id}.` +
       (panel
         ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina."
@@ -277,6 +279,37 @@ server.registerTool(
     }
     const note = await used(found, compito);
     return remind({ content: [{ type: "text", text: agentText(found, compito, textOptions()) }] }, note);
+  },
+);
+
+const CARD_ID = z.string().regex(/^[a-z0-9][a-z0-9-]{0,59}$/, "Id di una scheda, es. owasp-top-10-2025.");
+
+server.registerTool(
+  "library",
+  {
+    title: "Schede della biblioteca di un reparto",
+    description:
+      "Restituisce le schede della biblioteca del reparto di un agente: nozioni recenti con fonte, versione e data di verifica. " +
+      "Gli id delle schede sono nella sezione «Biblioteca del reparto» delle istruzioni dell'agente (tool agente).",
+    inputSchema: {
+      id: AGENT_ID,
+      cards: z.array(CARD_ID).min(1).max(10).describe("Gli id delle schede da leggere, al più 10."),
+    },
+    annotations: READ_ONLY,
+  },
+  ({ id, cards: wanted }) => {
+    const found = findAgent(catalog, id);
+    const fail = (text: string): ToolResult => ({ isError: true, content: [{ type: "text", text }] });
+    if (!found) return fail("Agente non trovato: usa elenca_agenti per vedere gli id.");
+    const { library, code } = found.department;
+    if (library.length === 0) return fail(`Il reparto ${code} non ha ancora schede.`);
+    const unknown = wanted.filter((card) => !library.some((c) => c.id === card));
+    if (unknown.length > 0) {
+      return fail(`Schede non trovate nel reparto ${code}: ${unknown.join(", ")}. Disponibili: ${library.map((c) => c.id).join(", ")}.`);
+    }
+    const date = today();
+    const cards = [...new Set(wanted)].map((card) => cardText(library.find((c) => c.id === card)!, date));
+    return remind({ content: [{ type: "text", text: cards.join("\n\n---\n\n") }] });
   },
 );
 

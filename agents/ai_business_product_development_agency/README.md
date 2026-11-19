@@ -36,3 +36,5 @@
 - Software: requisiti, priorità, acceptance criteria, business case e vincoli.
 - Privacy & Compliance: finalità, flussi dati, categorie di dati, fornitori e modelli di business.
 
+## Biblioteca
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

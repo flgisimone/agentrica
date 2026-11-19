@@ -45,3 +45,6 @@ Gli agenti supportano ma non sostituiscono titolare del trattamento, DPO, consul
 I Markdown definiscono ruoli e istruzioni ma non creano da soli subagent eseguibili. Per Claude Code o altri strumenti occorre configurarli nel formato di agenti supportato.
 
 I riferimenti normativi nei file sono indicativi: verificare sempre testo vigente, giurisdizione, linee guida e applicabilità al caso concreto.
+
+## Biblioteca
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

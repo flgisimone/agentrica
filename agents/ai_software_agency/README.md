@@ -39,3 +39,6 @@
 Estrai la cartella nel repository o nella directory di progetto. Chiedi a Claude Code di leggere questo README e i file degli agenti prima di assegnare il lavoro. Integra queste istruzioni con le convenzioni e i permessi effettivi del repository.
 
 I file Markdown definiscono ruoli e comportamenti: non creano da soli subagent eseguibili. L'attivazione dei ruoli dipende dalla configurazione e dalle funzionalità di Claude Code.
+
+## Biblioteca
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

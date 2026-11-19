@@ -12,6 +12,8 @@ test("ogni file di agents/ è Markdown con contenuto ammesso", () => {
   for (const entry of files) {
     const path = join(entry.parentPath, entry.name);
     const name = relative(dir, path);
+    // fonti.json (F25) porta gli URL, non va al modello e ha i suoi controlli (library.test.ts).
+    if (entry.name === "fonti.json" && relative(dir, entry.parentPath).split(/[\\/]/).length === 1) continue;
     assert.match(name, /\.md$/, `${name}: solo file .md`);
     assert.deepEqual(contentProblems(readFileSync(path, "utf8")), [], name);
   }

@@ -11,6 +11,7 @@
     "test": "node --test packages/catalog/src/*.test.ts packages/mcp/src/*.test.ts scripts/*.test.ts",
     "stats": "node scripts/stats.ts",
     "ratings": "node scripts/ratings.ts",
+    "study": "node scripts/study.ts",
     "verify": "npm run typecheck && npm run lint && npm test",
     "agent-text": "node scripts/agent-text.ts"
   },

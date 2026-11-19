@@ -1,0 +1,125 @@
+[
+  {
+    "id": "eur-lex",
+    "name": "EUR-Lex (GDPR, ePrivacy, AI Act, NIS2, DSA)",
+    "level": 1,
+    "url": "https://eur-lex.europa.eu/",
+    "domains": [
+      "eur-lex.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "normattiva",
+    "name": "Normattiva (Codice privacy, legge italiana sull'IA)",
+    "level": 1,
+    "url": "https://www.normattiva.it/",
+    "domains": [
+      "normattiva.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "edpb",
+    "name": "Comitato europeo per la protezione dei dati (EDPB)",
+    "level": 1,
+    "url": "https://www.edpb.europa.eu/edpb_en",
+    "domains": [
+      "edpb.europa.eu"
+    ],
+    "update": "rss",
+    "feed": "https://www.edpb.europa.eu/feed/publications_en",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "edps",
+    "name": "Garante europeo della protezione dei dati (EDPS)",
+    "level": 1,
+    "url": "https://www.edps.europa.eu/_en",
+    "domains": [
+      "edps.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "garante",
+    "name": "Garante per la protezione dei dati personali",
+    "level": 1,
+    "url": "https://www.garanteprivacy.it/",
+    "domains": [
+      "garanteprivacy.it"
+    ],
+    "update": "rss",
+    "feed": "https://www.garanteprivacy.it/o/gpdp-rss/rss?t=news",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "cgue",
+    "name": "Corte di giustizia dell'Unione europea (CGUE)",
+    "level": 1,
+    "url": "https://curia.europa.eu/",
+    "domains": [
+      "curia.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "commissione-dati",
+    "name": "Commissione europea, protezione dei dati (adeguatezza, SCC)",
+    "level": 1,
+    "url": "https://commission.europa.eu/law/law-topic/data-protection_en",
+    "domains": [
+      "commission.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "ai-office",
+    "name": "Commissione europea, Ufficio per l'IA (AI Office)",
+    "level": 1,
+    "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
+    "domains": [
+      "digital-strategy.ec.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "iapp",
+    "name": "IAPP",
+    "level": 3,
+    "url": "https://iapp.org/",
+    "domains": [
+      "iapp.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "noyb",
+    "name": "noyb (associazione di parte)",
+    "level": 3,
+    "url": "https://noyb.eu/en",
+    "domains": [
+      "noyb.eu"
+    ],
+    "update": "rss",
+    "feed": "https://noyb.eu/en/rss",
+    "access": "libero",
+    "checked": "2026-11-19"
+  }
+]

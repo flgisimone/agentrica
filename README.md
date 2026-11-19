@@ -72,6 +72,9 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F23 | Avvisi e installazione: `install` e `add` su Mac, Windows e Linux, valutazione con il modulo del client, avviso di versione nuova, reparto nei comandi, CHANGELOG (0.6.0) | completata |
 | F24 | Modelli per ruolo misurati sui casi di prova e consumo di token nel pannello | completata |
 | F25 | Biblioteca degli agenti: schede con fonte e data, tool `library`, rilevatore settimanale delle novità | completata |
+| F26 | Progetti degli utenti: vetrina su richiesta da issue e topic `agentrica`, pagina `/progetti` | completata |
+| F27 | Consumo sul sito: `share_usage`, endpoint con somme, pagina `/consumo` (0.7.0) | completata |
+| F28 | Nuova interfaccia del sito: strumento per sviluppatori, osservatorio stellare, catalogo `/agenti` e pannello «Usalo» | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

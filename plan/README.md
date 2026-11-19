@@ -24,8 +24,9 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Stili | Tailwind 4 con shadcn/ui (stile base-nova su Base UI, come gamoey); i token del tema scuro e gli accenti dei reparti diventano variabili del tema | Scelta dell'utente (2026-11-15) |
 | Reparti | AIBPD Business & Product Development, AICA Cybersecurity, AIPCA Privacy & Compliance, AISA Software, AIWDA Web Design | Scelta dell'utente (2026-11-15) |
 | Nomi degli agenti | Nome in codice di stella: sigla del reparto, numero del file di ruolo e stella in maiuscolo, es. «AISA-02 · ALTAIR». Il ruolo resta accanto al nome. Nessun nome di persona. Il direttore di AIBPD è ALDERAMIN (era CAPELLA fino a F1; il sito non era pubblicato) | Scelta dell'utente (2026-11-15) |
+| Posizionamento | Da F28 il sito presenta Agentrica come strumento per sviluppatori (il server MCP con i suoi agenti), non come società di consulenza: hero con il comando d'installazione, catalogo `/agenti` e comandi per agente; i reparti organizzano il catalogo. Il footer dice che Agentrica è un progetto, non una società | Scelta dell'utente (2026-11-19, F28) |
 | Trasparenza | Il sito dice sempre che gli agenti sono IA; nessuna persona, cliente, risultato o recensione inventati | Contenuti onesti (CONVENTIONS §1) |
-| Identità visiva | Da F9 torna il «tech scuro» di F0–F6 (fondo #0b1020, accenti luminosi per reparto), con Inter e JetBrains Mono di F7; contrasto WCAG AA. Il corporate chiaro di F7–F8 resta nella storia di git | Scelta dell'utente (2026-11-15, dopo F8) |
+| Identità visiva | Da F9 torna il «tech scuro» di F0–F6 (fondo #0b1020, accenti luminosi per reparto), con Inter e JetBrains Mono di F7; contrasto WCAG AA. Il corporate chiaro di F7–F8 resta nella storia di git. Da F28 «osservatorio stellare»: fondo #070b16 con cielo e griglia in CSS (via la rete animata), mappa del cielo dei 56 agenti in home, angoli a mirino al posto delle ombre | Scelta dell'utente (2026-11-15, dopo F8; F28 2026-11-19) |
 | Lingua | Sito, documentazione, piani e convenzioni in italiano; sigle e titoli dei ruoli in inglese come nei file. Da F11 API e identificatori del codice nuovo in inglese (CONVENTIONS §3) | Scelta dell'utente (2026-11-15; regola del codice in F11) |
 | Agenzie attive | Software e Web Design per costruire il sito; le altre tre sono il contenuto del prodotto e si attivano quando servono (Privacy e Cybersecurity con il server MCP e la pubblicazione) | Proposta F0 |
 | Test | Unitari con `node --test` su `packages/catalog`; prove di fumo e accessibilità con Playwright e axe sul sito | Come nello starter |
@@ -89,5 +90,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F25 | [25-biblioteca.md](25-biblioteca.md) | Biblioteca degli agenti: schede con fonte e data per i cinque reparti, tool nell'MCP, ciclo di studio con rilevatore settimanale | completata |
 | F26 | [26-progetti.md](26-progetti.md) | Progetti degli utenti: vetrina da issue GitHub e topic `agentrica`, pagina `/progetti` e anteprima in home; via «Messi alla prova», i casi restano come prova interna | completata |
 | F27 | [27-consumo-sito.md](27-consumo-sito.md) | Consumo sul sito: tool `share_usage` e pulsante del pannello con anteprima, endpoint con chiave per riga e somme, pagina `/consumo` con le prove di F24, frase in home sopra 10 invii | completata |
+| F28 | [28-interfaccia.md](28-interfaccia.md) | Nuova interfaccia del sito: posizionamento da strumento per sviluppatori, identità da osservatorio stellare, mappa del cielo in home, catalogo `/agenti` con ricerca e filtro, pannello «Usalo» nelle pagine agente | completata |
 
-Ordine: F0 → F27 in sequenza.
+Ordine: F0 → F28 in sequenza.

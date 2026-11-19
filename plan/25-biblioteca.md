@@ -124,7 +124,7 @@ Fuori perimetro: biblioteca sul sito, memoria del progetto nel prompt, rilascio 
 
 ## Rilievi aperti
 
-- P2: l'Action `study.yml` va provata con `gh workflow run study.yml` dopo il prossimo merge in `main`, controllando permessi e issue creata.
+- Risolto (2026-11-19): `gh workflow run study.yml` dopo il rilascio 0.7.0, esecuzione verde in 25 s, issue #20 «Novità da studiare» creata («Niente di nuovo»).
 - P2: la voce del CHANGELOG sulla biblioteca si scrive al rilascio: il test del CHANGELOG non ammette una sezione «Non rilasciato».
 - P3: i subagent di `.claude/agents/` rimandano al file di ruolo e non vedono la biblioteca; vale solo per chi usa i subagent invece del server MCP.
 - P3: ETSI EN 301 549 V4.1.1: da verificare se e da quando è citata come norma armonizzata; D.lgs. 82/2022: periodi transitori, esenzioni e vigilanza non sono nella scheda (le schede lo dicono).

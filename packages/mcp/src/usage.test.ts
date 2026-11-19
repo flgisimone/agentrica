@@ -52,8 +52,9 @@ writeFileSync(join(outside, "fuori.jsonl"), reply("req_c", "claude-opus-5-5", op
 symlinkSync(join(outside, "fuori.jsonl"), join(dir, "link.jsonl"));
 
 test("cartella di Claude Code del progetto", () => {
-  assert.equal(claudeProjectDir("/Users/a/lavoro/agentrica", { CLAUDE_CONFIG_DIR: "/c" }), "/c/projects/-Users-a-lavoro-agentrica");
-  assert.equal(claudeProjectDir("C:\\Users\\a b\\x.y", { CLAUDE_CONFIG_DIR: "/c" }), "/c/projects/C--Users-a-b-x-y");
+  // Il separatore è quello del sistema (join): su Windows «\c\projects\…».
+  assert.equal(claudeProjectDir("/Users/a/lavoro/agentrica", { CLAUDE_CONFIG_DIR: "/c" }), join("/c", "projects", "-Users-a-lavoro-agentrica"));
+  assert.equal(claudeProjectDir("C:\\Users\\a b\\x.y", { CLAUDE_CONFIG_DIR: "/c" }), join("/c", "projects", "C--Users-a-b-x-y"));
 });
 
 test("famiglia del modello", () => {

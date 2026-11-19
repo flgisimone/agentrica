@@ -2,6 +2,18 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
 
+## 0.7.0 — 2026-11-19
+
+### Nuovo
+- Modello consigliato per ruolo, misurato sui casi di prova: Haiku per AISA-08, Sonnet per AICA-04, AIPCA-02, AISA-09 e AIBPD-05, il modello della sessione per gli altri. Lo dicono `elenca_agenti`, il testo dell'agente e il campo `model:` dei subagent copiati da `init`; la scelta resta tua.
+- Pagina «Consumo» nel pannello: token spesi per agente, modello, sessione e giorno, letti dai file di Claude Code del progetto (solo numeri), con il risparmio della cache e quello stimato del modello.
+- Biblioteca degli agenti: schede di nozioni recenti per ogni reparto, con fonte, versione e date di verifica e scadenza. Il testo dell'agente ne ha l'indice; il tool `library`, in sola lettura, restituisce una scheda del reparto dell'agente.
+- Tool `share_usage` e pulsante «Condividi i totali con Agentrica» nel pannello: dopo l'anteprima delle righe esatte, inviano al sito i totali di token degli ultimi 30 giorni per sessione, giorno, agente, modello ed effort, senza testi né nomi di file. Parte solo dopo la tua conferma; `--no-ratings` lo toglie insieme a `rate_agent`.
+
+### Cambiato
+- Regole comuni dei reparti: su un modello più piccolo, un rilievo P0 o P1 o un dubbio passano al riesame del direttore o di un revisore sul modello più grande; le nozioni datate si citano dalla biblioteca, con fonte e data.
+- README: la sezione «Messi alla prova» diventa «Mostra il tuo progetto», con la issue e il topic `agentrica` per comparire sul sito.
+
 ## 0.6.0 — 2026-11-18
 
 ### Nuovo

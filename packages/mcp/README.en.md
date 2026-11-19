@@ -15,7 +15,7 @@ The agent files are in Italian. The agent answers in the language you write in.
 - The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
 - The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
 - The server writes no files (only the [`init`](#new-project) command does, when you run it), logs nothing and has no telemetry. It connects to the internet in two cases:
-  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version; `--no-ratings` turns it off;
+  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version, or when you confirm sending your [token totals](#token-totals), and it sends only token counts per day, agent, model and effort; `--no-ratings` turns both off;
   - to the npm registry, at startup, to find out whether there is a [new version](#updating-and-uninstalling): a request with no data, npm only sees your IP address and program, as when npx downloads the package; `--no-update-check` turns it off.
 
   With `--no-ratings --no-update-check` it never connects. With `--panel` it opens a page on your computer only: see [Local panel](#local-panel).
@@ -30,7 +30,7 @@ You need Node 22 or later, with npm. The commands are the same on Mac, Windows (
 **On the whole computer (recommended)**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 install
+npx -y @agentrica/mcp@0.7.0 install
 ```
 
 It installs the package with `npm install -g` and registers it in Claude Code with `user` scope: every project you open already has Agentrica. The server starts with `node` from npm's global folder: it starts fast and also works offline. Restart Claude Code and check with `claude mcp list`.
@@ -38,13 +38,13 @@ It installs the package with `npm install -g` and registers it in Claude Code wi
 **Without installing anything**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 add
+npx -y @agentrica/mcp@0.7.0 add
 ```
 
 It registers the server started with npx (on Windows `cmd /c npx`), which downloads the package to its cache on first start. The scope is `user`, all your projects; with `--project` it writes `.mcp.json` in the current folder, to share with your team (it works on the system it was created on), with `--local` it applies to the current project and to you only. For your team, from the project folder:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 add --project
+npx -y @agentrica/mcp@0.7.0 add --project
 ```
 
 The server options (`--agents`, `--panel`, `--no-ratings`, `--no-update-check`) go at the end of `install` and `add`, which pass them to the server. Run again, they replace Agentrica's registration in the same scope. If Node 22, npm or the `claude` command are missing, they say so and print the commands to run by hand.
@@ -54,10 +54,10 @@ The version stays the one you set until you change it: role updates do not arriv
 **By hand in Claude Code**, without `install` or `add`:
 
 ```sh
-claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.6.0
+claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.7.0
 ```
 
-On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.6.0`.
+On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.7.0`.
 
 **Other MCP clients**: add the server to the client configuration, usually a JSON file like this:
 
@@ -66,7 +66,7 @@ On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/m
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.6.0"]
+      "args": ["-y", "@agentrica/mcp@0.7.0"]
     }
   }
 }
@@ -79,7 +79,7 @@ On Windows:
   "mcpServers": {
     "agentrica": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.6.0"]
+      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.7.0"]
     }
   }
 }
@@ -88,7 +88,7 @@ On Windows:
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message and the version check does not run: to rate agents add `--allow-net`, otherwise add `--no-ratings --no-update-check` at the end of the command.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.6.0
+npm install -g --ignore-scripts @agentrica/mcp@0.7.0
 npm root -g
 ```
 
@@ -123,7 +123,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 install --agents aisa,aiwda-08
+npx -y @agentrica/mcp@0.7.0 install --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -133,8 +133,10 @@ The command menu shows only the squad's prompts, and `elenca_agenti` and `agente
 | Tool | Input | Returns |
 |---|---|---|
 | `elenca_agenti` (list agents) | optional `reparto` (department: `AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent |
-| `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions |
+| `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions, with the index of the department's library |
+| `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
+| `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
 
 For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
 
@@ -157,12 +159,31 @@ You can give an agent a score from 1 to 5 and a comment on what to improve: rati
 
 How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
 
+## Token totals
+
+You can send Agentrica your project's token totals: the site adds them to other users' totals on the [token usage page](https://agentrica.vercel.app/consumo) (in Italian), next to the results measured in our trials.
+
+- **How.** Ask the agent ("send the token totals to Agentrica"): `share_usage` first shows the preview, row by row, and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly those rows. At the end of a session the agent may suggest it once, together with the rating. With `--panel` there is also the «Prepara l'anteprima» (prepare the preview) button in the Consumo view: confirming on the page counts as your yes.
+- **What is sent.** The last 30 days, at most 300 rows: for each Claude Code session, day, agent, model and effort, the input, output, cache-read and cache-write tokens, plus the package version. The agent is the Agentrica id (e.g. `AISA-02`), `sessione` for the main conversation or `altro` (other) for your own subagents, whose names are not sent; the model is `opus`, `sonnet`, `haiku` or `altro`. Each row has a key, a SHA-256 fingerprint computed on your computer: the site uses it to replace a row already sent instead of counting it twice. No text, files, paths, project name or session id.
+- **On the site** only sums by month, model and agent appear, once there are at least 10 submissions, labelled as declared by users. At most 5 submissions a day from the same network.
+- **If sending fails** the tool says so and the work goes on; nothing is stored. `--no-ratings` removes this tool too.
+
+How the totals are handled: [legal notes](https://agentrica.vercel.app/note-legali#consumo) (in Italian).
+
+## Library
+
+A model's knowledge stops at its training date. Each department has a library of cards with recent knowledge (standards, laws, releases), each one checked against an allowed source of level 1 (standards bodies, authorities, legal texts) or 2 (official vendor documentation), with version, verification date and a date by which to recheck it. For example OWASP Top 10:2025, TypeScript 7.0, the AI Act dates after the AI Omnibus, WCAG 2.2. Cards are in Italian, like the agent files.
+
+- Every agent's text contains, after the role file, the index of its department's cards; the model reads the ones the task needs with `library` and cites source and date. A card past its date is flagged for rechecking.
+- Cards ship in the package (`agents/<department>/biblioteca/`) and follow the same rules as role files: no links, HTML or commands. Source addresses live in `agents/<department>/fonti.json` and never reach the model. The server stays offline: the library opens no connection.
+- It is updated with package versions: a weekly detector, with no model, reads the sources' feeds and lists what is new; new cards go in only after the owner's review.
+
 ## Local panel
 
 With `--panel` the server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 install --panel
+npx -y @agentrica/mcp@0.7.0 install --panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
@@ -180,7 +201,7 @@ With the panel the model has two more tools:
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
-**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
+**What changes with `--panel`.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings and token totals you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The Node permission model recommended above does not apply with `--panel`, which needs the local network and `git`.
 
 **Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 
@@ -193,7 +214,7 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.6.0 init my-project --name "My project"
+npx -y @agentrica/mcp@0.7.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
@@ -206,17 +227,18 @@ Without a folder it uses the current one; without `--name` the name is the folde
 
 If even one file already exists, `init` writes nothing and lists them. Outside a git repository it makes the first commit on `main` and leaves `develop` checked out; inside one it does not commit. Then open Claude Code in the folder and ask it to open phase F0. `init` is the only command that writes files: the server stays read-only. It replaces agentic-starter, which is no longer updated.
 
-## Put to the test
+## Show your project
 
-Three agents tested on 2026-11-15 against three small projects with planted, documented defects, using `@agentrica/mcp@0.2.0 --agents <id>`, Claude Code for VS Code and Opus 5.5 (medium reasoning). One run per case, counted by hand.
+Built something with Agentrica's agents? The site can show it on the projects page, after our approval, in two ways:
 
-| Agent | Project | Defects found | False findings | Other valid findings |
-|---|---|---|---|---|
-| AISA-09 · REGULUS, Application Security | Node REST API | 6 of 6 | 0 | 2 |
-| AIWDA-08 · GACRUX, Accessibility | sign-up form | 8 of 8 | 0 | 2 |
-| AIPCA-02 · ALIOTH, GDPR | gym booking service | 7 of 7 | 0 | 3 |
+- open the [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml) issue: name, link to the public repository, a short description, departments and agents used, with your consent to publish them (the form is in Italian);
+- or add the `agentrica` topic to the public repository: it counts as a request to appear, and we show only the repository's name, description, link and owner.
 
-Limits: the defects are few, known and fairly obvious; one model and one run per case; a result like this says nothing about how an agent does on a large project. Projects, expected defects, counting rules and the agents' full reports (in Italian) are in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): you can repeat the tests.
+The description and results stay yours: we do not verify them. You can ask for removal at any time; how we handle this data is in the [legal notes](https://agentrica.vercel.app/note-legali#progetti) (in Italian). If you like, add the badge to your README:
+
+```markdown
+[![Made with Agentrica](https://img.shields.io/badge/made%20with-Agentrica-0b1020)](https://agentrica.vercel.app)
+```
 
 ## Updating and uninstalling
 

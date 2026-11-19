@@ -1,22 +1,26 @@
 #!/usr/bin/env node
-// Server MCP di Agentrica su stdio: un prompt per agente e due tool (elenca_agenti, agente).
+// Server MCP di Agentrica su stdio: un prompt per agente e tre tool in sola lettura (elenca_agenti, agente e, da F25,
+// library, che dà le schede della biblioteca del reparto; gli URL delle fonti restano in fonti.json, mai al modello).
 // Con --agents (es. --agents aisa,aiwda-08) prompt e tool vedono solo la squadra; senza, tutti gli agenti.
-// Legge solo i file di agents/ all'avvio; non scrive file e non registra dati (scrive solo init). Due connessioni:
-// l'invio di una valutazione (F20, ratings.ts), solo dopo la conferma dell'utente, e da F23 il controllo della versione
-// sul registro npm all'avvio (update.ts). --no-ratings toglie tool, modulo e promemoria; --no-update-check il controllo.
+// Legge solo i file di agents/ all'avvio; non scrive file e non registra dati (scrive solo init). Due tipi di connessione:
+// l'invio di una valutazione (F20, ratings.ts) o, da F27, dei totali di token (share.ts), solo dopo la conferma
+// dell'utente, e da F23 il controllo della versione sul registro npm all'avvio (update.ts). --no-ratings toglie i tool
+// di invio, il modulo e i promemoria; --no-update-check il controllo.
 // Da F23 la valutazione la chiede il server con il modulo dell'elicitation MCP, se il client lo supporta: quando si
 // carica un altro agente (per il precedente) e dopo 30 minuti d'uso, una volta per agente.
 // Con --panel (F14) apre anche il pannello locale su 127.0.0.1 (panel.ts), che legge plan/, audit/ e lo stato di git
 // della cartella corrente e aggiunge i tool open_panel e ask_user; le chiamate agli agenti restano solo in memoria.
 import { realpathSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { AGENTS_DIR, loadCatalog, type Department, type DepartmentCode } from "./catalog.ts";
+import { AGENTS_DIR, loadCatalog, subagentIds, type Department, type DepartmentCode } from "./catalog.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, codeName, findAgent, introLine, promptName, selectSquad, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentSummary, agentText, cardText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, RATING_FORM, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
+import { createShare, SHARE_URL, sharePreviewText, type Share } from "./share.ts";
+import { claudeProjectDir, readUsage, shareRows, type Usage } from "./usage.ts";
 import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "./update.ts";
 
 // Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
@@ -79,6 +83,24 @@ const local = (name: string, fixed: string) => {
   return url && /^http:\/\/127\.0\.0\.1:\d+\//.test(url) ? url : fixed;
 };
 const ratings: Ratings | undefined = withRatings ? createRatings({ version: VERSION, url: local("AGENTRICA_RATINGS_URL", RATINGS_URL) }) : undefined;
+const share: Share | undefined = withRatings ? createShare({ version: VERSION, url: local("AGENTRICA_USAGE_URL", SHARE_URL) }) : undefined;
+
+/**
+ * Le righe dei totali del progetto, fissate in una bozza con il codice per inviarle (tool e pannello). La cartella si
+ * legge solo qui: con il permission model di Node senza lettura del progetto restano zero righe.
+ */
+async function draftShare(share: Share) {
+  let records: Usage[] = [];
+  let agentIds = new Map<string, string>();
+  try {
+    records = (await readUsage(claudeProjectDir(realpathSync(process.cwd())))).records;
+    agentIds = subagentIds(full);
+  } catch {
+    // Lettura non permessa: nulla da inviare.
+  }
+  const { rows, omitted } = shareRows(records, agentIds, new Date().toISOString().slice(0, 10));
+  return { ...share.draft(rows), omitted };
+}
 
 // Frasi per il modello in coda alla risposta del prossimo tool di Agentrica: l'avviso di versione nuova (una volta) e
 // l'esito di un modulo di valutazione mostrato fuori da una chiamata.
@@ -95,9 +117,11 @@ if (withUpdateCheck) {
 let panel: Panel | undefined;
 if (withPanel) {
   try {
-    const panelRatings = ratings && {
+    const panelRatings = ratings && share && {
       isRated: ratings.isRated,
       rate: (input: RatingInput) => ratings.send(ratings.build(input)),
+      previewShare: () => draftShare(share),
+      confirmShare: (code: string) => share.confirm(code),
     };
     panel = await startPanel(realpathSync(process.cwd()), panelRatings, () => update);
   } catch (error) {
@@ -180,12 +204,14 @@ const server = new McpServer(
     instructions:
       `Agentrica: ${count(all.length, "agente IA", "agenti IA")} in ${count(catalog.length, "reparto", "reparti")} (${codes.join(", ")}). ` +
       "Per scegliere un agente usa elenca_agenti; per lavorare come quell'agente carica le sue istruzioni con agente. " +
+      "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${promptName(all[0]!)}; il tool agente vuole l'id, es. ${all[0]!.agent.id}.` +
       (panel
         ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina."
         : "") +
       (ratings
-        ? " Se il testo di un agente chiede di proporre la valutazione, fallo con rate_agent (una volta per agente per sessione); niente parte senza il sì dell'utente all'anteprima."
+        ? " Se il testo di un agente chiede di proporre la valutazione, fallo con rate_agent (una volta per agente per sessione); niente parte senza il sì dell'utente all'anteprima." +
+          " A fine sessione, insieme alla valutazione e una volta sola, puoi proporre di inviare i totali di token del progetto con share_usage; se l'utente rifiuta, non insistere."
         : ""),
   },
 );
@@ -238,7 +264,7 @@ server.registerTool(
   "elenca_agenti",
   {
     title: "Elenca gli agenti di Agentrica",
-    description: "Elenca gli agenti di Agentrica con id, nome in codice, ruolo e reparto. Il reparto è facoltativo.",
+    description: "Elenca gli agenti di Agentrica con id, nome in codice, ruolo, reparto e, dove è stato misurato, il modello consigliato. Il reparto è facoltativo.",
     inputSchema: { reparto: z.enum(codes).optional().describe("Sigla del reparto.") },
     annotations: READ_ONLY,
   },
@@ -248,7 +274,7 @@ server.registerTool(
       .flatMap((d) => [
         `## ${d.code} — ${d.name}`,
         d.summary,
-        ...d.agents.map((agent) => `- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`),
+        ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
         "",
       ]);
     return remind({ content: [{ type: "text", text: lines.join("\n") }] });
@@ -280,7 +306,65 @@ server.registerTool(
   },
 );
 
+const CARD_ID = z.string().regex(/^[a-z0-9][a-z0-9-]{0,59}$/, "Id di una scheda, es. owasp-top-10-2025.");
+
+server.registerTool(
+  "library",
+  {
+    title: "Schede della biblioteca di un reparto",
+    description:
+      "Restituisce le schede della biblioteca del reparto di un agente: nozioni recenti con fonte, versione e data di verifica. " +
+      "Gli id delle schede sono nella sezione «Biblioteca del reparto» delle istruzioni dell'agente (tool agente).",
+    inputSchema: {
+      id: AGENT_ID,
+      cards: z.array(CARD_ID).min(1).max(10).describe("Gli id delle schede da leggere, al più 10."),
+    },
+    annotations: READ_ONLY,
+  },
+  ({ id, cards: wanted }) => {
+    const found = findAgent(catalog, id);
+    const fail = (text: string): ToolResult => ({ isError: true, content: [{ type: "text", text }] });
+    if (!found) return fail("Agente non trovato: usa elenca_agenti per vedere gli id.");
+    const { library, code } = found.department;
+    if (library.length === 0) return fail(`Il reparto ${code} non ha ancora schede.`);
+    const unknown = wanted.filter((card) => !library.some((c) => c.id === card));
+    if (unknown.length > 0) {
+      return fail(`Schede non trovate nel reparto ${code}: ${unknown.join(", ")}. Disponibili: ${library.map((c) => c.id).join(", ")}.`);
+    }
+    const date = today();
+    const cards = [...new Set(wanted)].map((card) => cardText(library.find((c) => c.id === card)!, date));
+    return remind({ content: [{ type: "text", text: cards.join("\n\n---\n\n") }] });
+  },
+);
+
 if (ratings) registerRatingTool(ratings);
+if (share) registerShareTool(share);
+
+function registerShareTool(share: Share) {
+  server.registerTool(
+    "share_usage",
+    {
+      title: "Invia ad Agentrica i totali di token",
+      description:
+        "Invia ad Agentrica, in forma anonima, i totali di token di questo progetto negli ultimi 30 giorni (per giorno, agente, modello ed effort), " +
+        "che il sito somma a quelli degli altri utenti. In due passi: 1) senza code restituisce l'anteprima di ciò che parte e un codice; " +
+        "2) mostra l'anteprima all'utente, chiedigli se inviarla e solo dopo il suo sì richiama il tool con quel code. Non inviare mai senza il sì dell'utente.",
+      inputSchema: {
+        code: z.string().regex(/^[0-9a-f]{8}$/).optional().describe("Il codice dell'anteprima, solo dopo il sì dell'utente (secondo passo)."),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    },
+    async ({ code }) => {
+      if (code) {
+        const result = await share.confirm(code);
+        if (!result.ok) return { isError: true, content: [{ type: "text", text: result.message }] };
+        return { content: [{ type: "text", text: `Totali inviati ad Agentrica (${result.rows} righe), grazie. Dillo all'utente.` }] };
+      }
+      const draft = await draftShare(share);
+      return { content: [{ type: "text", text: sharePreviewText(draft.code, draft.payload, draft.omitted) }] };
+    },
+  );
+}
 
 function registerRatingTool(ratings: Ratings) {
   server.registerTool(

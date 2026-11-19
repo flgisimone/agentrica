@@ -1,0 +1,64 @@
+# Modulo «Mostra il tuo progetto» (F26). Le etichette dei campi le legge `npm run projects` nel repository del sito
+# (FORM in src/lib/projects.ts di agentrica-site): se ne cambi una, cambiala anche lì.
+name: Mostra il tuo progetto
+description: Chiedi di mostrare sul sito di Agentrica un progetto pubblico fatto con i suoi agenti.
+title: "Progetto: "
+labels: [progetto]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Il progetto compare nella pagina dei progetti del sito solo dopo la nostra approvazione. Questa issue è pubblica:
+        non scrivere dati di altre persone. Descrizione e risultati restano tuoi e non li verifichiamo. Come trattiamo
+        questi dati: https://agentrica.vercel.app/note-legali#progetti
+  - type: input
+    attributes:
+      label: Nome del progetto
+      description: Al massimo 60 caratteri.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Link al repository
+      description: Un repository pubblico di GitHub, es. https://github.com/tuo-nome/tuo-progetto
+      placeholder: https://github.com/
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Descrizione
+      description: Cosa fa il progetto e come hai usato gli agenti. Al massimo 280 caratteri, testo semplice, senza link.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Reparti usati
+      multiple: true
+      options:
+        - AIBPD — Business & Product Development
+        - AICA — Cybersecurity
+        - AIPCA — Privacy & Compliance
+        - AISA — Software
+        - AIWDA — Web Design
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Agenti usati
+      description: Facoltativo. Gli id separati da virgole, es. AISA-02, AIWDA-08 (al massimo 10).
+  - type: input
+    attributes:
+      label: Versione di Agentrica
+      description: Facoltativo, es. 0.6.0
+  - type: input
+    attributes:
+      label: Nome da mostrare
+      description: Facoltativo, al massimo 40 caratteri. Se lo lasci vuoto mostriamo il tuo handle di GitHub.
+  - type: checkboxes
+    attributes:
+      label: Consenso e licenza
+      options:
+        - label: Acconsento a che Agentrica pubblichi sul suo sito i dati di questo modulo (nome da mostrare o handle, nome, link, descrizione, reparti, agenti, versione) e la data di approvazione, finché non chiedo di toglierli.
+          required: true
+        - label: Concedo ad Agentrica, senza compenso, il permesso di mostrare sul sito nome e descrizione del progetto finché non chiedo di toglierli, e dichiaro di poterlo fare.
+          required: true

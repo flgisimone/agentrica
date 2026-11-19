@@ -1,4 +1,4 @@
-// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer e i voti a /api/rate.
+// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer, i voti a /api/rate e, da F27, i totali di token a /api/share.
 // I dati del progetto entrano nel DOM solo come testo (textContent), mai come HTML.
 "use strict";
 
@@ -325,8 +325,120 @@ function renderCounts({ project, questions }) {
   $("count-rilievi").parentElement.setAttribute("aria-label", `Rilievi, ${findings} aperti`);
 }
 
+// Consumo (F24): tabelle con una barra per riga, così grafico e tabella equivalente sono la stessa cosa.
+// I token sono misurati; i dollari sono equivalenti ai prezzi API del listino; il risparmio del modello è una stima.
+const nf = new Intl.NumberFormat("it-IT");
+const tokens = (n) => (n >= 1e6 ? `${(n / 1e6).toLocaleString("it-IT", { maximumFractionDigits: 1 })} M` : n >= 1e3 ? `${Math.round(n / 1e3)} k` : nf.format(n));
+const usd = (n) => n.toLocaleString("it-IT", { style: "currency", currency: "USD", maximumFractionDigits: n < 1 ? 3 : 2 });
+const pct = (n) => `${Math.round(n * 100)}%`;
+const spent = (t) => t.totalInput + t.output;
+
+function tile(label, value, note) {
+  return el("div", { class: "tile" }, el("span", { class: "tile-label" }, label), el("strong", { class: "tile-value" }, value), note && el("span", { class: "tile-note" }, note));
+}
+
+// La CSP del pannello blocca gli attributi style: la larghezza passa dal CSSOM, che è permesso.
+function bar(share) {
+  const node = el("span", { class: "bar", "aria-hidden": "true" });
+  node.style.setProperty("--w", `${(share * 100).toFixed(1)}%`);
+  return node;
+}
+
+function usageTable(rows, label, keyLabel) {
+  if (rows.length === 0) return empty("Nessun dato.");
+  const max = Math.max(...rows.map((r) => spent(r.totals)), 1);
+  return table(
+    [keyLabel, "Token spesi", "Dalla cache", "Costo equivalente", "Risparmio cache", "Risparmio modello (stima)"],
+    rows.map((r) =>
+      el(
+        "tr",
+        {},
+        el("th", { scope: "row", class: "mono" }, label(r.key)),
+        el(
+          "td",
+          { class: "bar-cell" },
+          bar(spent(r.totals) / max),
+          el("span", { class: "bar-value" }, tokens(spent(r.totals))),
+        ),
+        el("td", {}, pct(r.totals.cacheShare)),
+        el("td", {}, usd(r.totals.costUsd)),
+        el("td", {}, usd(r.totals.cacheSavingUsd)),
+        el("td", {}, r.totals.modelSavingUsd > 0 ? usd(r.totals.modelSavingUsd) : "—"),
+      ),
+    ),
+  );
+}
+
+async function renderUsage() {
+  const response = await fetch("/api/usage").catch(() => null);
+  const report = response && response.ok ? await response.json() : null;
+  if (!report) {
+    $("usage-summary").replaceChildren(empty("Non riesco a leggere il consumo: la sessione è ancora aperta?"));
+    return;
+  }
+  const t = report.total;
+  $("usage-summary").replaceChildren(
+    t.requests === 0
+      ? empty("Nessun file di Claude Code per questo progetto: il consumo si vede solo con Claude Code.")
+      : el(
+          "div",
+          { class: "tiles" },
+          tile("Token spesi", tokens(spent(t)), `${nf.format(t.requests)} risposte, misurato`),
+          tile("Letti dalla cache", pct(t.cacheShare), "dei token in ingresso, misurato"),
+          tile("Risparmio della cache", usd(t.cacheSavingUsd), "misurato, in dollari equivalenti"),
+          tile("Risparmio del modello", t.modelSavingUsd > 0 ? usd(t.modelSavingUsd) : "—", "stima: gli stessi token al prezzo di Opus"),
+        ),
+    el("p", { class: "hint" }, `Dollari equivalenti ai prezzi API del ${report.prices.date}; con l'abbonamento contano i token, che consumano i limiti di cinque ore e settimanali.`),
+    ...(report.skipped > 0 ? [el("p", { class: "hint" }, `${report.skipped} file non letti (link simbolici o file troppo grandi).`)] : []),
+  );
+  const short = (key) => (/^[0-9a-f-]{36}$/.test(key) ? key.slice(0, 8) : key);
+  $("usage-day").replaceChildren(usageTable(report.byDay, (k) => k, "Giorno"));
+  $("usage-agent").replaceChildren(usageTable(report.byAgent, (k) => (k === "sessione" ? "conversazione principale" : k), "Agente"));
+  $("usage-model").replaceChildren(usageTable(report.byModel, (k) => k, "Modello"));
+  $("usage-session").replaceChildren(usageTable(report.bySession.slice(0, 15), short, "Sessione"));
+}
+
+// Totali di token (F27): l'anteprima mostra le righe esatte; «Conferma l'invio» manda solo il codice dell'anteprima.
+const post = (path, body) =>
+  fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    .then((r) => r.json())
+    .catch(() => null);
+
+async function previewShare() {
+  const preview = await post("/api/share/preview", {});
+  if (!preview) {
+    $("share-body").replaceChildren(el("p", { class: "error", role: "alert" }, "Il pannello non risponde: la sessione è ancora aperta?"));
+    return;
+  }
+  if (preview.rows.length === 0) {
+    $("share-body").replaceChildren(empty("Nessun consumo negli ultimi 30 giorni: non c'è nulla da inviare."));
+    return;
+  }
+  const status = el("p", { role: "status" });
+  const confirm = el("button", { type: "button", class: "send" }, "Conferma l'invio");
+  confirm.addEventListener("click", async () => {
+    confirm.disabled = true;
+    const result = await post("/api/share", { code: preview.code });
+    status.className = result?.ok ? "sent" : "error";
+    status.textContent = result?.ok ? `Totali inviati (${result.rows} righe), grazie.` : (result?.message ?? "Il pannello non risponde: la sessione è ancora aperta?");
+  });
+  $("share-body").replaceChildren(
+    el("p", {}, `${preview.rows.length} righe degli ultimi 30 giorni, versione ${preview.version}. Partono esattamente queste:`),
+    table(
+      ["Giorno", "Agente", "Modello", "Effort", "Ingresso", "Uscita", "Letti dalla cache", "Scritti in cache"],
+      preview.rows.map((r) =>
+        el("tr", {}, el("th", { scope: "row", class: "mono" }, r.day), ...[r.agent, r.model, r.effort].map((v) => el("td", {}, v)), ...[r.input, r.output, r.cacheRead, r.cacheWrite].map((v) => el("td", {}, nf.format(v)))),
+      ),
+    ),
+    ...(preview.omitted > 0 ? [el("p", { class: "hint" }, `${preview.omitted} righe più vecchie restano fuori: al più 300 per invio.`)] : []),
+    el("p", { class: "hint" }, preview.notice),
+    confirm,
+    status,
+  );
+}
+
 // Una vista per volta, scelta dall'hash: avanti e indietro del browser funzionano senza toccare il server.
-const VIEWS = ["sessione", "piano", "rilievi"];
+const VIEWS = ["sessione", "piano", "rilievi", "consumo"];
 
 function showView(moveFocus) {
   const name = location.hash.slice(1);
@@ -337,6 +449,8 @@ function showView(moveFocus) {
     else tab.removeAttribute("aria-current");
   }
   if (moveFocus) document.querySelector(`#view-${current} h1`).focus();
+  if (current === "consumo") renderUsage();
+  if (state) $("share").hidden = !state.rating;
 }
 
 function render() {
@@ -349,6 +463,7 @@ function render() {
   renderPhases(state);
   renderFilters();
   renderFindings(state);
+  $("share").hidden = !state.rating;
 }
 
 async function refresh() {
@@ -374,6 +489,8 @@ function connect() {
 }
 
 window.addEventListener("hashchange", () => showView(true));
+$("usage-refresh").addEventListener("click", renderUsage);
+$("share-preview").addEventListener("click", previewShare);
 showView(false);
 connect();
 refresh();

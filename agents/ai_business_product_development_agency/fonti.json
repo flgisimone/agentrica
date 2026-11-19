@@ -1,0 +1,172 @@
+[
+  {
+    "id": "istat",
+    "name": "Istat",
+    "level": 1,
+    "url": "https://www.istat.it/",
+    "domains": [
+      "istat.it"
+    ],
+    "update": "rss",
+    "feed": "https://www.istat.it/feed/",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "eurostat",
+    "name": "Eurostat",
+    "level": 1,
+    "url": "https://ec.europa.eu/eurostat",
+    "domains": [
+      "ec.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "ocse",
+    "name": "OCSE (OECD)",
+    "level": 1,
+    "url": "https://www.oecd.org/",
+    "domains": [
+      "oecd.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "banca-italia",
+    "name": "Banca d'Italia",
+    "level": 1,
+    "url": "https://www.bancaditalia.it/",
+    "domains": [
+      "bancaditalia.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "agenzia-entrate",
+    "name": "Agenzia delle Entrate",
+    "level": 1,
+    "url": "https://www.agenziaentrate.gov.it/",
+    "domains": [
+      "agenziaentrate.gov.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "normattiva",
+    "name": "Normattiva (Codice del consumo)",
+    "level": 1,
+    "url": "https://www.normattiva.it/",
+    "domains": [
+      "normattiva.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "eur-lex",
+    "name": "EUR-Lex (diritto dei consumatori dell'Unione)",
+    "level": 1,
+    "url": "https://eur-lex.europa.eu/",
+    "domains": [
+      "eur-lex.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "agcm",
+    "name": "Autorità garante della concorrenza e del mercato (AGCM)",
+    "level": 1,
+    "url": "https://www.agcm.it/",
+    "domains": [
+      "agcm.it"
+    ],
+    "update": "rss",
+    "feed": "https://www.agcm.it/rss/atom-feed",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "agcom",
+    "name": "Autorità per le garanzie nelle comunicazioni (AGCOM)",
+    "level": 1,
+    "url": "https://www.agcom.it/",
+    "domains": [
+      "agcom.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "commissione-ue",
+    "name": "Commissione europea",
+    "level": 1,
+    "url": "https://commission.europa.eu/index_en",
+    "domains": [
+      "commission.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "registro-imprese",
+    "name": "Registro delle imprese (bilanci e atti depositati)",
+    "level": 1,
+    "url": "https://www.registroimprese.it/",
+    "domains": [
+      "registroimprese.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "sec-edgar",
+    "name": "SEC EDGAR (documenti depositati)",
+    "level": 1,
+    "url": "https://www.sec.gov/edgar/search/",
+    "domains": [
+      "sec.gov"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "statista",
+    "name": "Statista",
+    "level": "citata",
+    "url": "https://www.statista.com/",
+    "domains": [
+      "statista.com"
+    ],
+    "update": "page",
+    "access": "pagamento",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "gartner",
+    "name": "Gartner",
+    "level": "citata",
+    "url": "https://www.gartner.com/",
+    "domains": [
+      "gartner.com"
+    ],
+    "update": "page",
+    "access": "pagamento",
+    "checked": "2026-11-19"
+  }
+]

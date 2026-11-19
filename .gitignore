@@ -15,6 +15,9 @@ dist/
 
 # env: mai in git
 .env*
+# Caso di prova AICA-04 (F24): il .env finto è parte del difetto da trovare.
+!examples/progetti/config-deploy/.env
+!examples/progetti/config-deploy/.env.example
 
 # indice locale di tokensave
 .tokensave/

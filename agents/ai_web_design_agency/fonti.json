@@ -1,0 +1,174 @@
+[
+  {
+    "id": "w3c-wai",
+    "name": "W3C Web Accessibility Initiative (WCAG, ARIA APG)",
+    "level": 1,
+    "url": "https://www.w3.org/WAI/",
+    "domains": [
+      "w3.org"
+    ],
+    "update": "rss",
+    "feed": "https://www.w3.org/WAI/feed.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "etsi-en-301-549",
+    "name": "ETSI EN 301 549",
+    "level": 1,
+    "url": "https://www.etsi.org/deliver/etsi_en/301500_301599/301549/",
+    "domains": [
+      "etsi.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "eur-lex",
+    "name": "EUR-Lex (European Accessibility Act)",
+    "level": 1,
+    "url": "https://eur-lex.europa.eu/",
+    "domains": [
+      "eur-lex.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "normattiva",
+    "name": "Normattiva (Legge Stanca, D.lgs. 82/2022)",
+    "level": 1,
+    "url": "https://www.normattiva.it/",
+    "domains": [
+      "normattiva.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "agid",
+    "name": "AgID, Agenzia per l'Italia digitale",
+    "level": 1,
+    "url": "https://www.agid.gov.it/",
+    "domains": [
+      "agid.gov.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "designers-italia",
+    "name": "Designers Italia",
+    "level": 2,
+    "url": "https://designers.italia.it/",
+    "domains": [
+      "italia.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "mdn",
+    "name": "MDN Web Docs",
+    "level": 2,
+    "url": "https://developer.mozilla.org/",
+    "domains": [
+      "mozilla.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "material-design",
+    "name": "Material Design (solo per Android e Material)",
+    "level": 2,
+    "url": "https://m3.material.io/",
+    "domains": [
+      "material.io"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "apple-hig",
+    "name": "Apple Human Interface Guidelines (solo per le piattaforme Apple)",
+    "level": 2,
+    "url": "https://developer.apple.com/design/human-interface-guidelines/",
+    "domains": [
+      "apple.com"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nngroup",
+    "name": "Nielsen Norman Group",
+    "level": 3,
+    "url": "https://www.nngroup.com/",
+    "domains": [
+      "nngroup.com"
+    ],
+    "update": "rss",
+    "feed": "https://www.nngroup.com/feed/rss/",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "webaim",
+    "name": "WebAIM",
+    "level": 3,
+    "url": "https://webaim.org/",
+    "domains": [
+      "webaim.org"
+    ],
+    "update": "rss",
+    "feed": "https://webaim.org/blog/feed",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "web-dev",
+    "name": "web.dev",
+    "level": 3,
+    "url": "https://web.dev/",
+    "domains": [
+      "web.dev"
+    ],
+    "update": "rss",
+    "feed": "https://web.dev/static/blog/feed.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "govuk-design-system",
+    "name": "GOV.UK Design System",
+    "level": 3,
+    "url": "https://design-system.service.gov.uk/",
+    "domains": [
+      "service.gov.uk"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "baymard",
+    "name": "Baymard Institute",
+    "level": "citata",
+    "url": "https://baymard.com/",
+    "domains": [
+      "baymard.com"
+    ],
+    "update": "page",
+    "access": "pagamento",
+    "checked": "2026-11-19"
+  }
+]

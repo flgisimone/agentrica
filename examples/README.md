@@ -2,12 +2,17 @@
 
 Progetti piccoli con difetti noti, per vedere se un agente di Agentrica li trova e se inventa rilievi. Ogni caso ha un progetto, un agente, un compito e l'elenco dei difetti attesi.
 
+Sono una prova interna: servono a confrontare modelli, livelli di ragionamento (effort) e versioni dei file di ruolo sugli stessi casi, prima di cambiare il modello consigliato di un agente o il suo testo (F24).
+
 | Caso | Agente | Progetto |
 |---|---|---|
 | [aisa-09-api-note](casi/aisa-09-api-note.md) | AISA-09 · REGULUS, Application Security | [api-note](progetti/api-note/) |
 | [aiwda-08-form-iscrizione](casi/aiwda-08-form-iscrizione.md) | AIWDA-08 · GACRUX, Accessibility | [form-iscrizione](progetti/form-iscrizione/) |
 | [aipca-02-prenotazioni-palestra](casi/aipca-02-prenotazioni-palestra.md) | AIPCA-02 · ALIOTH, GDPR | [prenotazioni-palestra](progetti/prenotazioni-palestra/) |
 | [aisa-09-api-fatture](casi/aisa-09-api-fatture.md) | AISA-09 · REGULUS, Application Security | [api-fatture](progetti/api-fatture/) |
+| [aibpd-05-requisiti-abbonamenti](casi/aibpd-05-requisiti-abbonamenti.md) | AIBPD-05 · ALGIEBA, Business Analyst | [requisiti-abbonamenti](progetti/requisiti-abbonamenti/) |
+| [aica-04-config-deploy](casi/aica-04-config-deploy.md) | AICA-04 · ALNILAM, Cloud Security | [config-deploy](progetti/config-deploy/) |
+| [aisa-08-calcolo-sconti](casi/aisa-08-calcolo-sconti.md) | AISA-08 · DENEB, QA | [calcolo-sconti](progetti/calcolo-sconti/) |
 
 I progetti sono difettosi di proposito: non usarli come modello e non metterli in rete.
 
@@ -35,6 +40,23 @@ I progetti sono difettosi di proposito: non usarli come modello e non metterli i
 
 4. Se l'agente propone di correggere, rispondi di no: si valuta solo il rapporto.
 5. Salva l'output intero in `risultati/<data>-<caso>.md` con data, versione del pacchetto, client e modello.
+
+## Confronto di modelli (F24)
+
+Per confrontare configurazioni si esegue ogni caso almeno due volte per configurazione, con lo stesso testo dell'agente e una copia nuova del progetto per ogni esecuzione.
+
+1. Il testo dell'agente, con il compito della scheda, è quello che dà il server MCP:
+
+   ```sh
+   npm run -s agent-text -- aisa-09 "<compito della scheda>" > istruzioni.md
+   ```
+
+2. In Claude Code un subagent per esecuzione riceve quel testo (dal file, fuori dalla copia del progetto), il percorso della copia e il modello e l'effort della configurazione (`model` ed `effort` del tool Agent). Deve lavorare solo nella copia, non correggere nulla e consegnare il rapporto.
+3. I token di ogni esecuzione si leggono dal file del subagent in `~/.claude/projects/<progetto>/<sessione>/subagents/`, una volta per `requestId` (Claude Code scrive una riga per blocco con lo stesso `usage`): ingresso, cache letta e scritta, uscita, ragionamento.
+4. Il conteggio lo fa un valutatore unico con le stesse istruzioni per tutte le configurazioni, sulle regole qui sotto; chi esegue la prova ne controlla un campione.
+5. Il risultato va in `risultati/<data>-<descrizione>.md` con data, versione del pacchetto, client, modello ed effort di ogni configurazione, conteggi per esecuzione, token per esecuzione e osservazioni. Il primo è [2026-11-19-modelli.md](risultati/2026-11-19-modelli.md).
+
+La soglia per consigliare un modello più piccolo (decisa in F24): sugli stessi casi trova almeno i difetti di Opus meno uno, non ha falsi in più e rispetta il formato dei rilievi.
 
 ## Come si conta
 

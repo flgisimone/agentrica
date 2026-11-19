@@ -9,7 +9,7 @@ Il repository ha due obiettivi, in quest'ordine:
 1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
 2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
 
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.6.0 install` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
+Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.7.0 install` (vedi [packages/mcp/README.md](packages/mcp/README.md)).
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
@@ -31,10 +31,11 @@ Agentrica non ha persone, clienti o casi di successo: il sito non ne inventa.
 
 ```
 agentrica/
-├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto)
+├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto, biblioteca/ e fonti.json)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
 ├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp con l'export ./catalog: vedi packages/mcp/README.md
 ├── plan/                # decisioni e fasi del progetto
+├── scripts/             # comandi da terminale: stats, ratings, agent-text, study (rilevatore della biblioteca)
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
 ```
@@ -69,6 +70,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F21 | Reputazione pubblica degli agenti: statistiche, classifiche e commenti moderati sul sito, sopra le soglie | completata |
 | F22 | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
 | F23 | Avvisi e installazione: `install` e `add` su Mac, Windows e Linux, valutazione con il modulo del client, avviso di versione nuova, reparto nei comandi, CHANGELOG (0.6.0) | completata |
+| F24 | Modelli per ruolo misurati sui casi di prova e consumo di token nel pannello | completata |
+| F25 | Biblioteca degli agenti: schede con fonte e data, tool `library`, rilevatore settimanale delle novità | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

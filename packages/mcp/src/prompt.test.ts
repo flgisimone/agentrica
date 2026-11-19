@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, findAgent, introLine, promptName, selectSquad, VERSION } from "./prompt.ts";
+import { agentText, cardText, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -129,4 +129,71 @@ test("CHANGELOG.md: la prima voce è VERSION, ogni voce «## x.y.z — AAAA-MM-G
   assert.equal(versions[0]!.split(" ")[0], VERSION);
   assert.equal(versions.at(-1)!.split(" ")[0], "0.1.0");
   for (const [, kind] of text.matchAll(/^### (.+)$/gm)) assert.ok(["Nuovo", "Cambiato", "Corretto", "Incompatibile"].includes(kind!), kind!);
+});
+
+// F24-08: il testo di un agente entra nel contesto a ogni uso. Da F25 la soglia è di 10 KB (decisione dell'utente del
+// 2026-11-19): l'indice della biblioteca aggiunge circa 0,8 KB e circa 60 byte per scheda. Chi la supera la cambia con una decisione.
+test("agentText: nessun agente supera i 10 KB, con la proposta di valutazione e la biblioteca", () => {
+  const big = selectSquad(catalog).flatMap((department) =>
+    department.agents.map((agent) => ({ id: agent.id, bytes: Buffer.byteLength(agentText({ department, agent }, undefined, { ratings: true })) })),
+  );
+  assert.equal(big.length, 56);
+  assert.deepEqual(big.filter((a) => a.bytes > 10_240), []);
+});
+
+// F24-06: il modello consigliato viene dal catalogo, solo per i ruoli misurati; i subagent di .claude/agents/ (copiati
+// anche da init) hanno lo stesso modello del catalogo per il loro file di ruolo.
+test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell'agente", () => {
+  const qa = findAgent(catalog, "aisa-08")!;
+  assert.equal(qa.agent.model, "haiku");
+  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di Agentrica\. Se il client lo permette/);
+  const architect = findAgent(catalog, "aisa-02")!;
+  assert.equal(architect.agent.model, "inherit");
+  assert.equal(modelAdvice(architect.agent), undefined);
+  assert.doesNotMatch(agentText(architect), /Modello consigliato/);
+  const measured = catalog.flatMap((d) => d.agents.filter((a) => a.model !== "inherit").map((a) => `${a.id}:${a.model}`));
+  assert.deepEqual(measured, ["AIBPD-05:sonnet", "AICA-04:sonnet", "AIPCA-02:sonnet", "AISA-08:haiku", "AISA-09:sonnet"]);
+});
+
+test("subagent: model: uguale al modello consigliato del catalogo per il file di ruolo", () => {
+  const dir = join(import.meta.dirname, "..", "..", "..", ".claude", "agents");
+  const files = readdirSync(dir, { recursive: true, encoding: "utf8" }).filter((f) => f.endsWith(".md"));
+  assert.equal(files.length, 56);
+  for (const file of files) {
+    const text = readFileSync(join(dir, file), "utf8");
+    const source = /`(agents\/[^`]+\/\d\d-[^`]+\.md)`/.exec(text)?.[1];
+    const agent = catalog.flatMap((d) => d.agents).find((a) => a.source === source);
+    assert.ok(agent, `${file}: file di ruolo non trovato`);
+    assert.equal(/^model: (\w+)$/m.exec(text)?.[1], agent.model, file);
+  }
+});
+
+test("libraryIndex: una riga per scheda del reparto, ruolo e scadenza segnati, prima del compito", () => {
+  const found = findAgent(catalog, "AISA-08")!;
+  const [heading, intro, list] = libraryIndex(found, "2026-11-19");
+  assert.equal(heading, "## Biblioteca del reparto");
+  assert.match(intro!, /tool library \(id AISA-08/);
+  assert.equal(list!.split("\n").length, found.department.library.length);
+  assert.match(list!, /^- typescript-7 \*: TypeScript 7\.0 \(7\.0, 2026-11-19\)$/m);
+  assert.match(list!, /^- mcp-2026-07-28: [^\n]*\(2026-07-28, 2026-11-19\)$/m);
+  const later = libraryIndex(found, "2030-01-01")[2]!;
+  assert.match(later, /, 2026-11-19, da ricontrollare\)$/m);
+  const text = agentText(found, "Rivedi i test.", { date: "2026-11-19" });
+  assert.ok(text.indexOf("## Biblioteca del reparto") > text.indexOf("## Ruolo:"));
+  assert.ok(text.indexOf("## Biblioteca del reparto") < text.indexOf("## Compito"));
+  const empty = { ...found, department: { ...found.department, library: [] } };
+  assert.deepEqual(libraryIndex(empty, "2026-11-19"), []);
+});
+
+test("cardText: fonte con livello e date, niente URL, avviso se scaduta", () => {
+  for (const department of catalog) {
+    for (const card of department.library) {
+      const text = cardText(card, card.verified);
+      assert.ok(text.startsWith(`# ${card.title}\n\nFonte: ${card.source.name} (livello ${card.source.level}), versione ${card.version}.`), card.path);
+      assert.ok(!/https?:|www\./.test(text), card.path);
+      assert.ok(!text.includes("Scaduta"), card.path);
+    }
+  }
+  const card = catalog[0]!.library[0]!;
+  assert.match(cardText(card, "2099-01-01"), /Scaduta: verificala sulla fonte/);
 });

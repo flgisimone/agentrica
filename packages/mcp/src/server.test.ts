@@ -50,14 +50,29 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
   assert.match(content.text, /## Compito\n\nRivedi i confini\.\n\n## Valutazione\n\n.*rate_agent, id AISA-02.*\n$/);
 });
 
-test("due tool in sola lettura e rate_agent, l'unico che apre una connessione", async () => {
+test("tre tool in sola lettura, rate_agent e share_usage, gli unici che aprono una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "rate_agent"]);
-  for (const t of tools.filter((t) => t.name !== "rate_agent")) assert.equal(t.annotations?.readOnlyHint, true, t.name);
-  const rate = tools.find((t) => t.name === "rate_agent")!;
-  assert.equal(rate.annotations?.readOnlyHint, false);
-  assert.equal(rate.annotations?.openWorldHint, true);
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library", "rate_agent", "share_usage"]);
+  const sending = ["rate_agent", "share_usage"];
+  for (const t of tools.filter((t) => !sending.includes(t.name))) assert.equal(t.annotations?.readOnlyHint, true, t.name);
+  for (const name of sending) {
+    const tool = tools.find((t) => t.name === name)!;
+    assert.equal(tool.annotations?.readOnlyHint, false, name);
+    assert.equal(tool.annotations?.openWorldHint, true, name);
+  }
   assert.match(client.getInstructions() ?? "", /rate_agent/);
+  assert.match(client.getInstructions() ?? "", /share_usage/);
+});
+
+test("share_usage: senza file di Claude Code nulla da inviare; un codice sconosciuto è un errore", async () => {
+  // Il server non può leggere la cartella di Claude Code (--permission solo sul clone): nessuna riga.
+  const preview = await client.callTool({ name: "share_usage", arguments: {} });
+  assert.notEqual(preview.isError, true);
+  assert.match(text(preview), /non c'è nulla da inviare/);
+  const unknown = await client.callTool({ name: "share_usage", arguments: { code: "00000000" } });
+  assert.equal(unknown.isError, true);
+  assert.match(text(unknown), /scaduto o già usato/);
+  assert.equal((await client.callTool({ name: "share_usage", arguments: { code: "NO" } })).isError, true);
 });
 
 test("rate_agent: anteprima con codice, poi invio; senza rete un errore chiaro e il lavoro continua", async () => {
@@ -85,7 +100,7 @@ test("rate_agent: anteprima con codice, poi invio; senza rete un errore chiaro e
   assert.notEqual((await client.callTool({ name: "agente", arguments: { id: "aisa-02" } })).isError, true);
 });
 
-test("--no-ratings: niente rate_agent, niente proposta di valutazione", async () => {
+test("--no-ratings: niente rate_agent né share_usage, niente proposta di valutazione o di invio", async () => {
   const quiet = new Client({ name: "test-senza-voti", version: "0" });
   await quiet.connect(
     new StdioClientTransport({
@@ -97,8 +112,9 @@ test("--no-ratings: niente rate_agent, niente proposta di valutazione", async ()
   );
   try {
     const { tools } = await quiet.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library"]);
     assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
+    assert.ok(!(quiet.getInstructions() ?? "").includes("share_usage"));
     assert.ok(!text(await quiet.callTool({ name: "agente", arguments: { id: "aisa-02" } })).includes("rate_agent"));
   } finally {
     await quiet.close();
@@ -132,6 +148,27 @@ test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", as
   }
 });
 
+test("library: le schede del reparto con fonte e data, mai URL; errori chiari per id sconosciuti", async () => {
+  const agent = text(await client.callTool({ name: "agente", arguments: { id: "AICA-03" } }));
+  assert.match(agent, /## Biblioteca del reparto\n\n.*tool library \(id AICA-03/);
+  assert.match(agent, /^- owasp-top-10-2025 \*: OWASP Top 10:2025 \(2025, \d{4}-\d{2}-\d{2}/m);
+  const ok = await client.callTool({ name: "library", arguments: { id: "aica-03", cards: ["owasp-top-10-2025", "cvss-4"] } });
+  assert.notEqual(ok.isError, true);
+  assert.match(text(ok), /^# OWASP Top 10:2025\n\nFonte: OWASP Top 10 \(livello 1\), versione 2025\. Verificata il /);
+  assert.match(text(ok), /\n---\n\n# CVSS v4\.0\n/);
+  assert.match(text(ok), /## Nozione\n\n.*## Come si applica\n\n/s);
+  assert.ok(!/https?:|www\./.test(text(ok)));
+  const other = await client.callTool({ name: "library", arguments: { id: "AISA-02", cards: ["owasp-top-10-2025"] } });
+  assert.equal(other.isError, true);
+  assert.match(text(other), /Schede non trovate nel reparto AISA: owasp-top-10-2025\. Disponibili: mcp-2026-07-28, /);
+  const agentMissing = await client.callTool({ name: "library", arguments: { id: "AISA-99", cards: ["x"] } });
+  assert.match(text(agentMissing), /Agente non trovato/);
+  for (const cards of [[], ["../fonti"], ["A"], Array(11).fill("cvss-4")]) {
+    const bad = await client.callTool({ name: "library", arguments: { id: "AICA-03", cards } });
+    assert.equal(bad.isError, true, JSON.stringify(cards));
+  }
+});
+
 test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
   const ok = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_000) } });
   assert.notEqual(ok.isError, true);
@@ -146,10 +183,10 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "update.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
-    for (const file of ["index.ts", "departments.ts", "markdown.ts"]) {
+    for (const file of ["index.ts", "departments.ts", "markdown.ts", "library.ts", "content.ts"]) {
       copyFileSync(join(catalogSrc, file), join(root, "packages", "catalog", "src", file));
     }
     // "junction": su Windows un link a una cartella senza permessi di amministratore; altrove si ignora.

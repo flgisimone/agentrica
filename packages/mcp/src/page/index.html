@@ -19,6 +19,7 @@
         <a href="#sessione" data-view="sessione">Sessione <span class="count" id="count-sessione"></span></a>
         <a href="#piano" data-view="piano">Piano</a>
         <a href="#rilievi" data-view="rilievi">Rilievi <span class="count" id="count-rilievi"></span></a>
+        <a href="#consumo" data-view="consumo">Consumo</a>
       </nav>
     </header>
     <div id="announce" class="sr-only" aria-live="polite"></div>
@@ -62,6 +63,38 @@
           <h2 id="h-findings">Rilievi aperti</h2>
           <div id="filters" class="filters" role="group" aria-label="Filtra per reparto"></div>
           <div id="findings"></div>
+        </section>
+      </div>
+
+      <div id="view-consumo" class="view" data-view="consumo" hidden>
+        <h1 class="sr-only" tabindex="-1">Consumo</h1>
+        <section aria-labelledby="h-usage" class="card">
+          <h2 id="h-usage">Token del progetto</h2>
+          <p class="hint" id="usage-source">I numeri vengono dai file che Claude Code salva per questo progetto: si leggono solo i conteggi dei token, il modello e il giorno, mai i testi delle conversazioni.</p>
+          <div id="usage-summary"></div>
+          <button type="button" class="refresh" id="usage-refresh">Aggiorna</button>
+        </section>
+        <section aria-labelledby="h-share" class="card" id="share" hidden>
+          <h2 id="h-share">Condividi i totali con Agentrica</h2>
+          <p class="hint">Il sito di Agentrica mostra la somma dei token di chi li condivide. Prima vedi l'anteprima di ciò che parte; niente parte senza la tua conferma.</p>
+          <button type="button" class="send" id="share-preview">Prepara l'anteprima</button>
+          <div id="share-body"></div>
+        </section>
+        <section aria-labelledby="h-usage-day" class="card">
+          <h2 id="h-usage-day">Per giorno</h2>
+          <div id="usage-day"></div>
+        </section>
+        <section aria-labelledby="h-usage-agent" class="card">
+          <h2 id="h-usage-agent">Per agente</h2>
+          <div id="usage-agent"></div>
+        </section>
+        <section aria-labelledby="h-usage-model" class="card">
+          <h2 id="h-usage-model">Per modello</h2>
+          <div id="usage-model"></div>
+        </section>
+        <section aria-labelledby="h-usage-session" class="card">
+          <h2 id="h-usage-session">Per sessione</h2>
+          <div id="usage-session"></div>
         </section>
       </div>
     </main>

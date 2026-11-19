@@ -85,13 +85,20 @@ test("parseRate: agente usato, voto intero 1–5, commento fino a 1000 caratteri
 
 test("valutazioni nel pannello: stato, difese e invio con le valutazioni del server", async () => {
   const sent: RateInput[] = [];
+  const shared: string[] = [];
   const rated = new Set<string>();
+  const shareRow = { key: "a".repeat(64), day: "2026-11-18", agent: "AISA-02", model: "opus" as const, effort: "medium", input: 1, output: 2, cacheRead: 3, cacheWrite: 4 };
   const panel = await startPanel(root, {
     isRated: (id) => rated.has(id),
     rate: async (input) => {
       sent.push(input);
       rated.add(input.agentId);
       return { ok: true, usageId: "00000000-0000-4000-8000-000000000000" };
+    },
+    previewShare: async () => ({ code: "0123abcd", payload: { mcpVersion: "0.7.0", rows: [shareRow] }, omitted: 0 }),
+    confirmShare: async (code) => {
+      shared.push(code);
+      return { ok: true, rows: 1 };
     },
   });
   const base = new URL(panel.url).origin;
@@ -113,6 +120,18 @@ test("valutazioni nel pannello: stato, difese e invio con le valutazioni del ser
     assert.equal(JSON.parse(ok.body).usageId, "00000000-0000-4000-8000-000000000000");
     assert.deepEqual(sent, [good]);
     assert.deepEqual((await state()).rating.rated, ["AISA-02"]);
+
+    // Totali di token (F27): l'anteprima dà righe e codice, la conferma manda solo il codice.
+    const share = (path: string, headers: Record<string, string>, body: unknown) => call(`${base}${path}`, { method: "POST", headers, body: JSON.stringify(body) });
+    assert.equal((await share("/api/share/preview", { ...json, Origin: "http://evil.example" }, {})).status, 403);
+    const preview = JSON.parse((await share("/api/share/preview", json, {})).body);
+    assert.deepEqual(preview.rows, [shareRow]);
+    assert.equal(preview.code, "0123abcd");
+    assert.match(preview.notice, /note-legali#consumo/);
+    assert.equal((await share("/api/share", json, { code: "<script>" })).status, 400);
+    assert.equal(shared.length, 0);
+    assert.equal((await share("/api/share", json, { code: "0123abcd" })).status, 200);
+    assert.deepEqual(shared, ["0123abcd"]);
   } finally {
     await panel.close();
   }
@@ -125,6 +144,7 @@ test("valutazioni nel pannello: stato, difese e invio con le valutazioni del ser
     assert.equal(empty.update, null);
     const headers = { Cookie: cookie, Origin: origin, "Content-Type": "application/json" };
     assert.equal((await call(`${origin}/api/rate`, { method: "POST", headers, body: "{}" })).status, 404, "senza valutazioni la rotta non c'è");
+    assert.equal((await call(`${origin}/api/share/preview`, { method: "POST", headers, body: "{}" })).status, 404, "né quella dei totali");
   } finally {
     await without.close();
   }
@@ -164,6 +184,11 @@ test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async (
     const state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     assert.equal(state.project.name, basename(root));
     assert.match(state.project.problems[0], /Non trovo plan\/README\.md/);
+    // Consumo (F24): stesso cookie delle altre rotte; un progetto senza file di Claude Code dà zero risposte.
+    assert.equal((await call(`${base}/api/usage`, { headers: { Cookie: "agentrica_panel_1=x" } })).status, 403);
+    const usage = JSON.parse((await call(`${base}/api/usage`, { headers: { Cookie: cookie } })).body);
+    assert.equal(usage.total.requests, 0);
+    assert.equal(usage.prices.date, "2026-11-03");
 
     const json = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
     const post = (headers: Record<string, string>, body = "{}") => call(`${base}/api/answer`, { method: "POST", headers, body });
@@ -217,7 +242,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "open_panel", "rate_agent"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "library", "open_panel", "rate_agent", "share_usage"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;

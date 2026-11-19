@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
-import { AGENTS_DIR, loadCatalog } from "./catalog.ts";
+import { AGENTS_DIR, loadCatalog, subagentIds } from "./catalog.ts";
 
 test("loadCatalog: gli agents/ tre livelli sopra, cinque reparti e 56 agenti", () => {
   assert.equal(AGENTS_DIR, join(import.meta.dirname, "..", "..", "..", "agents"));
@@ -20,4 +20,11 @@ test("exports: ./catalog porta a JavaScript e tipi di src/catalog.ts dentro dist
   assert.deepEqual(pkg.exports["./catalog"], { types: "./dist/mcp/src/catalog.d.ts", default: "./dist/mcp/src/catalog.js" });
   assert.ok(existsSync(join(import.meta.dirname, "catalog.ts")));
   assert.ok(pkg.files.includes("dist") && pkg.files.includes("agents"));
+});
+
+test("subagentIds: ognuno dei 56 subagent porta al suo agente", () => {
+  const ids = subagentIds(loadCatalog());
+  assert.equal(ids.size, 56);
+  assert.equal(new Set(ids.values()).size, 56);
+  assert.equal(ids.get("sw-architect"), "AISA-02");
 });

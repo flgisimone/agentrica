@@ -233,17 +233,18 @@ Senza cartella usa quella corrente; senza `--name` il nome è quello della carte
 
 Se anche un solo file esiste già, `init` non scrive nulla e dice quali sono. Fuori da un repository git fa il primo commit su `main` e lascia attivo `develop`; dentro un repository non fa commit. Poi apri Claude Code nella cartella e chiedi di aprire la fase F0. `init` è l'unico comando che scrive file: il server resta in sola lettura. Prende il posto di agentic-starter, che non si aggiorna più.
 
-## Messi alla prova
+## Mostra il tuo progetto
 
-Tre agenti provati il 2026-11-15 su tre piccoli progetti con difetti piantati e documentati, con `@agentrica/mcp@0.2.0 --agents <id>`, Claude Code per VS Code e Opus 5.5 (ragionamento medio). Un'esecuzione per caso, contata a mano.
+Hai fatto qualcosa con gli agenti di Agentrica? Il sito lo può mostrare nella pagina dei progetti, dopo la nostra approvazione, in due modi:
 
-| Agente | Progetto | Difetti trovati | Rilievi falsi | Altri rilievi validi |
-|---|---|---|---|---|
-| AISA-09 · REGULUS, Application Security | API REST in Node | 6 su 6 | 0 | 2 |
-| AIWDA-08 · GACRUX, Accessibility | form di iscrizione | 8 su 8 | 0 | 2 |
-| AIPCA-02 · ALIOTH, GDPR | prenotazioni di una palestra | 7 su 7 | 0 | 3 |
+- apri la issue [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml): nome, link al repository pubblico, una descrizione breve, reparti e agenti usati, con il consenso a pubblicarli;
+- oppure aggiungi al repository pubblico il topic `agentrica`: vale come richiesta di comparire, e mostriamo solo nome, descrizione, link e proprietario del repository.
 
-Limiti: i difetti sono pochi, noti e abbastanza evidenti; un solo modello e una sola esecuzione per caso; un risultato del genere non dice come va un agente su un progetto grande. Progetti, difetti attesi, regole di conteggio e rapporti completi degli agenti sono in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): puoi ripetere le prove.
+Descrizione e risultati restano tuoi: non li verifichiamo. Puoi chiedere la rimozione quando vuoi; come trattiamo questi dati è nelle [note legali](https://agentrica.vercel.app/note-legali#progetti). Se vuoi, metti il badge nel README:
+
+```markdown
+[![Fatto con Agentrica](https://img.shields.io/badge/fatto%20con-Agentrica-0b1020)](https://agentrica.vercel.app)
+```
 
 ## Aggiornare e disinstallare
 

@@ -110,7 +110,7 @@ test("opzioni sbagliate: codice 1 senza comandi", () => {
 
 test("serverCommand e cmdLine: argomenti fra virgolette per cmd, rifiutati se contengono \" o %", () => {
   assert.deepEqual(serverCommand("add", "win32", []), ["cmd", "/c", "npx", "-y", PKG]);
-  assert.equal(cmdLine("claude", ["mcp", "add", "C:\\Users\\Ada Rossi\\x.js"]), '""claude" "mcp" "add" "C:\\Users\\Ada Rossi\\x.js""');
+  assert.equal(cmdLine("claude", ["mcp", "add", "C:\\Users\\Ada Rossi\\x.js"]), '"claude "mcp" "add" "C:\\Users\\Ada Rossi\\x.js""');
   assert.equal(cmdLine("claude", ["%PATH%"]), undefined);
   assert.equal(cmdLine("claude", ['a"b']), undefined);
 });

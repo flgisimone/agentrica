@@ -2,6 +2,11 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
 
+## 0.7.1 — 2026-11-19
+
+### Corretto
+- `install` e `add` su Windows: npm e claude installati con npm (file `.cmd`) partivano con la cartella sbagliata e cercavano `node_modules\npm\bin\npm-cli.js` nel progetto corrente, e `install` si fermava con «npm install -g non riuscito». Ora il nome del comando passa a cmd senza virgolette.
+
 ## 0.7.0 — 2026-11-19
 
 ### Nuovo

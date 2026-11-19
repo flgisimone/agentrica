@@ -91,5 +91,6 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F26 | [26-progetti.md](26-progetti.md) | Progetti degli utenti: vetrina da issue GitHub e topic `agentrica`, pagina `/progetti` e anteprima in home; via «Messi alla prova», i casi restano come prova interna | completata |
 | F27 | [27-consumo-sito.md](27-consumo-sito.md) | Consumo sul sito: tool `share_usage` e pulsante del pannello con anteprima, endpoint con chiave per riga e somme, pagina `/consumo` con le prove di F24, frase in home sopra 10 invii | completata |
 | F28 | [28-interfaccia.md](28-interfaccia.md) | Nuova interfaccia del sito: posizionamento da strumento per sviluppatori, identità da osservatorio stellare, mappa del cielo in home, catalogo `/agenti` con ricerca e filtro, pannello «Usalo» nelle pagine agente | completata |
+| F29 | [29-configura-valuta.md](29-configura-valuta.md) | Verifica dei rilievi, comando `valuta`, modulo di configurazione salvata alla prima chiamata, correzione di `install` su Windows (0.7.1) | da aprire |
 
-Ordine: F0 → F28 in sequenza.
+Ordine: F0 → F29 in sequenza.

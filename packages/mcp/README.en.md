@@ -215,17 +215,18 @@ Without a folder it uses the current one; without `--name` the name is the folde
 
 If even one file already exists, `init` writes nothing and lists them. Outside a git repository it makes the first commit on `main` and leaves `develop` checked out; inside one it does not commit. Then open Claude Code in the folder and ask it to open phase F0. `init` is the only command that writes files: the server stays read-only. It replaces agentic-starter, which is no longer updated.
 
-## Put to the test
+## Show your project
 
-Three agents tested on 2026-11-15 against three small projects with planted, documented defects, using `@agentrica/mcp@0.2.0 --agents <id>`, Claude Code for VS Code and Opus 5.5 (medium reasoning). One run per case, counted by hand.
+Built something with Agentrica's agents? The site can show it on the projects page, after our approval, in two ways:
 
-| Agent | Project | Defects found | False findings | Other valid findings |
-|---|---|---|---|---|
-| AISA-09 · REGULUS, Application Security | Node REST API | 6 of 6 | 0 | 2 |
-| AIWDA-08 · GACRUX, Accessibility | sign-up form | 8 of 8 | 0 | 2 |
-| AIPCA-02 · ALIOTH, GDPR | gym booking service | 7 of 7 | 0 | 3 |
+- open the [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml) issue: name, link to the public repository, a short description, departments and agents used, with your consent to publish them (the form is in Italian);
+- or add the `agentrica` topic to the public repository: it counts as a request to appear, and we show only the repository's name, description, link and owner.
 
-Limits: the defects are few, known and fairly obvious; one model and one run per case; a result like this says nothing about how an agent does on a large project. Projects, expected defects, counting rules and the agents' full reports (in Italian) are in [`examples/`](https://github.com/flgisimone/agentrica/tree/main/examples): you can repeat the tests.
+The description and results stay yours: we do not verify them. You can ask for removal at any time; how we handle this data is in the [legal notes](https://agentrica.vercel.app/note-legali#progetti) (in Italian). If you like, add the badge to your README:
+
+```markdown
+[![Made with Agentrica](https://img.shields.io/badge/made%20with-Agentrica-0b1020)](https://agentrica.vercel.app)
+```
 
 ## Updating and uninstalling
 

@@ -31,10 +31,11 @@ Agentrica non ha persone, clienti o casi di successo: il sito non ne inventa.
 
 ```
 agentrica/
-├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto)
+├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto, biblioteca/ e fonti.json)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
 ├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp con l'export ./catalog: vedi packages/mcp/README.md
 ├── plan/                # decisioni e fasi del progetto
+├── scripts/             # comandi da terminale: stats, ratings, agent-text, study (rilevatore della biblioteca)
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
 ```
@@ -69,6 +70,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F21 | Reputazione pubblica degli agenti: statistiche, classifiche e commenti moderati sul sito, sopra le soglie | completata |
 | F22 | Vetrina del server MCP: badge di mcprush nei README e nel footer, link a npm, sito su 0.5.0 | completata |
 | F23 | Avvisi e installazione: `install` e `add` su Mac, Windows e Linux, valutazione con il modulo del client, avviso di versione nuova, reparto nei comandi, CHANGELOG (0.6.0) | completata |
+| F24 | Modelli per ruolo misurati sui casi di prova e consumo di token nel pannello | completata |
+| F25 | Biblioteca degli agenti: schede con fonte e data, tool `library`, rilevatore settimanale delle novità | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

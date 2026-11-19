@@ -1,0 +1,247 @@
+[
+  {
+    "id": "owasp-top10",
+    "name": "OWASP Top 10",
+    "level": 1,
+    "url": "https://top10.owasp.org/",
+    "domains": [
+      "owasp.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "owasp-asvs",
+    "name": "OWASP Application Security Verification Standard (ASVS)",
+    "level": 1,
+    "url": "https://asvs.owasp.org/",
+    "domains": [
+      "owasp.org",
+      "api.github.com",
+      "github.com"
+    ],
+    "update": "github",
+    "feed": "https://api.github.com/repos/OWASP/ASVS/releases",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "owasp-cheatsheets",
+    "name": "OWASP Cheat Sheet Series",
+    "level": 1,
+    "url": "https://cheatsheetseries.owasp.org/",
+    "domains": [
+      "owasp.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nist-csrc",
+    "name": "NIST Computer Security Resource Center (SP 800-53, SP 800-63)",
+    "level": 1,
+    "url": "https://csrc.nist.gov/",
+    "domains": [
+      "nist.gov"
+    ],
+    "update": "rss",
+    "feed": "https://csrc.nist.gov/CSRC/media/feeds/pubs/drafts-open-for-comment.xml",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nist-csf",
+    "name": "NIST Cybersecurity Framework (CSF)",
+    "level": 1,
+    "url": "https://www.nist.gov/cyberframework",
+    "domains": [
+      "nist.gov"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "mitre-cwe",
+    "name": "MITRE CWE",
+    "level": 1,
+    "url": "https://cwe.mitre.org/",
+    "domains": [
+      "mitre.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "mitre-attack",
+    "name": "MITRE ATT&CK",
+    "level": 1,
+    "url": "https://attack.mitre.org/",
+    "domains": [
+      "mitre.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "cisa-kev",
+    "name": "CISA Known Exploited Vulnerabilities Catalog",
+    "level": 1,
+    "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+    "domains": [
+      "cisa.gov"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "nvd",
+    "name": "NIST National Vulnerability Database (NVD)",
+    "level": 1,
+    "url": "https://nvd.nist.gov/",
+    "domains": [
+      "nist.gov"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "cve",
+    "name": "CVE Program",
+    "level": 1,
+    "url": "https://www.cve.org/",
+    "domains": [
+      "cve.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "first-cvss",
+    "name": "FIRST Common Vulnerability Scoring System (CVSS)",
+    "level": 1,
+    "url": "https://www.first.org/cvss/",
+    "domains": [
+      "first.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "first-epss",
+    "name": "FIRST Exploit Prediction Scoring System (EPSS)",
+    "level": 1,
+    "url": "https://www.first.org/epss/",
+    "domains": [
+      "first.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "enisa",
+    "name": "ENISA, Agenzia dell'Unione europea per la cibersicurezza",
+    "level": 1,
+    "url": "https://www.enisa.europa.eu/",
+    "domains": [
+      "enisa.europa.eu"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "acn",
+    "name": "Agenzia per la Cybersicurezza Nazionale (ACN)",
+    "level": 1,
+    "url": "https://www.acn.gov.it/portale/home",
+    "domains": [
+      "acn.gov.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "csirt-italia",
+    "name": "CSIRT Italia",
+    "level": 1,
+    "url": "https://www.acn.gov.it/portale/csirt-italia/",
+    "domains": [
+      "acn.gov.it"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "github-advisory",
+    "name": "GitHub Advisory Database",
+    "level": 2,
+    "url": "https://github.com/advisories",
+    "domains": [
+      "github.com"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "slsa",
+    "name": "SLSA (Supply-chain Levels for Software Artifacts)",
+    "level": 1,
+    "url": "https://slsa.dev/",
+    "domains": [
+      "slsa.dev"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "openssf",
+    "name": "OpenSSF (Open Source Security Foundation)",
+    "level": 1,
+    "url": "https://openssf.org/",
+    "domains": [
+      "openssf.org"
+    ],
+    "update": "rss",
+    "feed": "https://openssf.org/feed/",
+    "access": "libero",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "iso-27001",
+    "name": "ISO/IEC 27001",
+    "level": "citata",
+    "url": "https://www.iso.org/standard/27001",
+    "domains": [
+      "iso.org"
+    ],
+    "update": "page",
+    "access": "pagamento",
+    "checked": "2026-11-19"
+  },
+  {
+    "id": "cis-benchmarks",
+    "name": "CIS Benchmarks",
+    "level": "citata",
+    "url": "https://www.cisecurity.org/cis-benchmarks",
+    "domains": [
+      "cisecurity.org"
+    ],
+    "update": "page",
+    "access": "libero",
+    "checked": "2026-11-19"
+  }
+]

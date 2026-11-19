@@ -222,7 +222,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "open_panel", "rate_agent"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "library", "open_panel", "rate_agent"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;

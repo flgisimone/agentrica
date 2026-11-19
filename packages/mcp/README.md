@@ -131,7 +131,8 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti
 | Tool | Input | Cosa restituisce |
 |---|---|---|
 | `elenca_agenti` | `reparto` facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
-| `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente |
+| `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente, con l'indice della biblioteca del reparto |
+| `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 
 Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
@@ -173,6 +174,14 @@ Puoi dare a un agente un voto da 1 a 5 e un commento su cosa migliorare: servono
 - **Per non avere il tool**, il modulo né le proposte, aggiungi `--no-ratings` al comando: il server non si collega più ad Agentrica.
 
 Come trattiamo le valutazioni: [note legali](https://agentrica.vercel.app/note-legali#valutazioni).
+
+## Biblioteca
+
+Le conoscenze di un modello si fermano alla sua data di addestramento. Ogni reparto ha una biblioteca di schede con nozioni recenti (standard, norme, release), ciascuna verificata su una fonte ammessa di livello 1 (enti di standard, autorità, testi normativi) o 2 (documentazione ufficiale dei produttori), con versione, data di verifica e data entro cui ricontrollarla. Per esempio OWASP Top 10:2025, TypeScript 7.0, le date dell'AI Act dopo l'AI Omnibus, WCAG 2.2.
+
+- Il testo di ogni agente contiene, dopo il file di ruolo, l'indice delle schede del suo reparto; il modello legge quelle che servono al compito con `library` e cita fonte e data. Una scheda oltre la sua data è segnata da ricontrollare.
+- Le schede viaggiano nel pacchetto (`agents/<reparto>/biblioteca/`) e seguono le stesse regole dei file di ruolo: niente link, HTML o comandi. Gli indirizzi delle fonti stanno in `agents/<reparto>/fonti.json` e non arrivano mai al modello. Il server resta offline: la biblioteca non apre connessioni.
+- Si aggiorna con le versioni del pacchetto: un rilevatore settimanale, senza modello, legge i feed delle fonti e apre l'elenco delle novità; le schede nuove entrano solo dopo la revisione del titolare.
 
 ## Pannello locale
 

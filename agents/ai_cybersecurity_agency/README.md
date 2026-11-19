@@ -39,3 +39,6 @@
 
 ## Nota
 Nessun test su sistemi reali è autorizzato dalla sola presenza di questi file.
+
+## Biblioteca
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

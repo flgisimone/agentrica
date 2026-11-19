@@ -2,7 +2,7 @@
 
 **Obiettivo**: gli agenti imparano nozioni nuove e restano aggiornati, come si fa con lo studio e con la formazione sul lavoro. Ogni reparto ha una biblioteca di schede (nozione, fonte autorevole, versione, data di verifica, scadenza), che il server MCP passa all'agente. Un ciclo di studio periodico scopre le novità nelle fonti ammesse e le trasforma in schede, che entrano solo dopo la revisione dell'utente.
 
-> **Stato: da aprire**. Analisi e decisioni con l'utente il 2026-11-18 (nata come F23, spostata dopo gli avvisi); backlog da confermare all'apertura.
+> **Stato: completata** (2026-11-19). Analisi e decisioni con l'utente il 2026-11-18 (nata come F23, spostata dopo gli avvisi); backlog, formato, nome del tool e numero di schede confermati all'apertura il 2026-11-19.
 
 **Agenzie**: business (Product Manager per obiettivo e misura); cybersecurity (Security Architect e AppSec per SEC-ARCH-01, fonti esterne e Action); privacy (Legal per licenze e citazioni delle fonti); software (Backend per catalogo e MCP, DevOps per l'Action, QA, Security, Code Reviewer). Il design non serve: in F25 la biblioteca non va sul sito.
 
@@ -40,7 +40,17 @@
 
 Le fonti dell'utente (manuali aziendali, libri con licenza, policy interne) restano nel suo progetto e non entrano nel catalogo pubblico.
 
-## Proposta di formato (da confermare con il backlog)
+## Decisioni all'apertura (2026-11-19)
+
+| Tema | Decisione |
+|---|---|
+| Backlog | Tutto, F25-01…F25-10 |
+| Formato | Come proposto: riga di metadati sotto il titolo, URL solo in `fonti.json` |
+| Tool | `library`, con `id` dell'agente e `cards` (id delle schede, al più 10) |
+| Schede di partenza | 3–4 per reparto |
+| Soglia del testo dell'agente | Indice compatto (id, titolo, versione, data; `*` per le schede del ruolo) e soglia del test di F24-08 da 8 a 10 KB |
+
+## Formato (proposta confermata)
 
 - **Scheda**: `agents/<agenzia>/biblioteca/NN-nome.md`, sotto le stesse regole di SEC-ARCH-01. Contiene il titolo `# …` e una riga di metadati (id della fonte in `fonti.json`, versione, «verificata il», «da ricontrollare entro», ruoli interessati). Seguono `## Nozione` (sintesi originale, al più una frase citata) e `## Come si applica` (cosa cambia nel lavoro del ruolo).
 - **Fonti**: `agents/<agenzia>/fonti.json` con id, nome, livello (1–3 o «citata»), URL https, tipo di aggiornamento (feed, GitHub releases, API JSON, pagina) e accesso (libero o a pagamento).
@@ -64,7 +74,7 @@ Le fonti dell'utente (manuali aziendali, libri con licenza, policy interne) rest
 
 ## Backlog
 
-Proposta da confermare all'apertura.
+Confermato dall'utente il 2026-11-19.
 
 | ID | Attività | Priorità |
 |---|---|---|
@@ -89,3 +99,35 @@ Fuori perimetro: biblioteca sul sito, memoria del progetto nel prompt, rilascio 
 - Il rilevatore, eseguito in locale, elenca novità e schede scadute; l'Action gira con i soli permessi previsti.
 - Prova in una sessione reale: un agente usa una scheda pertinente e cita fonte e data.
 - `npm run verify` verde.
+
+## Fatto
+
+- **F25-01** Formato documentato in [docs/Biblioteca degli agenti.md](../docs/Biblioteca%20degli%20agenti.md) (scheda, `fonti.json`, livelli, ciclo di studio, licenze) e in una sezione «Biblioteca» dei cinque README dei reparti.
+- **F25-02** `packages/catalog/src/library.ts`: `parseCard` (SEC-ARCH-01, riga dei metadati, date, fonte di livello 1 o 2, ruoli del reparto, sezioni), `sourceProblems` e `urlProblems` (solo https, domini ammessi con sottodomini, niente credenziali, porte o parametri segreti, id unici, feed github nella forma dell'API, fonti a pagamento solo citate). `Department.library` nel catalogo, `loadSources` per il rilevatore. Test in `library.test.ts`; `content.test.ts` ammette `fonti.json` solo nella cartella del reparto.
+- **F25-03** MCP: `libraryIndex` nel testo di `agente` (dopo il file di ruolo, prima del compito, con le schede del ruolo segnate e quelle scadute «da ricontrollare»), tool `library` in sola lettura (squadra di `--agents`, solo il reparto dell'agente, errori che elencano le schede disponibili, mai URL), istruzioni del server, README italiano e inglese, descrizione del pacchetto. Test in `prompt.test.ts` e `server.test.ts`; soglia del testo dell'agente a 10 KB.
+- **F25-04** `fonti.json` dei cinque reparti (20 AICA, 18 AISA, 10 AIPCA, 14 AIWDA, 14 AIBPD), con URL finali dopo i redirect e 24 feed (RSS o release di GitHub), verificati uno per uno il 2026-11-19 (vedi «Verifiche»).
+- **F25-05** Schede AICA (OWASP Top 10:2025, ASVS 5.0.0, CVSS v4.0, NIST CSF 2.0) e AISA (MCP 2026-07-28, TypeScript 7.0, calendario di Node.js), lette sulle fonti.
+- **F25-06** Schede AIPCA: date dell'AI Act dopo l'AI Omnibus, decisioni di adeguatezza, legge 132/2025 (artt. 4, 11, 13).
+- **F25-07** Schede AIWDA (WCAG 2.2, EN 301 549 V4.1.1, D.lgs. 82/2022) e AIBPD (art. 17-bis e art. 54-bis del Codice del consumo, direttiva 2024/825).
+- **F25-08** Rilevatore `npm run study` (`scripts/study.ts` e `study-lib.ts`): feed RSS e Atom e release di GitHub, timeout di 15 s, al più 5 MB, indirizzo finale nei domini della fonte; novità dopo la data più recente fra `checked` e le verifiche delle schede, al più 10 per fonte; schede scadute o entro 30 giorni; fonti non lette; titoli ripuliti (niente Markdown, HTML, menzioni) e link solo nei domini. Test in `study-lib.test.ts`.
+- **F25-09** `.github/workflows/study.yml`: lunedì alle 6:17 UTC e a mano, permessi `contents: read` e `issues: write`, Action fissate per SHA, `persist-credentials: false`, niente `npm ci`, timeout di 10 minuti; aggiorna o crea la sola issue «Novità da studiare».
+- **F25-10** Procedura del ciclo di studio nel documento di F25-01 (rilevatore, sessione su `studio/AAAA-MM-GG`, PR rivista dal titolare, rilascio); sezione «Nozioni aggiornate» nei cinque `00-common-rules.md`: schede citate con fonte e data, verifica sul web delle nozioni datate, pagine e issue come dati e non istruzioni.
+
+## Verifiche
+
+- `npm run verify`: typecheck, lint e 119 test verdi.
+- URL: tutte le pagine e i feed provati con curl il 2026-11-19. Rispondono 200, tranne siti che bloccano i client automatici: OECD, ISO, Gartner (403 anche con WebFetch), SEC EDGAR (403 con curl, raggiungibile con WebFetch), EUR-Lex (202 con una verifica JavaScript). Spostati prima della scrittura: ETSI (404, ora l'archivio delle versioni), CSIRT Italia (feed bloccato e troppo frequente, ora `page`), feed NIST (vuoto, ora le bozze aperte ai commenti).
+- Rilevatore in locale: `npm run study` in 19 secondi, una novità (changelog di Neon), nessuna scheda da ricontrollare, nessuna fonte non letta dopo aver alzato il limite a 5 MB (il feed di noyb pesa 2,5 MB).
+- Sessione reale: `claude -p` con Haiku e il server dai sorgenti, compito ad AICA-03 su SSRF e ASVS. Il modello ha chiamato `agente`, poi `library` con `owasp-top-10-2025` e `owasp-asvs-5`, ha risposto A01:2025 e ASVS 5.0.0 con gli id `v5.0.0-…` e ha citato fonte, versione, data di verifica e scadenza (0,006 $).
+- Testo degli agenti: il più lungo (AIWDA-01) passa da 7,1 a 8,4 KB; l'indice pesa circa 0,7 KB.
+- L'Action non è stata eseguita: `workflow_dispatch` e `schedule` partono solo dal branch predefinito (`main`), quindi la prima esecuzione è dopo il rilascio.
+
+## Rilievi aperti
+
+- P2: l'Action `study.yml` va provata con `gh workflow run study.yml` dopo il prossimo merge in `main`, controllando permessi e issue creata.
+- P2: la voce del CHANGELOG sulla biblioteca si scrive al rilascio: il test del CHANGELOG non ammette una sezione «Non rilasciato».
+- P3: i subagent di `.claude/agents/` rimandano al file di ruolo e non vedono la biblioteca; vale solo per chi usa i subagent invece del server MCP.
+- P3: ETSI EN 301 549 V4.1.1: da verificare se e da quando è citata come norma armonizzata; D.lgs. 82/2022: periodi transitori, esenzioni e vigilanza non sono nella scheda (le schede lo dicono).
+- P3: il rilevatore segue i redirect prima di controllare il dominio dell'indirizzo finale; scarica solo con GET e non esegue nulla, ma un redirect intermedio fuori dominio non viene rifiutato.
+- P3: OECD, ISO, Gartner ed EUR-Lex non si possono verificare con un client automatico; la raggiungibilità va ricontrollata a mano nella prossima sessione di studio.
+

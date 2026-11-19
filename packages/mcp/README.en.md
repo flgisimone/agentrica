@@ -133,7 +133,8 @@ The command menu shows only the squad's prompts, and `elenca_agenti` and `agente
 | Tool | Input | Returns |
 |---|---|---|
 | `elenca_agenti` (list agents) | optional `reparto` (department: `AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent |
-| `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions |
+| `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions, with the index of the department's library |
+| `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
 
 For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
@@ -156,6 +157,14 @@ You can give an agent a score from 1 to 5 and a comment on what to improve: rati
 - **To drop the tool**, the form and the suggestions, add `--no-ratings` to the command: the server no longer connects to Agentrica.
 
 How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
+
+## Library
+
+A model's knowledge stops at its training date. Each department has a library of cards with recent knowledge (standards, laws, releases), each one checked against an allowed source of level 1 (standards bodies, authorities, legal texts) or 2 (official vendor documentation), with version, verification date and a date by which to recheck it. For example OWASP Top 10:2025, TypeScript 7.0, the AI Act dates after the AI Omnibus, WCAG 2.2. Cards are in Italian, like the agent files.
+
+- Every agent's text contains, after the role file, the index of its department's cards; the model reads the ones the task needs with `library` and cites source and date. A card past its date is flagged for rechecking.
+- Cards ship in the package (`agents/<department>/biblioteca/`) and follow the same rules as role files: no links, HTML or commands. Source addresses live in `agents/<department>/fonti.json` and never reach the model. The server stays offline: the library opens no connection.
+- It is updated with package versions: a weekly detector, with no model, reads the sources' feeds and lists what is new; new cards go in only after the owner's review.
 
 ## Local panel
 

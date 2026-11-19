@@ -1,0 +1,54 @@
+# Rilevatore della biblioteca (F25-09): una volta alla settimana esegue npm run study e aggiorna una sola issue,
+# «Novità da studiare», con novità delle fonti ammesse, schede da ricontrollare e fonti non lette. Nessun modello,
+# nessun segreto oltre al token del workflow; le schede si scrivono poi in una sessione di studio, con una PR
+# (docs/Biblioteca degli agenti.md). Il testo dei feed è un dato: lo script lo ripulisce e non lo esegue mai.
+name: Novità da studiare
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # lunedì mattina (UTC)
+  workflow_dispatch:
+
+concurrency:
+  group: study
+  cancel-in-progress: false
+
+# Solo lettura del repository e scrittura delle issue: nient'altro (requisito AICA di F25).
+permissions:
+  contents: read
+  issues: write
+
+env:
+  TZ: Europe/Rome
+  TITLE: Novità da studiare
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Action fissate per SHA, alle stesse versioni di ci.yml (SEC-REL-05).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Lo script usa solo Node e i sorgenti del catalogo: niente npm ci, nessuna dipendenza installata.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Rilevatore
+        run: node scripts/study.ts > "$RUNNER_TEMP/novita.md"
+
+      - name: Issue «Novità da studiare»
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          number=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title \
+            --jq "map(select(.title == env.TITLE)) | .[0].number // empty")
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/novita.md"
+          else
+            gh issue create --title "$TITLE" --body-file "$RUNNER_TEMP/novita.md"
+          fi

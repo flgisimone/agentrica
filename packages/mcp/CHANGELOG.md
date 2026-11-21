@@ -2,6 +2,20 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
 
+## 0.8.0 — 2026-11-19
+
+### Nuovo
+- Configurazione con un modulo: squadra, pannello, valutazioni e avviso di versione si scelgono alla prima chiamata ad Agentrica della sessione (se il client mostra moduli) o con il comando `/mcp__agentrica__configura`. Le scelte si salvano in `~/.agentrica/config.json`, solo sul tuo computer, e valgono dalla sessione successiva; le opzioni del comando del server hanno la precedenza.
+- Comando `/mcp__agentrica__progetto` e tool `submit_project`: proponi un tuo progetto per la pagina dei progetti del sito anche senza account GitHub, con un link https qualsiasi, consenso e licenza. Parte solo dopo il modulo o l'anteprima confermata; ricevi un codice per ritirarlo (`/mcp__agentrica__progetto` con `rimuovi`). `--no-ratings` lo toglie.
+- Comando `/mcp__agentrica__valuta`: apre il modulo di valutazione per l'ultimo agente usato o per quello indicato, anche in una sessione con un solo agente; senza moduli passa a `rate_agent`.
+
+### Corretto
+- Client che dichiarano i moduli ma li chiudono senza mostrarli (l'estensione VS Code di Claude Code): un modulo chiuso in meno di 300 ms vale come non mostrato. Non si salva la configurazione, e per il resto della sessione la valutazione torna al flusso di `rate_agent` proposto dall'agente.
+
+### Cambiato
+- Pannello locale acceso di predefinito, con `open_panel` e `ask_user`: «apri il pannello» funziona subito dopo l'installazione. `--no-panel` o la configurazione lo spengono; `--panel` resta valido. Con il permission model di Node senza rete o processi figli il pannello non parte e il server continua. `init` non scrive più `--panel` nel `.mcp.json`.
+- Il server scrive un file, la configurazione, e solo dopo il modulo; con il permission model di Node non lo legge né lo scrive.
+
 ## 0.7.1 — 2026-11-19
 
 ### Corretto

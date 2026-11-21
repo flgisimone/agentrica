@@ -36,9 +36,9 @@ test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, s
   assert.match(files.get("plan/README.md")!, /^# Piano di Prova App/);
   assert.match(files.get("CONVENTIONS.md")!, /### 2\.6 Fasi e backlog/);
   assert.match(files.get(".claude/agents/software/sw-cto.md")!, /del progetto Prova App\./);
-  assert.deepEqual(JSON.parse(files.get(".mcp.json")!).mcpServers.agentrica.args, ["-y", `@agentrica/mcp@${VERSION}`, "--panel"]);
+  assert.deepEqual(JSON.parse(files.get(".mcp.json")!).mcpServers.agentrica.args, ["-y", `@agentrica/mcp@${VERSION}`]);
   const windows = JSON.parse(projectFiles("X", "C:\\x", "2026-01-01", "win32").get(".mcp.json")!).mcpServers.agentrica;
-  assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@agentrica/mcp@${VERSION}`, "--panel"]);
+  assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@agentrica/mcp@${VERSION}`]);
   for (const [file, text] of files) {
     assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
     if (file.startsWith(".claude/")) assert.doesNotMatch(text, /Agentrica/, file);

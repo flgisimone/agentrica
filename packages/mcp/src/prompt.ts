@@ -3,7 +3,7 @@
 import { isExpired, type Agent, type Card, type Department, type Section } from "../../catalog/src/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.7.1";
+export const VERSION = "0.8.0";
 
 /**
  * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori

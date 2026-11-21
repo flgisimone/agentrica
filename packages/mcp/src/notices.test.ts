@@ -1,7 +1,7 @@
 // F23 con un client MCP vero: il modulo di valutazione (elicitation) al cambio d'agente e l'avviso di versione nuova,
 // con l'endpoint delle valutazioni e il registro npm finti su 127.0.0.1.
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -12,6 +12,11 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { ElicitRequestSchema, type ElicitResult } from "@modelcontextprotocol/sdk/types.js";
 
 const cwd = mkdtempSync(join(tmpdir(), "agentrica-avvisi-"));
+// Una cartella personale finta con la configurazione già salvata (F29): niente modulo della configurazione, e il
+// server non tocca quella vera.
+const home = join(cwd, "home");
+mkdirSync(join(home, ".agentrica"), { recursive: true });
+writeFileSync(join(home, ".agentrica", "config.json"), JSON.stringify({ version: 1 }));
 const servers: Server[] = [];
 const clients: Client[] = [];
 after(async () => {
@@ -38,9 +43,16 @@ async function fakeEndpoint(status: number, body: string) {
 
 async function start(env: Record<string, string>, args: string[] = [], forms?: (params: unknown) => ElicitResult) {
   const client = new Client({ name: "test-avvisi", version: "0" }, forms ? { capabilities: { elicitation: { form: {} } } } : {});
-  if (forms) client.setRequestHandler(ElicitRequestSchema, async (request) => forms(request.params));
+  // Una persona chiude il modulo in più di 300 ms: più in fretta vale come non mostrato (server.ts, UNSEEN_MS).
+  if (forms) {
+    client.setRequestHandler(ElicitRequestSchema, async (request) => {
+      const answer = forms(request.params);
+      if (answer.action !== "accept") await wait(350);
+      return answer;
+    });
+  }
   await client.connect(
-    new StdioClientTransport({ command: process.execPath, args: [join(import.meta.dirname, "server.ts"), ...args], cwd, env: { ...process.env, ...env } as Record<string, string>, stderr: "pipe" }),
+    new StdioClientTransport({ command: process.execPath, args: [join(import.meta.dirname, "server.ts"), ...args], cwd, env: { ...process.env, HOME: home, USERPROFILE: home, ...env } as Record<string, string>, stderr: "pipe" }),
   );
   clients.push(client);
   return client;

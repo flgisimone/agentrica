@@ -33,9 +33,10 @@ after(async () => {
 
 const text = (result: Record<string, unknown>) => (result.content as { type: string; text: string }[])[0]!.text;
 
-test("56 prompt con id in minuscolo e reparto, argomento compito facoltativo", async () => {
+test("56 prompt degli agenti con id in minuscolo e reparto, argomento compito facoltativo, più valuta, progetto e configura", async () => {
   const { prompts } = await client.listPrompts();
-  assert.equal(prompts.length, 56);
+  assert.equal(prompts.length, 59);
+  assert.deepEqual(prompts.slice(-3).map((p) => p.name), ["valuta", "progetto", "configura"]);
   const altair = prompts.find((p) => p.name === "aisa-02-software");
   assert.equal(altair?.title, "AISA-02 · ALTAIR — Senior Software Architect");
   assert.deepEqual(altair?.arguments?.map((a) => [a.name, a.required ?? false]), [["compito", false]]);
@@ -50,10 +51,10 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
   assert.match(content.text, /## Compito\n\nRivedi i confini\.\n\n## Valutazione\n\n.*rate_agent, id AISA-02.*\n$/);
 });
 
-test("tre tool in sola lettura, rate_agent e share_usage, gli unici che aprono una connessione", async () => {
+test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library", "rate_agent", "share_usage"]);
-  const sending = ["rate_agent", "share_usage"];
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library", "rate_agent", "share_usage", "submit_project"]);
+  const sending = ["rate_agent", "share_usage", "submit_project"];
   for (const t of tools.filter((t) => !sending.includes(t.name))) assert.equal(t.annotations?.readOnlyHint, true, t.name);
   for (const name of sending) {
     const tool = tools.find((t) => t.name === name)!;
@@ -100,7 +101,7 @@ test("rate_agent: anteprima con codice, poi invio; senza rete un errore chiaro e
   assert.notEqual((await client.callTool({ name: "agente", arguments: { id: "aisa-02" } })).isError, true);
 });
 
-test("--no-ratings: niente rate_agent né share_usage, niente proposta di valutazione o di invio", async () => {
+test("--no-ratings: niente rate_agent, share_usage né submit_project, niente proposta di valutazione o di invio", async () => {
   const quiet = new Client({ name: "test-senza-voti", version: "0" });
   await quiet.connect(
     new StdioClientTransport({
@@ -115,6 +116,7 @@ test("--no-ratings: niente rate_agent né share_usage, niente proposta di valuta
     assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library"]);
     assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
     assert.ok(!(quiet.getInstructions() ?? "").includes("share_usage"));
+    assert.deepEqual((await quiet.listPrompts()).prompts.slice(-1).map((p) => p.name), ["configura"], "senza valutazioni niente valuta né progetto");
     assert.ok(!text(await quiet.callTool({ name: "agente", arguments: { id: "aisa-02" } })).includes("rate_agent"));
   } finally {
     await quiet.close();
@@ -183,7 +185,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
     for (const file of ["index.ts", "departments.ts", "markdown.ts", "library.ts", "content.ts"]) {
@@ -212,9 +214,9 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
   await squad.connect(squadTransport);
   try {
     const { prompts } = await squad.listPrompts();
-    assert.equal(prompts.length, 11);
+    assert.equal(prompts.length, 14);
     assert.equal(prompts[0]!.name, "aisa-02-software");
-    assert.ok(prompts.slice(1).every((p) => /^aiwda-\d{2}-design$/.test(p.name)));
+    assert.ok(prompts.slice(1, -3).every((p) => /^aiwda-\d{2}-design$/.test(p.name)));
     assert.match(squad.getInstructions() ?? "", /^Agentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
     const list = text(await squad.callTool({ name: "elenca_agenti", arguments: {} }));
     assert.equal(list.match(/^- /gm)?.length, 11);
@@ -248,6 +250,18 @@ test("--agents sbagliato o opzione sconosciuta: il server non parte, una riga su
 });
 
 // Ultima prova, dopo tutte le chiamate: il server non ha scritto niente su stderr né nella cartella del progetto.
+test("pannello acceso di predefinito, ma con il permission model senza rete né processi figli si salta in silenzio", async () => {
+  // Il client principale gira con --permission solo in lettura: niente open_panel né ask_user, nessuna riga su stderr
+  // (lo controlla la prova finale). Con --panel esplicito, invece, un pannello che non parte ferma il server.
+  const { tools } = await client.listTools();
+  assert.ok(!tools.some((t) => t.name === "open_panel"));
+  const run = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--panel"], { cwd, input: "", encoding: "utf8" });
+  assert.equal(run.status, 1);
+  assert.match(run.stderr, /^agentrica: pannello non avviato: /);
+  const both = spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--panel", "--no-panel"], { cwd, input: "", encoding: "utf8" });
+  assert.match(both.stderr, /--panel o --no-panel/);
+});
+
 test("dopo tutte le chiamate: stderr vuoto, nessun file nella cartella del progetto", () => {
   assert.equal(stderr, "");
   assert.deepEqual(readdirSync(cwd), []);

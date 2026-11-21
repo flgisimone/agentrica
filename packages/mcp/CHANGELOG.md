@@ -2,7 +2,7 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
 
-## 0.8.0 — 2026-11-19
+## 0.8.0 — 2026-11-21
 
 ### Nuovo
 - Configurazione con un modulo: squadra, pannello, valutazioni e avviso di versione si scelgono alla prima chiamata ad Agentrica della sessione (se il client mostra moduli) o con il comando `/mcp__agentrica__configura`. Le scelte si salvano in `~/.agentrica/config.json`, solo sul tuo computer, e valgono dalla sessione successiva; le opzioni del comando del server hanno la precedenza.

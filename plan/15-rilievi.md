@@ -68,6 +68,6 @@ Confermato dall'utente il 2026-11-15.
 
 ## Rilievi aperti
 
-- P2: prove degli agenti F15-03 da eseguire dopo il rilascio 0.3.1 (caso nuovo e seconda esecuzione di `aisa-09-api-note`).
-- P3: F15-09, «Agenti in uso» da guardare in una sessione vera.
-- P3: il brillio dei glifi è continuo e non ha un pulsante di pausa (WCAG 2.2.2), come lo sfondo; si ferma con «riduci movimento».
+- P2: prove degli agenti F15-03 da eseguire dopo il rilascio 0.3.1 (caso nuovo e seconda esecuzione di `aisa-09-api-note`). Chiuso in F30: superato dalle misure di F24 (7 casi, 4 configurazioni, 56 esecuzioni); casi più difficili e altri ruoli sono nella voce di F24 sulle misure, rinviata a una fase dedicata (scelta dell'utente, 2026-11-22).
+- P3: F15-09, «Agenti in uso» da guardare in una sessione vera. Chiuso in F30 (F30-13, P3, 2026-11-22): pannello di `agentrica-dev` guardato in una sessione vera di Claude Code (estensione per VS Code); Sessione con AISA-02 · ALTAIR in «Agenti in uso», attivo, e il suo modulo di valutazione; Rilievi con il conteggio aggiornato (10).
+- P3: il brillio dei glifi è continuo e non ha un pulsante di pausa (WCAG 2.2.2), come lo sfondo; si ferma con «riduci movimento». Chiuso in F30 (scelta dell'utente, 2026-11-22): glifi e stelle della mappa brillano una volta e finiscono entro 5 secondi (`globals.css` del sito), eccezione di WCAG 2.2.2.

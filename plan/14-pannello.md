@@ -121,6 +121,6 @@ Ruoli: UX Designer, UI Designer, UX Writer, Accessibility Specialist.
 
 ## Rilievi aperti
 
-- P3: «Agenti in uso» nella sessione vera non è stato guardato a occhio dopo il prompt `aisa-02` (coperto dal test con un client MCP vero).
+- P3: «Agenti in uso» nella sessione vera non è stato guardato a occhio dopo il prompt `aisa-02` (coperto dal test con un client MCP vero). Chiuso in F30 (F30-13, P3, 2026-11-22): pannello di `agentrica-dev` guardato in una sessione vera di Claude Code (estensione per VS Code); Sessione con AISA-02 · ALTAIR in «Agenti in uso», attivo, e il suo modulo di valutazione; Rilievi con il conteggio aggiornato (10).
 - P3: «Rilievi aperti» delle fasi passate contengono voci già risolte (es. repository privato, CI al push): il pannello le mostra come aperte. Si sistemano ripulendo i piani o con una convenzione per i rilievi chiusi. Risolto in `fix/f14-rilievi` (2765e21): le voci che dicono «risolto» o «chiuso» non si mostrano; i piani ripuliti in F15.
 - P3: il conteggio «file modificati» comprende i file non tracciati (righe di `git status --porcelain`). Risolto in `fix/f14-rilievi`: modificati e nuovi contati a parte.

@@ -10,7 +10,7 @@ import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { VERSION } from "./prompt.ts";
-import { parseAnswer, parseRate, startPanel, type RateInput } from "./panel.ts";
+import { keepActivity, parseAnswer, parseRate, startPanel, type RateInput } from "./panel.ts";
 
 const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-")));
 const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
@@ -277,4 +277,14 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
     await client.close();
     endpoint.close();
   }
+});
+
+test("keepActivity: le ultime chiamate più l'ultima di ogni agente uscito, così resta valutabile (F30-09)", () => {
+  const calls = (ids: string[]) => ids.map((id, n) => ({ id, n }));
+  // Dalla più recente: tre chiamate di AISA-02, poi AIWDA-08 e AICA-04 più vecchie, con max 3.
+  const list = calls(["AISA-02", "AISA-02", "AISA-02", "AIWDA-08", "AISA-02", "AICA-04", "AIWDA-08"]);
+  assert.deepEqual(keepActivity(list, 3).map((a) => a.n), [0, 1, 2, 3, 5]);
+  assert.deepEqual(keepActivity(calls(["A", "B"]), 3).map((a) => a.id), ["A", "B"]);
+  const many = calls(Array.from({ length: 40 }, () => "AISA-02"));
+  assert.equal(keepActivity(many).length, 20);
 });

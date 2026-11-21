@@ -75,6 +75,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F26 | Progetti degli utenti: vetrina su richiesta da issue e topic `agentrica`, pagina `/progetti` | completata |
 | F27 | Consumo sul sito: `share_usage`, endpoint con somme, pagina `/consumo` (0.7.0) | completata |
 | F28 | Nuova interfaccia del sito: strumento per sviluppatori, osservatorio stellare, catalogo `/agenti` e pannello «Usalo» | completata |
+| F29 | Configurazione salvata, comandi `valuta`, `configura` e `progetto`, progetti proposti dal server MCP (0.8.0) | completata |
+| F30 | Rilievi aperti da F16 a F29: privilegio minimo del database, rischi accettati, correzioni e prove guidate | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

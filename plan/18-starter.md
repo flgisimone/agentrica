@@ -66,5 +66,5 @@ Ordine: F18-01 → F18-02/03 → F18-04 → chiusura in `develop` → F18-05 →
 
 ## Rilievi aperti
 
-- **F18-R1** (P3) `docs/AI Multi-Agency System.md` è in due copie (`docs/` e `starter/docs/`). F19 sposta `docs/` fuori dal repository pubblico: resterà solo quella di `starter/`, che però i subagent di Agentrica citano come `docs/…`; da sistemare in F19.
+- **F18-R1** (P3) `docs/AI Multi-Agency System.md` è in due copie (`docs/` e `starter/docs/`). F19 sposta `docs/` fuori dal repository pubblico: resterà solo quella di `starter/`, che però i subagent di Agentrica citano come `docs/…`; da sistemare in F19. Chiuso in F30 (scelta dell'utente, 2026-11-22): le due copie restano (F19 abbandonata) e un test in `init.test.ts` fallisce se diventano diverse.
 - **F18-R2** (P2) Rilascio del sito in `main` con la sezione `init`. Risolto il 2026-11-16 (PR #2 di `agentrica-site`).

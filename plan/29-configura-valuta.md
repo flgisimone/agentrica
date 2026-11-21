@@ -110,8 +110,8 @@ Su richiesta dell'utente, pacchetto e sito in produzione insieme («sempre in pa
 
 ## Rilievi aperti
 
-- **Progetti su Neon**: limite giornaliero, approvazione e pulizia provati solo con i test locali; da guardare alla prima proposta reale.
-- **Moduli da terminale**: il modulo della configurazione e i comandi `valuta`, `configura`, `progetto` sono provati con il client MCP dei test e in VS Code (senza moduli), non ancora in Claude Code da terminale.
-- **Soglia di 300 ms**: semplice ed efficace oggi; se un client mostrasse davvero i moduli e li chiudesse da solo più tardi, servirà un altro segnale (es. `clientInfo`).
-- SEC-ARCH-01: revisione obbligatoria del code owner con un secondo manutentore (invariato).
+- **Progetti su Neon**: limite giornaliero, approvazione e pulizia provati solo con i test locali; da guardare alla prima proposta reale. Chiuso in F30 (F30-13, P2, 2026-11-22): su Neon invio, ref pubblico (SHA-256 del codice, verificato), ritiro immediato di una proposta in attesa, limite di 3 al giorno per rete (la quarta rifiutata), approvazione e rifiuto con `npm run projects`. La pulizia dopo 90 giorni si prova con il job in P5.
+- **Moduli da terminale**: il modulo della configurazione e i comandi `valuta`, `configura`, `progetto` sono provati con il client MCP dei test e in VS Code (senza moduli), non ancora in Claude Code da terminale. Chiuso in F30 (F30-13, P1, 2026-11-22): in Claude Code 2.1.330 da terminale il modulo compare alla prima chiamata e salva `config.json` con le sole cinque chiavi; `configura` lo riapre con i valori salvati e cambia solo il campo scelto; `valuta` apre il modulo di AISA-02 e con Esc non parte nulla; `progetto` apre il modulo e invia.
+- **Soglia di 300 ms**: semplice ed efficace oggi; se un client mostrasse davvero i moduli e li chiudesse da solo più tardi, servirà un altro segnale (es. `clientInfo`). Chiuso in F30 (F30-12): accettato dall'utente il 2026-11-21, si riapre se un client chiude i moduli da solo dopo più di 300 ms.
+- SEC-ARCH-01: revisione obbligatoria del code owner con un secondo manutentore (invariato). Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, si riapre con un secondo manutentore.
 

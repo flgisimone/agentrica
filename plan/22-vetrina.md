@@ -45,7 +45,7 @@
 
 ## Rilievi aperti
 
-- Il badge e la scheda di mcprush mostrano ancora v0.4.0: dipende da quando mcprush rilegge npm o il registro MCP.
-- Il testo del badge dice «high access»: è il giudizio di mcprush su un server locale, non un rilievo nostro.
-- Il paragrafo su mcprush nelle note legali va riletto da un legale, come il resto (commento `ponytail:` nella pagina).
-- Il sito va in produzione con il merge in `main` di `agentrica-site` (CONVENTIONS §13.8), su richiesta dell'utente.
+- Il badge e la scheda di mcprush mostrano ancora v0.4.0: dipende da quando mcprush rilegge npm o il registro MCP. Chiuso in F30 (F30-13, P4, 2026-11-22): la scheda di mcprush mostra v0.8.0 del 21 Nov 2026, grado A, locale su stdio.
+- Il testo del badge dice «high access»: è il giudizio di mcprush su un server locale, non un rilievo nostro. Chiuso in F30 (F30-01): nessuna azione.
+- Il paragrafo su mcprush nelle note legali va riletto da un legale, come il resto (commento `ponytail:` nella pagina). Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale; riaprire con i casi scritti in PRIV-PUB-01.
+- Il sito va in produzione con il merge in `main` di `agentrica-site` (CONVENTIONS §13.8), su richiesta dell'utente. Chiuso in F30 (F30-01): `main` del sito allineato a `develop`, 0.8.0 in produzione.

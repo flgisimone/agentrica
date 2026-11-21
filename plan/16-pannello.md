@@ -61,4 +61,4 @@ Confermato dall'utente il 2026-11-16.
 ## Rilievi aperti
 
 - Risolto: le tre pagine arrivano agli utenti con il rilascio 0.3.2 (2026-11-16, su richiesta dell'utente). PR #9 `develop` → `main`, tag `v0.3.2` su `3c0f729`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`; `io.github.flgisimone/agentrica` 0.3.2 pubblicata nel registro MCP con `mcp-publisher` (login GitHub dell'utente), `active` e `isLatest`.
-- P3: il pannello multipagina non è stato guardato in una sessione vera di Claude Code.
+- P3: il pannello multipagina non è stato guardato in una sessione vera di Claude Code. Chiuso in F30 (F30-13, P3, 2026-11-22): pannello di `agentrica-dev` guardato in una sessione vera di Claude Code (estensione per VS Code); Sessione con AISA-02 · ALTAIR in «Agenti in uso», attivo, e il suo modulo di valutazione; Rilievi con il conteggio aggiornato (10).

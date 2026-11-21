@@ -88,6 +88,6 @@
 
 ## Rilievi aperti
 
-- **F28-R1 (P3)** Nel catalogo l'ultima riga può restare incompleta (56 agenti su tre colonne, e i risultati filtrati): accettato, la lista cambia con la ricerca.
-- **F28-R2 (P3)** Su telefono le sigle della mappa del cielo sono piccole (circa 11 px): le costellazioni restano link grandi e i reparti sono nella sezione subito sotto e nel menu.
-- **F28-R3 (P3)** Installa, rilasci, consumo, reputazione, progetti e note legali hanno solo token e layout nuovi, come deciso: un ritocco dedicato se serve.
+- **F28-R1 (P3)** Nel catalogo l'ultima riga può restare incompleta (56 agenti su tre colonne, e i risultati filtrati): accettato, la lista cambia con la ricerca. Chiuso in F30 (F30-11): accettato dall'utente il 2026-11-21.
+- **F28-R2 (P3)** Su telefono le sigle della mappa del cielo sono piccole (circa 11 px): le costellazioni restano link grandi e i reparti sono nella sezione subito sotto e nel menu. Chiuso in F30 (F30-11): sotto `sm` le sigle salgono a 30 unità, circa 16 px (evidenze in `audit/2026-11-21-f30/evidenze/`).
+- **F28-R3 (P3)** Installa, rilasci, consumo, reputazione, progetti e note legali hanno solo token e layout nuovi, come deciso: un ritocco dedicato se serve. Chiuso in F30 (F30-11): accettato dall'utente il 2026-11-21.

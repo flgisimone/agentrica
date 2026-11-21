@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { Card, Source } from "../packages/catalog/src/library.ts";
-import { addDays, cleanLink, cleanTitle, dueCards, MAX_BODY, MAX_ITEMS, MAX_TITLE, newItems, parseFeed, parseReleases, report, sinceFor, toDay } from "./study-lib.ts";
+import { addDays, cleanLink, cleanTitle, dueCards, MAX_BODY, MAX_ITEMS, MAX_TITLE, newItems, parseFeed, parseReleases, redirectTarget, report, sinceFor, toDay } from "./study-lib.ts";
 
 const SOURCE: Source = { id: "prova", name: "Fonte di prova", level: 1, url: "https://esempio.org/", domains: ["esempio.org", "github.com"], update: "rss", feed: "https://esempio.org/rss", access: "libero", checked: "2026-11-01" };
 const card = (id: string, verified: string, review: string): Card => ({
@@ -96,4 +96,14 @@ test("report: sezioni per reparto, niente di nuovo, motivi ripuliti, limite di G
   assert.match(report([], "2026-11-19"), /Niente di nuovo/);
   const huge = { ...finding, news: Array.from({ length: 600 }, () => finding.news[0]!) };
   assert.ok(report([huge], "2026-11-19").length < MAX_BODY + 200);
+});
+
+test("redirectTarget: segue solo https nei domini della fonte, anche con Location relativa (F30-07)", () => {
+  const domains = ["esempio.org"];
+  assert.equal(redirectTarget("https://esempio.org/rss", "/feed.xml", domains).href, "https://esempio.org/feed.xml");
+  assert.equal(redirectTarget("https://esempio.org/rss", "https://www.esempio.org/rss", domains).href, "https://www.esempio.org/rss");
+  assert.throws(() => redirectTarget("https://esempio.org/rss", "https://altro.net/rss", domains), /fuori dai domini \(altro\.net\)/);
+  assert.throws(() => redirectTarget("https://esempio.org/rss", "http://esempio.org/rss", domains), /fuori dai domini/);
+  assert.throws(() => redirectTarget("https://esempio.org/rss", "https://esempio.org.altro.net/", domains), /fuori dai domini/);
+  assert.throws(() => redirectTarget("https://esempio.org/rss", null, domains), /senza Location/);
 });

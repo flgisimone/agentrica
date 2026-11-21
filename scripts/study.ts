@@ -6,21 +6,30 @@
 // Uso: npm run study [-- --today AAAA-MM-GG]
 import { parseArgs } from "node:util";
 import { DEPARTMENTS, findAgentsDir, loadCatalog, loadSources } from "../packages/catalog/src/index.ts";
-import { inDomains, isDate, type Source } from "../packages/catalog/src/library.ts";
-import { dueCards, newItems, parseFeed, parseReleases, report, sinceFor, type Finding, type Item } from "./study-lib.ts";
+import { isDate, type Source } from "../packages/catalog/src/library.ts";
+import { dueCards, newItems, parseFeed, parseReleases, redirectTarget, report, sinceFor, type Finding, type Item } from "./study-lib.ts";
 
 const TIMEOUT_MS = 15_000;
 // Alcuni feed portano il testo intero degli articoli (noyb, 2,5 MB a novembre 2026).
 const MAX_BYTES = 5_000_000;
 
-/** Scarica un feed: solo https, risposta 200 entro il timeout e il limite, indirizzo finale nei domini della fonte. */
+const MAX_REDIRECTS = 5;
+
+/** Scarica un feed: solo https, risposta 200 entro il timeout e il limite; ogni redirect resta nei domini della fonte. */
 async function download(source: Source): Promise<string> {
-  const response = await fetch(source.feed!, {
-    headers: { "user-agent": "agentrica-study", accept: "application/rss+xml, application/atom+xml, application/xml, application/json;q=0.9, */*;q=0.5" },
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
-  const final = new URL(response.url);
-  if (final.protocol !== "https:" || !inDomains(final.hostname, source.domains)) throw new Error(`reindirizzato fuori dai domini (${final.hostname})`);
+  let url = source.feed!;
+  let response: Response;
+  for (let hops = 0; ; hops++) {
+    response = await fetch(url, {
+      headers: { "user-agent": "agentrica-study", accept: "application/rss+xml, application/atom+xml, application/xml, application/json;q=0.9, */*;q=0.5" },
+      redirect: "manual",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    if (response.status < 300 || response.status >= 400) break;
+    if (hops === MAX_REDIRECTS) throw new Error("troppi reindirizzamenti");
+    await response.body?.cancel();
+    url = redirectTarget(url, response.headers.get("location"), source.domains).href;
+  }
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   if (Number(response.headers.get("content-length") ?? 0) > MAX_BYTES) throw new Error("risposta oltre il limite");
   const reader = response.body?.getReader();

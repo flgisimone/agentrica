@@ -73,7 +73,7 @@
 | ID | Rilievo | Priorità |
 |---|---|---|
 | F26-R1 | Etichetta `progetto` creata nel repository pubblico alla chiusura (2026-11-19) | chiuso |
-| F26-R2 | Il README inglese non ha la sezione dei modelli consigliati di F24 (difetto preesistente) | P3 |
-| F26-R3 | Misura di business (progetti approvati e richieste per trimestre, tempo fra richiesta e approvazione): oggi dalle date delle issue e dalla storia di `projects.json`, nessuno script | P3 |
-| F26-R4 | Le note legali sui progetti, come il resto della pagina, vanno rilette da un legale (commento `ponytail:` della pagina) | P2 |
+| F26-R2 | Il README inglese non ha la sezione dei modelli consigliati di F24 (difetto preesistente) | P3 · chiuso in F30 (F30-10): sezione «Recommended models» |
+| F26-R3 | Misura di business (progetti approvati e richieste per trimestre, tempo fra richiesta e approvazione): oggi dalle date delle issue e dalla storia di `projects.json`, nessuno script | P3 · chiuso in F30 (F30-11): non serve finché non ci sono progetti, si costruisce con il primo (scelta dell'utente, 2026-11-21) |
+| F26-R4 | Le note legali sui progetti, come il resto della pagina, vanno rilette da un legale (commento `ponytail:` della pagina) | P2 · chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale |
 

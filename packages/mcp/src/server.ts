@@ -414,7 +414,7 @@ function registerShowcase(showcase: Showcase) {
     },
     async ({ rimuovi }) => {
       if (rimuovi !== undefined) {
-        if (!UUID.test(rimuovi.trim())) return said(title, "Il codice della proposta non è nel formato giusto (un UUID come 3f2a…-…): chiedilo di nuovo all'utente.");
+        if (!UUID.test(rimuovi.trim())) return said(title, "Il testo dopo il comando progetto è il codice di una proposta da ritirare, e questo non lo è (serve un UUID come 3f2a…-…). Dillo all'utente: per proporre un progetto si lancia il comando progetto senza argomenti; per ritirarne uno serve il codice ricevuto all'invio.");
         const result = await showcase.withdraw(rimuovi.trim().toLowerCase());
         return said(
           title,

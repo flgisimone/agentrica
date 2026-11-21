@@ -75,3 +75,9 @@ test("argomenti non validi: due cartelle, nome vuoto", () => {
   assert.match(init("a", "b").stderr, /uso: agentrica-mcp init/);
   assert.match(init("c", "--name", " ").stderr, /--name/);
 });
+
+test("docs: il quadro delle agenzie di starter/ è uguale a quello del repository (F18-R1, F30)", () => {
+  const repo = join(import.meta.dirname, "..", "..", "..");
+  const name = join("docs", "AI Multi-Agency System.md");
+  assert.equal(readFileSync(join(repo, "starter", name), "utf8"), readFileSync(join(repo, name), "utf8"), "aggiorna le due copie insieme");
+});

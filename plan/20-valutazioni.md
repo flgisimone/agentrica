@@ -147,15 +147,15 @@ Ordine: F20-01/02 → conferma dell'utente → F20-03/04 → F20-05/06/07/12 →
 
 ## Rilievi aperti
 
-- (P2) DPA di Neon da verificare: controparte (Neon o Databricks) e copertura dei trasferimenti fuori dallo SEE; poi aggiornare F20-02 e le note legali se serve.
-- (P2) Note legali, sezione `#valutazioni`: testo non rivisto da un legale (come il resto della pagina, PRIV-PUB-01).
-- (P3) Con F21 un modello manipolato da un file del progetto potrebbe mettere dati del progetto nel commento con `publish: true`: la moderazione di F21 deve tenerne conto (l'anteprima mostra il testo all'utente, ma la conferma dipende dal modello).
-- (P3) Il pannello tiene le ultime 20 chiamate: un agente usato molto prima non compare più fra quelli da valutare nella pagina (resta `rate_agent`).
+- (P2) DPA di Neon da verificare: controparte (Neon o Databricks) e copertura dei trasferimenti fuori dallo SEE; poi aggiornare F20-02 e le note legali se serve. Chiuso in F30 (**F30-03**): controparte Databricks, Inc., SCC 2021 e Data Privacy Framework, note legali aggiornate; copertura del piano gratuito non confermata, rischio accettato dall'utente il 2026-11-21.
+- (P2) Note legali, sezione `#valutazioni`: testo non rivisto da un legale (come il resto della pagina, PRIV-PUB-01). Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale; riaprire con i casi scritti in PRIV-PUB-01.
+- (P3) Con F21 un modello manipolato da un file del progetto potrebbe mettere dati del progetto nel commento con `publish: true`: la moderazione di F21 deve tenerne conto (l'anteprima mostra il testo all'utente, ma la conferma dipende dal modello). Chiuso in F30 (F30-12): `npm run ratings -- --moderate` mostra ogni commento al titolare e chiede di rifiutare codice, percorsi, dettagli di un progetto o testo che sembra scritto da un file del progetto; nel dubbio si rifiuta (`scripts/ratings.ts`).
+- (P3) Il pannello tiene le ultime 20 chiamate: un agente usato molto prima non compare più fra quelli da valutare nella pagina (resta `rate_agent`). Chiuso in F30 (F30-09): il pannello tiene anche l'ultima chiamata di ogni agente uscito dalle ultime 20.
 
 - (P2) Route e job con le credenziali del proprietario del database (rischio accettato, Decisioni). Da rivedere in F20-10 con Security; per tornare al privilegio minimo servono le stringhe di `ratings_writer` e `ratings_purger` in variabili Sensitive.
-- (P3) Variabili `RATINGS_WRITER_URL` e `RATINGS_PURGER_URL` su Vercel non più usate: da cancellare.
+- (P3) Variabili `RATINGS_WRITER_URL` e `RATINGS_PURGER_URL` su Vercel non più usate: da cancellare. Chiuso in F30 (F30-02): le variabili tornano in uso, reimpostate dall'utente il 2026-11-21.
 
-- `npm audit` (dipendenze di sviluppo): minimatch e tinyglobby moderati sotto typescript-eslint 8.72.2, la correzione porta a 8.73.0. Già presente prima di F20, fuori perimetro: P3, da un aggiornamento delle dipendenze.
+- `npm audit` (dipendenze di sviluppo): minimatch e tinyglobby moderati sotto typescript-eslint 8.72.2, la correzione porta a 8.73.0. Già presente prima di F20, fuori perimetro: P3, da un aggiornamento delle dipendenze. Chiuso in F29 (SEC09-F5-04, 2026-11-19): typescript-eslint 8.73.0 con minimatch ^11.0.1, deepmerge non è più nell'albero; `npm audit` a 0.
 
 ## Criteri di accettazione
 

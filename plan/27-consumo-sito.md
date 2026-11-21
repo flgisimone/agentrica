@@ -84,7 +84,7 @@
 
 ## Rilievi aperti
 
-- Risolto (2026-11-19, su richiesta dell'utente): `003-usage.sql` eseguito su Neon dall'utente (`usage_send_count()` = 0); sito in produzione con la PR #8 di `agentrica-site` (`/consumo` 200, `POST /api/usage` non valido 400); rilascio 0.7.0 con la voce del `CHANGELOG.md` per F24–F27: PR #19, tag `v0.7.0`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`. Da fare al PC: `io.github.flgisimone/agentrica` 0.7.0 nel registro MCP con `mcp-publisher`.
-- P2: base giuridica e bilanciamento dei totali da far verificare a un legale, come per le valutazioni; Vercel Hobby senza DPA resta PRIV-PUB-01.
-- P3: la soglia conta gli invii, non gli utenti: lo stesso utente che invia ogni giorno la fa salire (le righe no, si sostituiscono). Da rivedere se i totali crescono in modo strano.
-- P3: i grafici non hanno tooltip: ogni barra ha etichetta e valore scritti, quindi un tooltip ripeterebbe il dato.
+- Risolto (2026-11-19, su richiesta dell'utente): `003-usage.sql` eseguito su Neon dall'utente (`usage_send_count()` = 0); sito in produzione con la PR #8 di `agentrica-site` (`/consumo` 200, `POST /api/usage` non valido 400); rilascio 0.7.0 con la voce del `CHANGELOG.md` per F24–F27: PR #19, tag `v0.7.0`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm`. Da fare al PC: `io.github.flgisimone/agentrica` 0.7.0 nel registro MCP con `mcp-publisher`. Superato in F30 (F30-01): 0.8.0 è latest nel registro MCP.
+- P2: base giuridica e bilanciamento dei totali da far verificare a un legale, come per le valutazioni; Vercel Hobby senza DPA resta PRIV-PUB-01. Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale; riaprire con i casi scritti in PRIV-PUB-01.
+- P3: la soglia conta gli invii, non gli utenti: lo stesso utente che invia ogni giorno la fa salire (le righe no, si sostituiscono). Da rivedere se i totali crescono in modo strano. Chiuso in F30 (F30-12): accettato dall'utente il 2026-11-21, si riapre se i totali crescono in modo strano.
+- P3: i grafici non hanno tooltip: ogni barra ha etichetta e valore scritti, quindi un tooltip ripeterebbe il dato. Chiuso in F30 (F30-12): accettato dall'utente il 2026-11-21.

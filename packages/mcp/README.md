@@ -280,6 +280,9 @@ Il testo degli agenti viene dai file di `agents/` della versione installata. Qua
 
 - **Installato con `install`**: rilancia `install` con la versione nuova, es. `npx -y @agentrica/mcp@<versione> install`, poi riavvia Claude Code.
 - **Con `add` o `init`**: rilancia `add` con la versione nuova, o cambia la versione nel comando del server o nel `.mcp.json`, poi riavvia il client.
+poi riavvia il client.
+
+Se Agentrica è registrato in più ambiti (per esempio con `install` e poi con `add --local`), `add` e `install` lo dicono dopo la registrazione: Claude Code usa quella più vicina al progetto (local, poi project, poi user), e quella che non ti serve si toglie con `claude mcp remove agentrica --scope <ambito>`.
 
 Per disinstallare:
 

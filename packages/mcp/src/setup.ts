@@ -5,8 +5,11 @@
 // - install: installa questa versione con npm -g e registra `node <cartella globale>/…/server.js` con ambito user.
 // Una registrazione con lo stesso nome nello stesso ambito si sostituisce: rilanciare con una versione nuova aggiorna.
 // Se mancano Node ≥ 22, npm o claude, lo dice e stampa i comandi da lanciare a mano.
+// Se Agentrica è registrato anche in un altro ambito, lo dice dopo la registrazione (F30-08): Claude Code usa quello
+// più vicino al progetto e l'utente vedrebbe due comandi diversi.
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { VERSION } from "./prompt.ts";
@@ -29,6 +32,8 @@ export interface SetupDeps {
   run(command: string, args: string[]): RunResult;
   exists(path: string): boolean;
   out(text: string): void;
+  /** Gli ambiti in cui Agentrica è già registrato in Claude Code; assente nei test che non lo usano. */
+  registered?(): Scope[];
 }
 
 /**
@@ -56,12 +61,39 @@ function realRun(platform: NodeJS.Platform) {
   };
 }
 
+/**
+ * Gli ambiti con una voce «agentrica» nei file di Claude Code: `mcpServers` di ~/.claude.json (user), della cartella
+ * corrente in `projects` dello stesso file (local) e di ./.mcp.json (project). Un file illeggibile non conta.
+ * ponytail: non segue CLAUDE_CONFIG_DIR, un cambio di formato di Claude Code né, su Windows, una chiave di `projects` scritta
+ * in altra forma (barre /): l'avviso è un aiuto, non un controllo; da rivedere con la prova su Windows (F23-10).
+ */
+export function registeredScopes(home: string, cwd: string, read = (path: string) => readFileSync(path, "utf8")): Scope[] {
+  const json = (path: string): Record<string, unknown> | undefined => {
+    try {
+      const value: unknown = JSON.parse(read(path));
+      return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+  const has = (config: unknown) => {
+    const servers = (config as { mcpServers?: unknown } | undefined)?.mcpServers;
+    return typeof servers === "object" && servers !== null && Object.hasOwn(servers, NAME);
+  };
+  const user = json(join(home, ".claude.json"));
+  const local = (user?.projects as Record<string, unknown> | undefined)?.[cwd];
+  return (["user", "project", "local"] as const).filter((scope) =>
+    scope === "user" ? has(user) : scope === "project" ? has(json(join(cwd, ".mcp.json"))) : has(local),
+  );
+}
+
 const REAL: SetupDeps = {
   platform: process.platform,
   nodeVersion: process.versions.node,
   run: realRun(process.platform),
   exists: existsSync,
   out: (text) => process.stdout.write(text),
+  registered: () => registeredScopes(homedir(), process.cwd()),
 };
 
 /** Il comando con cui il client avvia il server. */
@@ -172,6 +204,9 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
   }
   say(`Agentrica ${VERSION} registrato in Claude Code (${SCOPE_TEXT[scope]})${removed.status === 0 ? ", al posto della registrazione precedente" : ""}.`);
   say(`Comando del server: ${shown(command)}`);
+  for (const other of deps.registered?.().filter((s) => s !== scope) ?? []) {
+    say(`Attenzione: Agentrica è registrato anche con ${SCOPE_TEXT[other]}, con un comando che può essere diverso. Claude Code usa la registrazione più vicina al progetto (local, poi project, poi user). Se non ti serve, toglila con: claude mcp remove ${NAME} --scope ${other}`);
+  }
   say("Riavvia Claude Code (o usa /mcp) e controlla con: claude mcp list");
   return 0;
 }

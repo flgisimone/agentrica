@@ -75,6 +75,19 @@ export interface Panel {
 const MAX_BODY_BYTES = 16_000;
 const MAX_NOTE = 2000;
 const MAX_ACTIVITY = 20;
+
+/**
+ * Le ultime `max` chiamate più l'ultima di ogni agente uscito da quelle (F30-09): ogni agente usato nella sessione resta
+ * nell'elenco e si può valutare. Al più `max` voci più una per agente del catalogo.
+ */
+export function keepActivity<T extends { id: string }>(list: T[], max = MAX_ACTIVITY): T[] {
+  const seen = new Set<string>();
+  return list.filter((entry, i) => {
+    const first = !seen.has(entry.id);
+    seen.add(entry.id);
+    return i < max || first;
+  });
+}
 const KEEPALIVE_MS = 25_000;
 
 const SECURITY_HEADERS = {
@@ -318,7 +331,7 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
     },
     record(entry) {
       activity.unshift({ ...entry, time: new Date().toISOString() });
-      activity.length = Math.min(activity.length, MAX_ACTIVITY);
+      activity.splice(0, activity.length, ...keepActivity(activity));
       changed();
     },
     hasViewers: () => viewers.size > 0,

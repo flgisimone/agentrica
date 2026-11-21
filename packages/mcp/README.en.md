@@ -159,6 +159,25 @@ Squad, panel, ratings and the new-version notice can be chosen with a form, with
 - An invalid file (wrong format, keys or squad) is ignored, with a line in the client's logs, and the form rewrites it. To go back to the defaults, delete the file.
 - With Node's [least privilege](#installation) permissions the server neither reads nor writes the file: use the command options.
 
+## Recommended models
+
+The server does not choose the model: your client does. For some agents, though, we recommend a model smaller than Opus, because on the same test cases it finds the same defects with no more false positives and costs less (of your subscription limits, or in dollars with the API).
+
+| Agent | Recommended model | Cost on the task compared with Opus |
+|---|---|---|
+| AISA-08 · DENEB, QA | Haiku | −96% |
+| AISA-09 · REGULUS, Application Security | Sonnet | −52% |
+| AICA-04 · ALNILAM, Cloud Security | Sonnet | −52% |
+| AIPCA-02 · ALIOTH, GDPR | Sonnet | −52% |
+| AIBPD-05 · ALGIEBA, Business Analyst | Sonnet | −52% |
+
+The other 51 agents have not been measured: they work with your session's model. The cost is the average over the test cases of 2026-11-19 (API prices of 2026-11-03); measurements, cases and reports are in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md) (in Italian).
+
+- **Where you see it.** In `elenca_agenti` and at the top of the agent's text ("Modello consigliato: Sonnet…"): if the client allows it, the model hands the task to a subagent with that model.
+- **Subagents.** The subagents copied by [`init`](#new-project) into `.claude/agents/` already have `model:` set to the recommended model (the others `inherit`). To change it, edit that line (`opus`, `sonnet`, `haiku` or `inherit`).
+- **Session.** In Claude Code you change the session's model with `/model`.
+- **Review.** The departments' rules ask an agent on a smaller model to propose a review on Opus when it finds a P0 or P1 finding or is unsure.
+
 ## Ratings
 
 You can give an agent a score from 1 to 5 and a comment on what to improve: ratings are used to fix the role files.
@@ -262,6 +281,9 @@ The agents' text comes from the `agents/` files of the installed version. When a
 
 - **Installed with `install`**: run `install` again with the new version, e.g. `npx -y @agentrica/mcp@<version> install`, then restart Claude Code.
 - **With `add` or `init`**: run `add` again with the new version, or change the version in the server command or in `.mcp.json`, then restart the client.
+then restart the client.
+
+If Agentrica is registered in more than one scope (for example with `install` and then `add --local`), `add` and `install` say so after registering: Claude Code uses the one closest to the project (local, then project, then user), and you remove the one you don't need with `claude mcp remove agentrica --scope <scope>`.
 
 To uninstall:
 

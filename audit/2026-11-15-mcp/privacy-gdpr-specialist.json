@@ -2,14 +2,155 @@
   "agente": "AIPCA-02 · privacy-gdpr-specialist",
   "data": "2026-11-15",
   "perimetro": "packages/mcp (server.ts, prompt.ts, README.md), catalog findAgentsDir, agents/*/00-common-rules.md; sola lettura, nessuna prova a runtime",
-  "fonti": ["GDPR Reg. UE 2016/679, testo vigente su EUR-Lex verificato il 2026-11-15"],
+  "fonti": [
+    "GDPR Reg. UE 2016/679, testo vigente su EUR-Lex verificato il 2026-11-15"
+  ],
   "sintesi": "Nessun P0 o P1. Il server non registra, conserva né trasmette il compito; Agentrica non è titolare né responsabile. Tre P2: percorso dei dati nel README, limite alle dichiarazioni di conformità nelle regole inviate, regole Software sui dati reali.",
   "rilievi": [
-    {"id": "PRIV-MCP-01", "area": "Trattamento nel server", "titolo": "Il compito non viene conservato né trasmesso, torna solo al client", "stato": "Chiuso: controllo superato (conforme_verificato). Test in F6 (F6-06, 2eace22): server.test.ts verifica stderr vuoto e cartella del progetto vuota con il permission model in sola lettura (verifica F15, 2026-11-15)", "gravita": "bassa", "riferimenti": ["art. 5(1)(c)", "art. 25", "cons. 78"], "evidenze": ["server.ts:26, prompt.ts:41-42, server.ts:33-36 e 73-81", "nessun console.*, scrittura su file, rete o process.env in server.ts e prompt.ts e nei moduli server dell'SDK usati"], "raccomandazione": "Facoltativo: test che fallisce se il server scrive su stderr o su file.", "priorita": "P3", "responsabile_suggerito": "sw-backend-developer / sw-qa", "verifica": "Rianalisi a ogni cambio di server.ts o dell'SDK; prova a runtime in F6."},
-    {"id": "PRIV-MCP-02", "area": "Ruoli privacy", "titolo": "Per i dati del progetto del cliente Agentrica non è titolare né responsabile", "stato": "Chiuso: controllo superato (non_applicabile). Vincolo «Privacy dei trasporti» in plan/README.md; il server resta solo stdio (verifica F15, 2026-11-15)", "gravita": "bassa", "riferimenti": ["art. 4(7)-(8)", "art. 28"], "evidenze": ["trasporto solo stdio (server.ts:85)"], "raccomandazione": "Vincolo in plan/: MCP remoto o telemetria richiedono una revisione privacy prima del design.", "priorita": "P3", "responsabile_suggerito": "privacy-chief-officer", "verifica": "Nel file della fase che introduce un trasporto remoto."},
-    {"id": "PRIV-MCP-03", "area": "Trasparenza del README", "titolo": "«Solo in locale» può far pensare che anche i dati del progetto restino in locale", "stato": "Risolto in F5: voce «Dove vanno i dati» in packages/mcp/README.md e README.en.md (57bee23; verifica F15, 2026-11-15)", "gravita": "media", "riferimenti": ["art. 5(1)(a) e (c)"], "evidenze": ["README.md:9-12"], "raccomandazione": "Voce sul percorso dei dati: prompt, compito e file letti vanno al fornitore del modello tramite il client; Agentrica non li riceve; non inserire nel compito dati personali o segreti non necessari.", "priorita": "P2", "responsabile_suggerito": "sw-backend-developer, revisione privacy", "verifica": "Rilettura del README."},
-    {"id": "PRIV-MCP-04", "area": "Dichiarazioni di conformità", "titolo": "Il README promette che gli agenti non dichiarano conformità, le regole inviate non lo garantiscono", "stato": "Risolto in F6: conforme_verificato limitato al singolo controllo nelle regole comuni privacy e cybersecurity (F6-02, 2eace22; verifica F15, 2026-11-15)", "gravita": "media", "riferimenti": ["art. 24", "README.md:13"], "evidenze": ["privacy/00-common-rules.md:8 conforme_verificato senza limite di perimetro", "divieto solo nel Chief (01-chief-privacy-compliance-officer.md:18)", "frase di non certificazione solo nel README del reparto, che il server non usa", "nessun divieto equivalente nelle regole cybersecurity"], "raccomandazione": "Nelle regole comuni privacy e cybersecurity: conforme_verificato vale solo per il singolo controllo; non dichiarare conforme un progetto nel suo insieme; i rilievi non sono certificazione. In alternativa ridimensionare il README.", "priorita": "P2", "responsabile_suggerito": "privacy-chief-officer, conferma dell'utente", "verifica": "Tool agente su AIPCA-02 e AICA-01."},
-    {"id": "PRIV-MCP-05", "area": "Regole comuni Software", "titolo": "Le regole Software sui dati personali si fermano a «dati sintetici per i test»", "stato": "Risolto in F6: niente dati personali reali in fixture, seed, snapshot, log, commit e report e privacy by design nelle regole comuni Software (F6-02, 2eace22; verifica F15, 2026-11-15)", "gravita": "media", "riferimenti": ["art. 5(1)(c) e (f)", "art. 25", "art. 32", "artt. 33-34"], "evidenze": ["software/00-common-rules.md:9-10"], "raccomandazione": "Regola: non leggere, copiare o riportare dati personali reali se non serve; mai in fixture, seed, snapshot, commit o report; niente dati personali o segreti nei log; privacy by design e reparto AIPCA per funzioni che trattano dati personali.", "priorita": "P2", "responsabile_suggerito": "privacy-chief-officer con sw-security, conferma dell'utente", "verifica": "Tool agente su un id AISA."},
-    {"id": "PRIV-MCP-06", "area": "Regole comuni di tutti i reparti", "titolo": "Manca un divieto comune di inviare dati del progetto a servizi esterni; destinatario delle segnalazioni urgenti poco chiaro", "stato": "Risolto in F6: sezione «Dati del progetto e segnalazioni» nei cinque 00-common-rules.md (F6-02, 2eace22; verifica F15, 2026-11-15)", "gravita": "bassa", "riferimenti": ["art. 5(1)(f)", "art. 33"], "evidenze": ["regole comuni Business e Design coprono solo report e aggregazione", "segnalazioni «al Chief» o «al responsabile umano»"], "raccomandazione": "A) una riga in ogni 00-common-rules (consigliata); B) una frase nella cornice di prompt.ts.", "priorita": "P3", "responsabile_suggerito": "privacy-chief-officer, conferma dell'utente", "verifica": "Tool agente con un id per reparto."}
+    {
+      "id": "PRIV-MCP-01",
+      "area": "Trattamento nel server",
+      "titolo": "Il compito non viene conservato né trasmesso, torna solo al client",
+      "stato": "Chiuso: controllo superato (conforme_verificato). Test in F6 (F6-06, 2eace22): server.test.ts verifica stderr vuoto e cartella del progetto vuota con il permission model in sola lettura (verifica F15, 2026-11-15)",
+      "gravita": "bassa",
+      "riferimenti": [
+        "art. 5(1)(c)",
+        "art. 25",
+        "cons. 78"
+      ],
+      "evidenze": [
+        "server.ts:26, prompt.ts:41-42, server.ts:33-36 e 73-81",
+        "nessun console.*, scrittura su file, rete o process.env in server.ts e prompt.ts e nei moduli server dell'SDK usati"
+      ],
+      "raccomandazione": "Facoltativo: test che fallisce se il server scrive su stderr o su file.",
+      "priorita": "P3",
+      "responsabile_suggerito": "sw-backend-developer / sw-qa",
+      "verifica": "Rianalisi a ogni cambio di server.ts o dell'SDK; prova a runtime in F6.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "Il compito non si salva né si trasmette: server.test.ts (permission model in sola lettura) chiude con stderr vuoto e cartella del progetto vuota. Da F29 il server scrive solo ~/.agentrica/config.json, senza compito né dati del progetto (PRIV-CFG-01, config.test.ts)."
+      }
+    },
+    {
+      "id": "PRIV-MCP-02",
+      "area": "Ruoli privacy",
+      "titolo": "Per i dati del progetto del cliente Agentrica non è titolare né responsabile",
+      "stato": "Chiuso: controllo superato (non_applicabile). Vincolo «Privacy dei trasporti» in plan/README.md; il server resta solo stdio (verifica F15, 2026-11-15)",
+      "gravita": "bassa",
+      "riferimenti": [
+        "art. 4(7)-(8)",
+        "art. 28"
+      ],
+      "evidenze": [
+        "trasporto solo stdio (server.ts:85)"
+      ],
+      "raccomandazione": "Vincolo in plan/: MCP remoto o telemetria richiedono una revisione privacy prima del design.",
+      "priorita": "P3",
+      "responsabile_suggerito": "privacy-chief-officer",
+      "verifica": "Nel file della fase che introduce un trasporto remoto.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "Il server resta solo stdio, nessun MCP remoto. Le connessioni verso Agentrica (valutazioni F20, totali di token F27, proposte di progetto F29-08) hanno avuto ciascuna la revisione privacy prima del design, come chiede il vincolo."
+      }
+    },
+    {
+      "id": "PRIV-MCP-03",
+      "area": "Trasparenza del README",
+      "titolo": "«Solo in locale» può far pensare che anche i dati del progetto restino in locale",
+      "stato": "Risolto in F5: voce «Dove vanno i dati» in packages/mcp/README.md e README.en.md (57bee23; verifica F15, 2026-11-15)",
+      "gravita": "media",
+      "riferimenti": [
+        "art. 5(1)(a) e (c)"
+      ],
+      "evidenze": [
+        "README.md:9-12"
+      ],
+      "raccomandazione": "Voce sul percorso dei dati: prompt, compito e file letti vanno al fornitore del modello tramite il client; Agentrica non li riceve; non inserire nel compito dati personali o segreti non necessari.",
+      "priorita": "P2",
+      "responsabile_suggerito": "sw-backend-developer, revisione privacy",
+      "verifica": "Rilettura del README.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "«Dove vanno i dati» c'è ancora in packages/mcp/README.md e README.en.md, sezione «Cosa fa e cosa non fa»."
+      }
+    },
+    {
+      "id": "PRIV-MCP-04",
+      "area": "Dichiarazioni di conformità",
+      "titolo": "Il README promette che gli agenti non dichiarano conformità, le regole inviate non lo garantiscono",
+      "stato": "Risolto in F6: conforme_verificato limitato al singolo controllo nelle regole comuni privacy e cybersecurity (F6-02, 2eace22; verifica F15, 2026-11-15)",
+      "gravita": "media",
+      "riferimenti": [
+        "art. 24",
+        "README.md:13"
+      ],
+      "evidenze": [
+        "privacy/00-common-rules.md:8 conforme_verificato senza limite di perimetro",
+        "divieto solo nel Chief (01-chief-privacy-compliance-officer.md:18)",
+        "frase di non certificazione solo nel README del reparto, che il server non usa",
+        "nessun divieto equivalente nelle regole cybersecurity"
+      ],
+      "raccomandazione": "Nelle regole comuni privacy e cybersecurity: conforme_verificato vale solo per il singolo controllo; non dichiarare conforme un progetto nel suo insieme; i rilievi non sono certificazione. In alternativa ridimensionare il README.",
+      "priorita": "P2",
+      "responsabile_suggerito": "privacy-chief-officer, conferma dell'utente",
+      "verifica": "Tool agente su AIPCA-02 e AICA-01.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "conforme_verificato limitato al singolo controllo in agents/ai_privacy_compliance_agency/00-common-rules.md:9; la regola equivalente, senza lo stato, in agents/ai_cybersecurity_agency/00-common-rules.md:18."
+      }
+    },
+    {
+      "id": "PRIV-MCP-05",
+      "area": "Regole comuni Software",
+      "titolo": "Le regole Software sui dati personali si fermano a «dati sintetici per i test»",
+      "stato": "Risolto in F6: niente dati personali reali in fixture, seed, snapshot, log, commit e report e privacy by design nelle regole comuni Software (F6-02, 2eace22; verifica F15, 2026-11-15)",
+      "gravita": "media",
+      "riferimenti": [
+        "art. 5(1)(c) e (f)",
+        "art. 25",
+        "art. 32",
+        "artt. 33-34"
+      ],
+      "evidenze": [
+        "software/00-common-rules.md:9-10"
+      ],
+      "raccomandazione": "Regola: non leggere, copiare o riportare dati personali reali se non serve; mai in fixture, seed, snapshot, commit o report; niente dati personali o segreti nei log; privacy by design e reparto AIPCA per funzioni che trattano dati personali.",
+      "priorita": "P2",
+      "responsabile_suggerito": "privacy-chief-officer con sw-security, conferma dell'utente",
+      "verifica": "Tool agente su un id AISA.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "agents/ai_software_agency/00-common-rules.md:11-12: niente dati personali reali in fixture, seed, snapshot, log, commit e report; privacy by design."
+      }
+    },
+    {
+      "id": "PRIV-MCP-06",
+      "area": "Regole comuni di tutti i reparti",
+      "titolo": "Manca un divieto comune di inviare dati del progetto a servizi esterni; destinatario delle segnalazioni urgenti poco chiaro",
+      "stato": "Risolto in F6: sezione «Dati del progetto e segnalazioni» nei cinque 00-common-rules.md (F6-02, 2eace22; verifica F15, 2026-11-15)",
+      "gravita": "bassa",
+      "riferimenti": [
+        "art. 5(1)(f)",
+        "art. 33"
+      ],
+      "evidenze": [
+        "regole comuni Business e Design coprono solo report e aggregazione",
+        "segnalazioni «al Chief» o «al responsabile umano»"
+      ],
+      "raccomandazione": "A) una riga in ogni 00-common-rules (consigliata); B) una frase nella cornice di prompt.ts.",
+      "priorita": "P3",
+      "responsabile_suggerito": "privacy-chief-officer, conferma dell'utente",
+      "verifica": "Tool agente con un id per reparto.",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "«Dati del progetto e segnalazioni» presente in tutti e cinque i 00-common-rules.md."
+      }
+    }
   ]
 }

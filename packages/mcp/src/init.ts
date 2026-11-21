@@ -38,7 +38,8 @@ export function projectFiles(name: string, path: string, date: string, platform:
     files.set(`.claude/agents/${file}`, text.split(SUBAGENT_PROJECT).join(`del progetto ${name}.`));
   }
   // Su Windows npx è npx.cmd, che Claude Code non avvia senza cmd /c (F23).
-  const npx = ["-y", `@agentrica/mcp@${VERSION}`, "--panel"];
+  // Da F29 il pannello parte di predefinito: niente --panel, così la configurazione salvata dell'utente vale anche qui.
+  const npx = ["-y", `@agentrica/mcp@${VERSION}`];
   const server = platform === "win32" ? { command: "cmd", args: ["/c", "npx", ...npx] } : { command: "npx", args: npx };
   files.set(".mcp.json", `${JSON.stringify({ mcpServers: { agentrica: server } }, null, 2)}\n`);
   return files;

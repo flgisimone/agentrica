@@ -2,7 +2,7 @@
 
 **Obiettivo**: ricontrollare tutti i rilievi degli audit sul codice di oggi, rendere la valutazione degli agenti raggiungibile in ogni sessione e permettere di configurare Agentrica con un modulo invece che con i flag; correggere `install` su Windows e rilasciare.
 
-> **Stato: da aprire** (piano scritto il 2026-11-19; l'implementazione parte dopo l'azzeramento del limite settimanale, sabato 2026-11-21). Le proposte qui sotto si confermano all'apertura.
+> **Stato: completata** (aperta il 2026-11-19, chiusa il 2026-11-21, branch `fase/f29-configura-valuta` nei due repository). F29-02 tolta all'apertura: la 0.7.1 è già su npm (tag `v0.7.1`); `mcp-publisher publish` resta all'utente fuori fase.
 
 **Agenzie**: software (Backend, QA, Security, Code Reviewer); privacy e cybersecurity per il file di configurazione (dato nuovo scritto sul PC dell'utente) e per la verifica dei rilievi; design (UX Writer) per i testi dei moduli.
 
@@ -19,10 +19,49 @@
 | Tema | Decisione |
 |---|---|
 | Configurazione | Salvata in un file, vale per le sessioni successive. Cambia la regola «il server non scrive file»: revisione privacy e cybersecurity prima del design |
+| Backlog (apertura) | F29-01, F29-03/05, F29-04/06/07 confermati; F29-02 tolto (0.7.1 già pubblicata) |
+| File | `~/.agentrica/config.json`, uno per utente; precedenza flag > file, chiave per chiave |
+| Revisione del file | PRIV-CFG-01..03 e SEC-CFG-01..05 confermati (2026-11-19) |
+| Progetti senza GitHub | Richiesta dell'utente all'apertura: chi non ha un account GitHub propone il progetto dal server MCP (prompt con modulo o tool con anteprima e conferma), il sito lo riceve in attesa e il titolare lo approva con `npm run projects`. In F29, dopo il resto, con revisione privacy e cybersecurity prima del codice (F29-08) |
+| F29-08 (revisione) | PRIV-PRJ-01..04 e SEC-PRJ-01..04 confermati; link: qualsiasi `https://`; senza moduli il tool `submit_project` con anteprima e codice (2026-11-19) |
+| Predefiniti (2026-11-21) | Alla prima installazione tutto acceso: pannello (con `open_panel` e `ask_user`), valutazioni e avviso di versione. `--no-panel` nuovo, `--panel` resta valido; `init` non scrive più `--panel`. Motivo: un utente ha chiesto «apri il pannello» e il modello gli ha detto di installarlo |
+| Primo modulo | Solo se il file manca; se l'utente annulla si salvano i predefiniti e non si richiede; dopo si cambia con `configura` |
+
+## Revisione privacy e cybersecurity del file (2026-11-19)
+
+Ruoli: privacy (GDPR Specialist, Data Governance) e cybersecurity (Security Architect, AppSec). Proposte, da confermare.
+
+| # | Requisito | Motivo |
+|---|---|---|
+| PRIV-CFG-01 | Contenuto minimo: `version`, `agents`, `panel`, `ratings`, `updateCheck`. Niente percorsi, nomi di progetto, date o identificativi | Nessun dato personale: il file resta sul PC dell'utente, Agentrica non ne riceve copia, quindi non è un trattamento di Agentrica e non serve una voce di registro |
+| PRIV-CFG-02 | Il modulo dice dove salva, che vale dalla sessione successiva e come cambiarlo o cancellarlo; README e note legali del sito lo dicono al posto di «il server non scrive file» | Trasparenza: la promessa di oggi cambia |
+| PRIV-CFG-03 | `ratings: true` non è un consenso: ogni invio resta con anteprima e conferma, come oggi | Il consenso è per singolo invio (F20) |
+| SEC-CFG-01 | Percorso fisso da `os.homedir()`, nessuna variabile d'ambiente propria; nei test si cambia `HOME`/`USERPROFILE`. Rischio accettato (P3): un `.mcp.json` che cambia `HOME` sposta il file, ma può già passare i flag direttamente e il contenuto è a schema fisso | Un progetto non deve poter dirottare letture o scritture con una variabile di Agentrica |
+| SEC-CFG-02 | Lettura stretta: al più 4 KB, solo le chiavi note con il tipo giusto, `agents` con le stesse regole di `--agents`. Un file non valido si ignora con una riga su stderr (senza il contenuto) e vale come mancante | Un file rotto non deve fermare il server in tutti i progetti |
+| SEC-CFG-03 | Scrittura atomica: cartella `0700`, file temporaneo `0600` nella stessa cartella, poi `rename` | Niente file a metà, niente lettura da altri utenti del PC |
+| SEC-CFG-04 | Con il permission model di Node senza permesso su `~/.agentrica`, niente lettura né modulo; `configura` lo dice e indica i flag | Il modo consigliato dal README resta in sola lettura |
+| SEC-CFG-05 | Le risposte del modulo si validano prima di salvare (scelte booleane, squadra al più 500 caratteri e risolta con `selectSquad`); una squadra non valida non si salva e il modello lo riferisce | L'input dell'utente passa dagli stessi controlli dei flag |
+
+## Revisione di F29-08: progetto proposto dal server MCP (2026-11-19)
+
+Ruoli: privacy (GDPR Specialist, Legal, Data Governance), cybersecurity (AppSec, Network Security), business (Product Manager). Proposte, da confermare.
+
+**Flusso.** `/mcp__agentrica__progetto` apre un modulo (nome, link, descrizione, reparti, agenti, nome da mostrare, consenso, licenza); l'invio del modulo è la conferma. Il server manda a `POST /api/projects` del sito i campi più la versione del pacchetto e riceve un codice. La proposta resta in Neon in attesa; `npm run projects` nel repository del sito la elenca accanto a issue e topic, `--add mcp:<codice>` la scrive in `src/data/projects.json`, `--decline` la rifiuta. `--no-ratings` toglie anche questo invio (unica opzione per «nessuna connessione ad Agentrica»).
+
+| # | Requisito | Motivo |
+|---|---|---|
+| PRIV-PRJ-01 | Base giuridica: consenso (art. 6.1.a) e licenza del testo, due caselle obbligatorie nel modulo come nella issue di F26. Il nome da mostrare è facoltativo (predefinito «Utente di Agentrica»), niente email né account | Stesse basi della issue; minimizzazione |
+| PRIV-PRJ-02 | Conservazione: una proposta in attesa si cancella dopo 90 giorni; rifiutata, subito; approvata, in Neon resta solo codice e stato (il testo vive in `projects.json`) | Nessuna copia oltre il necessario |
+| PRIV-PRJ-03 | Rimozione senza GitHub: il codice ricevuto all'invio, con `/mcp__agentrica__progetto` e l'argomento `rimuovi`, ritira subito la proposta in attesa; se è pubblicata, `npm run projects` la segnala e si toglie entro 30 giorni, come da F26 | Chi non ha GitHub non può aprire la issue di rimozione |
+| PRIV-PRJ-04 | Note legali: sezione «I progetti degli utenti» con il canale MCP, i dati, la conservazione, il codice e l'IP usato solo come hash con il sale del giorno per il limite | Trasparenza (artt. 13–14) |
+| SEC-PRJ-01 | Stessa validazione di F26 sui testi (`plainText`, limiti, reparti e agenti del catalogo), nel server MCP prima dell'invio e nella route prima del database; corpo al più 4 KB, SQL fisso in una funzione del database | Input non attendibile verso un sito pubblico |
+| SEC-PRJ-02 | Limite: 3 proposte al giorno per rete (hash dell'IP con il sale del giorno, come le valutazioni) | Spam senza un modulo pubblico, ma la route è raggiungibile da chiunque |
+| SEC-PRJ-03 | Link: solo `https://`, senza credenziali né porta, al più 200 caratteri; nella scheda il link porta `rel="nofollow ugc noopener"` e accanto si vede il dominio | Un link fuori da GitHub può portare ovunque: lo filtra l'approvazione del titolare, il dominio visibile aiuta chi legge |
+| SEC-PRJ-04 | Il codice è un UUID casuale; ritirare richiede il codice esatto e non dice se esisteva | Nessuna enumerazione delle proposte |
 
 ## Backlog
 
-Proposte da confermare all'apertura.
+Confermato all'apertura (2026-11-19), senza F29-02; F29-08 aggiunto dall'utente.
 
 | # | Task | Ruoli |
 |---|---|---|
@@ -33,6 +72,7 @@ Proposte da confermare all'apertura.
 | F29-05 | Prompt `configura` (`/mcp__agentrica__configura`): lo stesso modulo, quando l'utente vuole cambiare | Backend, QA |
 | F29-06 | File di configurazione: posizione (proposta `~/.agentrica/config.json`), precedenza flag > file, contenuto minimo senza dati personali, permessi, README e note legali | Backend, privacy, cybersecurity |
 | F29-07 | Verifica dell'elicitation nei client: Claude Code da terminale e in VS Code | QA |
+| F29-08 | Proposta di un progetto dal server MCP, senza account GitHub: prompt `progetto` con modulo (senza elicitation tool con anteprima e conferma), `POST /api/projects` nel sito, coda in Neon, approvazione con `npm run projects`, link anche fuori da GitHub, note legali e rimozione | Backend, privacy, cybersecurity, UX Writer, QA |
 
 ## Criteri di accettazione (proposte)
 
@@ -40,3 +80,30 @@ Proposte da confermare all'apertura.
 - Alla prima chiamata senza configurazione compare il modulo; la scelta vale anche nella sessione successiva; i flag di `add`/`install` hanno la precedenza.
 - `npx -y @agentrica/mcp@0.7.1 install` funziona da PowerShell in una cartella con `node_modules`.
 - Ogni rilievo di `audit/` ha un esito ricontrollato con data.
+
+## Fatto
+
+- **Configurazione (F29-04, F29-05, F29-06)**: `packages/mcp/src/config.ts` (lettura stretta, scrittura atomica 0600, modulo, `canUseConfig` per il permission model); `server.ts` con precedenza flag > file chiave per chiave, modulo alla prima chiamata di `agente`, `elenca_agenti` e dei prompt degli agenti se il file manca, prompt `configura` (senza moduli dà al modello la configurazione e il formato del file).
+- **Valutazione (F29-03)**: prompt `valuta` con argomento `agente` facoltativo (l'ultimo in uso), anche per un agente non caricato o un modulo già chiuso; senza moduli il flusso di `rate_agent`.
+- **Moduli non mostrati (F29-07)**: l'estensione VS Code di Claude Code gira in «print mode», dichiara `elicitation.form` e risponde `cancel` in circa 9 ms senza mostrare nulla (log del client del 2026-11-21). Un modulo chiuso in meno di 300 ms vale come non mostrato: niente salvataggio e, per il resto della sessione, i flussi senza moduli (anche la proposta di `rate_agent` nel testo dell'agente). Il difetto c'era dalla 0.6.0 per i moduli di valutazione.
+- **Progetti senza GitHub (F29-08)**: `packages/mcp/src/showcase.ts`, prompt `progetto` (modulo, argomento `rimuovi`) e tool `submit_project` (anteprima e codice); nel sito `db/004-projects.sql`, `POST /api/projects` e `/api/projects/withdraw`, `parseSubmission` e origine `mcp` in `src/lib/projects.ts`, `npm run projects` che legge le proposte con `DATABASE_URL_MODERATOR`, scheda con dominio e `rel="nofollow ugc"`, `purge_projects()` nel job giornaliero, note legali.
+- **Pannello di predefinito**: `DEFAULTS.panel` a `true`, opzione `--no-panel` (con `--panel` insieme è un errore) anche in `add`/`install`; con il permission model senza `net` o `child` il pannello si salta in silenzio se non l'ha chiesto un flag, e un avvio non riuscito ferma il server solo con `--panel` esplicito. `init` senza `--panel`; README, CHANGELOG e `starter/CONVENTIONS.md` aggiornati.
+- **Rilievi (F29-01)**: 29 rilievi ricontrollati, esito in `ricontrollo_f29` di ogni JSON e in `audit/2026-11-19-f29/report-f29.md`; SEC09-F5-04 chiuso con typescript-eslint 8.73.0 (conferma dell'utente).
+- **Testi**: i messaggi del server dicono «il comando configura/progetto di Agentrica» invece di `/mcp__agentrica__…`, che vale solo se il server si chiama `agentrica` (scelta dell'utente). README IT ed EN (configurazione, comandi, progetti, `submit_project`, frase «il server scrive un solo file»), CHANGELOG 0.8.0, versione 0.8.0 in pacchetto, `server.json` e README.
+
+## Verifiche
+
+- `npm run verify` verde: agentrica 142 test, sito 61 test e build. `npm audit` e `npm audit --omit=dev` a 0.
+- e2e del sito `progetti.spec.ts` e `pubblicazione.spec.ts`: 14 passati (computer e telefono), con una scheda finta dal server MCP.
+- Prova nel client (F29-07), estensione VS Code: il server 0.8.0 risponde, il modulo della configurazione non compare (vedi «Fatto»). Il comando si chiama `/mcp__agentrica-dev__…` perché il server di sviluppo ha quel nome. Il file salvato senza modulo è stato cancellato con il consenso dell'utente.
+- I test usano una cartella personale finta (`HOME`, `USERPROFILE`): nei primi giri la prova delle valutazioni aveva scritto `~/.agentrica/config.json` dell'utente, cancellato subito.
+
+## Rilievi aperti
+
+- **SQL su Neon**: `db/004-projects.sql` va eseguito dall'utente prima del deploy del sito (il job chiama `purge_projects()`) e del rilascio 0.8.0; poi da provare limite, ritiro, approvazione e pulizia.
+- **Moduli da terminale**: il modulo della configurazione e i comandi `valuta`, `configura`, `progetto` sono provati con il client MCP dei test e in VS Code (senza moduli), non ancora in Claude Code da terminale.
+- **Testi del sito sul pannello**: home, `/installa` (opzioni e comando), `scripts.ts` (comando `install --panel`) e la vista Consumo dicono ancora `--panel`. Si cambiano insieme all'aggiornamento del sito a `@agentrica/mcp` 0.8.0: con la 0.7.1 installata `--no-panel` fermerebbe il server.
+- **Rilascio 0.8.0**: tag `v0.8.0` su `main` (CONVENTIONS §13.8), poi `mcp-publisher publish` (registro MCP fermo alla 0.7.0) e aggiornamento del comando nel sito.
+- **Soglia di 300 ms**: semplice ed efficace oggi; se un client mostrasse davvero i moduli e li chiudesse da solo più tardi, servirà un altro segnale (es. `clientInfo`).
+- SEC-ARCH-01: revisione obbligatoria del code owner con un secondo manutentore (invariato).
+

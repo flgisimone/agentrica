@@ -236,13 +236,14 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
       command: process.execPath,
       args: [join(import.meta.dirname, "server.ts"), "--panel", "--agents", "aisa", "--no-update-check"],
       cwd: repo,
-      env: { PATH: root, AGENTRICA_RATINGS_URL: ratingsUrl },
+      // HOME senza configurazione salvata (F29): conta solo ciò che dicono i flag, la cartella personale vera resta fuori.
+      env: { PATH: root, HOME: root, USERPROFILE: root, AGENTRICA_RATINGS_URL: ratingsUrl },
       stderr: "pipe",
     }),
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "library", "open_panel", "rate_agent", "share_usage"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "ask_user", "elenca_agenti", "library", "open_panel", "rate_agent", "share_usage", "submit_project"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;

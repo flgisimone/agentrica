@@ -3,12 +3,81 @@
   "data": "2026-11-15",
   "perimetro": ".github/workflows/release.yml, .github/CODEOWNERS, packages/mcp (package.json, tsconfig.build.json, server.ts), packages/catalog/src/content.ts, apps/site/next.config.ts; sola lettura e prove locali (npm pack, installazione da tarball, publish --dry-run)",
   "sintesi": "Nessun P0. Un P1 corretto in fase (token OIDC esposto agli script di installazione). Restano configurazioni da fare sui servizi esterni, che solo l'utente può attivare.",
-  "non_verificato": ["esecuzione reale del workflow di release su GitHub", "configurazione del trusted publisher su npm", "header di sicurezza serviti da Vercel (verificati solo con next start)"],
+  "non_verificato": [
+    "esecuzione reale del workflow di release su GitHub",
+    "configurazione del trusted publisher su npm",
+    "header di sicurezza serviti da Vercel (verificati solo con next start)"
+  ],
   "rilievi": [
-    {"id": "SEC-REL-01", "titolo": "Nel job di pubblicazione npm ci eseguiva gli script di installazione con il token OIDC disponibile", "evidenza": "release.yml, prima versione: un solo job con id-token: write e npm ci", "priorita": "P1", "motivazione": "Una devDependency compromessa avrebbe potuto chiedere il token e pubblicare @agentrica/mcp con provenance valida.", "raccomandazione": "Job verify senza permessi; job publish con id-token e npm ci --ignore-scripts.", "stato": "Risolta in F10"},
-    {"id": "SEC-REL-02", "titolo": "Trusted publisher, ambiente npm e protezioni vanno attivati su npm e GitHub", "evidenza": "release.yml (environment: npm); CODEOWNERS", "priorita": "P1", "motivazione": "Senza ruleset chiunque abbia accesso in scrittura crea un tag v* o modifica agents/ senza revisione.", "raccomandazione": "Su npm: trusted publisher con repository flgisimone/agentrica, workflow release.yml, ambiente npm; nessun token di pubblicazione. Su GitHub: ambiente npm con approvazione obbligatoria; ruleset su main (PR, controllo CI verify, niente force push) e sui tag v* (solo il proprietario).", "stato": "Risolta dall'utente (2026-11-15): ambiente npm, ruleset main e versioni, trusted publisher, 2FA senza token"},
-    {"id": "SEC-REL-03", "titolo": "CSP con 'unsafe-inline' negli script", "evidenza": "apps/site/next.config.ts", "priorita": "P3", "motivazione": "Necessario agli script inline di Next nelle pagine statiche; il sito non ha input degli utenti né script di terzi, quindi il rischio di XSS è basso.", "raccomandazione": "Accettato con commento ponytail; nonce o SRI se arrivano contenuti dinamici.", "stato": "Accettata"},
-    {"id": "SEC-REL-04", "titolo": "Dipendenze transitive dell'SDK a range per chi installa", "evidenza": "packages/mcp/package.json: SDK e zod a versione esatta, transitivi no", "priorita": "P3", "motivazione": "Scelta dell'utente (tsc, catalogo incluso): chi installa riceve gli aggiornamenti di sicurezza dei transitivi, ma anche eventuali versioni compromesse.", "raccomandazione": "npm audit e audit signatures a ogni rilascio (fatto); Dependabot sulle dipendenze dirette in una fase futura.", "stato": "Accettata"},
-    {"id": "SEC-REL-05", "titolo": "ci.yml usa le action per tag, non per SHA", "evidenza": ".github/workflows/ci.yml", "priorita": "P3", "motivazione": "Il job ha solo contents: read e nessun segreto; le action di release sono già fissate per SHA.", "raccomandazione": "Allineare a SHA quando si aggiornano le action.", "stato": "Risolta (2026-11-15, 5ae2bf4): action di ci.yml fissate per SHA, alle versioni di release.yml"}
+    {
+      "id": "SEC-REL-01",
+      "titolo": "Nel job di pubblicazione npm ci eseguiva gli script di installazione con il token OIDC disponibile",
+      "evidenza": "release.yml, prima versione: un solo job con id-token: write e npm ci",
+      "priorita": "P1",
+      "motivazione": "Una devDependency compromessa avrebbe potuto chiedere il token e pubblicare @agentrica/mcp con provenance valida.",
+      "raccomandazione": "Job verify senza permessi; job publish con id-token e npm ci --ignore-scripts.",
+      "stato": "Risolta in F10",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "release.yml:73 npm ci --ignore-scripts nel job di pubblicazione."
+      }
+    },
+    {
+      "id": "SEC-REL-02",
+      "titolo": "Trusted publisher, ambiente npm e protezioni vanno attivati su npm e GitHub",
+      "evidenza": "release.yml (environment: npm); CODEOWNERS",
+      "priorita": "P1",
+      "motivazione": "Senza ruleset chiunque abbia accesso in scrittura crea un tag v* o modifica agents/ senza revisione.",
+      "raccomandazione": "Su npm: trusted publisher con repository flgisimone/agentrica, workflow release.yml, ambiente npm; nessun token di pubblicazione. Su GitHub: ambiente npm con approvazione obbligatoria; ruleset su main (PR, controllo CI verify, niente force push) e sui tag v* (solo il proprietario).",
+      "stato": "Risolta dall'utente (2026-11-15): ambiente npm, ruleset main e versioni, trusted publisher, 2FA senza token",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "Ambiente «npm» presente; ruleset «main» (PR, verify obbligatorio, niente force push né cancellazione) e «versioni» (tag v*) attivi, letti con l'API di GitHub."
+      }
+    },
+    {
+      "id": "SEC-REL-03",
+      "titolo": "CSP con 'unsafe-inline' negli script",
+      "evidenza": "apps/site/next.config.ts",
+      "priorita": "P3",
+      "motivazione": "Necessario agli script inline di Next nelle pagine statiche; il sito non ha input degli utenti né script di terzi, quindi il rischio di XSS è basso.",
+      "raccomandazione": "Accettato con commento ponytail; nonce o SRI se arrivano contenuti dinamici.",
+      "stato": "Accettata",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato, rischio ancora accettato",
+        "nota": "script-src con 'unsafe-inline' in agentrica-site/next.config, motivato nel commento ponytail. Le proposte di F29-08 aggiungono testo di terzi alle pagine, ma entra solo come testo (React, nessun HTML) e dopo l'approvazione: il motivo dell'accettazione resta valido."
+      }
+    },
+    {
+      "id": "SEC-REL-04",
+      "titolo": "Dipendenze transitive dell'SDK a range per chi installa",
+      "evidenza": "packages/mcp/package.json: SDK e zod a versione esatta, transitivi no",
+      "priorita": "P3",
+      "motivazione": "Scelta dell'utente (tsc, catalogo incluso): chi installa riceve gli aggiornamenti di sicurezza dei transitivi, ma anche eventuali versioni compromesse.",
+      "raccomandazione": "npm audit e audit signatures a ogni rilascio (fatto); Dependabot sulle dipendenze dirette in una fase futura.",
+      "stato": "Accettata",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato, rischio ancora accettato",
+        "nota": "Il pacchetto dichiara SDK e zod esatti, i transitivi dell'SDK restano a range per chi installa; npm audit --omit=dev a 0."
+      }
+    },
+    {
+      "id": "SEC-REL-05",
+      "titolo": "ci.yml usa le action per tag, non per SHA",
+      "evidenza": ".github/workflows/ci.yml",
+      "priorita": "P3",
+      "motivazione": "Il job ha solo contents: read e nessun segreto; le action di release sono già fissate per SHA.",
+      "raccomandazione": "Allineare a SHA quando si aggiornano le action.",
+      "stato": "Risolta (2026-11-15, 5ae2bf4): action di ci.yml fissate per SHA, alle versioni di release.yml",
+      "ricontrollo_f29": {
+        "data": "2026-11-19",
+        "esito": "confermato",
+        "nota": "Action di ci.yml e release.yml fissate per SHA (checkout v7.0.1, setup-node v7.1.0, upload-artifact v7.0.2)."
+      }
+    }
   ]
 }

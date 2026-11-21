@@ -94,6 +94,7 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
         local: { type: "boolean" },
         agents: { type: "string" },
         panel: { type: "boolean" },
+        "no-panel": { type: "boolean" },
         "no-ratings": { type: "boolean" },
         "no-update-check": { type: "boolean" },
         // ponytail: --from installa da un .tgz di npm pack, per provare install prima del rilascio (F23-10).
@@ -108,7 +109,9 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
       if (!/^[A-Za-z0-9,-]{1,300}$/.test(values.agents)) throw new Error("--agents: id di agenti e sigle di reparti separati da virgole, es. --agents aisa,aiwda-08");
       flags.push("--agents", values.agents);
     }
+    if (values.panel && values["no-panel"]) throw new Error("scegli --panel o --no-panel, non entrambi");
     if (values.panel) flags.push("--panel");
+    if (values["no-panel"]) flags.push("--no-panel");
     if (values["no-ratings"]) flags.push("--no-ratings");
     if (values["no-update-check"]) flags.push("--no-update-check");
     from = values.from;

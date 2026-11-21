@@ -1,4 +1,4 @@
-// Pannello locale: server HTTP nello stesso processo del server MCP, attivo solo con --panel.
+// Pannello locale: server HTTP nello stesso processo del server MCP, attivo di predefinito da F29 (prima solo con --panel), spento con --no-panel.
 // Chi raggiunge la pagina risponde alle domande dell'agente, quindi le difese sono strette: ascolto solo su 127.0.0.1
 // con porta casuale; token casuale nell'URL aperto dal tool, scambiato con un cookie HttpOnly e SameSite=Strict;
 // Host fisso contro il DNS rebinding; Origin fisso e JSON obbligatorio per le POST; CSP 'self' e nessuna risorsa

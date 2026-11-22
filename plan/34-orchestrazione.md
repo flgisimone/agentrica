@@ -2,7 +2,7 @@
 
 **Obiettivo**: chi usa Agentrica lavora con gli agenti passando dal server MCP, uno alla volta e in gerarchia (direttore del reparto, poi specialisti), e il pannello mostra chi è al lavoro. I subagent di Claude Code diventano una scelta esplicita, visibile e distinta nel pannello. Il sito spiega come funziona l'orchestrazione. Nasce dalla issue «Claude Code avvia i ruoli come subagent invece di usare il server MCP, e il pannello non li vede» (0.8.0, segnalata dall'utente il 2026-11-22).
 
-> **Stato: completata** (2026-11-22). Il rilascio 0.10.0 di pacchetto e sito (F34-10) parte solo con l'approvazione esplicita dell'utente. Branch `fase/f34-orchestrazione` nei due repository.
+> **Stato: completata** (2026-11-22), con il rilascio 0.10.0 di pacchetto e sito (F34-10). Branch `fase/f34-orchestrazione` nei due repository.
 
 **Agenzie**: software (Architect per gerarchia e pannello; Backend per server e `init`; Frontend per pannello e sito; QA, Security sulla lettura dei file di Claude Code, Code Reviewer); design (Information Architect per la pagina del sito, UX Writer per i testi di `AGENTS.md`, istruzioni e sito, Accessibility per pannello e pagina); privacy (ciò che il pannello legge dei subagent resta sul computer dell'utente: verifica). I file di `agents/` cambiano solo con la conferma dell'utente, reparto per reparto.
 
@@ -76,6 +76,8 @@ Nel sito (`agentrica-site`):
 - **Dopo la chiusura** (`fix/prova-f34-vscode`, 2026-11-22), dalle prove dell'utente in VS Code: tool `report` per il resoconto di ogni agente, che il testo dell'agente chiede a fine compito e il pannello mostra sotto l'agente; compito intero nel pannello (la prima riga, il resto da aprire); valutazioni in una pagina «Valutazioni» con il conto nel menu; avvisi nella pagina, e come notifiche di sistema se l'utente le attiva, per un agente nuovo o da valutare; spazio prima di «direttore» e «attivo»; colore del reparto nei moduli di voto; ora dei subagent dal transcript. `npm run verify` verde (170 test).
 
 - **Seconda prova in VS Code** (`fix/pannello-agenti`, 2026-11-22): resoconti mandati da tutti gli agenti finiti (7 su 7), catena e avvisi giusti. Correzioni: «false» scritto nella sezione dei subagent; «coordina il reparto» per un direttore senza resoconto il cui reparto lavora ancora; C6 misurato prima del primo specialista software (il direttore AISA-01 può chiedere la conferma). Pagina «Agenti» come albero per reparto, scelto dall'utente fra albero, serpentina e riga orizzontale; la Sessione mostra gli ultimi tre.
+
+- **F34-10, rilascio** (2026-11-22, con l'approvazione dell'utente). Un primo tentativo (PR #29, tag `v0.10.0`) è stato fermato prima della pubblicazione: senza «Utilizza gli agenti di agentrica» il modello non usava gli agenti (run annullato, tag cancellato, correzione su `fix/agenti-senza-frase`). Pacchetto: PR #30 `develop` → `main`, tag `v0.10.0`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm` (run 45064287705); `latest` su npm 0.10.0. Sito: dipendenza 0.10.0, `verify` e `verify:e2e` verdi (123 prove), PR #18 di `agentrica-site`, Vercel in produzione con `/it/orchestrazione`, `/en/orchestration` e la 0.10.0 in `/rilasci`. `develop` e `main` allineati nei due repository.
 
 ## Rilievi aperti
 

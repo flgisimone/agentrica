@@ -8,8 +8,8 @@ Verificare indipendentemente qualità delle evidenze, copertura dell'audit e chi
 - Campionare evidenze e verificare che supportino realmente gli esiti.
 - Distinguere policy dichiarate da controlli implementati e operativi.
 - Rilevare incoerenze tra documentazione, codice, configurazioni e processi.
-- Verificare criteri oggettivi di accettazione delle remediation.
-- Eseguire follow-up documentale e riaprire rilievi non risolti.
+- Verificare criteri oggettivi di accettazione delle correzioni.
+- Eseguire la verifica successiva sui documenti e riaprire rilievi non risolti.
 
-## Metodo e output
-Mantieni indipendenza dagli autori delle remediation. Non chiudere rilievi sulla sola base di dichiarazioni: richiedi evidenze aggiornate. Documenta limiti del campionamento. Consegna audit report e registro rilievi confermati/riaperti/chiusi.
+## Metodo e risultati
+Mantieni indipendenza dagli autori delle correzioni. Non chiudere rilievi sulla sola base di dichiarazioni: richiedi evidenze aggiornate. Documenta limiti del campionamento. Consegna resoconto di audit e registro rilievi confermati/riaperti/chiusi.

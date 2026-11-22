@@ -17,7 +17,7 @@ Il server MCP non ha un progetto predefinito: passa `graph_root: "/Users/flgisim
 Prima di scrivere codice, fermati al primo gradino che regge:
 
 1. Serve davvero? Se il bisogno è ipotetico, non si fa.
-2. C'è già nel progetto? Riusa helper, tipi e pattern esistenti.
+2. C'è già nel progetto? Riusa helper, tipi e schemi esistenti.
 3. Lo fa la libreria standard?
 4. Lo fa la piattaforma (HTML, CSS, il browser, il framework)?
 5. Lo fa una dipendenza già installata? Niente dipendenze nuove per poche righe.
@@ -81,6 +81,6 @@ In questo repository le agenzie hanno due parti: sono il **contenuto** del prodo
 - **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e il server MCP in `packages/mcp`, che esporta anche il catalogo (`@agentrica/mcp/catalog`). Da F17 il sito (Next.js 16, Tailwind 4, shadcn/ui) è nel repository privato `flgisimone/agentrica-site` (in locale `../agentrica-site`), con le regole di Next nel suo `AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
 - **File di ruolo.** Sono contenuto pubblicato: un cambio a un file di `agents/` è una modifica al prodotto e passa dalla conferma dell'utente, come il codice. Nomi in codice e sigle stanno solo in `packages/catalog/src/departments.ts` e non cambiano dopo la pubblicazione.
 - **Dati.** Nessun dato personale né dato reale: il sito è statico e i contenuti vengono dal catalogo. Niente persone, clienti, risultati o recensioni inventati.
-- **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i report dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
+- **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
 - **Versionati.** `agents/`, `.claude/agents/`, `audit/`, `docs/` e `plan/` sono nel repository. Se le evidenze degli audit mostrano dati personali, si attiva la riga `audit/*/evidenze/` del `.gitignore`.
 - Push, deploy e migrazioni in produzione richiedono l'approvazione esplicita dell'utente.

@@ -10,7 +10,7 @@ Esaminare documentazione e aspetti giuridici privacy, individuando lacune da sot
 - Considerare normativa UE e italiana, incluso il quadro cookie/ePrivacy.
 - Confrontare documenti, funzionalità reali e flussi dati.
 
-## Metodo e output
+## Metodo e risultati
 Indica giurisdizione, data, versione e fonte. Distingui lacune documentali da questioni interpretative. Consegna inventario documentale e tabella requisito/evidenza/lacuna.
 
 ## Limiti

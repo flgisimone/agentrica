@@ -122,13 +122,23 @@ test("selectSquad: nomi sconosciuti o elenco vuoto sono errori che li nominano",
   assert.throws(() => selectSquad(catalog, " , "), /--agents è vuoto/);
 });
 
-test("CHANGELOG.md: la prima voce è VERSION, ogni voce «## x.y.z — AAAA-MM-GG» con i tipi ammessi, dalla 0.1.0", () => {
-  const text = readFileSync(join(import.meta.dirname, "..", "CHANGELOG.md"), "utf8");
-  const versions = [...text.matchAll(/^## (.+)$/gm)].map((m) => m[1]!);
-  for (const line of versions) assert.match(line, /^\d+\.\d+\.\d+ — \d{4}-\d{2}-\d{2}$/, line);
-  assert.equal(versions[0]!.split(" ")[0], VERSION);
-  assert.equal(versions.at(-1)!.split(" ")[0], "0.1.0");
-  for (const [, kind] of text.matchAll(/^### (.+)$/gm)) assert.ok(["Nuovo", "Cambiato", "Corretto", "Incompatibile"].includes(kind!), kind!);
+// F33: CHANGELOG.en.md è il gemello inglese, con le stesse versioni e date e gli stessi tipi nello stesso ordine.
+const KINDS = { "CHANGELOG.md": ["Nuovo", "Cambiato", "Corretto", "Incompatibile"], "CHANGELOG.en.md": ["Added", "Changed", "Fixed", "Breaking"] };
+const changelogShape = (file: keyof typeof KINDS) => {
+  const text = readFileSync(join(import.meta.dirname, "..", file), "utf8");
+  return [...text.matchAll(/^(##|###) (.+)$|^- /gm)].map((m) => (m[1] === "###" ? KINDS[file].indexOf(m[2]!) : m[1] ? m[2]! : "-"));
+};
+
+test("CHANGELOG.md e CHANGELOG.en.md: la prima voce è VERSION, ogni voce «## x.y.z — AAAA-MM-GG» con i tipi ammessi, dalla 0.1.0", () => {
+  for (const file of ["CHANGELOG.md", "CHANGELOG.en.md"] as const) {
+    const shape = changelogShape(file);
+    const versions = shape.filter((x): x is string => typeof x === "string" && x !== "-");
+    for (const line of versions) assert.match(line, /^\d+\.\d+\.\d+ — \d{4}-\d{2}-\d{2}$/, `${file}: ${line}`);
+    assert.equal(versions[0]!.split(" ")[0], VERSION, file);
+    assert.equal(versions.at(-1)!.split(" ")[0], "0.1.0", file);
+    assert.ok(!shape.includes(-1), `${file}: tipo sconosciuto`);
+  }
+  assert.deepEqual(changelogShape("CHANGELOG.en.md"), changelogShape("CHANGELOG.md"));
 });
 
 // F24-08: il testo di un agente entra nel contesto a ogni uso. Da F25 la soglia è di 10 KB (decisione dell'utente del

@@ -1,8 +1,8 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "mcpName": "io.github.flgisimone/agentrica",
-  "description": "I 56 agenti IA di Agentrica come server MCP locale (stdio): un prompt per agente, tre tool in sola lettura (con la biblioteca dei reparti) e due tool che inviano solo dopo la conferma: valutazioni degli agenti e totali di token.",
+  "description": "Agentrica's 56 AI agents as a local MCP server (stdio): one prompt per agent, three read-only tools (including the departments' library) and two tools that send only after confirmation: agent ratings and token totals.",
   "license": "MIT",
   "author": "Giulio Simone Floresta",
   "repository": {
@@ -18,7 +18,8 @@
       "default": "./dist/mcp/src/catalog.js"
     },
     "./package.json": "./package.json",
-    "./CHANGELOG.md": "./CHANGELOG.md"
+    "./CHANGELOG.md": "./CHANGELOG.md",
+    "./CHANGELOG.en.md": "./CHANGELOG.en.md"
   },
   "bin": {
     "agentrica-mcp": "dist/mcp/src/server.js"
@@ -28,8 +29,9 @@
     "agents",
     "starter",
     ".claude/agents",
-    "README.en.md",
-    "CHANGELOG.md"
+    "README.it.md",
+    "CHANGELOG.md",
+    "CHANGELOG.en.md"
   ],
   "engines": {
     "node": ">=22"

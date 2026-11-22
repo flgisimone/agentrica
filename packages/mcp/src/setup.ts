@@ -13,6 +13,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { VERSION } from "./prompt.ts";
+import { isLang, T } from "./texts/index.ts";
 
 const NAME = "agentrica";
 const PACKAGE = `@agentrica/mcp@${VERSION}`;
@@ -106,12 +107,6 @@ export function serverCommand(mode: "add" | "install", platform: NodeJS.Platform
 /** Il comando da scrivere nel terminale, per i messaggi: gli argomenti con spazi fra virgolette. */
 const shown = (args: string[]) => args.map((arg) => (/[\s"]/.test(arg) ? `"${arg}"` : arg)).join(" ");
 
-const SCOPE_TEXT: Record<Scope, string> = {
-  user: "ambito user: tutti i tuoi progetti",
-  project: "ambito project: .mcp.json in questa cartella, per il team",
-  local: "ambito local: solo questo progetto, solo per te",
-};
-
 /** Esegue il comando; restituisce il codice di uscita. */
 export function runSetup(mode: "add" | "install", args: string[], deps: SetupDeps = REAL): number {
   const say = (line = "") => deps.out(`${line}\n`);
@@ -124,6 +119,7 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
       options: {
         project: { type: "boolean" },
         local: { type: "boolean" },
+        lang: { type: "string" },
         agents: { type: "string" },
         panel: { type: "boolean" },
         "no-panel": { type: "boolean" },
@@ -133,15 +129,19 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
         from: { type: "string" },
       },
     });
-    if (values.project && values.local) throw new Error("scegli --project o --local, non entrambi");
-    if (mode === "install" && (values.project || values.local)) throw new Error("install registra sempre con ambito user; per un progetto usa add --project o add --local");
-    if (mode === "add" && values.from) throw new Error("--from vale solo per install");
+    if (values.project && values.local) throw new Error(T.setup.projectAndLocal);
+    if (mode === "install" && (values.project || values.local)) throw new Error(T.setup.installScope);
+    if (mode === "add" && values.from) throw new Error(T.setup.fromOnlyInstall);
     scope = values.project ? "project" : values.local ? "local" : "user";
+    if (values.lang !== undefined) {
+      if (!isLang(values.lang)) throw new Error(T.server.langInvalid(values.lang));
+      flags.push("--lang", values.lang);
+    }
     if (values.agents !== undefined) {
-      if (!/^[A-Za-z0-9,-]{1,300}$/.test(values.agents)) throw new Error("--agents: id di agenti e sigle di reparti separati da virgole, es. --agents aisa,aiwda-08");
+      if (!/^[A-Za-z0-9,-]{1,300}$/.test(values.agents)) throw new Error(T.setup.badAgents);
       flags.push("--agents", values.agents);
     }
-    if (values.panel && values["no-panel"]) throw new Error("scegli --panel o --no-panel, non entrambi");
+    if (values.panel && values["no-panel"]) throw new Error(T.server.panelBoth);
     if (values.panel) flags.push("--panel");
     if (values["no-panel"]) flags.push("--no-panel");
     if (values["no-ratings"]) flags.push("--no-ratings");
@@ -154,12 +154,12 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
 
   const win = deps.platform === "win32";
   const manual = (steps: string[]) => {
-    say("Comandi da lanciare a mano:");
+    say(T.setup.manual);
     for (const step of steps) say(`  ${step}`);
   };
 
   if (Number(deps.nodeVersion.split(".")[0]) < 22) {
-    say(`agentrica ${mode}: serve Node.js 22 o più recente (in uso ${deps.nodeVersion}). Installalo da https://nodejs.org e rilancia:`);
+    say(T.setup.oldNode(mode, deps.nodeVersion));
     say(`  npx -y ${PACKAGE} ${mode}`);
     return 1;
   }
@@ -168,21 +168,21 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
   if (mode === "install") {
     const install = deps.run("npm", ["install", "-g", from ?? PACKAGE]);
     if (install.missing) {
-      say("agentrica install: npm non trovato. Installa Node.js 22 o più recente (con npm) da https://nodejs.org e rilancia.");
+      say(T.setup.noNpm);
       return 1;
     }
     if (install.status !== 0) {
-      say(`agentrica install: npm install -g non riuscito.${win ? "" : " Se è un problema di permessi, configura una cartella globale di npm tua (npm config set prefix) invece di usare sudo."}`);
+      say(T.setup.npmFailed(win));
       if (install.stderr.trim()) say(install.stderr.trim());
       return 1;
     }
     const root = deps.run("npm", ["root", "-g"]).stdout.trim();
     command = serverCommand("install", deps.platform, flags, root);
     if (!root || !deps.exists(command[1]!)) {
-      say(`agentrica install: pacchetto installato ma server non trovato in ${root || "(cartella globale di npm sconosciuta)"}.`);
+      say(T.setup.serverMissing(root || T.setup.unknownRoot));
       return 1;
     }
-    say(`Installato ${from ? from : PACKAGE} in ${root}.`);
+    say(T.setup.installed(from ? from : PACKAGE, root));
   } else {
     command = serverCommand("add", deps.platform, flags);
   }
@@ -190,23 +190,21 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
   const addArgs = ["mcp", "add", "--scope", scope, NAME, "--", ...command];
   const removed = deps.run("claude", ["mcp", "remove", NAME, "--scope", scope]);
   if (removed.missing) {
-    say("agentrica: Claude Code (comando claude) non trovato. Installalo e rilancia questo comando, oppure registra il server a mano:");
+    say(T.setup.noClaude);
     manual([shown(["claude", ...addArgs])]);
-    say("Per altri client MCP usa lo stesso comando del server nella loro configurazione (README di @agentrica/mcp).");
+    say(T.setup.otherClients);
     return 1;
   }
   const added = deps.run("claude", addArgs);
   if (added.status !== 0) {
-    say("agentrica: claude mcp add non riuscito.");
+    say(T.setup.addFailed);
     if ((added.stderr || added.stdout).trim()) say((added.stderr || added.stdout).trim());
     manual([shown(["claude", ...addArgs])]);
     return 1;
   }
-  say(`Agentrica ${VERSION} registrato in Claude Code (${SCOPE_TEXT[scope]})${removed.status === 0 ? ", al posto della registrazione precedente" : ""}.`);
-  say(`Comando del server: ${shown(command)}`);
-  for (const other of deps.registered?.().filter((s) => s !== scope) ?? []) {
-    say(`Attenzione: Agentrica è registrato anche con ${SCOPE_TEXT[other]}, con un comando che può essere diverso. Claude Code usa la registrazione più vicina al progetto (local, poi project, poi user). Se non ti serve, toglila con: claude mcp remove ${NAME} --scope ${other}`);
-  }
-  say("Riavvia Claude Code (o usa /mcp) e controlla con: claude mcp list");
+  say(T.setup.registered(VERSION, T.setup.scope[scope], removed.status === 0));
+  say(T.setup.command(shown(command)));
+  for (const other of deps.registered?.().filter((s) => s !== scope) ?? []) say(T.setup.otherScope(T.setup.scope[other], NAME, other));
+  say(T.setup.restart);
   return 0;
 }

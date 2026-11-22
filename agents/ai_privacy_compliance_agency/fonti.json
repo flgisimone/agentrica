@@ -14,6 +14,7 @@
   {
     "id": "normattiva",
     "name": "Normattiva (Codice privacy, legge italiana sull'IA)",
+    "nameEn": "Normattiva (Italian Privacy Code, Italian AI law)",
     "level": 1,
     "url": "https://www.normattiva.it/",
     "domains": [
@@ -26,6 +27,7 @@
   {
     "id": "edpb",
     "name": "Comitato europeo per la protezione dei dati (EDPB)",
+    "nameEn": "European Data Protection Board (EDPB)",
     "level": 1,
     "url": "https://www.edpb.europa.eu/edpb_en",
     "domains": [
@@ -39,6 +41,7 @@
   {
     "id": "edps",
     "name": "Garante europeo della protezione dei dati (EDPS)",
+    "nameEn": "European Data Protection Supervisor (EDPS)",
     "level": 1,
     "url": "https://www.edps.europa.eu/_en",
     "domains": [
@@ -51,6 +54,7 @@
   {
     "id": "garante",
     "name": "Garante per la protezione dei dati personali",
+    "nameEn": "Italian Data Protection Authority (Garante per la protezione dei dati personali)",
     "level": 1,
     "url": "https://www.garanteprivacy.it/",
     "domains": [
@@ -64,6 +68,7 @@
   {
     "id": "cgue",
     "name": "Corte di giustizia dell'Unione europea (CGUE)",
+    "nameEn": "Court of Justice of the European Union (CJEU)",
     "level": 1,
     "url": "https://curia.europa.eu/",
     "domains": [
@@ -76,6 +81,7 @@
   {
     "id": "commissione-dati",
     "name": "Commissione europea, protezione dei dati (adeguatezza, SCC)",
+    "nameEn": "European Commission, data protection (adequacy, SCCs)",
     "level": 1,
     "url": "https://commission.europa.eu/law/law-topic/data-protection_en",
     "domains": [
@@ -88,6 +94,7 @@
   {
     "id": "ai-office",
     "name": "Commissione europea, Ufficio per l'IA (AI Office)",
+    "nameEn": "European Commission, AI Office",
     "level": 1,
     "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
     "domains": [
@@ -112,6 +119,7 @@
   {
     "id": "noyb",
     "name": "noyb (associazione di parte)",
+    "nameEn": "noyb (advocacy organisation)",
     "level": 3,
     "url": "https://noyb.eu/en",
     "domains": [

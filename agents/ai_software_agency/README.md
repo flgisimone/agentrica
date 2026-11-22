@@ -32,7 +32,7 @@
 ## Collaborazione con le altre agenzie
 - Web Design: la Software Agency si occupa di fattibilità tecnica e implementazione, la Web Design Agency di UX/UI, design system, accessibilità e contenuti. Le specifiche di design approvate possono diventare requisiti per il team software.
 - Business & Product: requisiti, priorità, criteri di accettazione, business case e vincoli.
-- Cybersecurity: secure SDLC, code review, threat model, vulnerabilità e remediation.
+- Cybersecurity: ciclo di sviluppo sicuro, revisione del codice, threat model, vulnerabilità e correzioni.
 - Privacy & Compliance: misure tecniche sui dati personali; le correzioni si implementano previa approvazione umana.
 
 ## Uso con Claude Code

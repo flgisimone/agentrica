@@ -19,7 +19,7 @@ Il server MCP non ha un progetto predefinito: passa `graph_root: "{{PROJECT_PATH
 Prima di scrivere codice, fermati al primo gradino che regge:
 
 1. Serve davvero? Se il bisogno è ipotetico, non si fa.
-2. C'è già nel progetto? Riusa helper, tipi e pattern esistenti.
+2. C'è già nel progetto? Riusa helper, tipi e schemi esistenti.
 3. Lo fa la libreria standard?
 4. Lo fa la piattaforma (HTML, CSS, il browser, il framework)?
 5. Lo fa una dipendenza già installata? Niente dipendenze nuove per poche righe.
@@ -84,6 +84,6 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 
 - **Stack.** <!-- es. «Vite e TypeScript strict; logica pura e testata in src/lib» -->
 - **Dati.** <!-- Mock e dati finti, oppure dati reali dell'utente: dove stanno, cosa gli agenti non devono mai fare (salvare, importare, eliminare, copiare nel repository). -->
-- **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i report dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
+- **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
 - **Versionati.** `agents/`, `.claude/agents/`, `audit/`, `docs/` e `plan/` sono nel repository. Se le evidenze degli audit mostrano dati personali, si attiva la riga `audit/*/evidenze/` del `.gitignore`.
 - Push, deploy e migrazioni in produzione richiedono l'approvazione esplicita dell'utente.

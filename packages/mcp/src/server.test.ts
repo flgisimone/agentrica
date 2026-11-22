@@ -15,7 +15,7 @@ const repo = join(import.meta.dirname, "..", "..", "..");
 const client = new Client({ name: "test", version: "0" });
 const transport = new StdioClientTransport({
   command: process.execPath,
-  args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts")],
+  args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "it"],
   cwd,
   stderr: "pipe",
 });
@@ -36,14 +36,14 @@ const text = (result: Record<string, unknown>) => (result.content as { type: str
 test("56 prompt degli agenti con id in minuscolo e reparto, argomento compito facoltativo, più valuta, progetto e configura", async () => {
   const { prompts } = await client.listPrompts();
   assert.equal(prompts.length, 59);
-  assert.deepEqual(prompts.slice(-3).map((p) => p.name), ["valuta", "progetto", "configura"]);
+  assert.deepEqual(prompts.slice(-3).map((p) => p.name), ["rate", "project", "configure"]);
   const altair = prompts.find((p) => p.name === "aisa-02-software");
   assert.equal(altair?.title, "AISA-02 · ALTAIR — Senior Software Architect");
-  assert.deepEqual(altair?.arguments?.map((a) => [a.name, a.required ?? false]), [["compito", false]]);
+  assert.deepEqual(altair?.arguments?.map((a) => [a.name, a.required ?? false]), [["task", false]]);
 });
 
 test("un prompt con compito restituisce il testo dell'agente", async () => {
-  const { messages } = await client.getPrompt({ name: "aisa-02-software", arguments: { compito: "Rivedi i confini." } });
+  const { messages } = await client.getPrompt({ name: "aisa-02-software", arguments: { task: "Rivedi i confini." } });
   assert.equal(messages.length, 1);
   const content = messages[0]!.content as { type: string; text: string };
   assert.match(content.text, /^# AISA-02 · ALTAIR — Senior Software Architect\n/);
@@ -53,7 +53,7 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
 
 test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library", "rate_agent", "share_usage", "submit_project"]);
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents", "rate_agent", "share_usage", "submit_project"]);
   const sending = ["rate_agent", "share_usage", "submit_project"];
   for (const t of tools.filter((t) => !sending.includes(t.name))) assert.equal(t.annotations?.readOnlyHint, true, t.name);
   for (const name of sending) {
@@ -98,7 +98,7 @@ test("rate_agent: anteprima con codice, poi invio; senza rete un errore chiaro e
   }
   const long = await client.callTool({ name: "rate_agent", arguments: { id: "aisa-02", rating: 3, comment: "x".repeat(1001) } });
   assert.equal(long.isError, true);
-  assert.notEqual((await client.callTool({ name: "agente", arguments: { id: "aisa-02" } })).isError, true);
+  assert.notEqual((await client.callTool({ name: "agent", arguments: { id: "aisa-02" } })).isError, true);
 });
 
 test("--no-ratings: niente rate_agent, share_usage né submit_project, niente proposta di valutazione o di invio", async () => {
@@ -106,43 +106,43 @@ test("--no-ratings: niente rate_agent, share_usage né submit_project, niente pr
   await quiet.connect(
     new StdioClientTransport({
       command: process.execPath,
-      args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--no-ratings"],
+      args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "it", "--no-ratings"],
       cwd,
       stderr: "pipe",
     }),
   );
   try {
     const { tools } = await quiet.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agente", "elenca_agenti", "library"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents"]);
     assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
     assert.ok(!(quiet.getInstructions() ?? "").includes("share_usage"));
-    assert.deepEqual((await quiet.listPrompts()).prompts.slice(-1).map((p) => p.name), ["configura"], "senza valutazioni niente valuta né progetto");
-    assert.ok(!text(await quiet.callTool({ name: "agente", arguments: { id: "aisa-02" } })).includes("rate_agent"));
+    assert.deepEqual((await quiet.listPrompts()).prompts.slice(-1).map((p) => p.name), ["configure"], "senza valutazioni niente valuta né progetto");
+    assert.ok(!text(await quiet.callTool({ name: "agent", arguments: { id: "aisa-02" } })).includes("rate_agent"));
   } finally {
     await quiet.close();
   }
 });
 
 test("elenca_agenti: tutti o un reparto", async () => {
-  const all = text(await client.callTool({ name: "elenca_agenti", arguments: {} }));
+  const all = text(await client.callTool({ name: "list_agents", arguments: {} }));
   assert.equal(all.match(/^- /gm)?.length, 56);
-  const aipca = text(await client.callTool({ name: "elenca_agenti", arguments: { reparto: "AIPCA" } }));
+  const aipca = text(await client.callTool({ name: "list_agents", arguments: { department: "AIPCA" } }));
   assert.equal(aipca.match(/^- /gm)?.length, 10);
   assert.ok(!aipca.includes("AISA-"));
-  const wrong = await client.callTool({ name: "elenca_agenti", arguments: { reparto: "XYZ" } });
+  const wrong = await client.callTool({ name: "list_agents", arguments: { department: "XYZ" } });
   assert.equal(wrong.isError, true);
 });
 
 test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", async () => {
-  const ok = await client.callTool({ name: "agente", arguments: { id: "aica-01" } });
+  const ok = await client.callTool({ name: "agent", arguments: { id: "aica-01" } });
   assert.notEqual(ok.isError, true);
   assert.match(text(ok), /^# AICA-01 · VEGA — /);
-  const missing = await client.callTool({ name: "agente", arguments: { id: "AISA-99" } });
+  const missing = await client.callTool({ name: "agent", arguments: { id: "AISA-99" } });
   assert.equal(missing.isError, true);
   assert.match(text(missing), /non trovato/);
   assert.ok(!text(missing).includes("AISA-99"));
   for (const id of ["../../etc", "AIXX-01", "AISA-2", "AISA-02\n", " AISA-02", "AISA-002"]) {
-    const malformed = await client.callTool({ name: "agente", arguments: { id } });
+    const malformed = await client.callTool({ name: "agent", arguments: { id } });
     assert.equal(malformed.isError, true, JSON.stringify(id));
     assert.match(text(malformed), /Formato dell'id/);
     // Nessuna eco dell'input (tolto l'esempio del messaggio, che è un id valido).
@@ -151,7 +151,7 @@ test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", as
 });
 
 test("library: le schede del reparto con fonte e data, mai URL; errori chiari per id sconosciuti", async () => {
-  const agent = text(await client.callTool({ name: "agente", arguments: { id: "AICA-03" } }));
+  const agent = text(await client.callTool({ name: "agent", arguments: { id: "AICA-03" } }));
   assert.match(agent, /## Biblioteca del reparto\n\n.*tool library \(id AICA-03/);
   assert.match(agent, /^- owasp-top-10-2025 \*: OWASP Top 10:2025 \(2025, \d{4}-\d{2}-\d{2}/m);
   const ok = await client.callTool({ name: "library", arguments: { id: "aica-03", cards: ["owasp-top-10-2025", "cvss-4"] } });
@@ -172,11 +172,11 @@ test("library: le schede del reparto con fonte e data, mai URL; errori chiari pe
 });
 
 test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
-  const ok = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_000) } });
+  const ok = await client.callTool({ name: "agent", arguments: { id: "AISA-02", task: "x".repeat(20_000) } });
   assert.notEqual(ok.isError, true);
-  const long = await client.callTool({ name: "agente", arguments: { id: "AISA-02", compito: "x".repeat(20_001) } });
+  const long = await client.callTool({ name: "agent", arguments: { id: "AISA-02", task: "x".repeat(20_001) } });
   assert.equal(long.isError, true);
-  await assert.rejects(client.getPrompt({ name: "aisa-02-software", arguments: { compito: "x".repeat(20_001) } }));
+  await assert.rejects(client.getPrompt({ name: "aisa-02-software", arguments: { task: "x".repeat(20_001) } }));
 });
 
 test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr, codice 1", () => {
@@ -186,6 +186,8 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
     for (const file of ["server.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    mkdirSync(join(src, "texts"));
+    for (const file of ["index.ts", "it.ts", "en.ts"]) copyFileSync(join(import.meta.dirname, "texts", file), join(src, "texts", file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");
     mkdirSync(join(root, "packages", "catalog", "src"), { recursive: true });
     for (const file of ["index.ts", "departments.ts", "markdown.ts", "library.ts", "content.ts"]) {
@@ -194,7 +196,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
     // "junction": su Windows un link a una cartella senza permessi di amministratore; altrove si ignora.
     symlinkSync(join(import.meta.dirname, "..", "..", "..", "node_modules"), join(root, "node_modules"), "junction");
     // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
-    const run = spawnSync(process.execPath, [join(src, "server.ts")], { cwd: repo, input: "", encoding: "utf8" });
+    const run = spawnSync(process.execPath, [join(src, "server.ts"), "--lang", "it"], { cwd: repo, input: "", encoding: "utf8" });
     assert.equal(run.status, 1);
     assert.match(run.stderr, /^agentrica: catalogo non leggibile in .*agents: /);
     assert.equal(run.stderr.trim().split("\n").length, 1);
@@ -207,7 +209,7 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
   const squad = new Client({ name: "test-squadra", version: "0" });
   const squadTransport = new StdioClientTransport({
     command: process.execPath,
-    args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--agents", "aiwda,aisa-02"],
+    args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "it", "--agents", "aiwda,aisa-02"],
     cwd,
     stderr: "pipe",
   });
@@ -218,13 +220,13 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
     assert.equal(prompts[0]!.name, "aisa-02-software");
     assert.ok(prompts.slice(1, -3).every((p) => /^aiwda-\d{2}-design$/.test(p.name)));
     assert.match(squad.getInstructions() ?? "", /^Agentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
-    const list = text(await squad.callTool({ name: "elenca_agenti", arguments: {} }));
+    const list = text(await squad.callTool({ name: "list_agents", arguments: {} }));
     assert.equal(list.match(/^- /gm)?.length, 11);
-    const outside = await squad.callTool({ name: "elenca_agenti", arguments: { reparto: "AICA" } });
+    const outside = await squad.callTool({ name: "list_agents", arguments: { department: "AICA" } });
     assert.equal(outside.isError, true);
-    const missing = await squad.callTool({ name: "agente", arguments: { id: "AISA-03" } });
+    const missing = await squad.callTool({ name: "agent", arguments: { id: "AISA-03" } });
     assert.equal(missing.isError, true);
-    assert.match(text(await squad.callTool({ name: "agente", arguments: { id: "aisa-02" } })), /^# AISA-02 · ALTAIR/);
+    assert.match(text(await squad.callTool({ name: "agent", arguments: { id: "aisa-02" } })), /^# AISA-02 · ALTAIR/);
   } finally {
     await squad.close();
   }
@@ -232,7 +234,7 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
 
 test("--agents sbagliato o opzione sconosciuta: il server non parte, una riga su stderr che li nomina", () => {
   const start = (...args: string[]) =>
-    spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), ...args], { cwd, input: "", encoding: "utf8" });
+    spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--lang", "it", ...args], { cwd, input: "", encoding: "utf8" });
   const unknown = start("--agents", "aisa-02,aisa-99");
   assert.equal(unknown.status, 1);
   assert.equal(unknown.stderr, 'agentrica: agente o reparto sconosciuto in --agents: "aisa-99"\n');
@@ -249,16 +251,40 @@ test("--agents sbagliato o opzione sconosciuta: il server non parte, una riga su
   assert.ok(!control.stderr.includes("\u001b") && control.stderr.includes("\\u001b"));
 });
 
+test("--lang en: istruzioni, descrizioni, testo dell'agente e schede in inglese", async () => {
+  const english = new Client({ name: "test", version: "0" });
+  await english.connect(
+    new StdioClientTransport({ command: process.execPath, args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "en"], cwd, stderr: "pipe" }),
+  );
+  try {
+    assert.match(english.getInstructions() ?? "", /^Agentrica: 56 AI agents in 5 departments/);
+    const { tools } = await english.listTools();
+    assert.match(tools.find((t) => t.name === "list_agents")!.description!, /^Lists the Agentrica agents/);
+    const agent = text(await english.callTool({ name: "agent", arguments: { id: "AICA-03", task: "Check the login." } }));
+    assert.match(agent, /^# AICA-03 · BETELGEUSE — Senior Application Security Engineer\n\nYou are AICA-03/);
+    assert.match(agent, /## Department common rules\n\n.*### Mandatory rules/s);
+    assert.match(agent, /## Role: Senior Application Security Engineer\n\n### Mission/);
+    assert.match(agent, /## Department library\n/);
+    assert.match(agent, /## Task\n\nCheck the login\./);
+    assert.doesNotMatch(agent, /[àèéìòù]/);
+    const card = text(await english.callTool({ name: "library", arguments: { id: "AICA-03", cards: ["owasp-top-10-2025"] } }));
+    assert.match(card, /^# OWASP Top 10:2025\n\nSource: OWASP Top 10 \(level 1\)/);
+    assert.match(card, /## Notion\n\n.*## How it applies/s);
+  } finally {
+    await english.close();
+  }
+});
+
 // Ultima prova, dopo tutte le chiamate: il server non ha scritto niente su stderr né nella cartella del progetto.
 test("pannello acceso di predefinito, ma con il permission model senza rete né processi figli si salta in silenzio", async () => {
   // Il client principale gira con --permission solo in lettura: niente open_panel né ask_user, nessuna riga su stderr
   // (lo controlla la prova finale). Con --panel esplicito, invece, un pannello che non parte ferma il server.
   const { tools } = await client.listTools();
   assert.ok(!tools.some((t) => t.name === "open_panel"));
-  const run = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--panel"], { cwd, input: "", encoding: "utf8" });
+  const run = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "it", "--panel"], { cwd, input: "", encoding: "utf8" });
   assert.equal(run.status, 1);
   assert.match(run.stderr, /^agentrica: pannello non avviato: /);
-  const both = spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--panel", "--no-panel"], { cwd, input: "", encoding: "utf8" });
+  const both = spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--lang", "it", "--panel", "--no-panel"], { cwd, input: "", encoding: "utf8" });
   assert.match(both.stderr, /--panel o --no-panel/);
 });
 
@@ -266,3 +292,4 @@ test("dopo tutte le chiamate: stderr vuoto, nessun file nella cartella del proge
   assert.equal(stderr, "");
   assert.deepEqual(readdirSync(cwd), []);
 });
+

@@ -6,6 +6,7 @@
     <meta name="color-scheme" content="dark" />
     <title>Agentrica · pannello</title>
     <link rel="stylesheet" href="/style.css" />
+    <script src="/texts.js" defer></script>
     <script src="/app.js" defer></script>
   </head>
   <body>
@@ -16,10 +17,10 @@
         <p class="link" id="link" role="status">Collegamento in corso…</p>
       </div>
       <nav class="wrap tabs" aria-label="Sezioni del pannello">
-        <a href="#sessione" data-view="sessione">Sessione <span class="count" id="count-sessione"></span></a>
-        <a href="#piano" data-view="piano">Piano</a>
-        <a href="#rilievi" data-view="rilievi">Rilievi <span class="count" id="count-rilievi"></span></a>
-        <a href="#consumo" data-view="consumo">Consumo</a>
+        <a href="#session" data-view="session">Sessione <span class="count" id="count-session"></span></a>
+        <a href="#plan" data-view="plan">Piano</a>
+        <a href="#findings" data-view="findings">Rilievi <span class="count" id="count-findings"></span></a>
+        <a href="#usage" data-view="usage">Consumo</a>
       </nav>
     </header>
     <div id="announce" class="sr-only" aria-live="polite"></div>
@@ -27,7 +28,7 @@
       <p class="update" id="update" role="status" hidden></p>
       <p class="problems" id="problems" hidden></p>
 
-      <div id="view-sessione" class="view" data-view="sessione">
+      <div id="view-session" class="view" data-view="session">
         <h1 class="sr-only" tabindex="-1">Sessione</h1>
         <div class="live">
           <section aria-labelledby="h-decide" class="card">
@@ -45,7 +46,7 @@
         </div>
       </div>
 
-      <div id="view-piano" class="view" data-view="piano" hidden>
+      <div id="view-plan" class="view" data-view="plan" hidden>
         <h1 class="sr-only" tabindex="-1">Piano</h1>
         <section aria-labelledby="h-open" class="card">
           <h2 id="h-open">Fase in corso</h2>
@@ -57,7 +58,7 @@
         </section>
       </div>
 
-      <div id="view-rilievi" class="view" data-view="rilievi" hidden>
+      <div id="view-findings" class="view" data-view="findings" hidden>
         <h1 class="sr-only" tabindex="-1">Rilievi</h1>
         <section aria-labelledby="h-findings" class="card">
           <h2 id="h-findings">Rilievi aperti</h2>
@@ -66,7 +67,7 @@
         </section>
       </div>
 
-      <div id="view-consumo" class="view" data-view="consumo" hidden>
+      <div id="view-usage" class="view" data-view="usage" hidden>
         <h1 class="sr-only" tabindex="-1">Consumo</h1>
         <section aria-labelledby="h-usage" class="card">
           <h2 id="h-usage">Token del progetto</h2>

@@ -2,10 +2,13 @@
 // Il formato è quello che crea `init` (init.ts), descritto nel README del pacchetto. Si legge solo dentro plan/ e audit/
 // della cartella del progetto: i link simbolici che escono sono rifiutati e ogni file ha un limite di dimensione.
 // Un file mancante o fuori formato diventa un problema in `problems`, mai un errore che ferma il pannello.
+// Da F32 il formato esiste in italiano e in inglese (starter/ e starter/en/): titoli, stati e chiavi degli audit si
+// leggono in entrambe le lingue, qualunque sia quella del server.
 import { execFile } from "node:child_process";
 import { readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { basename, join, sep } from "node:path";
 import { promisify } from "node:util";
+import { T } from "./texts/index.ts";
 
 export interface Phase {
   id: string;
@@ -61,13 +64,23 @@ export interface Project {
 const MAX_FILE_BYTES = 1_000_000;
 const DEPARTMENT = /\b(AIBPD|AICA|AIPCA|AISA|AIWDA)\b/;
 const PRIORITY = /\bP[0-3]\b/;
-const CLOSED = new Set(["completata", "sospesa"]);
+const CLOSED = new Set(["completata", "sospesa", "completed", "suspended"]);
 // Un rilievo è chiuso quando il testo (fasi) o lo stato (audit) dice «risolto» o «chiuso», in qualsiasi genere e
-// numero, e non «non risolto»: la voce resta nel piano come storia ma il pannello non la mostra fra gli aperti.
-const CLOSED_FINDING = /(?<!\bnon )\b(risolt|chius)[oaie]\b/i;
+// numero, e non «non risolto» (in inglese «resolved» o «closed», non «not resolved»): la voce resta nel piano come
+// storia ma il pannello non la mostra fra gli aperti.
+const CLOSED_FINDING = [/(?<!\bnon )\b(risolt|chius)[oaie]\b/i, /(?<!\bnot )\b(resolved|closed)\b/i];
 
 /** true se il testo dice che il rilievo è risolto o chiuso (README del pacchetto, «Formato»). */
-export const isClosedFinding = (text: string) => CLOSED_FINDING.test(text);
+export const isClosedFinding = (text: string) => CLOSED_FINDING.some((pattern) => pattern.test(text));
+
+/** I titoli delle sezioni del piano, in italiano e in inglese. */
+const HEADINGS = {
+  phases: ["Fasi", "Phases"],
+  backlog: ["Backlog"],
+  done: ["Fatto", "Done"],
+  criteria: ["Criteri di accettazione", "Acceptance criteria"],
+  findings: ["Rilievi aperti", "Open findings"],
+} as const;
 
 /** Legge un file di testo sotto `root`, rifiutando link simbolici che escono e file troppo grandi. */
 function readInside(root: string, path: string): string {
@@ -77,10 +90,11 @@ function readInside(root: string, path: string): string {
   return readFileSync(real, "utf8");
 }
 
-/** Le righe di una sezione «## Titolo», fino alla sezione successiva dello stesso livello. */
-export function section(markdown: string, heading: string): string[] | null {
+/** Le righe di una sezione «## Titolo» (uno dei titoli dati), fino alla sezione successiva dello stesso livello. */
+export function section(markdown: string, heading: string | readonly string[]): string[] | null {
   const lines = markdown.split("\n");
-  const start = lines.findIndex((line) => line.trim() === `## ${heading}`);
+  const wanted = new Set((typeof heading === "string" ? [heading] : heading).map((h) => `## ${h}`));
+  const start = lines.findIndex((line) => wanted.has(line.trim()));
   if (start === -1) return null;
   const end = lines.findIndex((line, i) => i > start && line.startsWith("## "));
   return lines.slice(start + 1, end === -1 ? undefined : end);
@@ -105,13 +119,13 @@ function readPhases(root: string, plan: string, problems: string[]): Phase[] {
   try {
     readme = readInside(root, join(plan, "README.md"));
   } catch {
-    problems.push("Non trovo plan/README.md: il pannello legge il formato creato da `agentrica-mcp init` (vedi il README del pacchetto).");
+    problems.push(T.project.noPlan);
     return [];
   }
-  const fasi = section(readme, "Fasi");
-  const rows = fasi ? tableRows(fasi) : [];
+  const phasesSection = section(readme, HEADINGS.phases);
+  const rows = phasesSection ? tableRows(phasesSection) : [];
   if (rows.length === 0) {
-    problems.push("In plan/README.md manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).");
+    problems.push(T.project.noPhases);
     return [];
   }
   return rows.map(([id = "", file = "", summary = "", status = ""]) => {
@@ -128,21 +142,21 @@ function readOpenPhase(root: string, plan: string, phase: Phase, problems: strin
   try {
     text = readInside(root, join(plan, phase.file));
   } catch {
-    problems.push(`Non trovo plan/${phase.file}, il file della fase ${phase.id}.`);
+    problems.push(T.project.noPhaseFile(phase.file, phase.id));
     return null;
   }
   const title = /^# (.+)$/m.exec(text)?.[1] ?? phase.id;
-  const goal = /^\*\*Obiettivo\*\*:\s*(.+)$/m.exec(text)?.[1] ?? "";
-  const done = (section(text, "Fatto") ?? []).join("\n");
-  const backlog = section(text, "Backlog");
-  if (!backlog) problems.push(`In plan/${phase.file} manca la sezione «## Backlog».`);
+  const goal = /^\*\*(?:Obiettivo|Goal)\*\*:\s*(.+)$/m.exec(text)?.[1] ?? "";
+  const done = (section(text, HEADINGS.done) ?? []).join("\n");
+  const backlog = section(text, HEADINGS.backlog);
+  if (!backlog) problems.push(T.project.noBacklog(phase.file));
   const tasks = tableRows(backlog ?? []).map(([id = "", task = "", priority = ""]) => ({
     id,
     task,
     priority,
     done: id !== "" && done.includes(`**${id}**`),
   }));
-  return { id: phase.id, title, goal, status: phase.status, tasks, criteria: bullets(section(text, "Criteri di accettazione") ?? []) };
+  return { id: phase.id, title, goal, status: phase.status, tasks, criteria: bullets(section(text, HEADINGS.criteria) ?? []) };
 }
 
 /** I «Rilievi aperti» dei file di fase, che sono l'elenco curato dei rilievi ancora da chiudere. */
@@ -155,8 +169,8 @@ function readPhaseFindings(root: string, plan: string, phases: readonly Phase[])
     } catch {
       return [];
     }
-    return bullets(section(text, "Rilievi aperti") ?? [])
-      .filter((item) => !/^nessuno\b/i.test(item) && !isClosedFinding(item))
+    return bullets(section(text, HEADINGS.findings) ?? [])
+      .filter((item) => !/^(nessuno|none)\b/i.test(item) && !isClosedFinding(item))
       .map((item) => ({
         id: "",
         title: item,
@@ -186,25 +200,27 @@ function readAuditFindings(root: string, problems: string[]): Finding[] {
       try {
         data = JSON.parse(readInside(root, join(audit, folder, file)));
       } catch {
-        problems.push(`audit/${source} non è un JSON leggibile: saltato.`);
+        problems.push(T.project.badJson(source));
         return [];
       }
-      const record = data as { agente?: unknown; rilievi?: unknown };
-      if (!Array.isArray(record.rilievi)) {
-        problems.push(`audit/${source} non ha l'elenco «rilievi»: saltato.`);
+      // Chiavi italiane (rilievi, agente, titolo, priorita, stato) o inglesi (findings, agent, title, priority, status).
+      const record = data as Record<string, unknown>;
+      const list = record.rilievi ?? record.findings;
+      if (!Array.isArray(list)) {
+        problems.push(T.project.noFindings(source));
         return [];
       }
-      const department = DEPARTMENT.exec(asText(record.agente))?.[1] ?? null;
-      const items = record.rilievi
+      const department = DEPARTMENT.exec(asText(record.agente ?? record.agent))?.[1] ?? null;
+      const items = list
         .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null)
-        .filter((item) => !isClosedFinding(asText(item.stato)));
+        .filter((item) => !isClosedFinding(asText(item.stato ?? item.status)));
       return items.map((item) => ({
         id: asText(item.id),
-        title: asText(item.titolo),
-        priority: priorityOf(asText(item.priorita)),
+        title: asText(item.titolo ?? item.title),
+        priority: priorityOf(asText(item.priorita ?? item.priority)),
         department,
         source,
-        status: asText(item.stato) || null,
+        status: asText(item.stato ?? item.status) || null,
       }));
     });
   });

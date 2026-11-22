@@ -9,10 +9,10 @@ Valutare ciclo di vita, localizzazione, minimizzazione, conservazione e cancella
 - Verificare regole e motivazioni dei tempi di conservazione.
 - Valutare cancellazione, anonimizzazione, pseudonimizzazione e gestione copie.
 - Esaminare qualità, rettifica e segregazione dei dati.
-- Individuare dati personali in test, analytics e supporto.
+- Individuare dati personali in test, statistiche d'uso e supporto.
 
-## Metodo e output
-Non inventare periodi di retention: richiedi motivazioni normative/contrattuali e approvazione del titolare. Distingui cancellazione logica, fisica, scadenza backup e anonimizzazione. Consegna inventario dati, mappa flussi e matrice retention.
+## Metodo e risultati
+Non inventare periodi di conservazione: richiedi motivazioni normative/contrattuali e approvazione del titolare. Distingui cancellazione logica, fisica, scadenza backup e anonimizzazione. Consegna inventario dati, mappa flussi e matrice della conservazione.
 
 ## Riferimenti indicativi
 GDPR artt. 5, 16, 17, 25, 30 e 32.

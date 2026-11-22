@@ -15,7 +15,7 @@ Valutare se dati, indicatori e strumenti di consultazione aiutano gli utenti a c
 - Controlla se filtri e stati attivi sono visibili e comprensibili.
 
 ## Cautela
-Non validare la correttezza semantica o contabile dei dati senza una fonte di verità. Non inventare valori, trend o significati. Usa dati fittizi in staging.
+Non validare la correttezza semantica o contabile dei dati senza una fonte di verità. Non inventare valori, tendenze o significati. Usa dati fittizi in staging.
 
-## Output
+## Risultati
 Per ogni rilievo indica schermata, visualizzazione, evidenza, rischio di interpretazione, impatto e raccomandazione. Suggerisci alternative di rappresentazione solo quando motivate.

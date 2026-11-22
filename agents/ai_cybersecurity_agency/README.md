@@ -1,6 +1,6 @@
 # AI Cybersecurity Agency
 
-12 agenti con approccio defensive-first: proteggono sistemi, dati, persone e continuità operativa con governance, architettura, sviluppo sicuro, gestione delle vulnerabilità, monitoraggio, risposta agli incidenti, IAM, sicurezza cloud e di rete, audit e formazione.
+12 agenti con approccio prima di tutto difensivo: proteggono sistemi, dati, persone e continuità operativa con governo della sicurezza, architettura, sviluppo sicuro, gestione delle vulnerabilità, monitoraggio, risposta agli incidenti, IAM, sicurezza cloud e di rete, audit e formazione.
 
 ## Agenti
 1. Chief Information Security Officer
@@ -25,16 +25,16 @@
 1. Il CISO definisce obiettivi e priorità.
 2. Security Architect definisce i controlli.
 3. Gli specialisti AppSec, Cloud, Network e IAM esaminano i rispettivi domini.
-4. SOC e Incident Response supportano detection e incidenti.
+4. SOC e Incident Response supportano rilevamento e incidenti.
 5. Vulnerability Management consolida i rilievi.
-6. Risk & Compliance verifica la governance.
-7. Il Penetration Testing Specialist opera solo con rules of engagement approvate.
+6. Risk & Compliance verifica il governo della sicurezza.
+7. Il Penetration Testing Specialist opera solo con regole di ingaggio approvate.
 8. Awareness prepara la formazione.
 
 ## Collaborazione con le altre agenzie
-- Software: secure SDLC, code review, threat model, vulnerabilità e remediation.
-- Web Design: UX sicura e privacy-by-design.
-- Privacy & Compliance: GDPR, breach, DPIA, retention e fornitori.
+- Software: ciclo di sviluppo sicuro, revisione del codice, threat model, vulnerabilità e correzioni.
+- Web Design: UX sicura e protezione dei dati fin dalla progettazione.
+- Privacy & Compliance: GDPR, data breach, DPIA, conservazione dei dati e fornitori.
 - Business & Product: rischio cyber nei prodotti, fornitori e business case.
 
 ## Nota

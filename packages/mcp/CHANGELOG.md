@@ -1,6 +1,22 @@
 # Novità di @agentrica/mcp
 
-Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
+Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
+
+## 0.9.0 — 2026-11-22
+
+### Incompatibile
+- Tool, comandi e argomenti in inglese, senza alias: `elenca_agenti` → `list_agents` (`reparto` → `department`), `agente` → `agent` (`compito` → `task`), l'argomento `compito` dei prompt degli agenti → `task`, `/mcp__agentrica__valuta` → `/mcp__agentrica__rate` (`agente` → `agent`), `/mcp__agentrica__progetto` → `/mcp__agentrica__project` (`rimuovi` → `remove`), `/mcp__agentrica__configura` → `/mcp__agentrica__configure`. I nomi dei prompt degli agenti (`aisa-02-software`) non cambiano.
+
+### Nuovo
+- Agenti in due lingue: file di ruolo, regole comuni, README dei reparti e schede della biblioteca anche in inglese, in `agents/<agenzia>/en/`. Il server si ferma con un errore chiaro se un file non ha il gemello o se le sezioni non coincidono.
+- Lingua del server: istruzioni, risposte dei tool, testo degli agenti, moduli, messaggi di `install`, `add` e `init` e pannello in italiano o in inglese. Di predefinito la lingua del sistema (italiano se è l'italiano, altrimenti inglese); si sceglie con `--lang it` o `--lang en`, anche in `install` e `add`, o con la voce «Lingua» della configurazione (`lang` in `~/.agentrica/config.json`).
+- `init` crea il progetto nella lingua scelta: in inglese starter e subagent vengono da `starter/en/`; `agents/` si copia con le due lingue.
+- Il pannello legge piani e audit in italiano e in inglese (`## Phases`, `**Goal**`, `## Done`, chiavi `findings`, `title`, `priority`, `status`).
+- Questo file in inglese, `CHANGELOG.en.md`, con tutte le versioni dalla 0.1.0.
+
+### Cambiato
+- I link alle note legali nei moduli di valutazione, dei totali di token e dei progetti portano alla pagina nella lingua del server (`/it/note-legali` o `/en/legal`).
+- Un progetto proposto senza nome da mostrare parte con l'autore vuoto: il sito scrive «Utente di Agentrica» o «Agentrica user» nella lingua della pagina.
 
 ## 0.8.1 — 2026-11-22
 

@@ -10,8 +10,9 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readProject } from "./project.ts";
-import { MAX_COMMENT, NOTICE, type SendResult } from "./ratings.ts";
-import { SHARE_NOTICE, type SharePayload, type ShareResult } from "./share.ts";
+import { MAX_COMMENT, notice, type SendResult } from "./ratings.ts";
+import { shareNotice, type SharePayload, type ShareResult } from "./share.ts";
+import { lang, T } from "./texts/index.ts";
 import { usageReport } from "./usage.ts";
 
 export interface Choice {
@@ -99,11 +100,14 @@ const SECURITY_HEADERS = {
   "Cross-Origin-Resource-Policy": "same-origin",
 } as const;
 
-const PAGE_FILES = {
-  "/": ["index.html", "text/html; charset=utf-8"],
-  "/app.js": ["app.js", "text/javascript; charset=utf-8"],
-  "/style.css": ["style.css", "text/css; charset=utf-8"],
-} as const;
+// La pagina e i suoi testi nella lingua del server (F32): un file per lingua, index.<lingua>.html e texts.<lingua>.js.
+const pageFiles = () =>
+  ({
+    "/": [`index.${lang}.html`, "text/html; charset=utf-8"],
+    "/texts.js": [`texts.${lang}.js`, "text/javascript; charset=utf-8"],
+    "/app.js": ["app.js", "text/javascript; charset=utf-8"],
+    "/style.css": ["style.css", "text/css; charset=utf-8"],
+  }) as const;
 
 function sameSecret(given: string | undefined, token: string): boolean {
   if (!given) return false;
@@ -181,7 +185,7 @@ export function openBrowser(url: string): void {
 export async function startPanel(root: string, ratings?: PanelRatings, update: () => string | undefined = () => undefined): Promise<Panel> {
   const pageDir = join(import.meta.dirname, "page");
   const token = randomBytes(32).toString("hex");
-  const pages = Object.fromEntries(Object.entries(PAGE_FILES).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
+  const pages = Object.fromEntries(Object.entries(pageFiles()).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
   const pending = new Map<string, { question: Question; resolve: (answer: Answer) => void }>();
   const activity: Activity[] = [];
   const viewers = new Set<ServerResponse>();
@@ -193,7 +197,7 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
   const server = createServer((req, res) => {
     // Un errore in una richiesta non deve fermare il processo, che è anche il server MCP della sessione.
     handle(req, res).catch(() => {
-      if (!res.headersSent) send(res, 500, "Errore del pannello.");
+      if (!res.headersSent) send(res, 500, T.panel.error);
       else res.end();
     });
   });
@@ -201,19 +205,19 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const port = (server.address() as AddressInfo).port;
     const origin = `http://127.0.0.1:${port}`;
-    if (req.headers.host !== `127.0.0.1:${port}`) return send(res, 421, "Host non valido.");
+    if (req.headers.host !== `127.0.0.1:${port}`) return send(res, 421, T.panel.badHost);
     const url = new URL(req.url ?? "/", origin);
     const cookieName = `agentrica_panel_${port}`;
 
     if (req.method === "GET" && url.pathname === "/" && url.searchParams.has("t")) {
-      if (!sameSecret(url.searchParams.get("t") ?? undefined, token)) return send(res, 403, "Token non valido.");
+      if (!sameSecret(url.searchParams.get("t") ?? undefined, token)) return send(res, 403, T.panel.badToken);
       // Il token esce dalla barra degli indirizzi e dalla cronologia: da qui vale il cookie.
       res.writeHead(303, { ...SECURITY_HEADERS, Location: "/", "Set-Cookie": `${cookieName}=${token}; HttpOnly; SameSite=Strict; Path=/` });
       res.end();
       return;
     }
     if (!sameSecret(cookie(req, cookieName), token)) {
-      return send(res, 403, "Apri il pannello dall'URL che dà il tool open_panel dell'agente.");
+      return send(res, 403, T.panel.openFromTool);
     }
 
     if (req.method === "GET" && url.pathname in pages) {
@@ -224,7 +228,7 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
       const project = await readProject(root);
       const questions = [...pending.values()].map((p) => p.question);
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
-      const rating = ratings ? { notice: NOTICE, maxComment: MAX_COMMENT, rated } : null;
+      const rating = ratings ? { notice: notice(), maxComment: MAX_COMMENT, rated } : null;
       return send(res, 200, JSON.stringify({ project, questions, activity, rating, update: update() ?? null }), "application/json; charset=utf-8");
     }
     // Consumo di token dai file di Claude Code del progetto (F24): si legge solo quando la pagina apre la vista.
@@ -239,16 +243,16 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
       return;
     }
     if (req.method === "POST" && url.pathname === "/api/rate" && ratings) {
-      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
-      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      if (req.headers.origin !== origin) return send(res, 403, T.panel.badOrigin);
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, T.panel.needJson);
       let body: unknown;
       try {
         body = JSON.parse(await readBody(req));
       } catch {
-        return send(res, 400, "Richiesta non valida.");
+        return send(res, 400, T.panel.badRequest);
       }
       const input = parseRate(new Set(activity.map((a) => a.id)), body);
-      if (!input) return send(res, 400, "Valutazione non valida.");
+      if (!input) return send(res, 400, T.panel.badRating);
       // L'invio dalla pagina è la conferma dell'utente: la pagina mostra l'avviso accanto al pulsante.
       const result = await ratings.rate(input);
       changed();
@@ -257,41 +261,41 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
     // Totali di token (F27): l'anteprima fissa le righe nel server; la conferma manda solo il codice, quindi parte
     // esattamente ciò che la pagina ha mostrato.
     if (req.method === "POST" && (url.pathname === "/api/share/preview" || url.pathname === "/api/share") && ratings) {
-      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
-      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      if (req.headers.origin !== origin) return send(res, 403, T.panel.badOrigin);
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, T.panel.needJson);
       let body: { code?: unknown };
       try {
         body = JSON.parse(await readBody(req));
       } catch {
-        return send(res, 400, "Richiesta non valida.");
+        return send(res, 400, T.panel.badRequest);
       }
       if (url.pathname === "/api/share/preview") {
         const { code, payload, omitted } = await ratings.previewShare();
-        return send(res, 200, JSON.stringify({ code, rows: payload.rows, omitted, version: payload.mcpVersion, notice: SHARE_NOTICE }), "application/json; charset=utf-8");
+        return send(res, 200, JSON.stringify({ code, rows: payload.rows, omitted, version: payload.mcpVersion, notice: shareNotice() }), "application/json; charset=utf-8");
       }
-      if (typeof body?.code !== "string" || !/^[0-9a-f]{8}$/.test(body.code)) return send(res, 400, "Codice non valido.");
+      if (typeof body?.code !== "string" || !/^[0-9a-f]{8}$/.test(body.code)) return send(res, 400, T.panel.badCode);
       const result = await ratings.confirmShare(body.code);
       return send(res, result.ok ? 200 : 502, JSON.stringify(result), "application/json; charset=utf-8");
     }
     if (req.method === "POST" && url.pathname === "/api/answer") {
-      if (req.headers.origin !== origin) return send(res, 403, "Origine non valida.");
-      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, "Serve JSON.");
+      if (req.headers.origin !== origin) return send(res, 403, T.panel.badOrigin);
+      if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 415, T.panel.needJson);
       let body: { id?: unknown };
       try {
         body = JSON.parse(await readBody(req));
       } catch {
-        return send(res, 400, "Richiesta non valida.");
+        return send(res, 400, T.panel.badRequest);
       }
       const entry = typeof body?.id === "string" ? pending.get(body.id) : undefined;
-      if (!entry) return send(res, 404, "La domanda non è più in attesa.");
+      if (!entry) return send(res, 404, T.panel.notPending);
       const answer = parseAnswer(entry.question, body);
-      if (!answer) return send(res, 400, "Risposta non valida.");
+      if (!answer) return send(res, 400, T.panel.badAnswer);
       entry.resolve(answer);
       res.writeHead(204, SECURITY_HEADERS);
       res.end();
       return;
     }
-    return send(res, 404, "Non trovato.");
+    return send(res, 404, T.panel.notFound);
   }
 
   await new Promise<void>((resolve, reject) => {

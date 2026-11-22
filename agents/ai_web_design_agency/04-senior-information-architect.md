@@ -14,7 +14,7 @@ Valutare organizzazione delle informazioni, navigazione, nomenclatura, tassonomi
 - Cerca funzioni duplicate, difficili da trovare o collocate in aree inattese.
 - Proponi una struttura informativa più coerente senza alterare arbitrariamente la logica di business.
 
-## Output
+## Risultati
 Fornisci una mappa della struttura osservata, criticità con evidenze, impatto sulla reperibilità e proposte di riorganizzazione. Segnala le aree non esplorabili o non accessibili.
 
 ## Vincoli

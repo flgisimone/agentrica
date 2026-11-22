@@ -4,9 +4,9 @@
 // dell'anteprima e manda esattamente il contenuto mostrato. Niente compito, file o percorsi: solo i campi di Rating.
 // Tutto resta in memoria (nessun file); i tempi e fetch si passano dall'esterno per i test.
 import { randomBytes, randomUUID } from "node:crypto";
+import { legalUrl, T } from "./texts/index.ts";
 
 export const RATINGS_URL = "https://agentrica.vercel.app/api/ratings";
-export const PRIVACY_URL = "https://agentrica.vercel.app/note-legali#valutazioni";
 export const MAX_COMMENT = 1000;
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
@@ -38,9 +38,8 @@ export interface RatingsOptions {
   now?: () => number;
 }
 
-export const NOTICE =
-  "Parte solo ciò che vedi qui: niente compito, codice o file del progetto. " +
-  `Non scrivere nel commento nomi, dati personali o parti del progetto. Informativa: ${PRIVACY_URL}`;
+/** Cosa parte e cosa non scrivere, nell'anteprima, nel modulo e nel pannello. */
+export const notice = () => T.ratings.notice(legalUrl("valutazioni"));
 
 export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fetch, now = Date.now }: RatingsOptions) {
   // Un id casuale per agente e sessione: non collega sessioni né agenti diversi, ferma solo i doppi invii.
@@ -101,15 +100,15 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
     /** Secondo passo: invia il contenuto del codice, una volta sola. */
     async confirm(code: string, agentId: string): Promise<SendResult> {
       const entry = drafts.get(code);
-      if (entry && entry.rating.agentId !== agentId) return { ok: false, message: "Codice non valido per questo agente: prepara di nuovo l'anteprima." };
+      if (entry && entry.rating.agentId !== agentId) return { ok: false, message: T.ratings.wrongAgent };
       drafts.delete(code);
-      if (!entry || entry.expires <= now()) return { ok: false, message: "Codice scaduto o già usato: prepara di nuovo l'anteprima." };
+      if (!entry || entry.expires <= now()) return { ok: false, message: T.ratings.expired };
       return this.send(entry.rating);
     },
 
     /** Invio di un contenuto già confermato dall'utente (dal secondo passo o dal pannello). */
     async send(rating: Rating): Promise<SendResult> {
-      if (rated.has(rating.agentId)) return { ok: false, message: `${rating.agentId} è già stato valutato in questa sessione.` };
+      if (rated.has(rating.agentId)) return { ok: false, message: T.ratings.alreadyRated(rating.agentId) };
       let response: Response;
       try {
         response = await doFetch(url, {
@@ -120,16 +119,16 @@ export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fet
         });
       } catch {
         // Offline, endpoint giù, timeout o rete negata dal permission model di Node (--permission senza --allow-net).
-        return { ok: false, message: "Invio non riuscito: Agentrica non è raggiungibile (rete assente, timeout o rete non permessa). Riprova più tardi." };
+        return { ok: false, message: T.ratings.unreachable };
       }
       if (response.ok || response.status === 409) {
         // 409: lo stesso usageId è già registrato, quindi il voto c'è.
         rated.add(rating.agentId);
         return { ok: true, usageId: rating.usageId };
       }
-      if (response.status === 429) return { ok: false, message: "Hai già valutato questo agente oggi da questa rete." };
-      if (response.status === 400) return { ok: false, message: "Valutazione respinta: dati non validi." };
-      return { ok: false, message: `Invio non riuscito (errore ${response.status} del servizio). Riprova più tardi.` };
+      if (response.status === 429) return { ok: false, message: T.ratings.tooMany };
+      if (response.status === 400) return { ok: false, message: T.ratings.rejected };
+      return { ok: false, message: T.ratings.serviceError(response.status) };
     },
 
     /** Agenti caricati da almeno 30 minuti, non valutati e non ancora ricordati: si ricordano una volta sola. */
@@ -145,39 +144,30 @@ export type Ratings = ReturnType<typeof createRatings>;
 
 /** Testo dell'anteprima: cosa parte, l'avviso e il codice. */
 export function previewText(name: string, code: string, rating: Rating): string {
-  return [
-    `Anteprima della valutazione di ${name}:`,
-    `- voto: ${rating.rating}/5`,
-    `- commento: ${rating.comment || "(nessuno)"}`,
-    `- pubblicazione del commento sul sito: ${rating.publish ? "sì" : "no"}`,
-    `- versione: ${rating.mcpVersion}`,
-    "",
-    NOTICE,
-    "",
-    `Mostra questa anteprima all'utente e chiedigli se inviarla. Solo dopo il suo sì richiama rate_agent con code "${code}" (valido 10 minuti, una volta). Se dice no, non fare nulla.`,
-  ].join("\n");
+  const { comment, publish, mcpVersion: version } = rating;
+  return T.ratings.preview({ name, rating: rating.rating, comment, publish, version, notice: notice(), code });
 }
 
 /** Campi del modulo di valutazione (elicitation MCP): solo tipi semplici, la pubblicazione parte spenta. */
-export const RATING_FORM = {
+export const ratingForm = () => ({
   type: "object" as const,
   properties: {
     // Una scelta e non un numero: Claude Code mostra un intero come campo di testo libero (prova F23-01).
     rating: {
       type: "string" as const,
-      title: "Voto",
+      title: T.ratings.form.rating,
       enum: ["5", "4", "3", "2", "1"],
-      enumNames: ["5 · benissimo", "4 · bene", "3 · così così", "2 · male", "1 · malissimo"],
+      enumNames: T.ratings.form.ratingNames,
     },
-    comment: { type: "string" as const, title: "Commento (facoltativo)", description: "Cosa è andato bene o cosa migliorare", maxLength: MAX_COMMENT },
-    publish: { type: "boolean" as const, title: "Pubblica il commento sul sito di Agentrica", default: false },
+    comment: { type: "string" as const, title: T.ratings.form.comment, description: T.ratings.form.commentHelp, maxLength: MAX_COMMENT },
+    publish: { type: "boolean" as const, title: T.ratings.form.publish, default: false },
   },
   required: ["rating"],
-};
+});
 
 /** Il testo in cima al modulo: chi si valuta e cosa parte. */
 export function formMessage(name: string): string {
-  return `Valuta ${name}. Invia il modulo per mandare la valutazione ad Agentrica, in forma anonima; rifiuta e non te la chiediamo più per questo agente. ${NOTICE}`;
+  return T.ratings.formMessage(name, notice());
 }
 
 /** La risposta del modulo, validata come il resto: voto intero 1–5, commento al più MAX_COMMENT, booleano. */

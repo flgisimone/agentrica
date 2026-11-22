@@ -7,5 +7,5 @@ La versione stabile corrente dell'Application Security Verification Standard è 
 
 ## Come si applica
 - Cita sempre i requisiti con la versione (v5.0.0-…): un id senza versione è ambiguo, perché la numerazione della 5.0 non coincide con quella della 4.0.3.
-- Se il progetto ha controlli o checklist sulla 4.0.3, segnala che vanno riportati sulla 5.0.0 e non dare per uguali requisiti con lo stesso numero.
+- Se il progetto ha controlli o liste di controllo sulla 4.0.3, segnala che vanno riportati sulla 5.0.0 e non dare per uguali requisiti con lo stesso numero.
 - Sul repository di ASVS esiste anche un ramo in sviluppo («Bleeding Edge»): per audit e conformità usa la versione stabile.

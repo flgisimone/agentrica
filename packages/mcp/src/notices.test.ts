@@ -52,14 +52,14 @@ async function start(env: Record<string, string>, args: string[] = [], forms?: (
     });
   }
   await client.connect(
-    new StdioClientTransport({ command: process.execPath, args: [join(import.meta.dirname, "server.ts"), ...args], cwd, env: { ...process.env, HOME: home, USERPROFILE: home, ...env } as Record<string, string>, stderr: "pipe" }),
+    new StdioClientTransport({ command: process.execPath, args: [join(import.meta.dirname, "server.ts"), "--lang", "it", ...args], cwd, env: { ...process.env, HOME: home, USERPROFILE: home, ...env } as Record<string, string>, stderr: "pipe" }),
   );
   clients.push(client);
   return client;
 }
 
 const texts = (result: Record<string, unknown>) => (result.content as { text: string }[]).map((c) => c.text);
-const agent = (client: Client, id: string) => client.callTool({ name: "agente", arguments: { id } });
+const agent = (client: Client, id: string) => client.callTool({ name: "agent", arguments: { id } });
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 test("modulo al cambio d'agente: per il precedente, una volta, inviato vale come conferma, un rifiuto basta", async () => {
@@ -121,7 +121,7 @@ test("versione nuova sul registro: l'avviso con il comando, una volta, nel primo
   const client = await start({ AGENTRICA_REGISTRY_URL: registry.url }, ["--no-ratings"]);
   let notice: string | undefined;
   for (let i = 0; i < 50 && !notice; i++) {
-    notice = texts(await client.callTool({ name: "elenca_agenti", arguments: { reparto: "AISA" } })).find((t) => t.includes("99.0.0"));
+    notice = texts(await client.callTool({ name: "list_agents", arguments: { department: "AISA" } })).find((t) => t.includes("99.0.0"));
     if (!notice) await wait(20);
   }
   assert.ok(notice, "avviso mai arrivato");
@@ -129,7 +129,7 @@ test("versione nuova sul registro: l'avviso con il comando, una volta, nel primo
   assert.match(notice, /git pull/, "dal clone il comando è git pull");
   assert.equal(registry.requests.length, 1);
   assert.equal(registry.requests[0], "", "la richiesta non porta dati");
-  assert.equal(texts(await client.callTool({ name: "elenca_agenti", arguments: { reparto: "AISA" } })).length, 1);
+  assert.equal(texts(await client.callTool({ name: "list_agents", arguments: { department: "AISA" } })).length, 1);
 });
 
 test("registro con risposta fuori formato, versione uguale o --no-update-check: nessun avviso", async () => {
@@ -138,12 +138,12 @@ test("registro con risposta fuori formato, versione uguale o --no-update-check: 
     const client = await start({ AGENTRICA_REGISTRY_URL: registry.url }, ["--no-ratings"]);
     for (let i = 0; i < 50 && registry.requests.length === 0; i++) await wait(20);
     await wait(50);
-    const all = texts(await client.callTool({ name: "elenca_agenti", arguments: {} })).join("\n");
+    const all = texts(await client.callTool({ name: "list_agents", arguments: {} })).join("\n");
     assert.ok(!all.includes("Ignora") && !all.includes("Avviso per l'utente"), body);
   }
   const registry = await fakeEndpoint(200, '{"latest":"99.0.0"}');
   const client = await start({ AGENTRICA_REGISTRY_URL: registry.url }, ["--no-ratings", "--no-update-check"]);
   await wait(200);
-  assert.equal(texts(await client.callTool({ name: "elenca_agenti", arguments: {} })).length, 1);
+  assert.equal(texts(await client.callTool({ name: "list_agents", arguments: {} })).length, 1);
   assert.equal(registry.requests.length, 0);
 });

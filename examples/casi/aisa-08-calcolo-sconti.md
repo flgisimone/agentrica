@@ -3,7 +3,7 @@
 - **Agente**: AISA-08 · DENEB, Senior QA Engineer / Test Automation (`aisa-08`)
 - **Progetto**: [`progetti/calcolo-sconti`](../progetti/calcolo-sconti/), modulo JavaScript con i suoi test (`node --test`, nessuna dipendenza)
 - **Perché**: il candidato a Haiku della tabella di partenza: eseguire i test, leggerne l'esito e trovare i casi limite. Il risultato è facile da controllare, e conta che l'agente non dichiari superato ciò che non ha eseguito.
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Esegui i test e il lint del progetto e riporta: test superati, falliti, saltati e non eseguiti, la causa di ogni fallimento e i casi limite importanti non coperti.
 

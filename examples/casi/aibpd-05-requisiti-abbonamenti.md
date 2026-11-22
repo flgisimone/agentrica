@@ -3,7 +3,7 @@
 - **Agente**: AIBPD-05 · ALGIEBA, Senior Business Analyst & Requirements Strategist (`aibpd-05`)
 - **Progetto**: [`progetti/requisiti-abbonamenti`](../progetti/requisiti-abbonamenti/), bozza di requisiti di un abbonamento settimanale, solo testo
 - **Perché**: un ruolo di analisi senza codice, candidato a Sonnet; i difetti sono di contenuto (ambiguità, contraddizioni, lacune) e ci sono parti scritte bene da non toccare.
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Analizza i requisiti in requisiti.md e riporta ambiguità, contraddizioni, lacune e criteri non verificabili, con il punto del documento e una proposta di riformulazione.
 

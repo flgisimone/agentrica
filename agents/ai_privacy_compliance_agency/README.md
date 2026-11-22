@@ -26,19 +26,19 @@
 4. DPIA e Security valutano rischi e misure.
 5. Rights e Breach verificano processi operativi.
 6. Auditor verifica indipendentemente evidenze e conclusioni.
-7. Il Chief consolida il GDPR Compliance Master Report.
+7. Il Chief consolida il resoconto generale di conformità GDPR.
 
 ## Collaborazione con le altre agenzie
 - Software: le correzioni tecniche spettano alla Software Agency, previa approvazione umana.
 - Business & Product: finalità, flussi di dati, categorie di dati, fornitori e modelli di business.
-- Cybersecurity: breach, DPIA, misure di sicurezza, retention e fornitori.
-- Web Design: informative, consensi e privacy by design nell'interfaccia.
+- Cybersecurity: data breach, DPIA, misure di sicurezza, conservazione dei dati e fornitori.
+- Web Design: informative, consensi e protezione dei dati fin dalla progettazione nell'interfaccia.
 
-## GDPR Compliance Master Report
-Deve includere perimetro e data audit, mappa trattamenti/flussi, matrice requisiti-evidenze-stato, registro rilievi e priorità, rischi residui, aree non verificabili, piano di remediation, responsabili suggeriti, criteri di chiusura e limiti dell'audit.
+## Resoconto generale di conformità GDPR
+Deve includere perimetro e data audit, mappa trattamenti/flussi, matrice requisiti-evidenze-stato, registro rilievi e priorità, rischi residui, aree non verificabili, piano di correzione, responsabili suggeriti, criteri di chiusura e limiti dell'audit.
 
 ## Confini e sicurezza
-Gli agenti svolgono audit e formulano raccomandazioni: non implementano modifiche e non operano sui dati. Le correzioni tecniche spettano alla Software Agency previa approvazione umana. Non usare dati personali reali quando bastano dati sintetici; non accedere a produzione senza autorizzazione; non inserire segreti nei report.
+Gli agenti svolgono audit e formulano raccomandazioni: non implementano modifiche e non operano sui dati. Le correzioni tecniche spettano alla Software Agency previa approvazione umana. Non usare dati personali reali quando bastano dati sintetici; non accedere a produzione senza autorizzazione; non inserire segreti nei resoconti.
 
 Gli agenti supportano ma non sostituiscono titolare del trattamento, DPO, consulente legale o professionisti qualificati. Non costituiscono certificazione né garanzia di conformità.
 

@@ -16,7 +16,7 @@
 
 ## Backlog
 
-| # | Task | Priorità |
+| # | Attività | Priorità |
 |---|---|---|
 | F0-01 | `package.json` con le dipendenze approvate, versioni esatte; `.nvmrc` allineato | P1 |
 | F0-02 | `tsconfig.json` strict (`noUncheckedIndexedAccess`); lint; script `dev`, `build`, `typecheck`, `lint`, `test`, `verify` (e `verify:e2e` quando arriva Playwright) | P1 |
@@ -36,7 +36,7 @@
 
 ## Fatto
 
-<!-- A fine fase: una riga per task, con versioni installate, file creati e scelte prese. -->
+<!-- A fine fase: una riga per attività, con versioni installate, file creati e scelte prese. -->
 
 ## Verifiche
 

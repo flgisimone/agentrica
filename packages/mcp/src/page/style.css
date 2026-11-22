@@ -171,3 +171,5 @@ ol.tree { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wra
 .agent .task { display: block; }
 #tree .hint + div, #tree > ol.tree { margin-top: 4px; }
 #view-agents .hint { margin-bottom: 12px; }
+/* La prima riga del compito non è un titolo: peso normale, colore secondario (prova in VS Code del 2026-11-22). */
+.agent details.task summary { font-weight: 400; color: var(--muted-foreground); }

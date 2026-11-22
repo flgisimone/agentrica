@@ -1,5 +1,5 @@
 # Modulo «Mostra il tuo progetto» (F26). Le etichette dei campi le legge `npm run projects` nel repository del sito
-# (FORM in src/lib/projects.ts di agentrica-site): se ne cambi una, cambiala anche lì.
+# (FORM in src/lib/projects.ts di agentrica-site): se ne cambi una, cambiala anche lì. Il gemello inglese è project.yml.
 name: Mostra il tuo progetto
 description: Chiedi di mostrare sul sito di Agentrica un progetto pubblico fatto con i suoi agenti.
 title: "Progetto: "
@@ -10,7 +10,7 @@ body:
       value: |
         Il progetto compare nella pagina dei progetti del sito solo dopo la nostra approvazione. Questa issue è pubblica:
         non scrivere dati di altre persone. Descrizione e risultati restano tuoi e non li verifichiamo. Come trattiamo
-        questi dati: https://agentrica.vercel.app/note-legali#progetti
+        questi dati: https://agentrica.vercel.app/it/note-legali#progetti
   - type: input
     attributes:
       label: Nome del progetto

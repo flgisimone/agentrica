@@ -77,6 +77,6 @@ Nel pacchetto (0.9.0):
 ## Rilievi aperti
 
 - (P1) F33-07, rilascio: risolto il 2026-11-22 (vedi «Verifiche»).
-- (P3) I link alle note legali dei server fino alla 0.8.1 (`/note-legali#valutazioni`) portano un browser inglese a `/en/legal#valutazioni`: la pagina si apre, ma non scorre alla sezione, che in inglese è `#ratings`. Si risolve da sé con l'aggiornamento alla 0.9.0; se serve prima, ancore italiane di riserva nel testo inglese.
-- (P3) Il manifest dell'app installabile resta in italiano (`lang: "it"`, `start_url: "/"`, che porta comunque alla lingua del browser). Un manifest per lingua solo se qualcuno installa il sito in inglese.
-- (P3) Il modulo della issue «Mostra il tuo progetto» è solo in italiano: la pagina inglese lo dice. Una versione inglese del modulo è una modifica del repository pubblico, da decidere.
+- (P3) I link alle note legali dei server fino alla 0.8.1 (`/note-legali#valutazioni`) portano un browser inglese a `/en/legal#valutazioni`, che non scorre alla sezione (`#ratings`): chiuso come accettato il 2026-11-22, con la conferma dell'utente. Sparisce con l'aggiornamento alla 0.9.0; si riapre se arrivano segnalazioni.
+- (P3) Manifest solo in italiano: risolto in `fix/rilievi-f33` (2026-11-22) con un manifest neutro, confermato dall'utente: nome «Agentrica», descrizione in inglese, senza `lang`, `start_url` «/» che porta alla lingua del browser o a quella scelta.
+- (P3) Modulo della issue solo in italiano: risolto in `fix/rilievi-f33` (2026-11-22), confermato dall'utente. `.github/ISSUE_TEMPLATE/project.yml` («Show your project»), gemello inglese di `progetto.yml` con la stessa etichetta `progetto`; `npm run projects` riconosce le etichette delle due lingue (`FORM_EN`, prova unitaria); la pagina inglese dei progetti e il README inglese del pacchetto linkano il modulo inglese, le note legali nominano i due moduli. Consenso e licenza in inglese restano nel rischio accettato PRIV-PUB-01.

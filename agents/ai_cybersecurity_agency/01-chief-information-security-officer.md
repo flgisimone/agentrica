@@ -11,7 +11,7 @@ Strategia di sicurezza, roadmap, quadro delle policy, registro dei rischi, resoc
 
 ## Metodo operativo
 1. Chiarisci obiettivo, proprietario delle risorse, autorizzazione, perimetro e vincoli.
-2. Parti da analisi documentale e verifiche passive/read-only.
+2. Parti da analisi documentale e verifiche passive in sola lettura.
 3. Raccogli evidenze minimali, verificabili e prive di segreti o dati non necessari.
 4. Valuta impatto, probabilità, esposizione e controlli compensativi.
 5. Formula correzioni proporzionate, con priorità e criteri di verifica.

@@ -75,8 +75,8 @@ Verifica del 2026-11-22, dopo F31 (pacchetto 0.8.1):
 
 ## Rilievi aperti
 
-- (P2) Prova in Claude Code nelle due lingue (moduli `configure` e `rate`, comandi rinominati, pannello) prima della pubblicazione della 0.9.0, con F33.
-- (P2) Sito (F33): `DepartmentInfo.summary` ora è per lingua; il sito usa `Department.summary` e resta compatibile, ma per `/en` deve chiamare `loadCatalog("en")`. I link a `note-legali` delle informative di valutazioni, consumo e progetti puntano alle pagine italiane: con `/en` vanno indicati per lingua.
-- (P3) Il nome predefinito di un progetto proposto dal server («Utente di Agentrica» / «Agentrica user») parte nella lingua del server e il sito lo mostra così com'è (commento `ponytail:` in `showcase.ts`): da decidere in F33.
-- (P3) Anglicismi rimasti nei file italiani di `agents/`, fuori dal glossario di F31: «loading, error, empty e success states» in `ai_software_agency/05-senior-frontend-developer.md`, «outcome» nel README e in `12-…` di AIBPD. Da correggere con la conferma dell'utente (modifica al prodotto).
-- (P3) Il testo del consenso e della licenza dei progetti in inglese è una traduzione non rivista da un legale, come quello italiano (rischio accettato PRIV-PUB-01).
+- (P2) Prova in Claude Code: fatta il 2026-11-22 in `fix/anglicismi-agents` con `agentrica-dev` riconnesso. Il server ha scelto l'inglese dal sistema; `list_agents`, `agent`, `library` e `open_panel` rispondono in inglese; l'utente ha provato `rate`, `configure` (con la voce Language) e il pannello, tutti in inglese. Risolto. La prova ha trovato un difetto: i nomi delle fonti di `fonti.json`, comuni alle due lingue, avevano parti italiane nelle schede inglesi. Corretto con il campo facoltativo `nameEn` (37 fonti, confermato dall'utente), usato dalle schede inglesi; documentato in `docs/Biblioteca degli agenti.md`.
+- (P2) Sito con `/en` e informative per lingua: risolto spostandolo in F33 (F33-08).
+- (P3) Nome predefinito dei progetti proposti dal server: risolto spostandolo in F33 (F33-09).
+- (P3) Anglicismi nei file italiani di `agents/`: risolto in `fix/anglicismi-agents` (2026-11-22), con la conferma dell'utente: effort, management, product e change management, economics, outcome, milestone, prospect, stop, watcher, refactoring, read-only, follow-up, incident responder, privacy-by-design, client-side, performance e gli stati dell'interfaccia (34 file; i gemelli inglesi non cambiano).
+- (P3) Testo inglese di consenso e licenza non rivisto da un legale: chiuso come rischio accettato insieme a PRIV-PUB-01 (`plan/README.md`, «Rischi accettati»), con la stessa condizione per riaprirlo.

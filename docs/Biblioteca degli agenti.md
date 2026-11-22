@@ -45,6 +45,7 @@ Una scheda scaduta resta valida per il catalogo: il server la segnala «da ricon
 |---|---|
 | `id` | minuscole, cifre e trattini; unico nel reparto |
 | `name` | nome della fonte, una riga, stesse regole delle schede (va al modello) |
+| `nameEn` | facoltativo (F32): il nome in inglese, quando `name` ha parti italiane; lo usano le schede di `en/biblioteca/`, con le stesse regole di `name` |
 | `level` | `1` fonti primarie (enti di standard, autorità, testi normativi), `2` documentazione ufficiale dei produttori, `3` fonti di settore, solo come segnale, `"citata"` fonti a pagamento o con licenza che ne vieta la riproduzione: solo titolo e versione |
 | `url` | pagina della fonte; facoltativo solo per `"citata"` |
 | `domains` | i domini ammessi per `url` e `feed`, sottodomini compresi |

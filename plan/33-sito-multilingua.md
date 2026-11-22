@@ -34,6 +34,8 @@
 | F33-04 | Reparti e agenti dal catalogo nella lingua della pagina | P1 |
 | F33-05 | Note legali, `/installa` e `/rilasci` nelle due lingue; voce del cookie della lingua nelle note legali | P1 |
 | F33-06 | Test e2e nelle due lingue (redirect, selettore, pagine principali) | P1 |
+| F33-08 | Dai rilievi di F32: il server 0.9.0 punta le informative di valutazioni, consumo e progetti (`note-legali#…`) alla pagina della lingua scelta; il sito usa `loadCatalog("en")` per `/en` | P1 |
+| F33-09 | Dai rilievi di F32: nome predefinito di un progetto proposto dal server senza nome da mostrare («Utente di Agentrica» / «Agentrica user», commento `ponytail:` in `showcase.ts`): decidere se il server lo manda vuoto e il sito lo mostra nella lingua della pagina | P2 |
 | F33-07 | Rilascio insieme: pacchetto 0.9.0 su npm e registro MCP, sito con la dipendenza 0.9.0, comandi nei README; solo con l'approvazione esplicita dell'utente | P1 |
 
 ## Criteri di accettazione

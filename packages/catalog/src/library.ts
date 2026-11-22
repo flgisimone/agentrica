@@ -14,6 +14,8 @@ export interface Source {
   id: string;
   /** Nome della fonte, che va al modello. */
   name: string;
+  /** Nome in inglese (F32), se `name` ha parti italiane: lo usano le schede inglesi. */
+  nameEn?: string;
   level: SourceLevel;
   /** Pagina della fonte; facoltativa solo per le fonti citate. */
   url?: string;
@@ -96,16 +98,20 @@ export function sourceProblems(data: unknown): string[] {
   data.forEach((entry: Record<string, unknown> | null, index) => {
     const at = `fonte ${typeof entry?.id === "string" ? entry.id : index + 1}`;
     if (typeof entry !== "object" || entry === null || Array.isArray(entry)) return void problems.push(`${at}: non è un oggetto`);
-    const known = new Set(["id", "name", "level", "url", "domains", "update", "feed", "access", "checked"]);
+    const known = new Set(["id", "name", "nameEn", "level", "url", "domains", "update", "feed", "access", "checked"]);
     for (const key of Object.keys(entry)) if (!known.has(key)) problems.push(`${at}: campo sconosciuto «${key}»`);
     if (typeof entry.id !== "string" || !ID.test(entry.id)) problems.push(`${at}: id non valido`);
     else if (ids.has(entry.id)) problems.push(`${at}: id ripetuto`);
     else ids.add(entry.id);
-    // Il nome va al modello: stesse regole delle schede, su una riga e corto.
-    if (typeof entry.name !== "string" || entry.name.trim() === "" || entry.name.length > 120 || entry.name.includes("\n")) {
-      problems.push(`${at}: nome mancante o troppo lungo`);
-    } else {
-      for (const p of contentProblems(entry.name)) problems.push(`${at}: nome con ${p.replace(/^riga \d+: /, "")}`);
+    // Il nome va al modello: stesse regole delle schede, su una riga e corto. nameEn è facoltativo, con le stesse regole.
+    for (const key of ["name", "nameEn"] as const) {
+      const value = entry[key];
+      if (key === "nameEn" && value === undefined) continue;
+      if (typeof value !== "string" || value.trim() === "" || value.length > 120 || value.includes("\n")) {
+        problems.push(`${at}: ${key} mancante o troppo lungo`);
+      } else {
+        for (const p of contentProblems(value)) problems.push(`${at}: ${key} con ${p.replace(/^riga \d+: /, "")}`);
+      }
     }
     if (![1, 2, 3, "citata"].includes(entry.level as SourceLevel)) problems.push(`${at}: livello non valido`);
     if (entry.access !== "libero" && entry.access !== "pagamento") problems.push(`${at}: accesso non valido`);
@@ -190,7 +196,7 @@ export function parseCard(text: string, file: string, path: string, sources: rea
     id: match[2]!,
     number: Number(match[1]),
     title,
-    source: { id: source!.id, name: source!.name, level: source!.level as 1 | 2 },
+    source: { id: source!.id, name: (lang === "en" && source!.nameEn) || source!.name, level: source!.level as 1 | 2 },
     version: fields.get(VERSION)!,
     verified,
     review,

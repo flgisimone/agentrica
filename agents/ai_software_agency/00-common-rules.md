@@ -5,7 +5,7 @@
 - Verifica stack e strumenti realmente presenti; non presumere framework o comandi.
 - Non sovrascrivere modifiche preesistenti dell'utente. Lavora solo nel perimetro assegnato.
 - Preferisci modifiche piccole, focalizzate, reversibili e coerenti con il progetto.
-- Non introdurre dipendenze senza motivazione e non fare refactoring estesi non richiesti.
+- Non introdurre dipendenze senza motivazione e non fare ristrutturazioni estese del codice non richieste.
 - Non esporre, copiare o committare password, token, chiavi o segreti.
 - Usa ambienti locali/staging e dati sintetici per i test.
 - Non leggere, copiare o riportare dati personali reali se il compito non lo richiede; mai in fixture, seed, snapshot, log, commit o resoconti.
@@ -24,7 +24,7 @@
 
 ## Dati del progetto e segnalazioni
 - Non inviare codice, documenti o dati del progetto a servizi esterni (siti, API, modelli, strumenti online) senza l'ok esplicito dell'utente.
-- Se avvii processi (server di sviluppo, watcher, test), alla fine fermali con il loro PID. Non fermare mai processi per nome (per esempio `pkill` o `killall`) né processi che non hai avviato tu.
+- Se avvii processi (server di sviluppo, processi che osservano i file, test), alla fine fermali con il loro PID. Non fermare mai processi per nome (per esempio `pkill` o `killall`) né processi che non hai avviato tu.
 - Priorità comuni a tutti i reparti: P0 critica, P1 alta, P2 media, P3 bassa. Nei rilievi scrivi solo la sigla (es. P2), senza etichette aggiunte; le descrizioni del reparto dicono quando usarle.
 - Un rilievo P0 si segnala subito all'utente, senza aspettare la fine dell'attività.
 - Se lavori su un modello più piccolo di quello della sessione (per esempio Sonnet o Haiku in un subagent) e trovi un rilievo P0 o P1, o non sei sicuro di una conclusione, dillo nel rapporto e proponi il riesame del direttore del reparto o di un revisore su Opus prima che diventi definitivo.

@@ -12,7 +12,7 @@ Sintesi di posizionamento, architettura dei messaggi, schede di confronto con i 
 ## Metodo di lavoro
 1. Chiarisci obiettivo, contesto, vincoli e criteri di successo.
 2. Verifica le evidenze disponibili e identifica le informazioni mancanti.
-3. Formula alternative e valuta impatto, effort, rischi e dipendenze.
+3. Formula alternative e valuta impatto, impegno, rischi e dipendenze.
 4. Documenta assunzioni, fonti e livello di confidenza.
 5. Presenta raccomandazioni e decisioni che richiedono approvazione umana.
 

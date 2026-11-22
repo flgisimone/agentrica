@@ -110,6 +110,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 
 | F31 | [31-lingua.md](31-lingua.md) | Lingua: regola in CONVENTIONS §3, glossario, anglicismi tolti dai testi italiani, README inglesi di predefinito con `README.it.md` | completata |
 | F32 | [32-contenuti-en.md](32-contenuti-en.md) | File di ruolo, regole comuni e biblioteche in inglese; tool, prompt e testi del server in inglese, lingua dal sistema con `--lang` | completata |
-| F33 | [33-sito-multilingua.md](33-sito-multilingua.md) | Sito in italiano e inglese con `/it` e `/en`, lingua dal browser, selettore; rilascio di pacchetto e sito | completata, rilascio in attesa |
+| F33 | [33-sito-multilingua.md](33-sito-multilingua.md) | Sito in italiano e inglese con `/it` e `/en`, lingua dal browser, selettore; rilascio di pacchetto e sito | completata |
 
 Ordine: F0 → F33 in sequenza.

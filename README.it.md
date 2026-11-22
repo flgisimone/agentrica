@@ -81,7 +81,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F30 | Rilievi aperti da F16 a F29: privilegio minimo del database, rischi accettati, correzioni e prove guidate | completata |
 | F31 | Lingua: una lingua per file, anglicismi tolti dai testi italiani, README inglesi di predefinito | completata |
 | F32 | Ruoli, biblioteche e server MCP anche in inglese, `--lang`, tool in inglese (0.9.0) | completata |
-| F33 | Sito in italiano e inglese (`/it`, `/en`), selettore di lingua, CHANGELOG inglese | completata, rilascio 0.9.0 in attesa |
+| F33 | Sito in italiano e inglese (`/it`, `/en`), selettore di lingua, CHANGELOG inglese | completata (0.9.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

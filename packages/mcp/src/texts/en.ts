@@ -285,6 +285,7 @@ export const en: Texts = {
       "I agree that Agentrica may publish on its site the data in this form (display name, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.",
     license: "I grant Agentrica, free of charge, permission to show the project's name and description on the site until I ask for them to be removed, and I declare that I am entitled to do so.",
     defaultAuthor: "Agentrica user",
+    noAuthor: "none (the site writes «Agentrica user» or, in Italian, «Utente di Agentrica»)",
     needConsent: "consent and license are required",
     badName: (max: number) => `name missing, longer than ${max} characters or with links and the symbols < > [ ] \``,
     badUrl: "the link must be a full https:// address, without port or credentials, at most 200 characters",

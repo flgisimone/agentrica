@@ -2,7 +2,7 @@
 
 **Obiettivo**: il sito esiste in italiano e in inglese, con URL `/it` e `/en`, la lingua presa dal browser alla prima visita e un selettore che la ricorda; interfaccia e contenuti degli agenti in una lingua sola per pagina. Alla fine, rilascio insieme di pacchetto 0.9.0 e sito.
 
-> **Stato: da aprire** dopo F32, che porta il catalogo in due lingue. Branch `fase/f33-sito-multilingua` nei due repository. Backlog e decisioni aperte si confermano con l'utente all'apertura.
+> **Stato: completata, rilascio in attesa** (2026-11-22). Branch `fase/f33-sito-multilingua` nei due repository. Fatto tutto tranne F33-07, il rilascio di pacchetto 0.9.0 e sito, che parte solo con l'approvazione esplicita dell'utente (CONVENTIONS §13.8).
 
 **Agenzie**: software (Frontend, DevOps, QA, Performance, Code Reviewer); design (Information Architect per URL e selettore, UX Writer per i testi, Accessibility per `lang` e selettore); privacy (il cookie della lingua e le note legali nelle due lingue).
 
@@ -17,12 +17,13 @@
 - URL con prefisso `/it` e `/en`; alla prima visita la radice reindirizza secondo `Accept-Language` (italiano se il browser è in italiano, altrimenti inglese); selettore di lingua nell'intestazione, la scelta resta in un cookie; pagine statiche per lingua con `hreflang`.
 - Interfaccia e contenuti degli agenti tradotti.
 
-## Decisioni da prendere all'apertura
+## Decisioni prese all'apertura (2026-11-22)
 
-- **Nomi delle rotte in inglese**: stessi segmenti nelle due lingue (`/en/agenti`) o tradotti (`/en/agents`, `/en/departments`), con i redirect dai vecchi URL senza prefisso.
-- **Testi dell'interfaccia**: dizionari per lingua (proposta: un file TypeScript per lingua in `src/i18n/`, senza dipendenze nuove) o una libreria (`next-intl`).
-- **Note legali in inglese**: traduzione di cortesia con prevalenza del testo italiano, o due testi equivalenti.
-- **CHANGELOG e `/rilasci`**: il CHANGELOG del pacchetto resta in italiano o ha la versione inglese.
+- **Rotte**: segmenti tradotti in inglese (`/en/agents`, `/en/departments`, `/en/reputation`, `/en/projects`, `/en/usage`, `/en/install`, `/en/releases`, `/en/legal`); in italiano restano quelli di oggi. I vecchi URL senza prefisso reindirizzano.
+- **Testi dell'interfaccia**: un file TypeScript per lingua in `src/i18n/` con lo stesso tipo, senza dipendenze nuove.
+- **Note legali**: due testi equivalenti in italiano e in inglese, tenuti allineati; il rischio accettato PRIV-PUB-01 copre anche il testo inglese.
+- **CHANGELOG**: il pacchetto ha anche il CHANGELOG inglese; `/en/releases` lo legge e da 0.9.0 ogni versione si scrive nelle due lingue.
+- **F33-09**: il server 0.9.0 manda l'autore vuoto quando manca il nome da mostrare; il sito mostra «Utente di Agentrica» o «Agentrica user» secondo la pagina, anche per le proposte già arrivate con il nome predefinito.
 
 ## Backlog
 
@@ -47,6 +48,34 @@
 
 ## Fatto
 
+Nel sito (`agentrica-site`):
+
+- **F33-01** Pagine sotto `src/app/[lang]/` (le cartelle restano italiane, la storia con `git mv`), root layout con `<html lang>`, `generateStaticParams` per `it` ed `en` e `dynamicParams = false`. `src/i18n/config.ts`, senza dipendenze, ha la mappa delle parole (`EN_WORDS`: segmenti, ancore usate fra le pagine e il parametro del filtro) e `localize`, `unlocalize`, `switchLang`, `negotiate`: nel codice i percorsi si scrivono una volta, nella forma italiana. `next.config.ts` riscrive `/en/agents` su `/en/agenti` e reindirizza (308) `/en/agenti` su `/en/agents`. `src/proxy.ts` porta la radice e i vecchi URL senza prefisso (307, `Vary: Accept-Language, Cookie`) alla lingua del cookie o, senza, a quella preferita del browser (italiano solo se è la prima). Canonical e `hreflang` (`it`, `en`, `x-default` sull'indirizzo senza lingua) in ogni pagina; `sitemap.ts` con le alternative e `robots.ts`; immagine Open Graph per lingua.
+- **F33-02** Selettore «IT · EN» nell'intestazione, anche su telefono: link alla stessa pagina nell'altra lingua con `hreflang`, `lang`, `aria-current` e il nome intero per i lettori di schermo («IT – Italiano»); al clic scrive il cookie `lang` (un anno, `SameSite=Lax`, `Secure` in https).
+- **F33-03** Testi dell'interfaccia in `src/i18n/it.ts` ed `en.ts` con lo stesso tipo; `dict.ts` puro per server, client e `src/lib`, `client.ts` con `useLang` e `useDict` dai parametri della rotta. Numeri, date e mesi con il `locale` del dizionario. Le due pagine di sola prosa (installa, note legali) hanno un componente per lingua (`content-it.tsx`, `content-en.tsx`, segnato `ponytail:`). Copioni dei terminali e comandi per lingua in `scripts.ts`, confrontati con `README.it.md` e `README.md` del pacchetto; `/installa` aggiornata a `list_agents` e `agent`, con `--lang` e la nota sui nomi cambiati nella 0.9.0.
+- **F33-04** Reparti e agenti da `loadCatalog(lang)`, letti una volta per lingua (`getCatalog`).
+- **F33-05** Note legali in due testi equivalenti, con la sezione «La lingua e il suo cookie» (cookie tecnico senza consenso, art. 122 del Codice e linee guida del Garante del 2021; `Accept-Language` usato e non salvato), i comandi 0.9.0 (`project`, `remove`, `configure`), le cinque scelte della configurazione e il reclamo anche all'autorità del paese di residenza. Footer: «Un cookie solo, per la lingua; niente analytics». `/en/releases` legge `CHANGELOG.en.md`; i tipi delle voci sono posizioni comuni alle due lingue.
+- **F33-06** e2e: le prove esistenti sotto `/it`; `lingua.spec.ts` con redirect da browser italiano e inglese, segmento italiano sotto `/en`, `hreflang`, selettore da mouse e da tastiera, cookie che vince sul browser, pagine inglesi con il catalogo inglese, sitemap e robots, axe su sei pagine inglesi; CSP verificata anche su due pagine inglesi; `/install` confrontata con `README.md`.
+- **F33-09** Il sito accetta l'autore vuoto per le proposte dal server (anche i nomi predefiniti mandati fino alla 0.8.1), lo salva come `null` e la scheda scrive «Utente di Agentrica» o «Agentrica user»; link di rimozione nella lingua della pagina.
+
+Nel pacchetto (0.9.0, non ancora pubblicato):
+
+- **F33-08** `legalUrl` in `texts/index.ts`: valutazioni, consumo e progetti puntano a `/it/note-legali#…` o `/en/legal#ratings|usage|projects` secondo la lingua del server.
+- **F33-09** Senza nome da mostrare l'autore parte vuoto; l'anteprima dice «nessuno (il sito scrive …)», così mostra esattamente cosa parte.
+- `CHANGELOG.en.md` con tutte le versioni dalla 0.1.0, nel pacchetto e negli `exports`; `prompt.test.ts` controlla che i due CHANGELOG abbiano le stesse versioni, date, tipi e voci. Voci di F33 nella 0.9.0 dei due file; il README inglese rimanda al CHANGELOG inglese.
+
 ## Verifiche
 
+- Pacchetto: `npm run verify` verde, 160 test (con `legalUrl` in inglese e i CHANGELOG gemelli).
+- Sito, con il pacchetto 0.9.0 locale (`npm install --no-save` del tgz di `npm pack`): `npm run verify` verde (69 unitari, build senza avvisi di Turbopack, 238 pagine statiche); `npm run verify:e2e` verde, 119 prove su computer e telefono, una saltata (tastiera solo sul computer).
+- Server di produzione in locale: `/` con browser italiano → `/it`, inglese → `/en`, francese con cookie `it` → `/it`; `/agenti/aisa-02?x=1` con browser inglese → `/en/agents/aisa-02?x=1`; `/en/agenti/aisa-02` → 308 `/en/agents/aisa-02`; `/it/xyz` 404; `/api/*` e file statici fuori dal proxy. Nessuna parola italiana nelle pagine inglesi principali, salvo i nomi storici dei comandi nei rilasci.
+- Revisione visiva (ruoli UI e Accessibility): screenshot a 1440 e 360 px dell'intestazione con il selettore e del menu del telefono; bersagli di 40 px, nessuno scorrimento orizzontale.
+- Revisione privacy (ruoli AIPCA-03 e AIPCA-07): un solo cookie, tecnico, scritto solo alla scelta, con il solo valore della lingua; la navigazione senza scelta non crea cookie (e2e); i due testi delle note legali dicono le stesse cose.
+- Code Reviewer sul diff dei due repository: COMMENT, nessun difetto bloccante; rilievi sotto.
+
 ## Rilievi aperti
+
+- (P1) **F33-07, rilascio.** Il sito usa `CHANGELOG.en.md`, `loadCatalog(lang)` e `README.it.md` della 0.9.0: finché la 0.9.0 non è su npm, `package.json` del sito resta a 0.8.1 e la sua CI fallisce. Passi: merge in `main` e tag `v0.9.0` del pacchetto (pubblicazione con trusted publishing e registro MCP), poi `@agentrica/mcp` 0.9.0 nel sito (`package.json`, lockfile), verify ed e2e, merge in `main` del sito. Solo con l'approvazione esplicita dell'utente.
+- (P3) I link alle note legali dei server fino alla 0.8.1 (`/note-legali#valutazioni`) portano un browser inglese a `/en/legal#valutazioni`: la pagina si apre, ma non scorre alla sezione, che in inglese è `#ratings`. Si risolve da sé con l'aggiornamento alla 0.9.0; se serve prima, ancore italiane di riserva nel testo inglese.
+- (P3) Il manifest dell'app installabile resta in italiano (`lang: "it"`, `start_url: "/"`, che porta comunque alla lingua del browser). Un manifest per lingua solo se qualcuno installa il sito in inglese.
+- (P3) Il modulo della issue «Mostra il tuo progetto» è solo in italiano: la pagina inglese lo dice. Una versione inglese del modulo è una modifica del repository pubblico, da decidere.

@@ -30,7 +30,7 @@ test("parseProjectFields: consenso e licenza obbligatori, testi semplici, repart
     description: "Un diario dell'orto, fatto con gli agenti software.",
     departments: ["AISA", "AIWDA"],
     agents: [],
-    author: "Utente di Agentrica",
+    author: "",
     consent: true,
     license: true,
   });

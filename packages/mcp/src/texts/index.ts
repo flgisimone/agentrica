@@ -20,6 +20,15 @@ export function setLang(value: Lang): void {
 
 export const isLang = (value: unknown): value is Lang => value === "it" || value === "en";
 
+// F33: il sito ha le note legali in /it/note-legali e /en/legal, con le ancore tradotte (agentrica-site, src/i18n/config.ts).
+const LEGAL_ANCHORS = { valutazioni: "ratings", consumo: "usage", progetti: "projects" } as const;
+
+/** Le note legali del sito nella lingua del server, alla sezione `anchor`. */
+export function legalUrl(anchor: keyof typeof LEGAL_ANCHORS): string {
+  const site = "https://agentrica.vercel.app";
+  return lang === "en" ? `${site}/en/legal#${LEGAL_ANCHORS[anchor]}` : `${site}/it/note-legali#${anchor}`;
+}
+
 /**
  * La lingua del sistema: LC_ALL, LC_MESSAGES e LANG (Mac, Linux), poi la locale di Intl (anche Windows, dove quelle
  * variabili di solito mancano). «it», «it_IT.UTF-8» o «it-CH» → italiano; tutto il resto, anche «C», → inglese.

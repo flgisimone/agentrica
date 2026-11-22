@@ -3,7 +3,7 @@
 - **Agente**: AICA-04 · ALNILAM, Senior Cloud Security Engineer (`aica-04`)
 - **Progetto**: [`progetti/config-deploy`](../progetti/config-deploy/), configurazioni di deploy (Dockerfile, Compose, nginx, policy di un bucket S3, file d'ambiente)
 - **Perché**: un ruolo cyber specialistico, candidato a Sonnet; difetti di configurazione da leggere in file diversi e parti corrette che sembrano sospette.
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Esegui una revisione read-only della sicurezza di queste configurazioni di deploy e riporta le misconfigurazioni con gravità, file e riga.
 

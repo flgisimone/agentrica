@@ -42,7 +42,7 @@ async function start(home: string, args: string[] = [], forms?: (params: Form) =
   let stderr = "";
   const transport = new StdioClientTransport({
     command: process.execPath,
-    args: [join(import.meta.dirname, "server.ts"), "--no-update-check", ...args],
+    args: [join(import.meta.dirname, "server.ts"), "--lang", "it", "--no-update-check", ...args],
     cwd: root,
     env: { ...process.env, HOME: home, USERPROFILE: home } as Record<string, string>,
     stderr: "pipe",
@@ -81,8 +81,8 @@ test("writeConfig: cartella e file solo per l'utente, nessun file temporaneo las
 });
 
 test("configForm toglie i campi fissati dai flag; parseConfigForm rifiuta i tipi sbagliati", () => {
-  assert.deepEqual(Object.keys(configForm(DEFAULTS, new Set()).properties), ["agents", "panel", "ratings", "updateCheck"]);
-  assert.deepEqual(Object.keys(configForm(DEFAULTS, new Set(["agents", "panel"])).properties), ["ratings", "updateCheck"]);
+  assert.deepEqual(Object.keys(configForm(DEFAULTS, new Set()).properties), ["lang", "agents", "panel", "ratings", "updateCheck"]);
+  assert.deepEqual(Object.keys(configForm(DEFAULTS, new Set(["lang", "agents", "panel"])).properties), ["ratings", "updateCheck"]);
   assert.deepEqual(parseConfigForm(DEFAULTS, { agents: " aisa ", ratings: false }), { ...DEFAULTS, agents: "aisa", ratings: false });
   assert.equal(parseConfigForm(DEFAULTS, { panel: "true" }), undefined);
 });
@@ -94,21 +94,21 @@ test("primo modulo: compare una volta, salva le scelte, la sessione dopo le usa 
     shown.push(form);
     return { action: "accept", content: { agents: "aisa", panel: false, ratings: true, updateCheck: false } };
   });
-  const list = await first.client.callTool({ name: "elenca_agenti", arguments: {} });
+  const list = await first.client.callTool({ name: "list_agents", arguments: {} });
   assert.equal(shown.length, 1);
   assert.match(shown[0]!.message, /^Configura Agentrica\. .*~\/\.agentrica\/config\.json.*prossima sessione\. Ad Agentrica non arriva nulla\./);
   assert.match(texts(list).at(-1)!, /salvata in ~\/\.agentrica\/config\.json: vale dalla prossima sessione/);
-  await first.client.callTool({ name: "agente", arguments: { id: "AISA-02" } });
+  await first.client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
   assert.equal(shown.length, 1, "una volta per sessione");
   assert.equal(await agentPrompts(first.client), 56, "nella stessa sessione non cambia nulla");
-  assert.deepEqual(JSON.parse(readFileSync(configPath(home), "utf8")), { version: 1, agents: "aisa", panel: false, ratings: true, updateCheck: false });
+  assert.deepEqual(JSON.parse(readFileSync(configPath(home), "utf8")), { version: 1, lang: "", agents: "aisa", panel: false, ratings: true, updateCheck: false });
 
   const second = await start(home, [], (form) => {
     shown.push(form);
     return { action: "cancel" };
   });
   assert.equal(await agentPrompts(second.client), 12, "la squadra salvata");
-  await second.client.callTool({ name: "elenca_agenti", arguments: {} });
+  await second.client.callTool({ name: "list_agents", arguments: {} });
   assert.equal(shown.length, 1, "con il file il modulo non ricompare");
 
   const flagged = await start(home, ["--agents", "aiwda"]);
@@ -118,13 +118,13 @@ test("primo modulo: compare una volta, salva le scelte, la sessione dopo le usa 
 test("primo modulo chiuso: salva i predefiniti e non ricompare; senza moduli nessun file", async () => {
   const home = newHome();
   const { client } = await start(home, [], () => ({ action: "cancel" }));
-  const result = await client.callTool({ name: "agente", arguments: { id: "AISA-02" } });
+  const result = await client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
   assert.match(texts(result).join("\n"), /salvati i valori predefiniti/);
   assert.deepEqual(readConfig(configPath(home)), { config: DEFAULTS });
 
   const plain = newHome();
   const noForms = await start(plain);
-  await noForms.client.callTool({ name: "elenca_agenti", arguments: {} });
+  await noForms.client.callTool({ name: "list_agents", arguments: {} });
   assert.deepEqual(readdirSync(plain), []);
 });
 
@@ -132,19 +132,19 @@ test("moduli chiusi dal client senza mostrarli (VS Code): niente file, poi i flu
   const home = newHome();
   let shown = 0;
   const { client } = await start(home, [], () => (shown++, { action: "cancel" }), true);
-  const first = await client.callTool({ name: "agente", arguments: { id: "AISA-02" } });
+  const first = await client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
   assert.equal(shown, 1);
   assert.deepEqual(readdirSync(home), [], "nessun predefinito salvato senza che l'utente veda il modulo");
   assert.match(texts(first)[0]!, /rate_agent, id AISA-02/, "il testo dell'agente torna a proporre rate_agent");
-  assert.match(promptText(await client.getPrompt({ name: "valuta" })), /Chiedigli il voto.*rate_agent con id AISA-02/);
-  assert.match(promptText(await client.getPrompt({ name: "configura" })), /non mostra i moduli/);
+  assert.match(promptText(await client.getPrompt({ name: "rate" })), /Chiedigli il voto.*rate_agent con id AISA-02/);
+  assert.match(promptText(await client.getPrompt({ name: "configure" })), /non mostra i moduli/);
   assert.equal(shown, 1, "dopo il primo, nessun altro modulo nella sessione");
 });
 
 test("squadra non valida nel modulo: niente file; file non valido: ignorato con una riga su stderr e riscritto", async () => {
   const home = newHome();
   const { client } = await start(home, [], () => ({ action: "accept", content: { agents: "aisa,xyz" } }));
-  const result = await client.callTool({ name: "elenca_agenti", arguments: {} });
+  const result = await client.callTool({ name: "list_agents", arguments: {} });
   assert.match(texts(result).at(-1)!, /^Configurazione non salvata: agente o reparto sconosciuto nella squadra: "xyz"/);
   assert.deepEqual(readdirSync(home), []);
 
@@ -156,7 +156,7 @@ test("squadra non valida nel modulo: niente file; file non valido: ignorato con 
     return { action: "accept", content: {} };
   });
   assert.equal(await agentPrompts(again.client), 56);
-  await again.client.callTool({ name: "elenca_agenti", arguments: {} });
+  await again.client.callTool({ name: "list_agents", arguments: {} });
   assert.match(again.stderr(), /^agentrica: ~\/\.agentrica\/config\.json ignorato \(squadra non valida\)\n/);
   assert.ok(!again.stderr().includes("xyz"), "senza il contenuto del file");
   assert.deepEqual(Object.keys(shown[0]!.requestedSchema.properties), ["agents", "ratings"], "--panel e --no-update-check non compaiono nel modulo");
@@ -173,19 +173,19 @@ test("configura: il modulo con i valori salvati; chiuso non cambia nulla; senza 
     shown.push(form);
     return answer;
   });
-  const closed = await client.getPrompt({ name: "configura" });
+  const closed = await client.getPrompt({ name: "configure" });
   assert.match(promptText(closed), /chiuso il modulo della configurazione: non cambia nulla/);
   assert.equal(shown[0]!.requestedSchema.properties.agents?.default, "");
   assert.equal(shown[0]!.requestedSchema.properties.panel?.default, false, "il valore salvato, non il predefinito");
   assert.ok(!("ratings" in shown[0]!.requestedSchema.properties), "fissato da --no-ratings");
   answer = { action: "accept", content: { panel: true } };
-  assert.match(promptText(await client.getPrompt({ name: "configura" })), /salvata/);
+  assert.match(promptText(await client.getPrompt({ name: "configure" })), /salvata/);
   assert.deepEqual(readConfig(configPath(home)), { config: { ...DEFAULTS, ratings: false } });
-  await client.callTool({ name: "elenca_agenti", arguments: {} });
+  await client.callTool({ name: "list_agents", arguments: {} });
   assert.equal(shown.length, 2, "dopo configura il primo modulo non compare");
 
   const plain = await start(newHome());
-  assert.match(promptText(await plain.client.getPrompt({ name: "configura" })), /non mostra i moduli\. Configurazione attuale: \{"version":1,"agents":"","panel":true,"ratings":true,"updateCheck":true\}/);
+  assert.match(promptText(await plain.client.getPrompt({ name: "configure" })), /non mostra i moduli\. Configurazione attuale: \{"version":1,"lang":"","agents":"","panel":true,"ratings":true,"updateCheck":true\}/);
 });
 
 test("valuta: il modulo per l'ultimo agente o per quello indicato; senza moduli rate_agent; errori chiari", async () => {
@@ -196,17 +196,17 @@ test("valuta: il modulo per l'ultimo agente o per quello indicato; senza moduli 
     shown.push(form);
     return { action: "decline" };
   });
-  assert.match(promptText(await client.getPrompt({ name: "valuta" })), /non ne è stato usato nessuno/);
-  await client.callTool({ name: "agente", arguments: { id: "AISA-02" } });
-  assert.match(promptText(await client.getPrompt({ name: "valuta" })), /chiuso il modulo di valutazione di AISA-02 · ALTAIR/);
+  assert.match(promptText(await client.getPrompt({ name: "rate" })), /non ne è stato usato nessuno/);
+  await client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
+  assert.match(promptText(await client.getPrompt({ name: "rate" })), /chiuso il modulo di valutazione di AISA-02 · ALTAIR/);
   assert.match(shown[0]!.message, /^Valuta AISA-02 · ALTAIR/);
-  await client.getPrompt({ name: "valuta", arguments: { agente: "aiwda-03" } });
+  await client.getPrompt({ name: "rate", arguments: { agent: "aiwda-03" } });
   assert.match(shown[1]!.message, /^Valuta AIWDA-03 /, "anche un agente non caricato");
-  await client.getPrompt({ name: "valuta", arguments: { agente: "AISA-02" } });
+  await client.getPrompt({ name: "rate", arguments: { agent: "AISA-02" } });
   assert.equal(shown.length, 3, "su richiesta anche dopo un modulo già chiuso");
-  assert.match(promptText(await client.getPrompt({ name: "valuta", arguments: { agente: "AISA-99" } })), /non è fra gli agenti/);
+  assert.match(promptText(await client.getPrompt({ name: "rate", arguments: { agent: "AISA-99" } })), /non è fra gli agenti/);
 
   const plain = await start(newHome());
-  await plain.client.callTool({ name: "agente", arguments: { id: "AICA-03" } });
-  assert.match(promptText(await plain.client.getPrompt({ name: "valuta" })), /Chiedigli il voto.*rate_agent con id AICA-03/);
+  await plain.client.callTool({ name: "agent", arguments: { id: "AICA-03" } });
+  assert.match(promptText(await plain.client.getPrompt({ name: "rate" })), /Chiedigli il voto.*rate_agent con id AICA-03/);
 });

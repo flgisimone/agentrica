@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Agentrica · panel</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/texts.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-row">
+        <p class="brand">Agentrica <span aria-hidden="true">·</span> panel</p>
+        <p class="meta" id="project">Loading…</p>
+        <p class="link" id="link" role="status">Connecting…</p>
+      </div>
+      <nav class="wrap tabs" aria-label="Panel sections">
+        <a href="#session" data-view="session">Session <span class="count" id="count-session"></span></a>
+        <a href="#plan" data-view="plan">Plan</a>
+        <a href="#findings" data-view="findings">Findings <span class="count" id="count-findings"></span></a>
+        <a href="#usage" data-view="usage">Usage</a>
+      </nav>
+    </header>
+    <div id="announce" class="sr-only" aria-live="polite"></div>
+    <main class="wrap">
+      <p class="update" id="update" role="status" hidden></p>
+      <p class="problems" id="problems" hidden></p>
+
+      <div id="view-session" class="view" data-view="session">
+        <h1 class="sr-only" tabindex="-1">Session</h1>
+        <div class="live">
+          <section aria-labelledby="h-decide" class="card">
+            <h2 id="h-decide">To decide</h2>
+            <div id="questions"></div>
+          </section>
+          <section aria-labelledby="h-agents" class="card">
+            <h2 id="h-agents">Agents in use</h2>
+            <div id="activity"></div>
+          </section>
+          <section aria-labelledby="h-ratings" class="card" id="ratings-card" hidden>
+            <h2 id="h-ratings">Rate the agents</h2>
+            <div id="ratings"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="view-plan" class="view" data-view="plan" hidden>
+        <h1 class="sr-only" tabindex="-1">Plan</h1>
+        <section aria-labelledby="h-open" class="card">
+          <h2 id="h-open">Phase in progress</h2>
+          <div id="open-phase"></div>
+        </section>
+        <section aria-labelledby="h-phases" class="card">
+          <h2 id="h-phases">All phases</h2>
+          <div id="phases"></div>
+        </section>
+      </div>
+
+      <div id="view-findings" class="view" data-view="findings" hidden>
+        <h1 class="sr-only" tabindex="-1">Findings</h1>
+        <section aria-labelledby="h-findings" class="card">
+          <h2 id="h-findings">Open findings</h2>
+          <div id="filters" class="filters" role="group" aria-label="Filter by department"></div>
+          <div id="findings"></div>
+        </section>
+      </div>
+
+      <div id="view-usage" class="view" data-view="usage" hidden>
+        <h1 class="sr-only" tabindex="-1">Usage</h1>
+        <section aria-labelledby="h-usage" class="card">
+          <h2 id="h-usage">Project tokens</h2>
+          <p class="hint" id="usage-source">The numbers come from the files Claude Code saves for this project: only token counts, model and day are read, never the text of the conversations.</p>
+          <div id="usage-summary"></div>
+          <button type="button" class="refresh" id="usage-refresh">Refresh</button>
+        </section>
+        <section aria-labelledby="h-share" class="card" id="share" hidden>
+          <h2 id="h-share">Share the totals with Agentrica</h2>
+          <p class="hint">The Agentrica site shows the sum of the tokens of those who share them. First you see a preview of what is sent; nothing is sent without your confirmation.</p>
+          <button type="button" class="send" id="share-preview">Prepare the preview</button>
+          <div id="share-body"></div>
+        </section>
+        <section aria-labelledby="h-usage-day" class="card">
+          <h2 id="h-usage-day">By day</h2>
+          <div id="usage-day"></div>
+        </section>
+        <section aria-labelledby="h-usage-agent" class="card">
+          <h2 id="h-usage-agent">By agent</h2>
+          <div id="usage-agent"></div>
+        </section>
+        <section aria-labelledby="h-usage-model" class="card">
+          <h2 id="h-usage-model">By model</h2>
+          <div id="usage-model"></div>
+        </section>
+        <section aria-labelledby="h-usage-session" class="card">
+          <h2 id="h-usage-session">By session</h2>
+          <div id="usage-session"></div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

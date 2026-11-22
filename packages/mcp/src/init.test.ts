@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import { AGENTS_DIR } from "./catalog.ts";
-import { projectFiles, SUBAGENT_PROJECT } from "./init.ts";
+import { projectFiles, subagentProject } from "./init.ts";
 import { readPlan } from "./project.ts";
 import { VERSION } from "./prompt.ts";
 
@@ -17,13 +17,13 @@ after(() => rmSync(tmp, { recursive: true, force: true }));
 const server = join(import.meta.dirname, "server.ts");
 const identity = { GIT_AUTHOR_NAME: "t", GIT_AUTHOR_EMAIL: "t@t", GIT_COMMITTER_NAME: "t", GIT_COMMITTER_EMAIL: "t@t" };
 const init = (...args: string[]) =>
-  spawnSync(process.execPath, [server, "init", ...args], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
+  spawnSync(process.execPath, [server, "init", "--lang", "it", ...args], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
 
 test("i subagent di Agentrica nominano il progetto una volta sola, nella frase che init sostituisce", () => {
   const files = [...projectFiles("X", "/x", "2026-01-01").keys()].filter((file) => file.startsWith(".claude/"));
   assert.equal(files.length, 56);
   const dir = join(AGENTS_DIR, "..");
-  for (const file of files) assert.equal(readFileSync(join(dir, file), "utf8").split(SUBAGENT_PROJECT).length, 2, file);
+  for (const file of files) assert.equal(readFileSync(join(dir, file), "utf8").split(subagentProject("it")).length, 2, file);
 });
 
 test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, senza segnaposto", () => {
@@ -80,4 +80,35 @@ test("docs: il quadro delle agenzie di starter/ è uguale a quello del repositor
   const repo = join(import.meta.dirname, "..", "..", "..");
   const name = join("docs", "AI Multi-Agency System.md");
   assert.equal(readFileSync(join(repo, "starter", name), "utf8"), readFileSync(join(repo, name), "utf8"), "aggiorna le due copie insieme");
+});
+
+test("init in inglese (F32): starter e subagent di starter/en/, agents/ intero, stessi file dell'italiano", () => {
+  const it = projectFiles("X", "/x", "2026-01-01", "linux", "it");
+  const en = projectFiles("Test App", "/tmp/test", "2026-01-01", "linux", "en");
+  assert.deepEqual([...en.keys()].sort(), [...it.keys()].sort(), "stessi percorsi nelle due lingue");
+  assert.ok(![...it.keys()].some((file) => file.startsWith("en/")), "l'italiano non copia starter/en/");
+  assert.match(en.get("AGENTS.md")!, /^# Rules for agents/);
+  assert.match(en.get("AGENTS.md")!, /graph_root: "\/tmp\/test"/);
+  assert.match(en.get("CONVENTIONS.md")!, /### 2\.6 Phases and backlog/);
+  assert.match(en.get("plan/README.md")!, /^# Plan of Test App/);
+  assert.match(en.get(".claude/agents/software/sw-cto.md")!, /of the Test App project\..*`agents\/ai_software_agency\/en\/01-/s);
+  for (const [file, text] of en) {
+    assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
+    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /Agentrica project/, file);
+  }
+  const dir = join(AGENTS_DIR, "..", "starter", "en", ".claude", "agents");
+  for (const file of readdirSync(dir, { recursive: true }).map(String).filter((f) => f.endsWith(".md"))) {
+    assert.equal(readFileSync(join(dir, file), "utf8").split(subagentProject("en")).length, 2, file);
+  }
+});
+
+test("init --lang en: il pannello legge il piano inglese senza problemi", () => {
+  const result = spawnSync(process.execPath, [server, "init", "--lang", "en", "english", "--name", "English"], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Project «English» created/);
+  const plan = readPlan(realpathSync(join(tmp, "english")));
+  assert.deepEqual(plan.problems, []);
+  assert.equal(plan.phases[0]?.id, "F0");
+  assert.equal(plan.openPhase?.tasks.length, 7);
+  assert.equal(plan.openPhase?.goal.startsWith("a project that starts"), true);
 });

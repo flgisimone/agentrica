@@ -6,18 +6,14 @@
 // ponytail: la validazione dei testi copia plainText di agentrica-site (src/lib/projects.ts), che resta il controllo
 // finale. Se cambia una delle due, cambiare anche l'altra; da unire se il sito legge un giorno le regole dal pacchetto.
 import { randomBytes, randomUUID } from "node:crypto";
+import { T } from "./texts/index.ts";
 
 export const PROJECTS_URL = "https://agentrica.vercel.app/api/projects";
 export const PROJECTS_PRIVACY_URL = "https://agentrica.vercel.app/note-legali#progetti";
 export const PROJECT_LIMITS = { name: 60, description: 280, author: 40, agents: 10, url: 200 } as const;
-export const DEFAULT_AUTHOR = "Utente di Agentrica";
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
 
-export const CONSENT_TEXT =
-  "Acconsento a che Agentrica pubblichi sul suo sito i dati di questo modulo (nome da mostrare, nome, link, descrizione, reparti, agenti, versione) e la data di approvazione, finché non chiedo di toglierli.";
-export const LICENSE_TEXT =
-  "Concedo ad Agentrica, senza compenso, il permesso di mostrare sul sito nome e descrizione del progetto finché non chiedo di toglierli, e dichiaro di poterlo fare.";
 
 /** Quello che parte verso Agentrica, e nient'altro. */
 export interface ProjectPayload {
@@ -70,20 +66,22 @@ const list = (value: unknown) =>
 
 /** I campi della proposta, validati; altrimenti il motivo dello scarto, da dire all'utente. */
 export function parseProjectFields(input: Record<string, unknown>, known: Known): ProjectFields | string {
-  if (input.consent !== true || input.license !== true) return "servono il consenso e la licenza";
+  const t = T.showcase;
+  if (input.consent !== true || input.license !== true) return t.needConsent;
   const name = plainText(input.name, PROJECT_LIMITS.name);
-  if (!name) return `nome mancante, oltre ${PROJECT_LIMITS.name} caratteri o con link e simboli < > [ ] \``;
+  if (!name) return t.badName(PROJECT_LIMITS.name);
   const url = httpsUrl(input.url);
-  if (!url) return "il link deve essere un indirizzo https:// completo, senza porta né credenziali, al più 200 caratteri";
+  if (!url) return t.badUrl;
   const description = plainText(input.description, PROJECT_LIMITS.description);
-  if (!description) return `descrizione mancante, oltre ${PROJECT_LIMITS.description} caratteri o con link e simboli < > [ ] \``;
+  if (!description) return t.badDescription(PROJECT_LIMITS.description);
   const departments = list(input.departments);
-  if (departments.length === 0 || departments.some((d) => !known.departments.has(d))) return "reparti mancanti o sconosciuti (sigle come AISA, AIWDA)";
+  if (departments.length === 0 || departments.some((d) => !known.departments.has(d))) return t.badDepartments;
   const agents = list(input.agents);
-  if (agents.length > PROJECT_LIMITS.agents || agents.some((a) => !known.agents.has(a))) return `agenti sconosciuti o più di ${PROJECT_LIMITS.agents} (id come AISA-02)`;
+  if (agents.length > PROJECT_LIMITS.agents || agents.some((a) => !known.agents.has(a))) return t.badAgents(PROJECT_LIMITS.agents);
   const given = typeof input.author === "string" && input.author.trim() !== "";
-  const author = given ? plainText(input.author, PROJECT_LIMITS.author) : DEFAULT_AUTHOR;
-  if (!author) return `nome da mostrare oltre ${PROJECT_LIMITS.author} caratteri o con link e simboli`;
+  // ponytail: il nome predefinito parte nella lingua del server e il sito lo mostra così com'è; da rivedere in F33.
+  const author = given ? plainText(input.author, PROJECT_LIMITS.author) : t.defaultAuthor;
+  if (!author) return t.badAuthor(PROJECT_LIMITS.author);
   return { name, url, description, departments, agents, author, consent: true, license: true };
 }
 
@@ -105,7 +103,6 @@ export function createShowcase({ version, url = PROJECTS_URL, fetch: doFetch = f
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
     });
-  const unreachable = "Invio non riuscito: Agentrica non è raggiungibile (rete assente, timeout o rete non permessa). Riprova più tardi.";
 
   const showcase = {
     build: (fields: ProjectFields): ProjectPayload => ({ code: randomUUID(), ...fields, mcpVersion: version }),
@@ -123,7 +120,7 @@ export function createShowcase({ version, url = PROJECTS_URL, fetch: doFetch = f
     async confirm(code: string): Promise<SendResult> {
       const entry = drafts.get(code);
       drafts.delete(code);
-      if (!entry || entry.expires <= now()) return { ok: false, message: "Codice scaduto o già usato: prepara di nuovo l'anteprima." };
+      if (!entry || entry.expires <= now()) return { ok: false, message: T.showcase.expired };
       return showcase.send(entry.payload);
     },
 
@@ -138,22 +135,22 @@ export function createShowcase({ version, url = PROJECTS_URL, fetch: doFetch = f
           signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
         });
       } catch {
-        return { ok: false, message: unreachable };
+        return { ok: false, message: T.showcase.unreachable };
       }
       if (response.ok || response.status === 409) return { ok: true, code: payload.code, name: payload.name };
-      if (response.status === 429) return { ok: false, message: "Limite di proposte di oggi raggiunto da questa rete. Riprova domani." };
-      if (response.status === 400) return { ok: false, message: "Proposta respinta: dati non validi." };
-      return { ok: false, message: `Invio non riuscito (errore ${response.status} del servizio). Riprova più tardi.` };
+      if (response.status === 429) return { ok: false, message: T.showcase.tooMany };
+      if (response.status === 400) return { ok: false, message: T.showcase.rejected };
+      return { ok: false, message: T.showcase.serviceError(response.status) };
     },
 
     /** Ritiro con il codice della proposta: il sito non dice se il codice esisteva (SEC-PRJ-04). */
     async withdraw(code: string): Promise<{ ok: boolean; message: string }> {
       try {
         const response = await post("withdraw", { code });
-        if (response.ok) return { ok: true, message: "Richiesta di ritiro registrata." };
-        return { ok: false, message: `Ritiro non riuscito (errore ${response.status} del servizio). Riprova più tardi.` };
+        if (response.ok) return { ok: true, message: T.showcase.withdrawn };
+        return { ok: false, message: T.showcase.withdrawError(response.status) };
       } catch {
-        return { ok: false, message: unreachable.replace("Invio", "Ritiro") };
+        return { ok: false, message: T.showcase.withdrawUnreachable };
       }
     },
   };
@@ -162,53 +159,45 @@ export function createShowcase({ version, url = PROJECTS_URL, fetch: doFetch = f
 
 export type Showcase = ReturnType<typeof createShowcase>;
 
-export const PROJECT_NOTICE =
-  "Il progetto compare sul sito solo dopo l'approvazione del titolare; descrizione e risultati restano tuoi e non li verifichiamo. " +
-  `Parte solo ciò che vedi, con la versione del pacchetto; niente email né account. Informativa: ${PROJECTS_PRIVACY_URL}`;
+export const projectNotice = () => T.showcase.notice(PROJECTS_PRIVACY_URL);
 
 /** Il modulo della proposta (elicitation). */
-export const PROJECT_FORM = {
-  type: "object" as const,
-  properties: {
-    name: { type: "string" as const, title: "Nome del progetto", maxLength: PROJECT_LIMITS.name },
-    url: { type: "string" as const, title: "Link", description: "Un indirizzo https:// pubblico: repository, sito o pagina del progetto.", maxLength: PROJECT_LIMITS.url },
-    description: {
-      type: "string" as const,
-      title: "Descrizione",
-      description: "Cosa fa il progetto e come hai usato gli agenti. Testo semplice, senza link.",
-      maxLength: PROJECT_LIMITS.description,
+export function projectForm() {
+  const f = T.showcase.form;
+  return {
+    type: "object" as const,
+    properties: {
+      name: { type: "string" as const, title: f.name, maxLength: PROJECT_LIMITS.name },
+      url: { type: "string" as const, title: f.url, description: f.urlHelp, maxLength: PROJECT_LIMITS.url },
+      description: { type: "string" as const, title: f.description, description: f.descriptionHelp, maxLength: PROJECT_LIMITS.description },
+      departments: { type: "string" as const, title: f.departments, description: f.departmentsHelp },
+      agents: { type: "string" as const, title: f.agents, description: f.agentsHelp },
+      author: { type: "string" as const, title: f.author, description: f.authorHelp(T.showcase.defaultAuthor), maxLength: PROJECT_LIMITS.author },
+      consent: { type: "boolean" as const, title: f.consent, description: T.showcase.consent, default: false },
+      license: { type: "boolean" as const, title: f.license, description: T.showcase.license, default: false },
     },
-    departments: { type: "string" as const, title: "Reparti usati", description: "Sigle separate da virgole: AIBPD, AICA, AIPCA, AISA, AIWDA." },
-    agents: { type: "string" as const, title: "Agenti usati (facoltativo)", description: "Id separati da virgole, es. AISA-02, AIWDA-08; al più 10." },
-    author: { type: "string" as const, title: "Nome da mostrare (facoltativo)", description: `Vuoto: «${DEFAULT_AUTHOR}».`, maxLength: PROJECT_LIMITS.author },
-    consent: { type: "boolean" as const, title: "Consenso", description: CONSENT_TEXT, default: false },
-    license: { type: "boolean" as const, title: "Licenza", description: LICENSE_TEXT, default: false },
-  },
-  required: ["name", "url", "description", "departments", "consent", "license"],
-};
+    required: ["name", "url", "description", "departments", "consent", "license"],
+  };
+}
 
-export const projectFormMessage = () => `Mostra il tuo progetto sul sito di Agentrica. ${PROJECT_NOTICE}`;
+export const projectFormMessage = () => T.showcase.formMessage(projectNotice());
 
 /** Testo dell'anteprima di submit_project: cosa parte, l'avviso e il codice. */
 export function projectPreviewText(code: string, p: ProjectPayload): string {
-  return [
-    "Anteprima della proposta del progetto:",
-    `- nome: ${p.name}`,
-    `- link: ${p.url}`,
-    `- descrizione: ${p.description}`,
-    `- reparti: ${p.departments.join(", ")}`,
-    `- agenti: ${p.agents.join(", ") || "(nessuno)"}`,
-    `- nome da mostrare: ${p.author}`,
-    `- versione: ${p.mcpVersion}`,
-    `- consenso e licenza: sì («${CONSENT_TEXT}» «${LICENSE_TEXT}»)`,
-    "",
-    PROJECT_NOTICE,
-    "",
-    `Mostra questa anteprima all'utente e chiedigli se inviarla. Solo dopo il suo sì richiama submit_project con code "${code}" (valido 10 minuti, una volta). Se dice no, non fare nulla.`,
-  ].join("\n");
+  return T.showcase.preview({
+    code,
+    name: p.name,
+    url: p.url,
+    description: p.description,
+    departments: p.departments.join(", "),
+    agents: p.agents.join(", "),
+    author: p.author,
+    version: p.mcpVersion,
+    consent: T.showcase.consent,
+    license: T.showcase.license,
+    notice: projectNotice(),
+  });
 }
 
 /** La frase per il modello dopo un invio riuscito, con il codice per ritirare la proposta. */
-export const sentText = (name: string, code: string) =>
-  `Proposta del progetto «${name}» inviata ad Agentrica: comparirà sul sito dopo l'approvazione. Codice della proposta: ${code}. ` +
-  `Dillo all'utente e digli di conservarlo: è l'unico modo per ritirarla, con il comando progetto di Agentrica e l'argomento rimuovi (${PROJECTS_PRIVACY_URL}).`;
+export const sentText = (name: string, code: string) => T.showcase.sent(name, code, PROJECTS_PRIVACY_URL);

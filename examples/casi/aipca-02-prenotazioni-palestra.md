@@ -2,7 +2,7 @@
 
 - **Agente**: AIPCA-02 · ALIOTH, GDPR & Data Protection Specialist (`aipca-02`)
 - **Progetto**: [`progetti/prenotazioni-palestra`](../progetti/prenotazioni-palestra/), modulo di prenotazione in Node senza dipendenze
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Valuta il trattamento dei dati personali di questo servizio rispetto al GDPR e riporta i rilievi con articolo, file e riga.
 

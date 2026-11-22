@@ -2,7 +2,7 @@
 
 **Obiettivo**: i contenuti degli agenti esistono in italiano e in inglese, un file per lingua, e il server MCP parla inglese nell'API e nella lingua del sistema nei testi. Applica a contenuti e server la regola di CONVENTIONS §3 «Lingua» (F31): codice e API MCP in inglese, contenuti pubblici in due lingue complete.
 
-> **Stato: da aprire.** Branch `fase/f32-contenuti-en` da `develop`. Backlog e decisioni aperte si confermano con l'utente all'apertura (CONVENTIONS §2.6).
+> **Stato: completata** (branch `fase/f32-contenuti-en`, 2026-11-22). Decisioni e backlog confermati dall'utente all'apertura; ogni reparto tradotto confermato uno per volta. Versione 0.9.0 preparata, si pubblica con F33.
 
 **Agenzie**: software (Architect per il catalogo in due lingue, Backend, QA, Code Reviewer); design (UX Writer per le traduzioni dei testi e dei ruoli); i ruoli dei reparti rileggono il proprio file tradotto solo se l'utente lo chiede.
 
@@ -24,13 +24,14 @@ Verifica del 2026-11-22, dopo F31 (pacchetto 0.8.1):
 - Nomi propri invariati: reparti, sigle, stelle, titoli dei ruoli.
 - Rilascio di pacchetto e sito insieme, alla fine di F33.
 
-## Decisioni da prendere all'apertura
+## Decisioni prese all'apertura (2026-11-22)
 
-- **Dove stanno i file inglesi**: proposta `agents/<agenzia>/en/` con gli stessi nomi di file (`en/02-senior-software-architect.md`, `en/biblioteca/01-owasp-top-10-2025.md`); `fonti.json` resta unico.
-- **Titoli di sezione inglesi** letti dal catalogo (proposta: «Workflow», «Collaboration with the other agencies», «Notion», «How it applies», metadati «Source · Version · Verified on · Recheck by · Roles»).
-- **Lingua del sistema**: quali variabili e in che ordine (proposta: `--lang`, poi `lang` in `~/.agentrica/config.json`, poi `LC_ALL`, `LC_MESSAGES`, `LANG`, poi `Intl` su Windows; italiano se la lingua è `it`, altrimenti inglese).
-- **Subagent e starter**: `init` copia subagent e starter nella lingua del server o sempre in una lingua; serve una versione inglese di `.claude/agents/` e di `starter/`.
-- **Testi del pannello**: seguono la lingua del server (proposta) o hanno un selettore loro.
+- **File inglesi** in `agents/<agenzia>/en/` con gli stessi nomi di file; `fonti.json` resta unico, nella cartella italiana.
+- **Titoli di sezione inglesi**: «Workflow», «Collaboration with the other agencies», «Notion», «How it applies», metadati «Source · Version · Verified on · Recheck by · Roles».
+- **Lingua**: `--lang`, poi `lang` in `~/.agentrica/config.json`, poi `LC_ALL`, `LC_MESSAGES`, `LANG`, poi `Intl`; italiano se la lingua è `it`, altrimenti inglese.
+- **Subagent e starter** nella lingua del server: in inglese da `starter/en/`, con i subagent in `starter/en/.claude/agents/` (fuori da `.claude/agents/` di questo repository, che Claude Code caricherebbe due volte).
+- **Pannello** nella lingua del server, senza selettore.
+- **Traduzioni** riviste un reparto per volta (AISA, AIWDA, AIBPD, AICA, AIPCA, tutti confermati); inglese britannico semplice. La «Versione» delle schede si traduce, quindi il controllo dei gemelli confronta id, fonte, date e ruoli ma non la versione. Nelle schede di legge italiana il nome o l'etichetta originale resta fra parentesi dove serve a ritrovarla. Nei file inglesi stati e campi dei rilievi sono in inglese (`verified_compliant`, `title`, `status`…); il pannello legge le due forme.
 
 ## Backlog
 
@@ -56,6 +57,26 @@ Verifica del 2026-11-22, dopo F31 (pacchetto 0.8.1):
 
 ## Fatto
 
+- **F32-01** Catalogo in due lingue: `loadCatalog(dir, lang)`, `Lang` e `LANGS` in `departments.ts`, `summary` per lingua, sezioni del README e etichette delle schede per lingua; in inglese il catalogo carica anche l'italiano e si ferma con `twinProblems` se un gemello manca o ha sezioni, id, fonte, date o ruoli diversi. Export `@agentrica/mcp/catalog` con `loadCatalog(lang)`.
+- **F32-02** File di ruolo, regole comuni e README dei cinque reparti in `agents/<agenzia>/en/` (56 ruoli, 5 regole comuni, 5 README), confermati dall'utente reparto per reparto.
+- **F32-03** Le 16 schede in `en/biblioteca/`, con fonte, date e ruoli invariati.
+- **F32-04** API in inglese senza alias: `list_agents` (`department`), `agent` (`task`), `task` nei prompt, `rate` (`agent`), `project` (`remove`), `configure`; nomi dei prompt degli agenti invariati.
+- **F32-05** Lingua del server: `texts/index.ts` (`systemLang`, `chooseLang`, `setLang`) scelta in `server.ts` prima di `init`, `add` e `install`; `--lang` anche in `add` e `install` (passato al server); voce `lang` nel file di configurazione e nel modulo `configure` (Sistema, Italiano, English).
+- **F32-06** Testi in `texts/it.ts` e `texts/en.ts` con la stessa forma (tipo `Texts`); pagina del pannello in `page/index.<lingua>.html` e `page/texts.<lingua>.js`, viste con id inglesi; rimandi al README della lingua.
+- **F32-07** Starter inglese in `starter/en/` (README, AGENTS, CONVENTIONS, plan, audit, docs, CI, `.gitignore`, `.env.example`, `.nvmrc`) e 56 subagent inglesi in `starter/en/.claude/agents/`, generati dai paragrafi comuni dei subagent italiani; `init` copia quelli della lingua scelta e `agents/` intero. `project.ts` legge piani e audit nelle due lingue; `subagentIds` funziona anche col catalogo inglese.
+- **F32-08** README del pacchetto (inglese e italiano) con la tabella dei nomi prima/dopo, `--lang` e i contenuti in due lingue; `CHANGELOG.md` con la voce 0.9.0; versione 0.9.0 in `package.json`, `server.json`, `prompt.ts` e `package-lock.json`. README di radice aggiornati (il comando d'installazione resta 0.8.1 finché la 0.9.0 non è pubblicata).
+
 ## Verifiche
 
+- `npm run verify` verde: typecheck, lint, 158 test (nuovi: catalogo inglese e gemelli, etichette inglesi delle schede, `lang.test.ts` con lingua del sistema e forma uguale dei testi e delle pagine, `init` in inglese con il piano letto dal pannello, server con `--lang en`).
+- Prova reale del server con un client MCP vero in inglese (test e `--lang en --panel`): istruzioni, tool, testo dell'agente, schede e pagina del pannello (`lang="en"`, testi inglesi, piano di questo repository letto senza problemi). In italiano lo stesso con i test esistenti, fissati a `--lang it`.
+- Non provato in Claude Code stesso (il server registrato in questa sessione è quello pubblicato): la prova nelle due lingue in Claude Code va fatta con F33, prima del rilascio.
+- Revisione del diff nel ruolo di Code Reviewer: nessun blocco; note nei rilievi aperti.
+
 ## Rilievi aperti
+
+- (P2) Prova in Claude Code nelle due lingue (moduli `configure` e `rate`, comandi rinominati, pannello) prima della pubblicazione della 0.9.0, con F33.
+- (P2) Sito (F33): `DepartmentInfo.summary` ora è per lingua; il sito usa `Department.summary` e resta compatibile, ma per `/en` deve chiamare `loadCatalog("en")`. I link a `note-legali` delle informative di valutazioni, consumo e progetti puntano alle pagine italiane: con `/en` vanno indicati per lingua.
+- (P3) Il nome predefinito di un progetto proposto dal server («Utente di Agentrica» / «Agentrica user») parte nella lingua del server e il sito lo mostra così com'è (commento `ponytail:` in `showcase.ts`): da decidere in F33.
+- (P3) Anglicismi rimasti nei file italiani di `agents/`, fuori dal glossario di F31: «loading, error, empty e success states» in `ai_software_agency/05-senior-frontend-developer.md`, «outcome» nel README e in `12-…` di AIBPD. Da correggere con la conferma dell'utente (modifica al prodotto).
+- (P3) Il testo del consenso e della licenza dei progetti in inglese è una traduzione non rivista da un legale, come quello italiano (rischio accettato PRIV-PUB-01).

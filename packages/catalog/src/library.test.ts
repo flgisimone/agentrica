@@ -116,3 +116,12 @@ test("isDate e isExpired", () => {
   assert.ok(!isExpired({ review: "2027-05-19" }, "2027-05-19"));
   assert.ok(isExpired({ review: "2027-05-19" }, "2027-05-20"));
 });
+
+test("parseCard in inglese: etichette inglesi, quelle italiane non valgono", () => {
+  const en = CARD.replace("Fonte:", "Source:").replace("Versione:", "Version:").replace("Verificata il:", "Verified on:")
+    .replace("Da ricontrollare entro:", "Recheck by:").replace("Ruoli:", "Roles:").replace("## Nozione", "## Notion").replace("## Come si applica", "## How it applies");
+  const card = parseCard(en, "01-owasp-top-10-2025.md", "p", [SOURCE], ROLES, "en");
+  assert.equal(card.review, "2027-05-19");
+  assert.equal(card.notion, "Sintesi.");
+  assert.throws(() => parseCard(CARD, "01-x.md", "p", [SOURCE], ROLES, "en"), /Source · Version/);
+});

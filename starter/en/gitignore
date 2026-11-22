@@ -1,0 +1,36 @@
+# dependencies and build
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+# complete in F0 with the stack's folders, e.g. /.next/ /out/ /dist-ssr .vite/ .wrangler/ .vercel next-env.d.ts
+
+# misc
+.DS_Store
+*.log
+*.pem
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# env: only the example is versioned
+.env*
+!.env.example
+
+# local tokensave index
+.tokensave/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# agents/, .claude/agents/, plan/, docs/ and audit/ are versioned (default of `@agentrica/mcp init`).
+# If audit evidence shows personal data, uncomment:
+# audit/*/evidence/
+
+# Claude Code: personal settings and local locks
+.claude/settings.local.json
+.claude/*.lock

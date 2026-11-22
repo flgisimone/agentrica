@@ -2,7 +2,7 @@
 
 - **Agente**: AIWDA-08 · GACRUX, Senior Accessibility Specialist (`aiwda-08`)
 - **Progetto**: [`progetti/form-iscrizione`](../progetti/form-iscrizione/), pagina statica con un form
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Verifica l'accessibilità della pagina di iscrizione rispetto alle WCAG 2.2 AA e riporta i rilievi con criterio, file e riga.
 

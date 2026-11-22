@@ -10,7 +10,7 @@ import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { ElicitRequestSchema, type ElicitResult } from "@modelcontextprotocol/sdk/types.js";
-import { createShowcase, DEFAULT_AUTHOR, httpsUrl, parseProjectFields, type ProjectFields } from "./showcase.ts";
+import { createShowcase, httpsUrl, parseProjectFields, type ProjectFields } from "./showcase.ts";
 
 const known = { departments: new Set(["AISA", "AIWDA"]), agents: new Set(["AISA-02", "AIWDA-08"]) };
 const valid = { name: "Orto", url: "https://codeberg.org/ada/orto", description: "Un diario dell'orto, fatto con gli agenti software.", departments: "aisa, aiwda", consent: true, license: true };
@@ -30,7 +30,7 @@ test("parseProjectFields: consenso e licenza obbligatori, testi semplici, repart
     description: "Un diario dell'orto, fatto con gli agenti software.",
     departments: ["AISA", "AIWDA"],
     agents: [],
-    author: DEFAULT_AUTHOR,
+    author: "Utente di Agentrica",
     consent: true,
     license: true,
   });
@@ -117,7 +117,7 @@ async function start(url: string, forms?: () => ElicitResult) {
   await client.connect(
     new StdioClientTransport({
       command: process.execPath,
-      args: [join(import.meta.dirname, "server.ts"), "--no-update-check"],
+      args: [join(import.meta.dirname, "server.ts"), "--lang", "it", "--no-update-check"],
       cwd: root,
       env: { ...process.env, HOME: root, USERPROFILE: root, AGENTRICA_PROJECTS_URL: url } as Record<string, string>,
       stderr: "pipe",
@@ -133,27 +133,27 @@ test("progetto: il modulo inviato parte con la versione e dà il codice; chiuso 
   const site = await endpoint();
   let answer: ElicitResult = { action: "accept", content: { ...valid, agents: "AISA-02" } };
   const client = await start(site.url, () => answer);
-  const sent = said(await client.getPrompt({ name: "progetto" }));
+  const sent = said(await client.getPrompt({ name: "project" }));
   const code = sent.match(/Codice della proposta: ([0-9a-f-]{36})\./)?.[1];
   assert.ok(code, sent);
   assert.equal(site.requests.length, 1);
   assert.equal(site.requests[0]!.path, "/api/projects");
   assert.deepEqual(Object.keys(site.requests[0]!.body).sort(), ["agents", "author", "code", "consent", "departments", "description", "license", "mcpVersion", "name", "url"]);
   answer = { action: "accept", content: { ...valid, consent: false } };
-  assert.match(said(await client.getPrompt({ name: "progetto" })), /non è partita: servono il consenso e la licenza/);
+  assert.match(said(await client.getPrompt({ name: "project" })), /non è partita: servono il consenso e la licenza/);
   answer = { action: "cancel" };
-  assert.match(said(await client.getPrompt({ name: "progetto" })), /non parte nulla/);
+  assert.match(said(await client.getPrompt({ name: "project" })), /non parte nulla/);
   assert.equal(site.requests.length, 1);
-  assert.match(said(await client.getPrompt({ name: "progetto", arguments: { rimuovi: code! } })), /Richiesta di ritiro registrata/);
+  assert.match(said(await client.getPrompt({ name: "project", arguments: { remove: code! } })), /Richiesta di ritiro registrata/);
   assert.deepEqual(site.requests[1], { path: "/api/projects/withdraw", body: { code } });
-  assert.match(said(await client.getPrompt({ name: "progetto", arguments: { rimuovi: "123" } })), /per proporre un progetto si lancia il comando progetto senza argomenti/);
+  assert.match(said(await client.getPrompt({ name: "project", arguments: { remove: "123" } })), /per proporre un progetto si lancia il comando project senza argomenti/);
   assert.equal(site.requests.length, 2);
 });
 
 test("senza moduli: progetto rimanda a submit_project, che invia solo con il codice dell'anteprima", async () => {
   const site = await endpoint();
   const client = await start(site.url);
-  assert.match(said(await client.getPrompt({ name: "progetto" })), /usa submit_project/);
+  assert.match(said(await client.getPrompt({ name: "project" })), /usa submit_project/);
   const preview = await client.callTool({ name: "submit_project", arguments: valid });
   assert.match(text(preview), /^Anteprima della proposta del progetto:\n- nome: Orto\n- link: https:\/\/codeberg\.org\/ada\/orto\n/);
   assert.equal(site.requests.length, 0);

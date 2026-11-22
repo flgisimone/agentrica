@@ -1,11 +1,11 @@
-// Pagina del pannello: legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer, i voti a /api/rate e, da F27, i totali di token a /api/share.
+// Pagina del pannello (i testi in TEXTS, da texts.<lingua>.js che il server serve come /texts.js): legge /api/state (con l'avviso di versione nuova, F23), si aggiorna con /api/events e manda le risposte a /api/answer, i voti a /api/rate e, da F27, i totali di token a /api/share.
 // I dati del progetto entrano nel DOM solo come testo (textContent), mai come HTML.
 "use strict";
 
 const DEPARTMENTS = ["AIBPD", "AICA", "AIPCA", "AISA", "AIWDA"];
 const PRIORITIES = ["P0", "P1", "P2", "P3", ""];
 const REFRESH_MS = 10_000;
-const TITLE = "Agentrica · pannello";
+const TITLE = TEXTS.title;
 
 let state = null;
 let filter = "";
@@ -30,21 +30,17 @@ function inline(text) {
   return plain.split("`").map((part, i) => (i % 2 ? el("code", {}, part) : part));
 }
 
-const time = (iso) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+const time = (iso) => new Date(iso).toLocaleTimeString(TEXTS.locale, { hour: "2-digit", minute: "2-digit" });
 const empty = (text) => el("p", { class: "empty" }, text);
 
 function renderHeader({ project, update }) {
   const banner = $("update");
   banner.hidden = !update;
   banner.textContent = update ?? "";
-  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
   const files = project.git
-    ? [
-        project.git.changed > 0 && plural(project.git.changed, "file modificato", "file modificati"),
-        project.git.untracked > 0 && plural(project.git.untracked, "nuovo", "nuovi"),
-      ].filter(Boolean)
+    ? [project.git.changed > 0 && TEXTS.changed(project.git.changed), project.git.untracked > 0 && TEXTS.untracked(project.git.untracked)].filter(Boolean)
     : [];
-  const git = project.git ? [` · branch ${project.git.branch}`, ...files].join(" · ") : " · non è un repository git";
+  const git = project.git ? [TEXTS.branch(project.git.branch), ...files].join(" · ") : TEXTS.noGit;
   $("project").textContent = project.name + git;
   const problems = $("problems");
   problems.hidden = project.problems.length === 0;
@@ -64,7 +60,7 @@ function renderQuestions({ questions }) {
   const waiting = questions.length;
   box.querySelector(".empty")?.remove();
   if (!box.querySelector("[data-question]")) {
-    box.append(empty("Nessuna scelta in attesa. Quando un agente ha bisogno di te, la domanda compare qui."));
+    box.append(empty(TEXTS.noQuestions));
   }
   document.title = waiting ? `(${waiting}) ${TITLE}` : TITLE;
 }
@@ -83,7 +79,7 @@ function questionCard(question) {
       el(
         "span",
         {},
-        el("strong", {}, option.label.replace(recommended, ""), recommended.test(option.label) && el("span", { class: "recommended" }, "Consigliata")),
+        el("strong", {}, option.label.replace(recommended, ""), recommended.test(option.label) && el("span", { class: "recommended" }, TEXTS.recommended)),
         option.description,
       ),
     );
@@ -93,11 +89,11 @@ function questionCard(question) {
     { class: "question", "data-question": question.id, onsubmit: (event) => submit(event, question, form, error) },
     question.header && el("span", { class: "tag" }, question.header),
     el("fieldset", {}, el("legend", {}, question.question), options),
-    el("label", { class: "note" }, "Nota (facoltativa)", note),
-    el("button", { type: "submit", class: "send" }, "Invia risposta"),
+    el("label", { class: "note" }, TEXTS.note, note),
+    el("button", { type: "submit", class: "send" }, TEXTS.sendAnswer),
     error,
   );
-  $("announce").textContent = `Nuova scelta da prendere: ${question.question}`;
+  $("announce").textContent = TEXTS.newQuestion(question.question);
   return form;
 }
 
@@ -106,7 +102,7 @@ async function submit(event, question, form, error) {
   const choices = [...form.querySelectorAll("input:checked")].map((input) => input.value);
   const note = form.elements.note.value;
   if (choices.length === 0 && note.trim() === "") {
-    error.textContent = "Scegli un'opzione o scrivi una nota.";
+    error.textContent = TEXTS.pickOrNote;
     error.hidden = false;
     return;
   }
@@ -116,12 +112,12 @@ async function submit(event, question, form, error) {
     body: JSON.stringify({ id: question.id, choices, note }),
   }).catch(() => null);
   if (!response || !response.ok) {
-    error.textContent = response ? await response.text() : "Il pannello non risponde: la sessione è ancora aperta?";
+    error.textContent = response ? await response.text() : TEXTS.noResponse;
     error.hidden = false;
     return;
   }
   form.dataset.sent = "true";
-  form.replaceChildren(el("p", { class: "sent", role: "status" }, `Risposta inviata: ${[...choices, note.trim()].filter(Boolean).join(", ")}`));
+  form.replaceChildren(el("p", { class: "sent", role: "status" }, TEXTS.answerSent([...choices, note.trim()].filter(Boolean).join(", "))));
   setTimeout(() => {
     form.remove();
     if (state) renderQuestions(state);
@@ -131,7 +127,7 @@ async function submit(event, question, form, error) {
 function renderActivity({ activity }) {
   $("activity").replaceChildren(
     activity.length === 0
-      ? empty("Nessun agente usato in questa sessione.")
+      ? empty(TEXTS.noActivity)
       : el(
           "ol",
           { class: "activity" },
@@ -140,7 +136,7 @@ function renderActivity({ activity }) {
               "li",
               { "data-dept": a.department, class: i === 0 ? "active" : null },
               el("time", { datetime: a.time, class: "mono" }, time(a.time)),
-              el("span", { class: "dot" }, el("strong", {}, a.codeName), ` — ${a.role}, reparto ${a.department}`, i === 0 && el("span", { class: "now" }, "attivo")),
+              el("span", { class: "dot" }, el("strong", {}, a.codeName), ` — ${a.role}${TEXTS.department(a.department)}`, i === 0 && el("span", { class: "now" }, TEXTS.active)),
               a.task && el("span", { class: "task" }, a.task),
             ),
           ),
@@ -162,10 +158,10 @@ function renderRatings({ activity, rating }) {
     else if (done && node.tagName === "FORM" && !node.dataset.sent) node.replaceWith(ratedNote(agent));
   }
   box.querySelector(".empty")?.remove();
-  if (!box.querySelector("[data-agent]")) box.append(empty("Quando usi un agente, qui puoi dargli un voto."));
+  if (!box.querySelector("[data-agent]")) box.append(empty(TEXTS.rateEmpty));
 }
 
-const ratedNote = (agent) => el("p", { class: "sent", "data-agent": agent.id, "data-dept": agent.department }, el("strong", {}, agent.codeName), " — valutato in questa sessione.");
+const ratedNote = (agent) => el("p", { class: "sent", "data-agent": agent.id, "data-dept": agent.department }, el("strong", {}, agent.codeName), TEXTS.rated);
 
 function rateForm(agent, rating) {
   const name = `r-${agent.id}`;
@@ -179,13 +175,13 @@ function rateForm(agent, rating) {
     el(
       "fieldset",
       {},
-      el("legend", {}, el("span", { class: "dot" }, el("strong", {}, agent.codeName)), ` — ${agent.role}, reparto ${agent.department}. Voto da 1 a 5:`),
+      el("legend", {}, el("span", { class: "dot" }, el("strong", {}, agent.codeName)), TEXTS.scoreLegend(agent.role, agent.department)),
       el("div", { class: "stars" }, stars),
     ),
-    el("label", { class: "note" }, "Cosa è andato bene o cosa migliorare (facoltativo)", el("textarea", { name: "comment", maxlength: String(rating.maxComment) })),
-    el("label", { class: "check" }, el("input", { type: "checkbox", name: "publish" }), "Puoi pubblicare il mio commento sul sito di Agentrica"),
+    el("label", { class: "note" }, TEXTS.comment, el("textarea", { name: "comment", maxlength: String(rating.maxComment) })),
+    el("label", { class: "check" }, el("input", { type: "checkbox", name: "publish" }), TEXTS.publish),
     el("p", { class: "hint" }, rating.notice),
-    el("button", { type: "submit", class: "send" }, "Invia la valutazione"),
+    el("button", { type: "submit", class: "send" }, TEXTS.sendRating),
     error,
   );
   return form;
@@ -195,7 +191,7 @@ async function sendRating(event, agent, form, error) {
   event.preventDefault();
   const picked = form.querySelector("input[type=radio]:checked");
   if (!picked) {
-    error.textContent = "Scegli un voto da 1 a 5.";
+    error.textContent = TEXTS.pickScore;
     error.hidden = false;
     return;
   }
@@ -203,13 +199,13 @@ async function sendRating(event, agent, form, error) {
   const response = await fetch("/api/rate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).catch(() => null);
   const result = response ? await response.json().catch(() => null) : null;
   if (!result?.ok) {
-    error.textContent = result?.message ?? (response ? "Valutazione non valida." : "Il pannello non risponde: la sessione è ancora aperta?");
+    error.textContent = result?.message ?? (response ? TEXTS.badRating : TEXTS.noResponse);
     error.hidden = false;
     return;
   }
   form.dataset.sent = "true";
   form.replaceChildren(
-    el("p", { class: "sent", role: "status" }, `Valutazione di ${agent.codeName} inviata, grazie. Codice della valutazione: `, el("code", {}, result.usageId), ". Conservalo per chiedere di cancellarla o di non pubblicare il commento."),
+    el("p", { class: "sent", role: "status" }, TEXTS.ratingSent(agent.codeName), el("code", {}, result.usageId), TEXTS.keepCode),
   );
 }
 
@@ -228,10 +224,10 @@ function renderPhases({ project }) {
       ? [
           el("h3", {}, inline(open.title), ` — ${open.status}`),
           open.goal && el("p", { class: "goal" }, inline(open.goal)),
-          el("h3", {}, "Backlog"),
+          el("h3", {}, TEXTS.backlog),
           open.tasks.length
             ? table(
-                ["Attività", "Descrizione", "Priorità", "Stato"],
+                TEXTS.taskHead,
                 open.tasks.map((t) =>
                   el(
                     "tr",
@@ -239,21 +235,21 @@ function renderPhases({ project }) {
                     el("th", { scope: "row", class: "mono" }, t.id),
                     el("td", {}, inline(t.task)),
                     el("td", {}, t.priority),
-                    el("td", { class: t.done ? "status-done" : "" }, t.done ? "Fatto" : "Da fare"),
+                    el("td", { class: t.done ? "status-done" : "" }, t.done ? TEXTS.done : TEXTS.todo),
                   ),
                 ),
               )
-            : empty("Backlog non ancora scritto."),
-          open.criteria.length > 0 && el("h3", {}, "Criteri di accettazione"),
+            : empty(TEXTS.noBacklog),
+          open.criteria.length > 0 && el("h3", {}, TEXTS.criteria),
           open.criteria.length > 0 && el("ul", { class: "criteria" }, open.criteria.map((c) => el("li", {}, inline(c)))),
         ]
-      : [empty("Nessuna fase in corso: tutte le fasi sono completate, sospese o da aprire.")]),
+      : [empty(TEXTS.noOpenPhase)]),
   );
   $("phases").replaceChildren(
     project.phases.length === 0
-      ? empty("Nessuna fase trovata in plan/README.md.")
+      ? empty(TEXTS.noPhases)
       : table(
-          ["Fase", "Contenuto", "Stato"],
+          TEXTS.phaseHead,
           project.phases.map((p) =>
             el(
               "tr",
@@ -273,14 +269,14 @@ function renderFilters() {
   if (!box.firstChild) {
     box.append(
       ...["", ...DEPARTMENTS].map((code) =>
-        el("button", { type: "button", "data-code": code, onclick: () => ((filter = code), render()) }, code || "Tutti"),
+        el("button", { type: "button", "data-code": code, onclick: () => ((filter = code), render()) }, code || TEXTS.all),
       ),
     );
   }
   for (const button of box.children) button.setAttribute("aria-pressed", String(button.dataset.code === filter));
 }
 
-const LABELS = { P0: "P0 · critica", P1: "P1 · alta", P2: "P2 · media", P3: "P3 · bassa", "": "Senza priorità" };
+const LABELS = TEXTS.priorities;
 
 function findingItem(f) {
   return el(
@@ -310,26 +306,26 @@ function renderFindings({ project }) {
     return details;
   });
   $("findings").replaceChildren(
-    ...(shown.length ? groups.filter(Boolean) : [empty(filter ? `Nessun rilievo di ${filter}.` : "Nessun rilievo.")]),
-    el("p", { class: "hint" }, "In ogni gruppo prima i «Rilievi aperti» dei file di fase, poi i rilievi degli audit con il loro stato. Quelli segnati come risolti o chiusi non compaiono."),
+    ...(shown.length ? groups.filter(Boolean) : [empty(filter ? TEXTS.noFindingsOf(filter) : TEXTS.noFindings)]),
+    el("p", { class: "hint" }, TEXTS.findingsHint),
   );
 }
 
 function renderCounts({ project, questions }) {
   const waiting = questions.length;
   const findings = project.findings.length;
-  $("count-sessione").textContent = waiting ? String(waiting) : "";
-  $("count-rilievi").textContent = String(findings);
+  $("count-session").textContent = waiting ? String(waiting) : "";
+  $("count-findings").textContent = String(findings);
   // Il solo numero non dice cosa conta: il nome completo è per i lettori di schermo.
-  $("count-sessione").parentElement.setAttribute("aria-label", waiting ? `Sessione, ${waiting} da decidere` : "Sessione");
-  $("count-rilievi").parentElement.setAttribute("aria-label", `Rilievi, ${findings} aperti`);
+  $("count-session").parentElement.setAttribute("aria-label", TEXTS.sessionLabel(waiting));
+  $("count-findings").parentElement.setAttribute("aria-label", TEXTS.findingsLabel(findings));
 }
 
 // Consumo (F24): tabelle con una barra per riga, così grafico e tabella equivalente sono la stessa cosa.
 // I token sono misurati; i dollari sono equivalenti ai prezzi API del listino; il risparmio del modello è una stima.
-const nf = new Intl.NumberFormat("it-IT");
-const tokens = (n) => (n >= 1e6 ? `${(n / 1e6).toLocaleString("it-IT", { maximumFractionDigits: 1 })} M` : n >= 1e3 ? `${Math.round(n / 1e3)} k` : nf.format(n));
-const usd = (n) => n.toLocaleString("it-IT", { style: "currency", currency: "USD", maximumFractionDigits: n < 1 ? 3 : 2 });
+const nf = new Intl.NumberFormat(TEXTS.locale);
+const tokens = (n) => (n >= 1e6 ? `${(n / 1e6).toLocaleString(TEXTS.locale, { maximumFractionDigits: 1 })} M` : n >= 1e3 ? `${Math.round(n / 1e3)} k` : nf.format(n));
+const usd = (n) => n.toLocaleString(TEXTS.locale, { style: "currency", currency: "USD", maximumFractionDigits: n < 1 ? 3 : 2 });
 const pct = (n) => `${Math.round(n * 100)}%`;
 const spent = (t) => t.totalInput + t.output;
 
@@ -345,10 +341,10 @@ function bar(share) {
 }
 
 function usageTable(rows, label, keyLabel) {
-  if (rows.length === 0) return empty("Nessun dato.");
+  if (rows.length === 0) return empty(TEXTS.noData);
   const max = Math.max(...rows.map((r) => spent(r.totals)), 1);
   return table(
-    [keyLabel, "Token spesi", "Dalla cache", "Costo equivalente", "Risparmio cache", "Risparmio modello (stima)"],
+    TEXTS.usageHead(keyLabel),
     rows.map((r) =>
       el(
         "tr",
@@ -373,29 +369,29 @@ async function renderUsage() {
   const response = await fetch("/api/usage").catch(() => null);
   const report = response && response.ok ? await response.json() : null;
   if (!report) {
-    $("usage-summary").replaceChildren(empty("Non riesco a leggere il consumo: la sessione è ancora aperta?"));
+    $("usage-summary").replaceChildren(empty(TEXTS.usageUnreadable));
     return;
   }
   const t = report.total;
   $("usage-summary").replaceChildren(
     t.requests === 0
-      ? empty("Nessun file di Claude Code per questo progetto: il consumo si vede solo con Claude Code.")
+      ? empty(TEXTS.noClaudeFiles)
       : el(
           "div",
           { class: "tiles" },
-          tile("Token spesi", tokens(spent(t)), `${nf.format(t.requests)} risposte, misurato`),
-          tile("Letti dalla cache", pct(t.cacheShare), "dei token in ingresso, misurato"),
-          tile("Risparmio della cache", usd(t.cacheSavingUsd), "misurato, in dollari equivalenti"),
-          tile("Risparmio del modello", t.modelSavingUsd > 0 ? usd(t.modelSavingUsd) : "—", "stima: gli stessi token al prezzo di Opus"),
+          tile(TEXTS.tileSpent, tokens(spent(t)), TEXTS.tileSpentNote(nf.format(t.requests))),
+          tile(TEXTS.tileCache, pct(t.cacheShare), TEXTS.tileCacheNote),
+          tile(TEXTS.tileCacheSaving, usd(t.cacheSavingUsd), TEXTS.tileCacheSavingNote),
+          tile(TEXTS.tileModelSaving, t.modelSavingUsd > 0 ? usd(t.modelSavingUsd) : "—", TEXTS.tileModelSavingNote),
         ),
-    el("p", { class: "hint" }, `Dollari equivalenti ai prezzi API del ${report.prices.date}; con l'abbonamento contano i token, che consumano i limiti di cinque ore e settimanali.`),
-    ...(report.skipped > 0 ? [el("p", { class: "hint" }, `${report.skipped} file non letti (link simbolici o file troppo grandi).`)] : []),
+    el("p", { class: "hint" }, TEXTS.pricesHint(report.prices.date)),
+    ...(report.skipped > 0 ? [el("p", { class: "hint" }, TEXTS.skipped(report.skipped))] : []),
   );
   const short = (key) => (/^[0-9a-f-]{36}$/.test(key) ? key.slice(0, 8) : key);
-  $("usage-day").replaceChildren(usageTable(report.byDay, (k) => k, "Giorno"));
-  $("usage-agent").replaceChildren(usageTable(report.byAgent, (k) => (k === "sessione" ? "conversazione principale" : k), "Agente"));
-  $("usage-model").replaceChildren(usageTable(report.byModel, (k) => k, "Modello"));
-  $("usage-session").replaceChildren(usageTable(report.bySession.slice(0, 15), short, "Sessione"));
+  $("usage-day").replaceChildren(usageTable(report.byDay, (k) => k, TEXTS.day));
+  $("usage-agent").replaceChildren(usageTable(report.byAgent, (k) => (k === "sessione" ? TEXTS.mainConversation : k), TEXTS.agent));
+  $("usage-model").replaceChildren(usageTable(report.byModel, (k) => k, TEXTS.model));
+  $("usage-session").replaceChildren(usageTable(report.bySession.slice(0, 15), short, TEXTS.session));
 }
 
 // Totali di token (F27): l'anteprima mostra le righe esatte; «Conferma l'invio» manda solo il codice dell'anteprima.
@@ -407,30 +403,30 @@ const post = (path, body) =>
 async function previewShare() {
   const preview = await post("/api/share/preview", {});
   if (!preview) {
-    $("share-body").replaceChildren(el("p", { class: "error", role: "alert" }, "Il pannello non risponde: la sessione è ancora aperta?"));
+    $("share-body").replaceChildren(el("p", { class: "error", role: "alert" }, TEXTS.noResponse));
     return;
   }
   if (preview.rows.length === 0) {
-    $("share-body").replaceChildren(empty("Nessun consumo negli ultimi 30 giorni: non c'è nulla da inviare."));
+    $("share-body").replaceChildren(empty(TEXTS.nothingToShare));
     return;
   }
   const status = el("p", { role: "status" });
-  const confirm = el("button", { type: "button", class: "send" }, "Conferma l'invio");
+  const confirm = el("button", { type: "button", class: "send" }, TEXTS.confirmShare);
   confirm.addEventListener("click", async () => {
     confirm.disabled = true;
     const result = await post("/api/share", { code: preview.code });
     status.className = result?.ok ? "sent" : "error";
-    status.textContent = result?.ok ? `Totali inviati (${result.rows} righe), grazie.` : (result?.message ?? "Il pannello non risponde: la sessione è ancora aperta?");
+    status.textContent = result?.ok ? TEXTS.shared(result.rows) : (result?.message ?? TEXTS.noResponse);
   });
   $("share-body").replaceChildren(
-    el("p", {}, `${preview.rows.length} righe degli ultimi 30 giorni, versione ${preview.version}. Partono esattamente queste:`),
+    el("p", {}, TEXTS.shareHead(preview.rows.length, preview.version)),
     table(
-      ["Giorno", "Agente", "Modello", "Effort", "Ingresso", "Uscita", "Letti dalla cache", "Scritti in cache"],
+      TEXTS.shareColumns,
       preview.rows.map((r) =>
         el("tr", {}, el("th", { scope: "row", class: "mono" }, r.day), ...[r.agent, r.model, r.effort].map((v) => el("td", {}, v)), ...[r.input, r.output, r.cacheRead, r.cacheWrite].map((v) => el("td", {}, nf.format(v)))),
       ),
     ),
-    ...(preview.omitted > 0 ? [el("p", { class: "hint" }, `${preview.omitted} righe più vecchie restano fuori: al più 300 per invio.`)] : []),
+    ...(preview.omitted > 0 ? [el("p", { class: "hint" }, TEXTS.shareOmitted(preview.omitted))] : []),
     el("p", { class: "hint" }, preview.notice),
     confirm,
     status,
@@ -438,7 +434,7 @@ async function previewShare() {
 }
 
 // Una vista per volta, scelta dall'hash: avanti e indietro del browser funzionano senza toccare il server.
-const VIEWS = ["sessione", "piano", "rilievi", "consumo"];
+const VIEWS = ["session", "plan", "findings", "usage"];
 
 function showView(moveFocus) {
   const name = location.hash.slice(1);
@@ -449,7 +445,7 @@ function showView(moveFocus) {
     else tab.removeAttribute("aria-current");
   }
   if (moveFocus) document.querySelector(`#view-${current} h1`).focus();
-  if (current === "consumo") renderUsage();
+  if (current === "usage") renderUsage();
   if (state) $("share").hidden = !state.rating;
 }
 
@@ -478,13 +474,13 @@ function connect() {
   const events = new EventSource("/api/events");
   events.onopen = () => {
     link.dataset.state = "ok";
-    link.textContent = "Sessione collegata";
+    link.textContent = TEXTS.linked;
     refresh();
   };
   events.addEventListener("change", refresh);
   events.onerror = () => {
     link.dataset.state = "off";
-    link.textContent = "Collegamento con la sessione interrotto. Riavvia la sessione di Claude Code per riaprire il pannello.";
+    link.textContent = TEXTS.unlinked;
   };
 }
 

@@ -3,7 +3,7 @@
 - **Agente**: AISA-09 · REGULUS, Senior Application Security Engineer (`aisa-09`)
 - **Progetto**: [`progetti/api-fatture`](../progetti/api-fatture/), API multiutente in Node senza dipendenze, in quattro file
 - **Perché**: i difetti di [api-note](aisa-09-api-note.md) sono evidenti; qui sono sottili (controlli presenti in un ramo e assenti in un altro, configurazioni plausibili) e ci sono parti corrette che sembrano sospette, per misurare i falsi positivi.
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Esegui una revisione di sicurezza di questa API e riporta i rilievi con gravità, file e riga.
 

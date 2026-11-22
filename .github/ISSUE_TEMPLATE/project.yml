@@ -1,0 +1,65 @@
+# «Show your project» form, the English twin of progetto.yml (F33). `npm run projects` in the site repository reads
+# its field labels (FORM_EN in src/lib/projects.ts of agentrica-site): if you change one, change it there too. Same
+# label «progetto», so the script finds both forms.
+name: Show your project
+description: Ask to show on the Agentrica site a public project made with its agents.
+title: "Project: "
+labels: [progetto]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The project appears on the site's projects page only after our approval. This issue is public: do not write
+        other people's data. Description and results stay yours and we do not check them. How we handle this data:
+        https://agentrica.vercel.app/en/legal#projects
+  - type: input
+    attributes:
+      label: Project name
+      description: At most 60 characters.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Repository link
+      description: A public GitHub repository, e.g. https://github.com/your-name/your-project
+      placeholder: https://github.com/
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: What the project does and how you used the agents. At most 280 characters, plain text, no links.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Departments used
+      multiple: true
+      options:
+        - AIBPD — Business & Product Development
+        - AICA — Cybersecurity
+        - AIPCA — Privacy & Compliance
+        - AISA — Software
+        - AIWDA — Web Design
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Agents used
+      description: Optional. Ids separated by commas, e.g. AISA-02, AIWDA-08 (at most 10).
+  - type: input
+    attributes:
+      label: Agentrica version
+      description: Optional, e.g. 0.9.0
+  - type: input
+    attributes:
+      label: Display name
+      description: Optional, at most 40 characters. If you leave it empty we show your GitHub handle.
+  - type: checkboxes
+    attributes:
+      label: Consent and licence
+      options:
+        - label: I consent to Agentrica publishing on its site the data of this form (display name or handle, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.
+          required: true
+        - label: I grant Agentrica, free of charge, permission to show on the site the project's name and description until I ask for them to be removed, and I declare that I am entitled to do so.
+          required: true

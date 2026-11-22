@@ -278,7 +278,7 @@ If even one file already exists, `init` writes nothing and lists them. Outside a
 
 Built something with Agentrica's agents? The site can show it on the projects page, after our approval, in three ways:
 
-- open the [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml) issue: name, link to the public repository, a short description, departments and agents used, with your consent to publish them (the form is in Italian);
+- open the [«Show your project»](https://github.com/flgisimone/agentrica/issues/new?template=project.yml) issue: name, link to the public repository, a short description, departments and agents used, with your consent to publish them;
 - or add the `agentrica` topic to the public repository: it counts as a request to appear, and we show only the repository's name, description, link and owner;
 - or, without a GitHub account, from the server: `/mcp__agentrica__project` opens a form with the same fields and any `https://` link (repository, site or page); without forms the `submit_project` tool does the same, with a preview and confirmation. You get a code: keep it, it is how you withdraw the proposal with `/mcp__agentrica__project` and the `remove` argument. Nothing is sent without your confirmation; `--no-ratings` turns this off too.
 

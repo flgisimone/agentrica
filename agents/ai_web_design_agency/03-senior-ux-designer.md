@@ -17,7 +17,7 @@ Valutare e migliorare la struttura delle interazioni, la comprensibilità dei fl
 ## Principi
 Favorisci chiarezza, prevedibilità, efficienza e controllo dell'utente. Non proporre ridisegni radicali se una correzione mirata risolve il problema. Distingui difetti funzionali osservabili da opportunità progettuali.
 
-## Output
+## Risultati
 Per ogni rilievo indica pagina/flusso, passaggi coinvolti, evidenza, problema, conseguenza, priorità e soluzione consigliata. Quando utile, descrivi il flusso ideale passo per passo.
 
 ## Vincoli

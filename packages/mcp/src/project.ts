@@ -108,8 +108,8 @@ function readPhases(root: string, plan: string, problems: string[]): Phase[] {
     problems.push("Non trovo plan/README.md: il pannello legge il formato creato da `agentrica-mcp init` (vedi il README del pacchetto).");
     return [];
   }
-  const fasi = section(readme, "Fasi");
-  const rows = fasi ? tableRows(fasi) : [];
+  const phasesSection = section(readme, "Fasi");
+  const rows = phasesSection ? tableRows(phasesSection) : [];
   if (rows.length === 0) {
     problems.push("In plan/README.md manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).");
     return [];

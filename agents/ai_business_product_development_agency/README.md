@@ -24,7 +24,7 @@
 ## Flusso di lavoro
 1. Il Chief Business & Product Officer riceve l'obiettivo.
 2. Market Research analizza mercato e concorrenti.
-3. Innovation elabora i concept.
+3. Innovation elabora i concetti di prodotto.
 4. Product Manager e Business Analyst definiscono outcome e requisiti.
 5. Finance valuta il business case.
 6. Growth, Marketing, Sales e Customer Success preparano le strategie.
@@ -32,8 +32,8 @@
 8. Il Chief presenta la proposta per approvazione umana.
 
 ## Collaborazione con le altre agenzie
-- Web Design: target, bisogni, journey e brief UX.
-- Software: requisiti, priorità, acceptance criteria, business case e vincoli.
+- Web Design: target, bisogni, percorso del cliente e sintesi UX.
+- Software: requisiti, priorità, criteri di accettazione, business case e vincoli.
 - Privacy & Compliance: finalità, flussi dati, categorie di dati, fornitori e modelli di business.
 
 ## Biblioteca

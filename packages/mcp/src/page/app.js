@@ -231,7 +231,7 @@ function renderPhases({ project }) {
           el("h3", {}, "Backlog"),
           open.tasks.length
             ? table(
-                ["Task", "Descrizione", "Priorità", "Stato"],
+                ["Attività", "Descrizione", "Priorità", "Stato"],
                 open.tasks.map((t) =>
                   el(
                     "tr",

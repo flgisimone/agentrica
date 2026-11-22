@@ -14,7 +14,7 @@ Le regole servono a tre cose, in quest'ordine: tenere il catalogo coerente e one
 Prima di modificare il codice si leggono questo documento (le sezioni pertinenti), `AGENTS.md`, il file della fase in `plan/` e i criteri di accettazione. Uno script, una libreria o una configurazione esiste solo se lo si trova nel repository, non perché un documento lo descrive.
 
 ### 2.2 Capire il codice esistente
-Si guardano i file coinvolti e le loro dipendenze, si cercano helper, tipi e componenti che risolvono già il problema, si capisce come scorrono i dati. Si seguono i pattern esistenti, salvo un motivo concreto.
+Si guardano i file coinvolti e le loro dipendenze, si cercano helper, tipi e componenti che risolvono già il problema, si capisce come scorrono i dati. Si seguono gli schemi esistenti, salvo un motivo concreto.
 
 ### 2.3 Chiarire le ambiguità che contano
 Si procede da soli quando i requisiti sono chiari e le scelte sono a basso rischio e reversibili. Si chiede all'utente quando un'ambiguità può cambiare il comportamento visibile, i contenuti del catalogo, la sicurezza o il perimetro. Le decisioni di prodotto non si prendono in silenzio.
@@ -28,7 +28,7 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 ### 2.6 Fasi e backlog
 Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
 - **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
-- **Backlog.** Una tabella con id `FN-NN`, task e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un task è fatto quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l'evidenza: il pannello locale legge questo formato.
+- **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l'evidenza: il pannello locale legge questo formato.
 - **Apertura.** Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
 - **Durante.** Ciò che esce dal perimetro diventa una voce del backlog o un rilievo aperto, non una modifica di passaggio (§14). Le correzioni fuori fase vanno su `fix/nome`.
 - **Chiusura.** Procedura di §13.7; i «Rilievi aperti» restano visibili finché una fase successiva non li chiude con un'evidenza.
@@ -39,7 +39,12 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 - **Semplicità**: il codice più corto che resta chiaro. Niente «per dopo».
 - **DRY senza esagerare**: si estrae alla terza ripetizione o quando la logica deve restare identica.
 - **Costanti**: niente valori magici ripetuti; sigle, nomi dei reparti e nomi in codice stanno solo in `packages/catalog/src/departments.ts`.
-- **Lingua del codice**: API (rotte, payload, tabelle, colonne) e identificatori in inglese; testi visibili e commenti in italiano. Vale dal codice nuovo di F11: quello esistente non si rinomina.
+- **Lingua**: mai due lingue nello stesso file o nella stessa pagina (F31–F33).
+  - In inglese: identificatori, tipi, file sorgente, rotte `/api/*`, payload, tabelle e colonne, chiavi JSON, nomi e parametri dei tool e dei prompt MCP.
+  - In italiano: commenti, piano, `CONVENTIONS.md`, `AGENTS.md`, audit e documentazione interna in `docs/`.
+  - In due lingue complete, italiano e inglese, un file per lingua: README pubblici (`README.md` in inglese, `README.it.md` in italiano, con il link all'altra lingua in cima), file di ruolo, regole comuni e biblioteche, testi del sito e del server MCP. Lingua predefinita: inglese su GitHub, npm e registro MCP; sul sito quella del browser (`/it`, `/en`); nel server quella del sistema, con `--lang`.
+  - Invariati: i nomi propri (reparti, sigle, stelle, titoli dei ruoli, prodotti e standard) e le parole chiave e le opzioni di linguaggi e strumenti esterni.
+  - Nei testi italiani le parole inglesi ammesse sono solo quelle del glossario di `plan/README.md`.
 - **Commenti**: spiegano il perché, non il cosa. Brevi, in italiano. Una semplificazione voluta si segna con `ponytail:`, dicendo il limite e quando superarlo.
 - **Codice morto**: si toglie, non si commenta.
 - **Difese**: il catalogo valida i file di `agents/` quando li legge (titolo, numerazione, un nome in codice per file) e si ferma con un errore chiaro; dentro, si usano i tipi.
@@ -155,13 +160,13 @@ Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, c
 1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando il controllo `verify` è verde (`gh pr merge --merge`). Il ruleset `main` vieta push diretti, force push e altri metodi di unione. **Subito dopo, `develop` torna allo stesso commit di `main`**: `git fetch`, su `develop` `git merge --ff-only origin/main`, push di `develop`, e `origin/develop` e `origin/main` devono avere lo stesso hash. Una nota scritta dopo il rilascio va in `main` con un'altra PR, poi si riallinea di nuovo. `develop` e `main` sono sempre allineati, anche in `agentrica-site`.
 2. **Sito**: da F17 Vercel pubblica `main` del repository privato `agentrica-site`, con le stesse regole (PR da `develop`, CI verde). Un rilascio del pacchetto arriva sul sito quando lì si alza la versione di `@agentrica/mcp`: Dependabot apre la PR verso `develop` di `agentrica-site` entro un giorno; la si unisce con la CI verde e poi si rilascia il sito in `main`.
 3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`. Il ruleset `versioni` lascia creare i tag `v*` solo all'amministratore del repository.
-4. **Eccezione, solo per la 0.1.0**: npm configura il trusted publisher dalla pagina di un pacchetto che esiste già, quindi la prima versione si pubblica a mano da `main` (`npm publish -w @agentrica/mcp --access public`, con il codice 2FA) e non ha provenance. Subito dopo si configura il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`) e dalla versione successiva vale il punto 3. Per la 0.1.0 non si crea il tag, che avvierebbe la release.
+4. **Eccezione, solo per la 0.1.0**: npm configura il trusted publisher dalla pagina di un pacchetto che esiste già, quindi la prima versione si pubblica a mano da `main` (`npm publish -w @agentrica/mcp --access public`, con il codice 2FA) e non ha provenance. Subito dopo si configura il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`) e dalla versione successiva vale il punto 3. Per la 0.1.0 non si crea il tag, che avvierebbe il rilascio.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 
 ## 14. Perimetro e difetti esistenti
 
-- Si fa ciò che la fase chiede. Un difetto direttamente collegato si corregge nello stesso task e si segnala; gli altri diventano voci del backlog in `plan/`, non modifiche di passaggio.
+- Si fa ciò che la fase chiede. Un difetto direttamente collegato si corregge nella stessa attività e si segnala; gli altri diventano voci del backlog in `plan/`, non modifiche di passaggio.
 - Il comportamento esistente si preserva, salvo che la fase lo cambi.
 
 ## 15. Configurazione del repository
@@ -202,4 +207,4 @@ Un'eccezione a queste regole si scrive nella tabella «Decisioni» di `plan/READ
 
 ## 19. Risposta finale
 
-Chi chiude un task riferisce, in quest'ordine: cosa è stato fatto, file toccati, controlli eseguiti con l'esito reale, ruoli delle agenzie consultati, rilievi rimasti aperti e decisioni che servono all'utente.
+Chi chiude un'attività riferisce, in quest'ordine: cosa è stato fatto, file toccati, controlli eseguiti con l'esito reale, ruoli delle agenzie consultati, rilievi rimasti aperti e decisioni che servono all'utente.

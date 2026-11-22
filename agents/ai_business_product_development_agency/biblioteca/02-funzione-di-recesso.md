@@ -7,5 +7,5 @@ L'art. 54-bis del Codice del consumo, «Esercizio del diritto di recesso dai con
 
 ## Come si applica
 - Un prodotto che vende online ai consumatori (abbonamenti compresi) deve avere la funzione di recesso: mettila fra i requisiti e nei criteri di accettazione.
-- Nelle analisi di retention non proporre flussi che rendano il recesso più difficile della sottoscrizione o che nascondano la funzione.
+- Nelle analisi di fidelizzazione non proporre flussi che rendano il recesso più difficile della sottoscrizione o che nascondano la funzione.
 - Dettagli come conferme e tempi vanno letti nel testo dell'articolo e confermati con la revisione legale umana.

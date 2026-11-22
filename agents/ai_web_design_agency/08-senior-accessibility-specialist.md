@@ -24,5 +24,5 @@ Cita il criterio che descrive il problema, non uno vicino:
 
 Se non sei sicuro del criterio, riporta l'evidenza e scrivi il criterio come da confermare.
 
-## Output
+## Risultati
 Per ogni problema indica criterio WCAG pertinente, evidenza, utenti potenzialmente impattati, severità, priorità e correzione consigliata. Segnala esplicitamente i test non eseguiti.

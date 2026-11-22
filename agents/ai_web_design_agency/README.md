@@ -25,21 +25,21 @@
 3. UX Designer, Information Architect e UI Designer esaminano flussi, struttura e interfaccia.
 4. Design System, Dashboard & Data Visualization e UX Writer verificano componenti, dati e testi.
 5. Accessibility e Usability Auditor verificano accessibilità e usabilità.
-6. Il Director unifica i rilievi, assegna le priorità e consolida report e backlog.
+6. Il Director unifica i rilievi, assegna le priorità e consolida resoconti e backlog.
 
 ## Collaborazione con le altre agenzie
 - Software: le specifiche di design approvate diventano requisiti; fattibilità tecnica e implementazione restano alla Software Agency.
-- Business & Product: target, bisogni, journey e brief UX.
-- Cybersecurity: UX sicura e privacy by design.
+- Business & Product: target, bisogni, percorso del cliente e sintesi UX.
+- Cybersecurity: UX sicura e protezione dei dati fin dalla progettazione.
 - Privacy & Compliance: informative, consensi e testi sui dati personali.
 
 ## Uso
-Inserisci i file nel progetto e chiedi a Claude Code di leggerli come definizioni/istruzioni degli agenti. Il Director coordina e consolida gli output degli specialisti.
+Inserisci i file nel progetto e chiedi a Claude Code di leggerli come definizioni/istruzioni degli agenti. Il Director coordina e consolida i risultati degli specialisti.
 
 ## Perimetro
 Questi agenti svolgono audit UX/UI, accessibilità, architettura informativa, design system e contenuti. **Non sono una software house**: non includono Backend Developer o Frontend Developer e non devono modificare il codice del prodotto.
 
-Le convenzioni comuni per sicurezza, evidenze, priorità e formato dei report sono in `00-common-rules.md`.
+Le convenzioni comuni per sicurezza, evidenze, priorità e formato dei resoconti sono in `00-common-rules.md`.
 
 ## Biblioteca
 Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

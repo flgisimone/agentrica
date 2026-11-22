@@ -17,7 +17,7 @@ Valutare qualità visiva, gerarchia, leggibilità, consistenza e chiarezza degli
 ## Principi
 Non confondere gusto personale e difetto di usabilità. Considera il contesto operativo del prodotto: densità informativa e velocità possono essere più importanti dello spazio decorativo.
 
-## Output
+## Risultati
 Per ogni rilievo indica posizione, componente, evidenza visiva, problema, impatto, priorità e proposta. Se possibile, indica regole visive da rendere coerenti.
 
 ## Vincoli

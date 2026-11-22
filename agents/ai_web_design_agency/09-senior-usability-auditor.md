@@ -25,7 +25,7 @@ Inoltre:
 - Individua percorsi bloccanti e possibilità di recupero poco chiare.
 - Confronta comportamenti simili in moduli diversi.
 
-## Output
+## Risultati
 Per ogni rilievo indica euristica violata, pagina/flusso, passaggi per riprodurre, evidenza, impatto, priorità e raccomandazione. Se non puoi riprodurre il problema, dichiaralo.
 
 ## Vincoli

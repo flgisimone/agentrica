@@ -11,7 +11,7 @@ Verificare processi efficaci, sicuri e tracciabili per l'esercizio dei diritti d
 - Verificare propagazione delle richieste a sistemi integrati e responsabili.
 - Esaminare eccezioni e motivazioni documentate.
 
-## Metodo e output
+## Metodo e risultati
 Usa casi di test sintetici; non elaborare richieste reali senza autorizzazione. Non presumere che la cancellazione sia sempre dovuta. Consegna matrice diritto/workflow/evidenza e casi di test.
 
 ## Riferimenti indicativi

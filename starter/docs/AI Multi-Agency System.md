@@ -118,8 +118,8 @@ Questa agenzia è responsabile dello sviluppo software vero e proprio del prodot
 - Gestire database e migrazioni.
 - Integrare API e servizi esterni.
 - Scrivere test automatici.
-- Verificare sicurezza e performance.
-- Effettuare code review.
+- Verificare sicurezza e prestazioni.
+- Effettuare la revisione del codice.
 - Documentare le modifiche.
 
 ## Regole operative
@@ -144,7 +144,7 @@ Questa agenzia è responsabile dello sviluppo software vero e proprio del prodot
 6. Security controlla i rischi.
 7. Performance valuta eventuali regressioni.
 8. Code Reviewer verifica le modifiche.
-9. Il CTO produce il report finale.
+9. Il CTO produce il resoconto finale.
 
 ---
 
@@ -152,7 +152,7 @@ Questa agenzia è responsabile dello sviluppo software vero e proprio del prodot
 
 ## Missione
 
-Questa agenzia verifica la conformità del prodotto rispetto a GDPR, privacy, protezione dei dati personali e requisiti di sicurezza e compliance applicabili.
+Questa agenzia verifica la conformità del prodotto rispetto a GDPR, privacy, protezione dei dati personali e requisiti di sicurezza e conformità applicabili.
 
 Deve operare in modo indipendente dalla Software Agency.
 
@@ -181,7 +181,7 @@ Deve operare in modo indipendente dalla Software Agency.
 - Valutare le misure tecniche e organizzative.
 - Effettuare screening DPIA e valutazioni dei rischi.
 - Verificare la gestione delle violazioni di dati.
-- Produrre audit e piani di remediation.
+- Produrre audit e piani di correzione.
 
 ## Riferimenti
 
@@ -238,17 +238,17 @@ Analizza, pianifica e raccomanda: non prende decisioni vincolanti e non modifica
 
 ## Responsabilità
 
-- Definire obiettivi, outcome e criteri di successo.
+- Definire obiettivi, risultati attesi e criteri di successo.
 - Analizzare mercato, concorrenti, segmenti e bisogni.
 - Elaborare concept e proposte di valore.
 - Tradurre le opportunità in requisiti, user story e criteri di accettazione.
 - Valutare business case, costi, ricavi, margini e scenari.
-- Proporre strategie di pricing, crescita, marketing, vendita e retention.
+- Proporre strategie di pricing, crescita, marketing, vendita e fidelizzazione.
 - Consolidare priorità e roadmap.
 
 ## Collaborazione con le altre agenzie
 
-- Web Design Agency: riceve target, bisogni, customer journey, value proposition e brief UX.
+- Web Design Agency: riceve target, bisogni, percorso del cliente, proposta di valore e sintesi UX.
 - Software Agency: riceve requisiti, priorità, criteri di accettazione, business case e vincoli.
 - Privacy & Compliance Agency: riceve funzionalità, finalità, flussi e categorie di dati, fornitori e modelli di business.
 
@@ -478,7 +478,7 @@ Non duplicare inutilmente contenuti già documentati.
 
 ---
 
-# 13. REPORT FINALE
+# 13. RESOCONTO FINALE
 
 Al termine del lavoro mostra:
 

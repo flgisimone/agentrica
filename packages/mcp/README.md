@@ -1,63 +1,65 @@
 # Agentrica MCP
 
-[![Agentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+[![Agentrica MCP on mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
 
-[English](README.en.md)
+[Italiano](README.it.md)
 
-Il server MCP di Agentrica: i 56 agenti IA dei cinque reparti (AIBPD, AICA, AIPCA, AISA, AIWDA) usabili nel tuo progetto da Claude Code o da qualsiasi client MCP.
+The Agentrica MCP server: the 56 AI agents of the five departments (AIBPD, AICA, AIPCA, AISA, AIWDA), usable in your project from Claude Code or any MCP client.
 
-Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA-02 · ALTAIR`, Senior Software Architect, o `AIPCA-03 · DUBHE`, Senior Privacy Legal Specialist. Il server dà al modello le regole comuni del reparto e il file di ruolo dell'agente, presi da [`agents/`](https://github.com/flgisimone/agentrica/tree/main/agents), e il modello lavora nel tuo progetto con quelle istruzioni.
+Each agent is a role with a declared method and limits, for example `AISA-02 · ALTAIR`, Senior Software Architect, or `AIPCA-03 · DUBHE`, Senior Privacy Legal Specialist. The server gives the model the department's common rules and the agent's role file, taken from [`agents/`](https://github.com/flgisimone/agentrica/tree/main/agents), and the model works in your project with those instructions.
 
-## Cosa fa e cosa non fa
+The agent files are in Italian. The agent answers in the language you write in.
 
-- Il server gira solo in locale: lo avvia il client sul tuo computer e i due comunicano con stdio. Il server non ha una parte remota.
-- Come contenuto legge solo i file di `agents/` inclusi nel pacchetto, una volta all'avvio. Il testo che arriva al modello è quello di quei file: puoi leggerlo prima di usarlo.
-- Il server scrive un solo file, la tua [configurazione](#configurazione) in `~/.agentrica/config.json`, e solo dopo che hai risposto al modulo; gli altri file li scrive solo il comando [`init`](#nuovo-progetto), quando lo lanci tu. Non registra e non ha telemetria. Si collega a internet in due casi:
-  - verso Agentrica, quando confermi la [valutazione di un agente](#valutazioni), e invia solo voto, commento e versione, o quando confermi l'invio dei [totali di token](#totali-di-token), e invia solo numeri di token per giorno, agente, modello ed effort, o quando confermi la proposta di un [tuo progetto](#mostra-il-tuo-progetto), e invia solo i campi del modulo; `--no-ratings` spegne tutti e tre;
-  - verso il registro npm, all'avvio, per sapere se c'è una [versione nuova](#aggiornare-e-disinstallare): è una richiesta senza dati, npm vede solo indirizzo IP e programma, come quando npx scarica il pacchetto; `--no-update-check` lo spegne.
+## What it does and does not do
 
-  Con `--no-ratings --no-update-check` non si collega mai. Apre anche, di predefinito, una pagina solo sul tuo computer: vedi [Pannello locale](#pannello-locale); `--no-panel` la spegne.
-- Non esegue niente nel tuo progetto. Dà soltanto istruzioni al modello: quello che il modello fa nel progetto dipende dal client e dai permessi che gli concedi.
-- **Dove vanno i dati.** Il testo dell'agente, il compito e i file che il modello legge nel tuo progetto vanno al fornitore del modello attraverso il tuo client, secondo le condizioni di quel fornitore. Agentrica non li riceve. Nel compito non inserire dati personali, segreti o dati di clienti che non servono.
-- Gli agenti sono IA: le loro conclusioni sono proposte da verificare. Gli agenti di privacy e sicurezza non sostituiscono un DPO, un avvocato o un responsabile della sicurezza, e i loro rilievi non sono una certificazione di conformità.
+- The server runs only locally: the client starts it on your computer and the two talk over stdio. The server has no remote part.
+- The only content it reads is the `agents/` files included in the package, once, at startup. The text that reaches the model is the text of those files: you can read it before using it.
+- The server writes a single file, your [configuration](#configuration) in `~/.agentrica/config.json`, and only after you answer the form; other files are written only by the [`init`](#new-project) command, when you run it. It logs nothing and has no telemetry. It connects to the internet in two cases:
+  - to Agentrica, when you confirm an [agent rating](#ratings), and it sends only the score, the comment and the version, or when you confirm sending your [token totals](#token-totals), and it sends only token counts per day, agent, model and effort, or when you confirm proposing [a project of yours](#show-your-project), and it sends only the form's fields; `--no-ratings` turns all three off;
+  - to the npm registry, at startup, to find out whether there is a [new version](#updating-and-uninstalling): a request with no data, npm only sees your IP address and program, as when npx downloads the package; `--no-update-check` turns it off.
 
-## Installazione
+  With `--no-ratings --no-update-check` it never connects. By default it also opens a page on your computer only: see [Local panel](#local-panel); `--no-panel` turns it off.
+- It runs nothing in your project. It only gives instructions to the model: what the model does in the project depends on the client and on the permissions you grant it.
+- **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
+- The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
 
-Serve Node 22 o successivo, con npm. I comandi sono gli stessi su Mac, Windows (PowerShell o cmd) e Linux.
+## Installation
 
-**Su tutto il computer (consigliato)**, per Claude Code:
+You need Node 22 or later, with npm. The commands are the same on Mac, Windows (PowerShell or cmd) and Linux.
+
+**On the whole computer (recommended)**, for Claude Code:
 
 ```sh
 npx -y @agentrica/mcp@0.8.1 install
 ```
 
-Installa il pacchetto con `npm install -g` e lo registra in Claude Code con ambito `user`: ogni progetto che apri ha già Agentrica. Il server parte con `node` dalla cartella globale di npm: parte in fretta e funziona anche offline. Riavvia Claude Code e controlla con `claude mcp list`.
+It installs the package with `npm install -g` and registers it in Claude Code with `user` scope: every project you open already has Agentrica. The server starts with `node` from npm's global folder: it starts fast and also works offline. Restart Claude Code and check with `claude mcp list`.
 
-**Senza installare nulla**, per Claude Code:
+**Without installing anything**, for Claude Code:
 
 ```sh
 npx -y @agentrica/mcp@0.8.1 add
 ```
 
-Registra il server avviato con npx (su Windows `cmd /c npx`), che al primo avvio scarica il pacchetto nella sua cache. L'ambito è `user`, tutti i tuoi progetti; con `--project` scrive `.mcp.json` nella cartella corrente, da condividere con il team (vale per il sistema su cui l'hai creato), con `--local` vale solo per il progetto corrente e solo per te. Per il team, dalla cartella del progetto:
+It registers the server started with npx (on Windows `cmd /c npx`), which downloads the package to its cache on first start. The scope is `user`, all your projects; with `--project` it writes `.mcp.json` in the current folder, to share with your team (it works on the system it was created on), with `--local` it applies to the current project and to you only. For your team, from the project folder:
 
 ```sh
 npx -y @agentrica/mcp@0.8.1 add --project
 ```
 
-Le opzioni del server (`--agents`, `--no-panel`, `--no-ratings`, `--no-update-check`) si aggiungono in fondo a `install` e `add`, che le passano al server. Lanciati di nuovo, sostituiscono la registrazione di Agentrica nello stesso ambito. Se mancano Node 22, npm o il comando `claude`, lo dicono e stampano i comandi da lanciare a mano.
+The server options (`--agents`, `--no-panel`, `--no-ratings`, `--no-update-check`) go at the end of `install` and `add`, which pass them to the server. Run again, they replace Agentrica's registration in the same scope. If Node 22, npm or the `claude` command are missing, they say so and print the commands to run by hand.
 
-La versione resta quella indicata finché non la cambi tu: un aggiornamento dei ruoli non arriva senza che tu lo scelga. Vedi [Aggiornare e disinstallare](#aggiornare-e-disinstallare).
+The version stays the one you set until you change it: role updates do not arrive unless you choose them. See [Updating and uninstalling](#updating-and-uninstalling).
 
-**A mano in Claude Code**, senza `install` né `add`:
+**By hand in Claude Code**, without `install` or `add`:
 
 ```sh
 claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.8.1
 ```
 
-Su Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.8.1`.
+On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.8.1`.
 
-**Altri client MCP**: aggiungi il server alla configurazione del client, di solito un file JSON come questo:
+**Other MCP clients**: add the server to the client configuration, usually a JSON file like this:
 
 ```json
 {
@@ -70,7 +72,7 @@ Su Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/m
 }
 ```
 
-Su Windows:
+On Windows:
 
 ```json
 {
@@ -83,85 +85,85 @@ Su Windows:
 }
 ```
 
-**Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro. Con questi permessi l'invio di una [valutazione](#valutazioni) fallisce con un messaggio chiaro e il controllo della versione non parte: se vuoi votare gli agenti aggiungi `--allow-net`, altrimenti aggiungi `--no-ratings --no-update-check` in fondo al comando. Il [pannello](#pannello-locale) con questi permessi non parte.
+**Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message and the version check does not run: to rate agents add `--allow-net`, otherwise add `--no-ratings --no-update-check` at the end of the command. The [panel](#local-panel) does not start with these permissions.
 
 ```sh
 npm install -g --ignore-scripts @agentrica/mcp@0.8.1
 npm root -g
 ```
 
-Con la cartella stampata da `npm root -g` al posto di `/cartella/globale`:
+With the folder printed by `npm root -g` in place of `/global/folder`:
 
 ```sh
-claude mcp add --scope user agentrica -- node --permission --allow-fs-read=/cartella/globale/@agentrica/mcp /cartella/globale/@agentrica/mcp/dist/mcp/src/server.js
+claude mcp add --scope user agentrica -- node --permission --allow-fs-read=/global/folder/@agentrica/mcp /global/folder/@agentrica/mcp/dist/mcp/src/server.js
 ```
 
-Su Windows la cartella è di solito `C:\Users\<nome>\AppData\Roaming\npm\node_modules`; se contiene spazi, metti fra virgolette il percorso e l'intera opzione:
+On Windows the folder is usually `C:\Users\<name>\AppData\Roaming\npm\node_modules`; if it contains spaces, quote the path and the whole option:
 
 ```sh
-claude mcp add --scope user agentrica -- node --permission "--allow-fs-read=C:\Users\<nome>\AppData\Roaming\npm\node_modules\@agentrica\mcp" "C:\Users\<nome>\AppData\Roaming\npm\node_modules\@agentrica\mcp\dist\mcp\src\server.js"
+claude mcp add --scope user agentrica -- node --permission "--allow-fs-read=C:\Users\<name>\AppData\Roaming\npm\node_modules\@agentrica\mcp" "C:\Users\<name>\AppData\Roaming\npm\node_modules\@agentrica\mcp\dist\mcp\src\server.js"
 ```
 
-**Provenienza.** Il pacchetto è pubblicato dalla CI del repository con provenance: su npm si vede da quale commit è stato costruito, e `npm audit signatures` nel tuo progetto ne verifica la firma.
+**Provenance.** The package is published by the repository CI with provenance: npm shows which commit it was built from, and `npm audit signatures` in your project verifies its signature.
 
-**Da un clone**, per lavorare su Agentrica: `npm ci` nella root del repository, poi al posto del comando npx `node --permission --allow-fs-read=/percorso/di/agentrica /percorso/di/agentrica/packages/mcp/src/server.ts` (Node 26, come in `.nvmrc`).
+**From a clone**, to work on Agentrica: `npm ci` at the repository root, then instead of the npx command `node --permission --allow-fs-read=/path/to/agentrica /path/to/agentrica/packages/mcp/src/server.ts` (Node 26, as in `.nvmrc`).
 
-## Uso
+## Usage
 
-**Prompt.** Ogni agente è un prompt con il suo id in minuscolo e il reparto (`aisa-02-software`, `aica-01-cybersecurity`, `aibpd-01-business`, `aipca-02-privacy`, `aiwda-08-design`) e un argomento facoltativo, `compito`. In Claude Code i prompt diventano comandi, e il menu mostra il reparto:
+**Prompts.** Each agent is a prompt named after its lowercase id and its department (`aisa-02-software`, `aica-01-cybersecurity`, `aibpd-01-business`, `aipca-02-privacy`, `aiwda-08-design`) with one optional argument, `compito` (the task). In Claude Code prompts become commands, and the menu shows the department:
 
 ```
-/mcp__agentrica__aisa-02-software "Rivedi i confini fra i moduli di src/"
+/mcp__agentrica__aisa-02-software "Review the boundaries between the modules in src/"
 ```
 
-Fino alla 0.5.0 il nome era solo l'id (`aisa-02`).
+Up to 0.5.0 the name was the id alone (`aisa-02`).
 
-Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
+Put the task in quotes: Claude Code splits arguments on spaces.
 
-**Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
+**Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
 npx -y @agentrica/mcp@0.8.1 install --agents aisa,aiwda-08
 ```
 
-Nel menu dei comandi restano solo i prompt della squadra, e anche `elenca_agenti` e `agente` vedono solo quelli. Senza `--agents` ci sono tutti i 56 agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
+The command menu shows only the squad's prompts, and `elenca_agenti` and `agente` see only those agents too. Without `--agents` all 56 agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
 
-**Tool**, per i client che non mostrano i prompt, o quando vuoi che sia il modello a scegliere l'agente:
+**Tools**, for clients that do not show prompts, or when you want the model to pick the agent:
 
-| Tool | Input | Cosa restituisce |
+| Tool | Input | Returns |
 |---|---|---|
-| `elenca_agenti` | `reparto` facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
-| `agente` | `id` (es. `AISA-02`), `compito` facoltativo | le istruzioni complete dell'agente, con l'indice della biblioteca del reparto |
-| `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
-| `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
-| `share_usage` | nessuno; poi `code` | l'anteprima dei totali di token del progetto e un codice; con il codice, l'invio (vedi [Totali di token](#totali-di-token)) |
-| `submit_project` | `name`, `url`, `description`, `departments`, `agents` e `author` (gli ultimi due facoltativi), `consent`, `license`; poi `code` | l'anteprima della proposta di un progetto e un codice; con il codice, l'invio (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)) |
+| `elenca_agenti` (list agents) | optional `reparto` (department: `AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent |
+| `agente` (agent) | `id` (e.g. `AISA-02`), optional `compito` (task) | the agent's full instructions, with the index of the department's library |
+| `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
+| `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
+| `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
+| `submit_project` | `name`, `url`, `description`, `departments`, optional `agents` and `author`, `consent`, `license`; then `code` | a preview of a project proposal and a code; with the code, the sending (see [Show your project](#show-your-project)) |
 
-Per esempio: «Usa elenca_agenti, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
+For example: "Use elenca_agenti, pick the right Agentrica agent and check the accessibility of the login form".
 
-Il numero 01 di ogni reparto è il direttore: coordina gli specialisti e consolida i loro rilievi.
+Number 01 in each department is the director: it coordinates the specialists and consolidates their findings.
 
-**Comandi.** Oltre ai prompt degli agenti ci sono `/mcp__agentrica__valuta`, che apre il modulo di [valutazione](#valutazioni) per l'ultimo agente usato (o per quello che indichi, es. `/mcp__agentrica__valuta AISA-02`), `/mcp__agentrica__progetto`, che propone un tuo progetto per il sito senza account GitHub (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)), e `/mcp__agentrica__configura`, che apre il modulo della [configurazione](#configurazione).
+**Commands.** Besides the agents' prompts there are `/mcp__agentrica__valuta` (rate), which opens the [rating](#ratings) form for the last agent used (or the one you name, e.g. `/mcp__agentrica__valuta AISA-02`), `/mcp__agentrica__progetto` (project), which proposes a project of yours for the site without a GitHub account (see [Show your project](#show-your-project)), and `/mcp__agentrica__configura` (configure), which opens the [configuration](#configuration) form.
 
-I file degli agenti sono in italiano; l'agente risponde nella lingua in cui gli scrivi. Durante il lavoro l'agente dice chi è, per esempio «AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)»: all'inizio, quando passa a un altro agente e nel riepilogo finale.
+While working, the agent says who it is, for example "AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)": at the start, when it hands over to another agent and in the final summary.
 
-## Configurazione
+## Configuration
 
-Squadra, pannello, valutazioni e avviso di versione si scelgono con un modulo, senza rilanciare `add` o `install`.
+Squad, panel, ratings and the new-version notice can be chosen with a form, without running `add` or `install` again.
 
-- **Quando.** Se il client mostra moduli (elicitation MCP, come Claude Code), il modulo compare alla prima chiamata ad Agentrica di una sessione, finché non c'è una configurazione salvata. Dopo lo riapri con `/mcp__agentrica__configura`. Se chiudi il primo modulo senza scegliere, si salvano i valori predefiniti e non ricompare.
-- **Dove.** Le scelte si salvano sul tuo computer in `~/.agentrica/config.json` (su Windows `C:\Users\<nome>\.agentrica\config.json`), leggibile solo dal tuo utente, e valgono dalla sessione successiva in tutti i progetti. Contiene solo le quattro scelte, per esempio `{"version": 1, "agents": "aisa,aiwda-08", "panel": false, "ratings": true, "updateCheck": true}`; niente percorsi, progetti o date. Ad Agentrica non arriva nulla.
-- **Precedenza.** Le opzioni scritte nel comando del server (`--agents`, `--panel`, `--no-panel`, `--no-ratings`, `--no-update-check`) vincono sul file, una per una, e non compaiono nel modulo.
-- **Valutazioni accese** vuol dire solo che il server può chiederti un voto: ogni invio parte comunque solo dopo la tua conferma.
-- **Senza moduli** (anche l'estensione VS Code di Claude Code, che li dichiara ma li chiude senza mostrarli: il server se ne accorge e non salva nulla) `/mcp__agentrica__configura` mostra la configurazione al modello, che può scrivere il file per te con il tuo permesso; oppure scrivilo a mano o usa le opzioni.
-- Un file non valido (formato, chiavi o squadra sbagliati) si ignora, con una riga nei log del client, e il modulo lo riscrive. Per tornare ai predefiniti cancella il file.
-- Con i [permessi minimi](#installazione) di Node il server non legge né scrive il file: usa le opzioni del comando.
+- **When.** If the client shows forms (MCP elicitation, like Claude Code), the form appears at the first call to Agentrica in a session, until a configuration is saved. After that, reopen it with `/mcp__agentrica__configura`. If you close the first form without choosing, the defaults are saved and it does not come back.
+- **Where.** Your choices are saved on your computer in `~/.agentrica/config.json` (on Windows `C:\Users\<name>\.agentrica\config.json`), readable only by your user, and apply from the next session in every project. It holds only the four choices, for example `{"version": 1, "agents": "aisa,aiwda-08", "panel": false, "ratings": true, "updateCheck": true}`; no paths, projects or dates. Nothing reaches Agentrica.
+- **Precedence.** Options written in the server command (`--agents`, `--panel`, `--no-panel`, `--no-ratings`, `--no-update-check`) win over the file, one by one, and are not shown in the form.
+- **Ratings on** only means the server may ask you for a score: every sending still needs your confirmation.
+- **Without forms** (including the Claude Code VS Code extension, which declares forms but closes them without showing them: the server notices and saves nothing) `/mcp__agentrica__configura` shows the configuration to the model, which can write the file for you with your permission; or write it by hand, or use the options.
+- An invalid file (wrong format, keys or squad) is ignored, with a line in the client's logs, and the form rewrites it. To go back to the defaults, delete the file.
+- With Node's [least privilege](#installation) permissions the server neither reads nor writes the file: use the command options.
 
-## Modelli consigliati
+## Recommended models
 
-Il server non sceglie il modello: lo usa il tuo client. Per alcuni agenti però consigliamo un modello più piccolo di Opus, perché sugli stessi casi di prova trova gli stessi difetti senza falsi in più e costa meno (dei limiti dell'abbonamento, o in dollari con l'API).
+The server does not choose the model: your client does. For some agents, though, we recommend a model smaller than Opus, because on the same test cases it finds the same defects with no more false positives and costs less (of your subscription limits, or in dollars with the API).
 
-| Agente | Modello consigliato | Costo sul compito rispetto a Opus |
+| Agent | Recommended model | Cost on the task compared with Opus |
 |---|---|---|
 | AISA-08 · DENEB, QA | Haiku | −96% |
 | AISA-09 · REGULUS, Application Security | Sonnet | −52% |
@@ -169,136 +171,135 @@ Il server non sceglie il modello: lo usa il tuo client. Per alcuni agenti però 
 | AIPCA-02 · ALIOTH, GDPR | Sonnet | −52% |
 | AIBPD-05 · ALGIEBA, Business Analyst | Sonnet | −52% |
 
-Gli altri 51 agenti non sono stati misurati: lavorano con il modello della tua sessione. Il costo è la media sui casi di prova del 2026-11-19 (prezzi API del 2026-11-03); misure, casi e rapporti sono in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md).
+The other 51 agents have not been measured: they work with your session's model. The cost is the average over the test cases of 2026-11-19 (API prices of 2026-11-03); measurements, cases and reports are in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md) (in Italian).
 
-- **Dove si vede.** In `elenca_agenti` e in testa al testo dell'agente («Modello consigliato: Sonnet…»): se il client lo permette, il modello affida il compito a un subagent con quel modello.
-- **Subagent.** I subagent copiati da [`init`](#nuovo-progetto) in `.claude/agents/` hanno già `model:` con il modello consigliato (gli altri `inherit`). Per cambiarlo modifica quella riga (`opus`, `sonnet`, `haiku` o `inherit`).
-- **Sessione.** In Claude Code il modello della sessione si cambia con `/model`.
-- **Riesame.** Le regole dei reparti chiedono a un agente su un modello più piccolo di proporre il riesame su Opus quando trova un rilievo P0 o P1 o non è sicuro.
+- **Where you see it.** In `elenca_agenti` and at the top of the agent's text ("Modello consigliato: Sonnet…"): if the client allows it, the model hands the task to a subagent with that model.
+- **Subagents.** The subagents copied by [`init`](#new-project) into `.claude/agents/` already have `model:` set to the recommended model (the others `inherit`). To change it, edit that line (`opus`, `sonnet`, `haiku` or `inherit`).
+- **Session.** In Claude Code you change the session's model with `/model`.
+- **Review.** The departments' rules ask an agent on a smaller model to propose a review on Opus when it finds a P0 or P1 finding or is unsure.
 
-## Valutazioni
+## Ratings
 
-Puoi dare a un agente un voto da 1 a 5 e un commento su cosa migliorare: servono a correggere i file di ruolo.
+You can give an agent a score from 1 to 5 and a comment on what to improve: ratings are used to fix the role files.
 
-- **Il modulo.** Se il client mostra moduli (elicitation MCP, come Claude Code), è il server a chiedertelo, con un modulo: voto, commento e se pubblicarlo. Te lo chiede quando carichi un altro agente, per quello di prima, che ha finito, e dopo 30 minuti d'uso. Una volta per agente per sessione: se rifiuti, per quell'agente non te lo chiede più. Inviare il modulo vale come conferma, e parte solo ciò che c'è nel modulo.
-- **Senza modulo.** Con i client che non mostrano moduli te lo propone l'agente quando ha finito il compito, una volta per sessione; se lavora da più di 30 minuti, il server lo ricorda al modello una volta. `rate_agent` prima mostra l'anteprima di ciò che parte e un codice valido 10 minuti; il modello te la mostra e invia solo con il codice, esattamente quel contenuto.
-- Puoi anche chiederlo tu, con il comando `/mcp__agentrica__valuta` (l'ultimo agente usato, o quello che indichi) o a parole («valuta AISA-02»), o votare dal [pannello](#pannello-locale), nella sezione «Valuta gli agenti».
-- **Cosa parte.** Id dell'agente, voto, commento, se permetti di pubblicare il commento sul sito (spento di default), versione del pacchetto e un codice casuale della valutazione. Niente compito, file, percorsi o nome del progetto, niente account. Nel commento non scrivere nomi, dati personali o parti del progetto.
-- **Sul sito.** Ogni agente con almeno 5 voti mostra media, numero e distribuzione dei voti, e c'è una classifica quando almeno 5 agenti superano la soglia. Un commento compare solo se hai permesso di pubblicarlo e dopo l'approvazione (criteri nelle [note legali](https://agentrica.vercel.app/note-legali#valutazioni)), con il voto e il mese.
-- **Dopo l'invio** ricevi il codice della valutazione: con quello puoi chiedere di cancellarla o di non pubblicare il commento. Un agente si valuta una volta per sessione e una volta al giorno dalla stessa rete.
-- **Se l'invio non riesce** (offline, servizio giù) il tool lo dice e il lavoro continua; il voto non resta salvato da nessuna parte.
-- **Per non avere il tool**, il modulo né le proposte, aggiungi `--no-ratings` al comando: il server non si collega più ad Agentrica.
+- **The form.** If the client shows forms (MCP elicitation, like Claude Code), the server asks you itself, with a form: score, comment and whether to publish it. It asks when you load another agent, for the previous one, which has finished, and after 30 minutes of use. Once per agent per session: if you decline, it does not ask again for that agent. Submitting the form is the confirmation, and only what is in the form is sent.
+- **Without forms.** With clients that do not show forms, the agent suggests a rating when it has finished the task, once per session; if it has been working for more than 30 minutes, the server reminds the model once. `rate_agent` first shows a preview of what will be sent and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly that content.
+- You can also ask yourself, with the `/mcp__agentrica__valuta` command (the last agent used, or the one you name) or in words ("rate AISA-02"), or rate from the [panel](#local-panel), in the "Valuta gli agenti" section.
+- **What is sent.** The agent id, the score, the comment, whether you allow the comment to be published on the site (off by default), the package version and a random rating code. No task, files, paths or project name, no account. Do not write names, personal data or parts of your project in the comment.
+- **On the site.** Every agent with at least 5 ratings shows the average, the number of ratings and their distribution, and a ranking appears once at least 5 agents pass that threshold. A comment appears only if you allowed it to be published and after it is approved (criteria in the [legal notes](https://agentrica.vercel.app/note-legali#valutazioni), in Italian), with the score and the month.
+- **After sending** you get the rating code: with it you can ask for the rating to be deleted or for the comment not to be published. An agent can be rated once per session and once a day from the same network.
+- **If sending fails** (offline, service down) the tool says so and the work goes on; the rating is not stored anywhere.
+- **To drop the tool**, the form and the suggestions, add `--no-ratings` to the command: the server no longer connects to Agentrica.
 
-Come trattiamo le valutazioni: [note legali](https://agentrica.vercel.app/note-legali#valutazioni).
+How ratings are handled: [legal notes](https://agentrica.vercel.app/note-legali#valutazioni) (in Italian).
 
-## Totali di token
+## Token totals
 
-Puoi inviare ad Agentrica i totali di token del progetto: il sito li somma a quelli degli altri utenti nella pagina [Consumo di token](https://agentrica.vercel.app/consumo), accanto ai risultati misurati nelle nostre prove.
+You can send Agentrica your project's token totals: the site adds them to other users' totals on the [token usage page](https://agentrica.vercel.app/consumo) (in Italian), next to the results measured in our trials.
 
-- **Come.** Chiedilo all'agente («invia i totali di token ad Agentrica»): `share_usage` prima mostra l'anteprima, riga per riga, e un codice valido 10 minuti; il modello te la mostra e invia solo con il codice, esattamente quelle righe. A fine sessione l'agente può proportelo una volta, insieme alla valutazione. Nel [pannello](#pannello-locale) c'è anche il pulsante «Prepara l'anteprima» nella vista Consumo: la conferma dalla pagina vale come sì.
-- **Cosa parte.** Gli ultimi 30 giorni, al più 300 righe: per ogni sessione di Claude Code, giorno, agente, modello ed effort, i token in ingresso, in uscita, letti e scritti in cache, più la versione del pacchetto. L'agente è l'id di Agentrica (es. `AISA-02`), `sessione` per la conversazione principale o `altro` per i tuoi subagent, di cui non parte il nome; il modello è `opus`, `sonnet`, `haiku` o `altro`. Ogni riga ha una chiave, un'impronta SHA-256 calcolata sul tuo computer: serve al sito per sostituire una riga già inviata invece di contarla due volte. Niente testi, file, percorsi, nome del progetto né id di sessione.
-- **Sul sito** compaiono solo somme per mese, modello e agente, quando ci sono almeno 10 invii, indicate come dichiarate dagli utenti. Al più 5 invii al giorno dalla stessa rete.
-- **Se l'invio non riesce** il tool lo dice e il lavoro continua; nulla resta salvato. `--no-ratings` toglie anche questo tool.
+- **How.** Ask the agent ("send the token totals to Agentrica"): `share_usage` first shows the preview, row by row, and a code valid for 10 minutes; the model shows it to you and sends only with the code, exactly those rows. At the end of a session the agent may suggest it once, together with the rating. In the [panel](#local-panel) there is also the «Prepara l'anteprima» (prepare the preview) button in the Consumo view: confirming on the page counts as your yes.
+- **What is sent.** The last 30 days, at most 300 rows: for each Claude Code session, day, agent, model and effort, the input, output, cache-read and cache-write tokens, plus the package version. The agent is the Agentrica id (e.g. `AISA-02`), `sessione` for the main conversation or `altro` (other) for your own subagents, whose names are not sent; the model is `opus`, `sonnet`, `haiku` or `altro`. Each row has a key, a SHA-256 fingerprint computed on your computer: the site uses it to replace a row already sent instead of counting it twice. No text, files, paths, project name or session id.
+- **On the site** only sums by month, model and agent appear, once there are at least 10 submissions, labelled as declared by users. At most 5 submissions a day from the same network.
+- **If sending fails** the tool says so and the work goes on; nothing is stored. `--no-ratings` removes this tool too.
 
-Come trattiamo i totali: [note legali](https://agentrica.vercel.app/note-legali#consumo).
+How the totals are handled: [legal notes](https://agentrica.vercel.app/note-legali#consumo) (in Italian).
 
-## Biblioteca
+## Library
 
-Le conoscenze di un modello si fermano alla sua data di addestramento. Ogni reparto ha una biblioteca di schede con nozioni recenti (standard, norme, release), ciascuna verificata su una fonte ammessa di livello 1 (enti di standard, autorità, testi normativi) o 2 (documentazione ufficiale dei produttori), con versione, data di verifica e data entro cui ricontrollarla. Per esempio OWASP Top 10:2025, TypeScript 7.0, le date dell'AI Act dopo l'AI Omnibus, WCAG 2.2.
+A model's knowledge stops at its training date. Each department has a library of cards with recent knowledge (standards, laws, releases), each one checked against an allowed source of level 1 (standards bodies, authorities, legal texts) or 2 (official vendor documentation), with version, verification date and a date by which to recheck it. For example OWASP Top 10:2025, TypeScript 7.0, the AI Act dates after the AI Omnibus, WCAG 2.2. Cards are in Italian, like the agent files.
 
-- Il testo di ogni agente contiene, dopo il file di ruolo, l'indice delle schede del suo reparto; il modello legge quelle che servono al compito con `library` e cita fonte e data. Una scheda oltre la sua data è segnata da ricontrollare.
-- Le schede viaggiano nel pacchetto (`agents/<reparto>/biblioteca/`) e seguono le stesse regole dei file di ruolo: niente link, HTML o comandi. Gli indirizzi delle fonti stanno in `agents/<reparto>/fonti.json` e non arrivano mai al modello. Il server resta offline: la biblioteca non apre connessioni.
-- Si aggiorna con le versioni del pacchetto: un rilevatore settimanale, senza modello, legge i feed delle fonti e apre l'elenco delle novità; le schede nuove entrano solo dopo la revisione del titolare.
+- Every agent's text contains, after the role file, the index of its department's cards; the model reads the ones the task needs with `library` and cites source and date. A card past its date is flagged for rechecking.
+- Cards ship in the package (`agents/<department>/biblioteca/`) and follow the same rules as role files: no links, HTML or commands. Source addresses live in `agents/<department>/fonti.json` and never reach the model. The server stays offline: the library opens no connection.
+- It is updated with package versions: a weekly detector, with no model, reads the sources' feeds and lists what is new; new cards go in only after the owner's review.
 
-## Pannello locale
+## Local panel
 
-Il server apre anche una pagina sul tuo computer da cui segui il progetto e prendi le scelte che l'agente ti chiede, invece di rispondere nel terminale. Da 0.8.0 è acceso di predefinito: chiedi «apri il pannello di Agentrica». Alla prima scelta da fare, se la pagina non è aperta, il server apre il browser. Per spegnerlo scegli nel modulo della [configurazione](#configurazione) o aggiungi `--no-panel`:
+The server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal. From 0.8.0 it is on by default: ask "open the Agentrica panel". At the first choice to make, if the page is not open, the server opens the browser. To turn it off, choose so in the [configuration](#configuration) form or add `--no-panel`:
 
 ```sh
 npx -y @agentrica/mcp@0.8.1 install --no-panel
 ```
 
-Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha quattro pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
 
-- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), con il reparto e l'inizio del compito;
-- **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
-- **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
-- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella.
+- **Sessione** (session): pending choices (*Da decidere*, to decide), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agenti in uso*, agents in use), with the department and the start of the task;
+- **Piano** (plan): the open phase with backlog and acceptance criteria, and all project phases;
+- **Rilievi** (findings): open findings from phases and audits, by priority and department.
 
-Con il pannello il modello ha due tool in più:
+With the panel the model has two more tools:
 
-| Tool | Input | Cosa fa |
+| Tool | Input | What it does |
 |---|---|---|
-| `open_panel` | nessuno | apre la pagina nel browser e ne restituisce l'URL |
-| `ask_user` | `question`, 2–4 `options` (`label`, `description`), `header` e `multiple` facoltativi | mostra la scelta nella pagina e restituisce la risposta |
+| `open_panel` | none | opens the page in the browser and returns its URL |
+| `ask_user` | `question`, 2–4 `options` (`label`, `description`), optional `header` and `multiple` | shows the choice in the page and returns the answer |
 
-Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
+If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
-**Cosa fa il pannello.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il pannello ha bisogno della rete locale e di `git`: con il permission model di Node consigliato sopra non parte, e il server funziona senza (con `--panel` esplicito, invece, si ferma con un messaggio).
+**What the panel does.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder, and keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings and token totals you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The panel needs the local network and `git`: with the Node permission model recommended above it does not start, and the server works without it (with an explicit `--panel`, instead, it stops with a message).
 
-**Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
+**Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in Italian, the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 
-- `plan/README.md` con una sezione `## Fasi` e una tabella `| Fase | File | Contenuto | Stato |`, il file come link (`[14-pannello.md](14-pannello.md)`). La fase aperta è la prima con uno stato diverso da `completata` e `sospesa`.
-- Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …`, `## Backlog` con la tabella `| # | Task | Priorità |`, `## Criteri di accettazione` e `## Fatto` come elenchi; un task è fatto quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` è un elenco, con la priorità (`P0`–`P3`) nel testo; una voce che dice «risolto» o «chiuso» (es. «Risolto in F6.») resta nel piano ma il pannello non la mostra.
-- `audit/<cartella>/<file>.json` con `agente` (es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo; un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
+- `plan/README.md` with a `## Fasi` section and a `| Fase | File | Contenuto | Stato |` table, the file as a link (`[14-pannello.md](14-pannello.md)`). The open phase is the first one whose status is neither `completata` nor `sospesa`.
+- In the phase file: `# Title`, a `**Obiettivo**: …` line, `## Backlog` with the `| # | Attività | Priorità |` table, `## Criteri di accettazione` and `## Fatto` as lists; a task is done when its id appears in bold under «Fatto» (`- **F14-01** …`). `## Rilievi aperti` is a list, with the priority (`P0`–`P3`) in the text; an item that says «risolto» or «chiuso» (resolved, closed; e.g. «Risolto in F6.») stays in the plan but the panel does not show it.
+- `audit/<folder>/<file>.json` with `agente` (e.g. `"AICA-02 · …"`, which gives the department) and a `rilievi` list of objects with `id`, `titolo`, `priorita` and optional `stato`; a finding whose `stato` says «risolto» or «chiuso» is not shown.
 
-## Nuovo progetto
+## New project
 
-`init` crea un progetto con il metodo di lavoro di Agentrica, pronto per Claude Code:
+`init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.8.1 init mio-progetto --name "Mio progetto"
+npx -y @agentrica/mcp@0.8.1 init my-project --name "My project"
 ```
 
-Senza cartella usa quella corrente; senza `--name` il nome è quello della cartella. Scrive:
+Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in Italian:
 
-- `AGENTS.md` e `CLAUDE.md` (regole per gli agenti: tokensave, scala Ponytail, efficienza, verifica, agenzie) e `CONVENTIONS.md` (codice, test, fasi, chiusura e rilascio), con le parti dello stack marcate «da compilare»;
-- `plan/` con `README.md` (decisioni, glossario, fasi) e `00-base.md`, la fase F0 da cui si parte; `audit/` e `docs/`;
-- `agents/` e `.claude/agents/`: i 56 ruoli di questa versione e un subagent per ruolo, con il nome del progetto;
-- `.github/workflows/ci.yml` (`npm run verify` e `verify:e2e`, saltati finché F0 non li crea), `.gitignore`, `.nvmrc`, `.env.example`;
-- `.mcp.json` con questo server a versione esatta (il pannello è acceso di predefinito e legge subito il piano) (su Windows con `cmd /c npx`).
+- `AGENTS.md` and `CLAUDE.md` (rules for agents: tokensave, the Ponytail ladder, efficiency, checks, agencies) and `CONVENTIONS.md` (code, tests, phases, closing and release), with the stack-specific parts marked «da compilare» (to fill in);
+- `plan/` with `README.md` (decisions, glossary, phases) and `00-base.md`, the F0 phase to start from; `audit/` and `docs/`;
+- `agents/` and `.claude/agents/`: the 56 roles of this version and one subagent per role, with the project name;
+- `.github/workflows/ci.yml` (`npm run verify` and `verify:e2e`, skipped until F0 creates them), `.gitignore`, `.nvmrc`, `.env.example`;
+- `.mcp.json` with this server at an exact version (the panel is on by default and reads the plan right away) (on Windows with `cmd /c npx`).
 
-Se anche un solo file esiste già, `init` non scrive nulla e dice quali sono. Fuori da un repository git fa il primo commit su `main` e lascia attivo `develop`; dentro un repository non fa commit. Poi apri Claude Code nella cartella e chiedi di aprire la fase F0. `init` è l'unico comando che scrive file nel progetto: il server scrive solo la sua [configurazione](#configurazione). Prende il posto di agentic-starter, che non si aggiorna più.
+If even one file already exists, `init` writes nothing and lists them. Outside a git repository it makes the first commit on `main` and leaves `develop` checked out; inside one it does not commit. Then open Claude Code in the folder and ask it to open phase F0. `init` is the only command that writes files in the project: the server writes only its [configuration](#configuration). It replaces agentic-starter, which is no longer updated.
 
-## Mostra il tuo progetto
+## Show your project
 
-Hai fatto qualcosa con gli agenti di Agentrica? Il sito lo può mostrare nella pagina dei progetti, dopo la nostra approvazione, in tre modi:
+Built something with Agentrica's agents? The site can show it on the projects page, after our approval, in three ways:
 
-- apri la issue [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml): nome, link al repository pubblico, una descrizione breve, reparti e agenti usati, con il consenso a pubblicarli;
-- oppure aggiungi al repository pubblico il topic `agentrica`: vale come richiesta di comparire, e mostriamo solo nome, descrizione, link e proprietario del repository;
-- oppure, senza account GitHub, dal server: `/mcp__agentrica__progetto` apre un modulo con gli stessi campi e un link `https://` qualsiasi (repository, sito o pagina); senza moduli lo stesso fa il tool `submit_project`, con anteprima e conferma. Ricevi un codice: conservalo, serve per ritirare la proposta con `/mcp__agentrica__progetto` e l'argomento `rimuovi`. Senza la tua conferma non parte nulla; `--no-ratings` toglie anche questo.
+- open the [«Mostra il tuo progetto»](https://github.com/flgisimone/agentrica/issues/new?template=progetto.yml) issue: name, link to the public repository, a short description, departments and agents used, with your consent to publish them (the form is in Italian);
+- or add the `agentrica` topic to the public repository: it counts as a request to appear, and we show only the repository's name, description, link and owner;
+- or, without a GitHub account, from the server: `/mcp__agentrica__progetto` opens a form with the same fields and any `https://` link (repository, site or page); without forms the `submit_project` tool does the same, with a preview and confirmation. You get a code: keep it, it is how you withdraw the proposal with `/mcp__agentrica__progetto` and the `rimuovi` (remove) argument. Nothing is sent without your confirmation; `--no-ratings` turns this off too.
 
-Descrizione e risultati restano tuoi: non li verifichiamo. Puoi chiedere la rimozione quando vuoi; come trattiamo questi dati è nelle [note legali](https://agentrica.vercel.app/note-legali#progetti). Se vuoi, metti il badge nel README:
+The description and results stay yours: we do not verify them. You can ask for removal at any time; how we handle this data is in the [legal notes](https://agentrica.vercel.app/note-legali#progetti) (in Italian). If you like, add the badge to your README:
 
 ```markdown
-[![Fatto con Agentrica](https://img.shields.io/badge/fatto%20con-Agentrica-0b1020)](https://agentrica.vercel.app)
+[![Made with Agentrica](https://img.shields.io/badge/made%20with-Agentrica-0b1020)](https://agentrica.vercel.app)
 ```
 
-## Aggiornare e disinstallare
+## Updating and uninstalling
 
-Il testo degli agenti viene dai file di `agents/` della versione installata. Quando esce una versione nuova il server te lo dice una volta per sessione, nella risposta di un tool e nel pannello, con il comando giusto per come l'hai installato. Gli id e i nomi in codice non cambiano.
+The agents' text comes from the `agents/` files of the installed version. When a new version is out the server tells you once per session, in a tool response and in the panel, with the right command for how you installed it. Ids and code names do not change.
 
-- **Installato con `install`**: rilancia `install` con la versione nuova, es. `npx -y @agentrica/mcp@<versione> install`, poi riavvia Claude Code.
-- **Con `add` o `init`**: rilancia `add` con la versione nuova, o cambia la versione nel comando del server o nel `.mcp.json`, poi riavvia il client.
-poi riavvia il client.
+- **Installed with `install`**: run `install` again with the new version, e.g. `npx -y @agentrica/mcp@<version> install`, then restart Claude Code.
+- **With `add` or `init`**: run `add` again with the new version, or change the version in the server command or in `.mcp.json`, then restart the client.
+then restart the client.
 
-Se Agentrica è registrato in più ambiti (per esempio con `install` e poi con `add --local`), `add` e `install` lo dicono dopo la registrazione: Claude Code usa quella più vicina al progetto (local, poi project, poi user), e quella che non ti serve si toglie con `claude mcp remove agentrica --scope <ambito>`.
+If Agentrica is registered in more than one scope (for example with `install` and then `add --local`), `add` and `install` say so after registering: Claude Code uses the one closest to the project (local, then project, then user), and you remove the one you don't need with `claude mcp remove agentrica --scope <scope>`.
 
-Per disinstallare:
+To uninstall:
 
 ```sh
 claude mcp remove agentrica --scope user
 npm uninstall -g @agentrica/mcp
 ```
 
-Il secondo comando serve solo se avevi usato `install`; con `add --project` o `--local` usa quell'ambito al posto di `user`. Se hai salvato una [configurazione](#configurazione), cancella anche la cartella `~/.agentrica`.
+The second command is needed only if you used `install`; with `add --project` or `--local` use that scope instead of `user`. If you saved a [configuration](#configuration), also delete the `~/.agentrica` folder.
 
-Lo stesso catalogo si legge anche da codice, senza avviare il server: `import { loadCatalog } from "@agentrica/mcp/catalog"` restituisce reparti e agenti (con i tipi `Department` e `Agent`) dagli `agents/` del pacchetto. È ciò che usa il sito di Agentrica.
+The same catalog can be read from code, without starting the server: `import { loadCatalog } from "@agentrica/mcp/catalog"` returns departments and agents (with the `Department` and `Agent` types) from the package's `agents/`. The Agentrica site uses it.
 
-## Versioni
+## Versions
 
-Le novità di ogni versione, con la data, sono in [CHANGELOG.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.md). La 0.6.0 cambia il nome dei prompt (`aisa-02` diventa `aisa-02-software`).
+What changed in each version, with its date, is in [CHANGELOG.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.md) (in Italian). 0.6.0 renames the prompts (`aisa-02` becomes `aisa-02-software`).
 
-## Licenza
+## License
 
-MIT. Agentrica è una società fittizia: gli agenti sono modelli di IA guidati da file di ruolo.
+MIT. Agentrica is a fictional company: the agents are AI models guided by role files.

@@ -14,7 +14,7 @@ Le regole servono a tre cose, in quest'ordine: non perdere né alterare i dati e
 Prima di modificare il codice si leggono questo documento (le sezioni pertinenti), `AGENTS.md`, il file della fase in `plan/` e i criteri di accettazione. Uno script, una libreria o una configurazione esiste solo se lo si trova nel repository, non perché un documento lo descrive.
 
 ### 2.2 Capire il codice esistente
-Si guardano i file coinvolti e le loro dipendenze, si cercano helper, tipi e componenti che risolvono già il problema, si capisce come scorrono i dati. Si seguono i pattern esistenti, salvo un motivo concreto.
+Si guardano i file coinvolti e le loro dipendenze, si cercano helper, tipi e componenti che risolvono già il problema, si capisce come scorrono i dati. Si seguono gli schemi esistenti, salvo un motivo concreto.
 
 ### 2.3 Chiarire le ambiguità che contano
 Si procede da soli quando i requisiti sono chiari e le scelte sono a basso rischio e reversibili. Si chiede all'utente quando un'ambiguità può cambiare il comportamento visibile, l'integrità dei dati, la sicurezza, il modello dei dati o il perimetro. Le decisioni di prodotto non si prendono in silenzio.
@@ -28,7 +28,7 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 ### 2.6 Fasi e backlog
 Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
 - **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
-- **Backlog.** Una tabella con id `FN-NN`, task e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un task è fatto quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l’evidenza: il pannello di `@agentrica/mcp` (acceso di predefinito) legge questo formato.
+- **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l’evidenza: il pannello di `@agentrica/mcp` (acceso di predefinito) legge questo formato.
 - **Apertura.** Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
 - **Durante.** Ciò che esce dal perimetro diventa una voce del backlog o un rilievo aperto, non una modifica di passaggio (§14). Le correzioni fuori fase vanno su `fix/nome`.
 - **Chiusura.** Procedura di §13.7; i «Rilievi aperti» restano visibili finché una fase successiva non li chiude con un'evidenza.
@@ -41,7 +41,7 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 - **Costanti**: niente valori magici ripetuti; le stringhe di dominio stanno in un solo punto.
 - **Commenti**: spiegano il perché, non il cosa. Brevi, in italiano. Una semplificazione voluta si segna con `ponytail:`, dicendo il limite e quando superarlo.
 - **Codice morto**: si toglie, non si commenta.
-- **Difese**: si valida l'input ai confini (azioni lato server, route, import, input dell'utente); dentro, si usano i tipi.
+- **Difese**: si validano i dati in ingresso ai confini (azioni lato server, route, import, dati inseriti dall'utente); dentro, si usano i tipi.
 
 ## 4. TypeScript
 
@@ -60,7 +60,7 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 | `scripts/` | script di progetto (migrazioni, dati dei test, utilità) |
 | `plan/` | decisioni e fasi |
 | `agents/`, `.claude/agents/` | ruoli delle agenzie e subagent |
-| `audit/` | rilievi e report degli audit |
+| `audit/` | rilievi e resoconti degli audit |
 | `docs/` | materiale di riferimento |
 
 La logica che si può testare senza framework, rete o database va in `src/lib`. Un controllo di lint lo fa rispettare quando lo stack lo permette.
@@ -69,16 +69,16 @@ La logica che si può testare senza framework, rete o database va in `src/lib`. 
 
 <!-- Da compilare: dove si leggono e si scrivono i dati, dove vive lo stato (URL, server, client locale), come si invalida dopo una scrittura. Regola comune: lo stato che deve sopravvivere a un link sta nell'URL; niente librerie di stato globale senza un motivo registrato in plan/README.md. -->
 
-## 7. Confini: API, azioni, input
+## 7. Confini: API, azioni, dati in ingresso
 
-<!-- Da compilare: come entrano dati e comandi (Server Actions, API, eventi di input, file importati). Regole comuni: -->
+<!-- Da compilare: come entrano dati e comandi (Server Actions, API, eventi di immissione, file importati). Regole comuni: -->
 
-- Ogni scrittura passa da un solo punto per area, valida i suoi input e restituisce un esito vero: un aggiornamento che non tocca nulla non risponde «aggiornato».
+- Ogni scrittura passa da un solo punto per area, valida i suoi dati in ingresso e restituisce un esito vero: un aggiornamento che non tocca nulla non risponde «aggiornato».
 - Le scritture in più passi sono atomiche (transazione o equivalente).
 
 ## 8. Form e interazioni
 
-<!-- Da compilare: componenti dei form, formati di input (es. importi in formato italiano), comportamento dopo il salvataggio; oppure, per un gioco, mappa dei comandi e feedback. -->
+<!-- Da compilare: componenti dei form, formati dei dati inseriti (es. importi in formato italiano), comportamento dopo il salvataggio; oppure, per un gioco, mappa dei comandi e feedback. -->
 
 ## 9. Componenti
 
@@ -155,7 +155,7 @@ Deploy e migrazioni in produzione partono sempre con un ok esplicito, a parte da
 
 ## 14. Perimetro e difetti esistenti
 
-- Si fa ciò che la fase chiede. Un difetto direttamente collegato si corregge nello stesso task e si segnala; gli altri diventano voci del backlog in `plan/`, non modifiche di passaggio.
+- Si fa ciò che la fase chiede. Un difetto direttamente collegato si corregge nella stessa attività e si segnala; gli altri diventano voci del backlog in `plan/`, non modifiche di passaggio.
 - Il comportamento esistente si preserva, salvo che la fase lo cambi.
 
 ## 15. Configurazione del repository
@@ -164,7 +164,7 @@ Deploy e migrazioni in produzione partono sempre con un ok esplicito, a parte da
 <!-- Da compilare in F0: framework, versioni, file di configurazione e loro particolarità. Una sottosezione per strumento (15.2, 15.3…). -->
 
 ### 15.x Evidenze per gli audit
-<!-- Quando serve: uno script `audit:capture` (Playwright) che salva screenshot, report axe e albero accessibile in `audit/<audit_id>/evidenze/`, su dati finti. -->
+<!-- Quando serve: uno script `audit:capture` (Playwright) che salva screenshot, resoconti axe e albero accessibile in `audit/<audit_id>/evidenze/`, su dati finti. -->
 
 ### 15.y Agenzie
 Ruoli, attivazione e coordinamento delle agenzie sono in `AGENTS.md`, sezione «Agenzie», e in `docs/AI Multi-Agency System.md`. Le regole delle agenzie si aggiungono a questo documento, non lo sostituiscono.
@@ -189,4 +189,4 @@ Un'eccezione a queste regole si scrive nella tabella «Decisioni» di `plan/READ
 
 ## 19. Risposta finale
 
-Chi chiude un task riferisce, in quest'ordine: cosa è stato fatto, file toccati, controlli eseguiti con l'esito reale, ruoli delle agenzie consultati, rilievi rimasti aperti e decisioni che servono all'utente.
+Chi chiude un'attività riferisce, in quest'ordine: cosa è stato fatto, file toccati, controlli eseguiti con l'esito reale, ruoli delle agenzie consultati, rilievi rimasti aperti e decisioni che servono all'utente.

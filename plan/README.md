@@ -60,6 +60,16 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 
 «Agentrica» (la società), «Reparto» (un'agenzia: AIBPD, AICA, AIPCA, AISA, AIWDA), «Agente» (un ruolo di un reparto), «Nome in codice» (es. AISA-02 · ALTAIR), «Direttore» (l'agente 01 di ogni reparto), «Biografia» (la pagina di un agente, ricavata dal suo file), «Catalogo» (i dati di reparti e agenti letti da `agents/`), «Pagina del reparto», «Pagina dell'agente», «Squadra» (gli agenti scelti da un utente per il suo MCP con `--agents`), «Biblioteca» (le schede di nozioni recenti di un reparto), «Scheda» (una nozione con fonte, versione e date), «Ciclo di studio» (rilevatore, sessione di studio e revisione che aggiornano la biblioteca).
 
+Parole inglesi ammesse nei testi italiani (CONVENTIONS §3, F31), elenco chiuso:
+
+- **Sviluppo**: audit, backlog, branch, build, bundle, CI, commit, deploy, flag, helper, id, lint, merge, MCP, mock, payload, prompt, provenance, push, route, runtime, server, test, token, tool, trusted publisher, typecheck, UI, UX, workflow, Definition of Done.
+- **Web e strumenti**: account, file, on-premise, privacy, design, design system, download, end-to-end, focus, footer, header, hero, issue e PR (di GitHub), login, online, offline, plugin, responsive, alert (componente), backend, backup, badge, banner, browser, bug, cache, card, chat, cloud, container, cookie, dashboard, endpoint, fixture, form, framework, frontend, hosting, layout, link, log, password, placeholder, query, rendering, repository, screenshot, script, seed, select, snapshot, stack, tenant, tooltip, viewport.
+- **Gestione**: budget, business case, feedback, freemium, marketing, partner, pipeline, policy, pricing, roadmap, target, team, user story.
+- **Sicurezza**: advisory, backdoor, brute force, data breach, DoS, exploit, firewall, malware, password spraying, pentest, phishing, playbook, ransomware, rollback, scanner, social engineering, spyware, staging, threat model.
+- **Nomi propri**: reparti, sigle, stelle, titoli dei ruoli, prodotti e standard.
+
+Il resto si traduce: output → risultato, report → resoconto (resta nel nome dei file `report-*.md`), handoff → passaggio di consegne, asset → risorse, task → attività, input → dati in ingresso, review → revisione, gap → lacuna, brief → sintesi, feed → flusso, scope → perimetro, finding → rilievo, feature → funzione, issue → segnalazione (salvo le issue di GitHub).
+
 ## Fasi
 
 | Fase | File | Contenuto | Stato |
@@ -96,4 +106,8 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | F29 | [29-configura-valuta.md](29-configura-valuta.md) | Verifica dei rilievi, comandi `valuta`, `configura` e `progetto`, configurazione salvata in `~/.agentrica/config.json`, progetti proposti dal server MCP senza GitHub, moduli non mostrati in VS Code (0.8.0) | completata |
 | F30 | [30-rilievi.md](30-rilievi.md) | Rilievi aperti da F16 a F29 e degli audit: privilegio minimo del database, DPA di Neon, rischi accettati, AIWDA-08, rilevatore, `add`, pannello, README, prove guidate | completata |
 
-Ordine: F0 → F30 in sequenza.
+| F31 | [31-lingua.md](31-lingua.md) | Lingua: regola in CONVENTIONS §3, glossario, anglicismi tolti dai testi italiani, README inglesi di predefinito con `README.it.md` | completata |
+| F32 | 32-contenuti-en.md | File di ruolo, regole comuni e biblioteche in inglese; tool, prompt e testi del server in inglese, lingua dal sistema con `--lang` | da aprire |
+| F33 | 33-sito-multilingua.md | Sito in italiano e inglese con `/it` e `/en`, lingua dal browser, selettore; rilascio di pacchetto e sito | da aprire |
+
+Ordine: F0 → F33 in sequenza.

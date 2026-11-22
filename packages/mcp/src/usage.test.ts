@@ -179,7 +179,11 @@ test("subagentRuns (F34-06): solo i subagent della sessione, con tipo, descrizio
     const meta = (name: string, body: object) => writeFileSync(join(sub, `${name}.meta.json`), JSON.stringify(body));
     meta("agent-a1", { agentType: "design-ux-writer", description: "Testi\ndel modulo", finished: true, prompt: "segreto" });
     meta("agent-b2", { agentType: "<script>", description: "x".repeat(300) });
-    writeFileSync(join(sub, "agent-a1.jsonl"), "{}");
+    const start = new Date(Date.now() - 10_000).toISOString();
+    writeFileSync(join(sub, "agent-a1.jsonl"), `${JSON.stringify({ type: "user", timestamp: start })}\n{}\n`);
+    // Avviato prima della sessione, .meta.json scritto dopo (F34-R4): l'ora è quella del transcript, quindi resta fuori.
+    meta("agent-d4", { agentType: "Explore", finished: true });
+    writeFileSync(join(sub, "agent-d4.jsonl"), `${JSON.stringify({ type: "user", timestamp: "2020-01-01T00:00:00.000Z" })}\n`);
     writeFileSync(join(sub, "nota.meta.json"), "{}");
     mkdirSync(join(dir, "vecchia", "subagents"), { recursive: true });
     const old = join(dir, "vecchia", "subagents");
@@ -190,6 +194,7 @@ test("subagentRuns (F34-06): solo i subagent della sessione, con tipo, descrizio
     assert.deepEqual(runs.map(({ type, finished }) => [type, finished]).sort(), [["design-ux-writer", true], ["subagent", false]]);
     const writer = runs.find((r) => r.type === "design-ux-writer")!;
     assert.equal(writer.description, "Testi del modulo");
+    assert.equal(writer.time, start, "ora di avvio dal transcript");
     assert.equal(runs.find((r) => r.type === "subagent")!.description.length, 120);
     assert.ok(!JSON.stringify(runs).includes("segreto"), "il prompt non esce");
     assert.deepEqual(await subagentRuns(dir, Date.now() + 60_000), [], "avviati prima della sessione");

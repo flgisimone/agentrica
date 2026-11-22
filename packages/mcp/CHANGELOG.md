@@ -10,6 +10,8 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 ### Nuovo
 - Gerarchia: `list_agents` segna il direttore di ogni reparto; il testo del direttore dice come coordinare gli specialisti, quello di uno specialista a chi riporta e di caricare prima il direttore.
 - Pannello: gli agenti in uso in ordine di chiamata, con il direttore segnato, e una sezione a parte «Subagent di Claude Code» con tipo, descrizione e stato dei subagent avviati nella sessione, letti dai file che Claude Code salva per il progetto.
+- Tool `report`, con il pannello: il resoconto di ciò che un agente ha fatto, che il testo dell'agente chiede a fine compito; il pannello lo mostra sotto l'agente, con il compito intero.
+- Pannello: le valutazioni in una pagina propria, «Valutazioni», con il numero degli agenti da valutare nel menu; un avviso quando un agente nuovo si mette al lavoro o c'è un agente da valutare, anche come notifica di sistema se la attivi.
 
 ### Cambiato
 - Istruzioni del server: direttore prima degli specialisti, un agente alla volta, ordine fra reparti, `agent` invece dei subagent locali salvo richiesta dell'utente.
@@ -17,7 +19,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 - `AGENTS.md` dei progetti nuovi: sezione «Come si consulta un agente»; README dei reparti senza subagent di predefinito.
 
 ### Corretto
-- Pannello: il colore del reparto negli agenti in uso.
+- Pannello: il colore del reparto negli agenti in uso e nei moduli di valutazione; il compito non si tronca più a 120 caratteri; l'ora di avvio dei subagent viene dal loro transcript.
 
 ## 0.9.0 — 2026-11-22
 

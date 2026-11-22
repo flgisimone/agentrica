@@ -46,6 +46,8 @@ export interface Activity {
   /** Il direttore del reparto (agente 01): nella catena del pannello è segnato (F34-07). */
   director: boolean;
   task: string;
+  /** Il resoconto del lavoro fatto, dal tool report (F34): assente finché il modello non lo manda. */
+  report?: string;
 }
 
 /** Le valutazioni viste dal pannello (F20): il server MCP le passa, il pannello non apre connessioni da solo. */
@@ -70,7 +72,9 @@ export interface Panel {
   url: string;
   /** Mostra la domanda nella pagina e aspetta la risposta; con `signal` interrotto la domanda sparisce. */
   ask(question: QuestionInput, signal: AbortSignal): Promise<Answer>;
-  record(activity: Omit<Activity, "time">): void;
+  record(activity: Omit<Activity, "time" | "report">): void;
+  /** Il resoconto dell'ultima chiamata all'agente `id`; false se l'agente non è stato caricato in questa sessione. */
+  report(id: string, summary: string): boolean;
   hasViewers(): boolean;
   close(): Promise<void>;
 }
@@ -366,6 +370,13 @@ export async function startPanel(
       activity.unshift({ ...entry, time: new Date().toISOString() });
       activity.splice(0, activity.length, ...keepActivity(activity));
       changed();
+    },
+    report(id, summary) {
+      const entry = activity.find((a) => a.id === id);
+      if (!entry) return false;
+      entry.report = summary;
+      changed();
+      return true;
     },
     hasViewers: () => viewers.size > 0,
     close() {

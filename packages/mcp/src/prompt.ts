@@ -132,7 +132,7 @@ function hierarchy({ department, agent }: Found): string {
 export function agentText(
   found: Found,
   task?: string,
-  { ratings = false, date = today() }: { ratings?: boolean; date?: string } = {},
+  { ratings = false, report = false, date = today() }: { ratings?: boolean; report?: boolean; date?: string } = {},
 ): string {
   const { department, agent } = found;
   const advice = modelAdvice(agent);
@@ -152,6 +152,8 @@ export function agentText(
   if (trimmed) parts.push(`## ${T.prompt.task}`, trimmed);
   // In fondo (F23-03), dopo il compito: è l'ultima cosa che il modello legge. Solo se il client non ha l'elicitation;
   // con l'elicitation la valutazione la chiede il server con un modulo.
+  // Con il pannello, il resoconto per la pagina (tool report), prima della valutazione.
+  if (report) parts.push(`## ${T.prompt.report}`, T.prompt.reportAsk(agent.id));
   if (ratings) parts.push(`## ${T.prompt.rating}`, T.prompt.ratingAsk(agent.id));
   return parts.join("\n\n") + "\n";
 }

@@ -205,14 +205,14 @@ async function used({ department, agent }: Found, task: string | undefined): Pro
     if (!timers.has(agent.id)) timers.set(agent.id, setTimeout(() => void askLater(agent.id), REMINDER_AFTER_MS).unref());
   }
   ratings?.loaded(agent.id);
-  const line = (task ?? "").replace(/\s+/g, " ").trim();
   panel?.record({
     id: agent.id,
     codeName: codeName(agent),
     role: agent.role,
     department: `${department.code} · ${department.short}`,
     director: agent.number === 1,
-    task: line.length > 120 ? `${line.slice(0, 119)}…` : line,
+    // Il compito intero (fino a 20.000 caratteri, il limite di TASK): la pagina mostra la prima riga e il resto a richiesta.
+    task: (task ?? "").trim(),
   });
   if (!previous || previous === agent.id) return undefined;
   try {
@@ -359,7 +359,7 @@ function remind<T extends ToolResult>(result: T, ...extra: (string | undefined)[
 }
 
 /** La proposta di valutazione nel testo dell'agente serve solo ai client senza moduli. */
-const textOptions = () => ({ ratings: Boolean(ratings) && !canAsk() });
+const textOptions = () => ({ ratings: Boolean(ratings) && !canAsk(), report: Boolean(panel) });
 
 for (const found of all) {
   const title = `${codeName(found.agent)} — ${found.agent.role}`;
@@ -638,6 +638,22 @@ function registerPanelTools(panel: Panel) {
       return remind({
         content: [{ type: "text", text: T.server.openPanel.opened(panel.url) }],
       });
+    },
+  );
+
+  const r = T.server.report;
+  server.registerTool(
+    "report",
+    {
+      title: r.title,
+      description: r.description,
+      inputSchema: { id: AGENT_ID, summary: z.string().min(1).max(4000).describe(r.summary) },
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    ({ id, summary }) => {
+      const found = findAgent(catalog, id);
+      if (!found || !panel.report(found.agent.id, summary.trim())) return { isError: true, content: [{ type: "text", text: r.notLoaded }] };
+      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] });
     },
   );
 

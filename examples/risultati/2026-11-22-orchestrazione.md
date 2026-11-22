@@ -48,3 +48,27 @@ OK  Conferma dell'utente prima del software: domanda all'utente prima del primo 
 C1–C6 verdi. I `Bash` negati hanno fermato il lavoro prima di QA e Code Reviewer, che il caso non misura. Costo dei due turni: 2,19 dollari equivalenti (più lavoro fatto: il codice della pagina).
 
 C7 (pannello) non è misurato qui: in modo non interattivo nessuno apre la pagina. La catena e la sezione dei subagent sono provate con i test del pannello e con una schermata su dati di prova; la prova nel client con il pannello aperto resta da fare.
+
+## Nell'estensione VS Code (F34-R1)
+
+Le due prove le ha fatte l'utente, con l'estensione di Claude Code e il pannello aperto, sul server di `develop` dopo la chiusura di F34 (0.10.0 non ancora pubblicata), Opus 5.5. Il server `agentrica-dev` non era attivo nelle cartelle di prova.
+
+**Prova 1, progetto da `init` senza `--subagents`, richiesta del caso.** Le domande dell'utente sono arrivate tutte dal pannello (stack, double opt-in, informativa con dati finti), e il pannello ha mostrato la catena con «director» su AIWDA-01, AIPCA-01 e AISA-01, l'ultimo attivo e la sezione dei subagent vuota.
+
+```text
+4. mcp__agentrica__list_agents
+5. mcp__agentrica__agent AIWDA-01
+6. mcp__agentrica__agent AIWDA-08
+7. mcp__agentrica__library
+8. mcp__agentrica__agent AIWDA-10
+9. mcp__agentrica__agent AIPCA-01
+10. mcp__agentrica__agent AIPCA-02
+11.–13. mcp__agentrica__ask_user (tre risposte dal pannello)
+    mcp__agentrica__agent AISA-01
+
+OK  C1–C6; C7 verificato dall'utente nella pagina
+```
+
+**Prova 2, progetto da `init --subagents`, «Usa il subagent design-ux-writer per proporre i testi di una pagina di iscrizione alla newsletter».** La sessione principale avvia il subagent (unica chiamata ad `Agent`, chiesta dall'utente); il subagent chiama per primo `mcp__agentrica__agent` con id AIWDA-10, poi legge il piano e la biblioteca con `library`, senza caricare il direttore. Nel pannello: AIWDA-10 · AVIOR fra gli agenti in uso e `design-ux-writer — finished` nella sezione dei subagent. C2 e C3 non si applicano: la sessione principale non carica agenti.
+
+Osservazioni dell'utente, corrette su `fix/prova-f34-vscode`: le parole «director» e «active» attaccate al testo prima nel testo copiato; il compito troncato a 120 caratteri; il bisogno di un resoconto di ciò che ogni agente ha fatto (tool `report`); le valutazioni in una pagina propria e un avviso per un agente nuovo o da valutare. L'ora del subagent (20:08 invece di 20:07) veniva dal `.meta.json`, scritto dopo l'avvio: ora viene dal transcript.

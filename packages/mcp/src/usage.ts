@@ -163,11 +163,28 @@ export interface SubagentRun {
 const MAX_RUNS = 50;
 const MAX_DESCRIPTION = 120;
 
+/** L'ora della prima riga del transcript di un subagent, cioè del suo avvio; undefined se manca o non si legge. */
+async function startedAt(path: string): Promise<number | undefined> {
+  if (!(await readable(path))) return undefined;
+  const lines = createInterface({ input: createReadStream(path, { encoding: "utf8" }), crlfDelay: Infinity });
+  try {
+    for await (const line of lines) {
+      const time = Date.parse(String((JSON.parse(line) as { timestamp?: unknown }).timestamp));
+      return Number.isNaN(time) ? undefined : time;
+    }
+  } catch {
+    // Riga non valida: si usa l'ora del file.
+  } finally {
+    lines.close();
+  }
+  return undefined;
+}
+
 /**
  * I subagent avviati da `since` (ms) nelle sessioni del progetto, dal più vecchio: Claude Code scrive per ognuno
  * `<sessione>/subagents/agent-*.meta.json` con il tipo. Si leggono solo le cartelle cambiate da `since`, e dei file
- * solo i campi di `SubagentRun`; un subagent avviato prima di `since` e finito dopo può comparire (ora di nascita
- * del file non disponibile, es. su alcuni Linux).
+ * solo i campi di `SubagentRun`. L'ora di avvio viene dalla prima riga del transcript del subagent (F34-R4): il
+ * .meta.json nasce dopo, e non tutti i sistemi danno l'ora di nascita di un file.
  */
 export async function subagentRuns(dir: string, since: number): Promise<SubagentRun[]> {
   const runs: SubagentRun[] = [];
@@ -180,8 +197,9 @@ export async function subagentRuns(dir: string, since: number): Promise<Subagent
       if (!/^agent-[\w-]+\.meta\.json$/.test(file)) continue;
       const path = join(sub, file);
       const s = await lstat(path).catch(() => undefined);
-      const born = s ? s.birthtimeMs || s.mtimeMs : 0;
-      if (!s?.isFile() || s.size > 64 * 1024 || born < since) continue;
+      if (!s?.isFile() || s.size > 64 * 1024) continue;
+      const born = (await startedAt(path.replace(/\.meta\.json$/, ".jsonl"))) ?? (s.birthtimeMs || s.mtimeMs);
+      if (born < since) continue;
       const meta = (await readFile(path, "utf8").then(JSON.parse).catch(() => ({}))) as Record<string, unknown>;
       const description = typeof meta.description === "string" ? meta.description.replace(/\p{Cc}/gu, " ").trim() : "";
       runs.push({

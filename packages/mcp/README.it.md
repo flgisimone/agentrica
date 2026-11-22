@@ -231,23 +231,27 @@ Il server apre anche una pagina sul tuo computer da cui segui il progetto e pren
 npx -y @agentrica/mcp@0.10.0 install --no-panel
 ```
 
-Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha quattro pagine, con il menu in alto che conta le scelte in attesa e i rilievi:
+Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha cinque pagine, con il menu in alto che conta le scelte in attesa, i rilievi e gli agenti da valutare:
 
-- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), in ordine di chiamata, con il reparto, il direttore segnato e l'inizio del compito; sotto, in una sezione a parte, i subagent di Claude Code avviati nella sessione (*Subagent di Claude Code*), con tipo, descrizione e stato;
+- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), in ordine di chiamata, con il reparto, il direttore segnato, il compito intero (la prima riga in vista, il resto da aprire) e il resoconto di ciò che ha fatto, se l'agente l'ha mandato con il tool `report`; sotto, in una sezione a parte, i subagent di Claude Code avviati nella sessione (*Subagent di Claude Code*), con tipo, descrizione e stato;
 - **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
 - **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
+- **Valutazioni**: un modulo per ogni agente usato e non ancora valutato (vedi [Valutazioni](#valutazioni)); non c'è con `--no-ratings`;
 - **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella.
 
-Con il pannello il modello ha due tool in più:
+Quando un agente nuovo si mette al lavoro o c'è un agente in più da valutare, la pagina lo dice con un avviso in basso. Con «Attiva le notifiche» lo dice anche con una notifica di sistema quando la scheda del pannello non è in vista; serve il permesso del browser, e la notifica la mostra il browser, senza servizi esterni.
+
+Con il pannello il modello ha tre tool in più:
 
 | Tool | Parametri | Cosa fa |
 |---|---|---|
 | `open_panel` | nessuno | apre la pagina nel browser e ne restituisce l'URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), `header` e `multiple` facoltativi | mostra la scelta nella pagina e restituisce la risposta |
+| `report` | `id` dell'agente, `summary` (al più 4000 caratteri) | salva nel pannello il resoconto di ciò che l'agente ha fatto; il testo di ogni agente chiede di mandarlo a fine compito |
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
-**Cosa fa il pannello.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Con la pagina aperta, ogni 5 secondi guarda nella stessa cartella i file `.meta.json` dei subagent avviati dopo la partenza del server, da cui prende solo tipo, descrizione e stato. Tiene in memoria le ultime 20 chiamate agli agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il pannello ha bisogno della rete locale e di `git`: con il permission model di Node consigliato sopra non parte, e il server funziona senza (con `--panel` esplicito, invece, si ferma con un messaggio).
+**Cosa fa il pannello.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Con la pagina aperta, ogni 5 secondi guarda nella stessa cartella i file `.meta.json` dei subagent avviati dopo la partenza del server, da cui prende solo tipo, descrizione e stato. Tiene in memoria le ultime 20 chiamate agli agenti, con il compito e il resoconto. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il pannello ha bisogno della rete locale e di `git`: con il permission model di Node consigliato sopra non parte, e il server funziona senza (con `--panel` esplicito, invece, si ferma con un messaggio).
 
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, in italiano o in inglese (qui in italiano, con i nomi inglesi fra parentesi), lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa.
 

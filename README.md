@@ -48,7 +48,7 @@ The departments serve twice: they are the **content** of the product and also th
 
 ## Status
 
-Phases F0–F33 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F33 (the website in Italian and English, at `/it` and `/en`) is complete; the 0.9.0 release of package and site is pending.
+Phases F0–F33 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F33 (the website in Italian and English, at `/it` and `/en`) is complete and released with 0.9.0.
 
 ## Getting started
 

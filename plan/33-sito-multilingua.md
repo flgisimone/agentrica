@@ -2,7 +2,7 @@
 
 **Obiettivo**: il sito esiste in italiano e in inglese, con URL `/it` e `/en`, la lingua presa dal browser alla prima visita e un selettore che la ricorda; interfaccia e contenuti degli agenti in una lingua sola per pagina. Alla fine, rilascio insieme di pacchetto 0.9.0 e sito.
 
-> **Stato: completata, rilascio in attesa** (2026-11-22). Branch `fase/f33-sito-multilingua` nei due repository. Fatto tutto tranne F33-07, il rilascio di pacchetto 0.9.0 e sito, che parte solo con l'approvazione esplicita dell'utente (CONVENTIONS §13.8).
+> **Stato: completata** (2026-11-22), con il rilascio 0.9.0 di pacchetto e sito. Branch `fase/f33-sito-multilingua` nei due repository.
 
 **Agenzie**: software (Frontend, DevOps, QA, Performance, Code Reviewer); design (Information Architect per URL e selettore, UX Writer per i testi, Accessibility per `lang` e selettore); privacy (il cookie della lingua e le note legali nelle due lingue).
 
@@ -58,7 +58,7 @@ Nel sito (`agentrica-site`):
 - **F33-06** e2e: le prove esistenti sotto `/it`; `lingua.spec.ts` con redirect da browser italiano e inglese, segmento italiano sotto `/en`, `hreflang`, selettore da mouse e da tastiera, cookie che vince sul browser, pagine inglesi con il catalogo inglese, sitemap e robots, axe su sei pagine inglesi; CSP verificata anche su due pagine inglesi; `/install` confrontata con `README.md`.
 - **F33-09** Il sito accetta l'autore vuoto per le proposte dal server (anche i nomi predefiniti mandati fino alla 0.8.1), lo salva come `null` e la scheda scrive «Utente di Agentrica» o «Agentrica user»; link di rimozione nella lingua della pagina.
 
-Nel pacchetto (0.9.0, non ancora pubblicato):
+Nel pacchetto (0.9.0):
 
 - **F33-08** `legalUrl` in `texts/index.ts`: valutazioni, consumo e progetti puntano a `/it/note-legali#…` o `/en/legal#ratings|usage|projects` secondo la lingua del server.
 - **F33-09** Senza nome da mostrare l'autore parte vuoto; l'anteprima dice «nessuno (il sito scrive …)», così mostra esattamente cosa parte.
@@ -72,10 +72,11 @@ Nel pacchetto (0.9.0, non ancora pubblicato):
 - Revisione visiva (ruoli UI e Accessibility): screenshot a 1440 e 360 px dell'intestazione con il selettore e del menu del telefono; bersagli di 40 px, nessuno scorrimento orizzontale.
 - Revisione privacy (ruoli AIPCA-03 e AIPCA-07): un solo cookie, tecnico, scritto solo alla scelta, con il solo valore della lingua; la navigazione senza scelta non crea cookie (e2e); i due testi delle note legali dicono le stesse cose.
 - Code Reviewer sul diff dei due repository: COMMENT, nessun difetto bloccante; rilievi sotto.
+- **F33-07, rilascio** (2026-11-22, con l'approvazione dell'utente). Pacchetto: PR #26 `develop` → `main`, tag `v0.9.0`, pubblicazione dalla CI con provenance dopo l'approvazione dell'ambiente `npm` (run 45035824059); `latest` su npm 0.9.0; `io.github.flgisimone/agentrica` 0.9.0 `active` e `isLatest` nel registro MCP (`mcp-publisher`, login GitHub dell'utente). Sito: `@agentrica/mcp` 0.9.0 da npm, verify ed e2e verdi (119 prove, una saltata), CI di `develop` verde, PR #16 in `main`, deploy di Vercel. In produzione: radice → `/it` o `/en` secondo il browser, `/agenti/aisa-02` → `/en/agents/aisa-02` con browser inglese, `/en/agenti` → 308, `/en/legal`, `/en/releases` (0.9.0), sitemap e robots 200, `<html lang="en">`, CSP attiva, `POST /api/ratings` vuoto → 400. `develop` e `main` allineati nei due repository.
 
 ## Rilievi aperti
 
-- (P1) **F33-07, rilascio.** Il sito usa `CHANGELOG.en.md`, `loadCatalog(lang)` e `README.it.md` della 0.9.0: finché la 0.9.0 non è su npm, `package.json` del sito resta a 0.8.1 e la sua CI fallisce. Passi: merge in `main` e tag `v0.9.0` del pacchetto (pubblicazione con trusted publishing e registro MCP), poi `@agentrica/mcp` 0.9.0 nel sito (`package.json`, lockfile), verify ed e2e, merge in `main` del sito. Solo con l'approvazione esplicita dell'utente.
+- (P1) F33-07, rilascio: risolto il 2026-11-22 (vedi «Verifiche»).
 - (P3) I link alle note legali dei server fino alla 0.8.1 (`/note-legali#valutazioni`) portano un browser inglese a `/en/legal#valutazioni`: la pagina si apre, ma non scorre alla sezione, che in inglese è `#ratings`. Si risolve da sé con l'aggiornamento alla 0.9.0; se serve prima, ancore italiane di riserva nel testo inglese.
 - (P3) Il manifest dell'app installabile resta in italiano (`lang: "it"`, `start_url: "/"`, che porta comunque alla lingua del browser). Un manifest per lingua solo se qualcuno installa il sito in inglese.
 - (P3) Il modulo della issue «Mostra il tuo progetto» è solo in italiano: la pagina inglese lo dice. Una versione inglese del modulo è una modifica del repository pubblico, da decidere.

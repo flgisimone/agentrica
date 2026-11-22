@@ -36,6 +36,7 @@ export const en: Texts = {
       `The user closed the configuration form: the default values were saved in ${path}, so the form will not appear again. They can be changed with Agentrica's configure command.`,
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
       `Agentrica: ${plural(o.agents, "AI agent", "AI agents")} in ${plural(o.departments, "department", "departments")} (${o.codes}). ` +
+      "All work on the user's project (features, changes, stack choices, phases, audits) goes through Agentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
       "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
       "then load the specialists with agent one at a time, each from the previous one's result, never two in the same response; the director consolidates and presents to the user. " +

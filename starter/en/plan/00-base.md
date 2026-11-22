@@ -8,7 +8,7 @@
 
 ## Proposals to confirm
 
-<!-- Decided with the user when the phase opens, with AskUserQuestion. -->
+<!-- When the phase opens the software director proposes them (AISA-01, with Agentrica's `agent` tool) and they are decided with the user with `ask_user`, in the panel. -->
 
 - Stack and dependency versions (current stable, pinned exactly).
 - Active agencies for this project (AGENTS.md, «Agencies»).

@@ -3,9 +3,11 @@
 - **Agenti**: tutti i reparti, scelti dal modello (nessun `--agents`)
 - **Progetto**: una cartella vuota creata con `npx -y @agentrica/mcp@<versione> init`, alla versione da provare
 - **Perché**: nasce dalla issue di F34. Con la 0.9.0 Claude Code avviava i ruoli come subagent (tool `Agent`) invece di passare dal server MCP, e il pannello non li vedeva. Il caso misura come il modello consulta gli agenti, non la qualità del lavoro.
-- **Richiesta** (primo messaggio della sessione, da copiare così com'è):
+- **Richiesta** (primo messaggio della sessione, da copiare così com'è), senza nominare gli agenti: chi usa Agentrica non deve ricordarsi una frase.
 
-  > Aggiungi al progetto una pagina di iscrizione alla newsletter con l'email e il consenso al trattamento dei dati. Utilizza gli agenti di agentrica.
+  > Aggiungi al progetto una pagina di iscrizione alla newsletter con l'email e il consenso al trattamento dei dati.
+
+  Variante della issue, con la frase in fondo: «… Utilizza gli agenti di agentrica.» Fino alla regola principale di `AGENTS.md` (2026-11-22) solo questa variante usava gli agenti.
 
 ## Criteri
 

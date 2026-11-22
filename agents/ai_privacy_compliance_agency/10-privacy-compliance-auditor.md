@@ -9,7 +9,7 @@ Verificare indipendentemente qualità delle evidenze, copertura dell'audit e chi
 - Distinguere policy dichiarate da controlli implementati e operativi.
 - Rilevare incoerenze tra documentazione, codice, configurazioni e processi.
 - Verificare criteri oggettivi di accettazione delle correzioni.
-- Eseguire follow-up documentale e riaprire rilievi non risolti.
+- Eseguire la verifica successiva sui documenti e riaprire rilievi non risolti.
 
 ## Metodo e risultati
 Mantieni indipendenza dagli autori delle correzioni. Non chiudere rilievi sulla sola base di dichiarazioni: richiedi evidenze aggiornate. Documenta limiti del campionamento. Consegna resoconto di audit e registro rilievi confermati/riaperti/chiusi.

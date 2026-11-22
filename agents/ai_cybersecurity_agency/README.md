@@ -33,7 +33,7 @@
 
 ## Collaborazione con le altre agenzie
 - Software: ciclo di sviluppo sicuro, revisione del codice, threat model, vulnerabilità e correzioni.
-- Web Design: UX sicura e privacy-by-design.
+- Web Design: UX sicura e protezione dei dati fin dalla progettazione.
 - Privacy & Compliance: GDPR, data breach, DPIA, conservazione dei dati e fornitori.
 - Business & Product: rischio cyber nei prodotti, fornitori e business case.
 

@@ -27,6 +27,7 @@
   {
     "id": "ocse",
     "name": "OCSE (OECD)",
+    "nameEn": "OECD",
     "level": 1,
     "url": "https://www.oecd.org/",
     "domains": [
@@ -39,6 +40,7 @@
   {
     "id": "banca-italia",
     "name": "Banca d'Italia",
+    "nameEn": "Bank of Italy (Banca d'Italia)",
     "level": 1,
     "url": "https://www.bancaditalia.it/",
     "domains": [
@@ -51,6 +53,7 @@
   {
     "id": "agenzia-entrate",
     "name": "Agenzia delle Entrate",
+    "nameEn": "Italian Revenue Agency (Agenzia delle Entrate)",
     "level": 1,
     "url": "https://www.agenziaentrate.gov.it/",
     "domains": [
@@ -63,6 +66,7 @@
   {
     "id": "normattiva",
     "name": "Normattiva (Codice del consumo)",
+    "nameEn": "Normattiva (Italian Consumer Code)",
     "level": 1,
     "url": "https://www.normattiva.it/",
     "domains": [
@@ -75,6 +79,7 @@
   {
     "id": "eur-lex",
     "name": "EUR-Lex (diritto dei consumatori dell'Unione)",
+    "nameEn": "EUR-Lex (EU consumer law)",
     "level": 1,
     "url": "https://eur-lex.europa.eu/",
     "domains": [
@@ -87,6 +92,7 @@
   {
     "id": "agcm",
     "name": "Autorità garante della concorrenza e del mercato (AGCM)",
+    "nameEn": "Italian Competition Authority (AGCM)",
     "level": 1,
     "url": "https://www.agcm.it/",
     "domains": [
@@ -100,6 +106,7 @@
   {
     "id": "agcom",
     "name": "Autorità per le garanzie nelle comunicazioni (AGCOM)",
+    "nameEn": "Italian Communications Authority (AGCOM)",
     "level": 1,
     "url": "https://www.agcom.it/",
     "domains": [
@@ -112,6 +119,7 @@
   {
     "id": "commissione-ue",
     "name": "Commissione europea",
+    "nameEn": "European Commission",
     "level": 1,
     "url": "https://commission.europa.eu/index_en",
     "domains": [
@@ -124,6 +132,7 @@
   {
     "id": "registro-imprese",
     "name": "Registro delle imprese (bilanci e atti depositati)",
+    "nameEn": "Italian Business Register (filed accounts and deeds)",
     "level": 1,
     "url": "https://www.registroimprese.it/",
     "domains": [
@@ -136,6 +145,7 @@
   {
     "id": "sec-edgar",
     "name": "SEC EDGAR (documenti depositati)",
+    "nameEn": "SEC EDGAR (filed documents)",
     "level": 1,
     "url": "https://www.sec.gov/edgar/search/",
     "domains": [

@@ -2,6 +2,7 @@
   {
     "id": "tc39",
     "name": "TC39 ed ECMAScript (ECMA-262)",
+    "nameEn": "TC39 and ECMAScript (ECMA-262)",
     "level": 1,
     "url": "https://tc39.es/",
     "domains": [
@@ -38,6 +39,7 @@
   {
     "id": "ietf-rfc",
     "name": "RFC Editor (RFC IETF)",
+    "nameEn": "RFC Editor (IETF RFCs)",
     "level": 1,
     "url": "https://www.rfc-editor.org/",
     "domains": [
@@ -51,6 +53,7 @@
   {
     "id": "mcp-spec",
     "name": "Model Context Protocol, specifica",
+    "nameEn": "Model Context Protocol, specification",
     "level": 1,
     "url": "https://modelcontextprotocol.io/specification",
     "domains": [
@@ -66,6 +69,7 @@
   {
     "id": "nodejs",
     "name": "Node.js, documentazione e release",
+    "nameEn": "Node.js, documentation and releases",
     "level": 2,
     "url": "https://nodejs.org/en/about/previous-releases",
     "domains": [
@@ -79,6 +83,7 @@
   {
     "id": "typescript",
     "name": "TypeScript, documentazione e release notes",
+    "nameEn": "TypeScript, documentation and release notes",
     "level": 2,
     "url": "https://www.typescriptlang.org/docs/",
     "domains": [
@@ -95,6 +100,7 @@
   {
     "id": "react",
     "name": "React, documentazione e blog",
+    "nameEn": "React, documentation and blog",
     "level": 2,
     "url": "https://react.dev/",
     "domains": [
@@ -108,6 +114,7 @@
   {
     "id": "nextjs",
     "name": "Next.js, documentazione e blog",
+    "nameEn": "Next.js, documentation and blog",
     "level": 2,
     "url": "https://nextjs.org/docs",
     "domains": [
@@ -120,6 +127,7 @@
   {
     "id": "npm",
     "name": "npm, documentazione e release della CLI",
+    "nameEn": "npm, documentation and CLI releases",
     "level": 2,
     "url": "https://docs.npmjs.com/",
     "domains": [
@@ -135,6 +143,7 @@
   {
     "id": "playwright",
     "name": "Playwright, documentazione e release notes",
+    "nameEn": "Playwright, documentation and release notes",
     "level": 2,
     "url": "https://playwright.dev/docs/release-notes",
     "domains": [
@@ -150,6 +159,7 @@
   {
     "id": "tailwind",
     "name": "Tailwind CSS, documentazione e release",
+    "nameEn": "Tailwind CSS, documentation and releases",
     "level": 2,
     "url": "https://tailwindcss.com/docs",
     "domains": [
@@ -165,6 +175,7 @@
   {
     "id": "shadcn-ui",
     "name": "shadcn/ui, documentazione e changelog",
+    "nameEn": "shadcn/ui, documentation and changelog",
     "level": 2,
     "url": "https://ui.shadcn.com/docs",
     "domains": [
@@ -202,6 +213,7 @@
   {
     "id": "vercel-docs",
     "name": "Vercel, documentazione e changelog",
+    "nameEn": "Vercel, documentation and changelog",
     "level": 2,
     "url": "https://vercel.com/docs",
     "domains": [
@@ -215,6 +227,7 @@
   {
     "id": "neon-docs",
     "name": "Neon, documentazione e changelog",
+    "nameEn": "Neon, documentation and changelog",
     "level": 2,
     "url": "https://neon.com/docs",
     "domains": [

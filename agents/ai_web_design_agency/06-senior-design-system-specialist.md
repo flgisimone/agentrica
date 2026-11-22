@@ -11,7 +11,7 @@ Verificare coerenza, riuso e governo del linguaggio visivo e dei componenti cond
 - Confronta componenti equivalenti tra pagine e moduli.
 - Individua variazioni non motivate in dimensioni, colori, spaziature, stati e comportamento.
 - Identifica opportunità di standardizzazione e componenti che sembrano duplicati.
-- Valuta stati hover, focus, disabled, loading, error e success quando osservabili.
+- Valuta stati hover, focus, disattivato, caricamento, errore e successo quando osservabili.
 - Stima l'ampiezza dell'impatto di una correzione condivisa.
 
 ## Metodo

@@ -95,7 +95,9 @@ test("sourceProblems: campi, livelli, accesso, feed e id unici", () => {
     [[{ ...SOURCE, level: 4 }], /livello/],
     [[{ ...SOURCE, access: "pagamento" }], /solo citata/],
     [[{ ...SOURCE, url: undefined }], /url mancante/],
-    [[{ ...SOURCE, name: "Vedi www.x.test" }], /nome con URL/],
+    [[{ ...SOURCE, name: "Vedi www.x.test" }], /name con URL/],
+    [[{ ...SOURCE, nameEn: "See www.x.test" }], /nameEn con URL/],
+    [[{ ...SOURCE, nameEn: "" }], /nameEn mancante/],
     [[{ ...SOURCE, extra: 1 }], /campo sconosciuto/],
     [[{ ...SOURCE, update: "rss" }], /feed mancante/],
     [[{ ...SOURCE, update: "rss", feed: "https://altro.test/rss" }], /feed dominio/],
@@ -124,4 +126,13 @@ test("parseCard in inglese: etichette inglesi, quelle italiane non valgono", () 
   assert.equal(card.review, "2027-05-19");
   assert.equal(card.notion, "Sintesi.");
   assert.throws(() => parseCard(CARD, "01-x.md", "p", [SOURCE], ROLES, "en"), /Source · Version/);
+});
+
+test("nameEn (F32): le schede inglesi usano il nome inglese della fonte, quelle italiane il nome", () => {
+  const source = { ...SOURCE, name: "OWASP, progetto", nameEn: "OWASP, project" };
+  const en = CARD.replace("Fonte:", "Source:").replace("Versione:", "Version:").replace("Verificata il:", "Verified on:")
+    .replace("Da ricontrollare entro:", "Recheck by:").replace("Ruoli:", "Roles:").replace("## Nozione", "## Notion").replace("## Come si applica", "## How it applies");
+  assert.equal(parseCard(en, "01-x.md", "p", [source], ROLES, "en").source.name, "OWASP, project");
+  assert.equal(parseCard(CARD, "01-x.md", "p", [source], ROLES).source.name, "OWASP, progetto");
+  assert.equal(parseCard(en, "01-x.md", "p", [SOURCE], ROLES, "en").source.name, "OWASP Top 10", "senza nameEn vale name");
 });

@@ -117,10 +117,13 @@ Le può lanciare la sessione, sono richieste senza dati:
 
 - **P4** superata (2026-11-22): mcprush mostra Agentrica MCP v0.8.0 · 21 Nov 2026, Grade A, Local · stdio, 8 tools, MIT. Chiusa la voce di F22.
 
+- **P5** superata (2026-11-22, dopo il rilascio del sito: PR #12 di `agentrica-site`, `main` e `develop` su 967a2c1). Ritiro con un codice inventato: `Registrato.` (200), quindi `RATINGS_WRITER_URL` e il permesso di `005-grants.sql` funzionano senza creare righe; una valutazione vuota su `/api/ratings` risponde 400, non 503. Run del job da Vercel: `GET /api/ratings/purge` 200 da `vercel-cron/1.0`, quindi `RATINGS_PURGER_URL`, `purge_ratings()` e `purge_projects()`. Note legali in produzione con la frase su Neon e Databricks. Chiusa la voce di F20 sulle credenziali del proprietario.
+
 ### Rilievi nuovi delle prove
 
 - **F30-R1 (P3)** Il testo scritto dopo `/mcp__agentrica__progetto` è l'argomento `rimuovi`: chi scrive il nome del progetto riceve «il codice della proposta non è valido». Il messaggio potrebbe dire anche che per proporre un progetto il comando va lanciato senza argomenti. Chiuso in F30 (scelta dell'utente, 2026-11-22): il messaggio dice come proporre un progetto, senza ripetere il testo scritto; test in `showcase.test.ts`.
 - **F30-R2 (P3)** `npm run projects -- --add` scrive la data di approvazione in UTC (`toISOString`): fra mezzanotte e l'una (le due d'estate) segna il giorno prima. Chiuso in F30 (scelta dell'utente, 2026-11-22): `dayInRome` in `src/lib/projects.ts` del sito, usato da `scripts/projects.ts`; test con mezzanotte e ora legale.
+- **F30-R3 (P3)** Il log di P5 mostra le funzioni del sito a Washington (iad1) e il database a Francoforte: i dati delle route attraversano gli Stati Uniti e ogni chiamata al database fa due volte l'oceano. Correzione chiesta dall'utente il 2026-11-22: `regions: ["fra1"]` in `vercel.json` di `agentrica-site` (branch `fix/regione-fra1`), rilascio in `main` e prova sull'header `x-vercel-id`.
 
 ## Criteri di accettazione
 
@@ -159,7 +162,7 @@ Le può lanciare la sessione, sono richieste senza dati:
 
 ## Rilievi aperti
 
-- (P2) Prova in produzione di F30-02 e F30-03 (P5): dopo il merge in `main` di `agentrica-site`, `curl` sul ritiro con un codice inventato (atteso `Registrato.`), Run del job su Vercel (atteso JSON con `deleted` e `projects`), frase su Neon nelle note legali. Chiude anche la voce di F20 sulle credenziali del proprietario.
+- (P2) Prova in produzione di F30-02 e F30-03 (P5): dopo il merge in `main` di `agentrica-site`, `curl` sul ritiro con un codice inventato (atteso `Registrato.`), Run del job su Vercel (atteso JSON con `deleted` e `projects`), frase su Neon nelle note legali. Chiude anche la voce di F20 sulle credenziali del proprietario. Chiuso il 2026-11-22: P5 superata (vedi «Esiti»).
 - (P3) Correzioni del pacchetto (F30-07, F30-08, F30-09, F30-R1, README, subagent, regole comuni) senza rilascio: arrivano agli utenti con la prossima versione.
 
 Restano aperti nelle loro fasi, per decisione dell'utente: F23-10 (Windows), le misure dei 50 ruoli (F24, con le voci di F13 e F15), le due voci di F21 sulle statistiche sopra le soglie, la verifica a mano di OECD, ISO e Gartner (F25).

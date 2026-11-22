@@ -233,22 +233,27 @@ The server also opens a page on your computer where you follow the project and m
 npx -y @agentrica/mcp@0.10.0 install --no-panel
 ```
 
-Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has three pages, with a menu at the top counting pending choices and findings:
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has five pages, with a menu at the top counting pending choices, findings and agents to rate:
 
-- **Sessione** (session): pending choices (*Da decidere*, to decide), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agents in use*), in call order, with the department, the director marked and the start of the task; below, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
-- **Piano** (plan): the open phase with backlog and acceptance criteria, and all project phases;
-- **Rilievi** (findings): open findings from phases and audits, by priority and department.
+- **Session**: pending choices (*To decide*), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agents in use*), in call order, with the department, the director marked, the whole task (the first line in view, the rest on demand) and the report of what it did, if the agent sent one with the `report` tool; below, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
+- **Plan**: the open phase with backlog and acceptance criteria, and all project phases;
+- **Findings**: open findings from phases and audits, by priority and department;
+- **Ratings**: a form for each agent used and not yet rated (see [Ratings](#ratings)); absent with `--no-ratings`;
+- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table.
 
-With the panel the model has two more tools:
+When a new agent starts working or there is one more agent to rate, the page says so with a notice at the bottom. With «Turn on notifications» it also shows a system notification when the panel tab is not in view; it needs the browser's permission, and the browser shows it, without external services.
+
+With the panel the model has three more tools:
 
 | Tool | Input | What it does |
 |---|---|---|
 | `open_panel` | none | opens the page in the browser and returns its URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), optional `header` and `multiple` | shows the choice in the page and returns the answer |
+| `report` | agent `id`, `summary` (at most 4000 characters) | saves in the panel the report of what the agent did; each agent's text asks to send it at the end of the task |
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
-**What the panel does.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder and, with the page open, every 5 seconds the `.meta.json` files of the subagents started after the server, in the folder where Claude Code saves the project (`~/.claude/projects/<project>/`), taking only type, description and state. It keeps the last 20 agent calls in memory. It writes no files and sends no data off your computer, except the ratings and token totals you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The panel needs the local network and `git`: with the Node permission model recommended above it does not start, and the server works without it (with an explicit `--panel`, instead, it stops with a message).
+**What the panel does.** The server opens a random port on `127.0.0.1` only, reads `plan/`, `audit/` and the git status (`git status`) of the project folder and, with the page open, every 5 seconds the `.meta.json` files of the subagents started after the server, in the folder where Claude Code saves the project (`~/.claude/projects/<project>/`), taking only type, description and state. It keeps the last 20 agent calls in memory, with the task and the report. It writes no files and sends no data off your computer, except the ratings and token totals you send from the page. The page opens only with the random token in the URL, valid for that session; requests from other sites or with another `Host` are refused. The panel needs the local network and `git`: with the Node permission model recommended above it does not start, and the server works without it (with an explicit `--panel`, instead, it stops with a message).
 
 **Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in English or in Italian (shown here in English, with the Italian names in brackets), the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what.
 

@@ -139,3 +139,12 @@ td { font-variant-numeric: tabular-nums; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (prefers-reduced-motion: no-preference) { .option, .filters button { transition: background-color 120ms; } }
+
+/* F34: compito intero, resoconto, avvisi. */
+details.task summary { cursor: pointer; }
+details.task .full { margin: 4px 0 0; white-space: pre-line; color: var(--foreground); }
+.report { grid-column: 2; margin-top: 4px; padding: 6px 10px; border-left: 2px solid var(--dept, var(--border)); }
+.report p { margin: 2px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
+.muted { font-style: italic; }
+.toast { position: fixed; right: 16px; bottom: 16px; left: 16px; max-width: 28rem; margin: 0 0 0 auto; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--secondary); color: var(--foreground); z-index: 10; }
+#notify { margin-top: 0; }

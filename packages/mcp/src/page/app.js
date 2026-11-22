@@ -30,6 +30,24 @@ function inline(text) {
   return plain.split("`").map((part, i) => (i % 2 ? el("code", {}, part) : part));
 }
 
+/** La sigla del reparto dall'id dell'agente («AISA-02» → «AISA»): è il valore di data-dept che colora il reparto. */
+const dept = (agent) => agent.id.split("-")[0];
+
+// Compiti aperti dall'utente: la lista si ridisegna a ogni aggiornamento e non deve richiuderli.
+const openTasks = new Set();
+
+/** Il compito: la prima riga in vista, il testo intero in un <details> se è più lungo. */
+function taskBlock(key, text) {
+  const first = text.split("\n")[0];
+  if (first === text && text.length <= 120) return el("span", { class: "task" }, text);
+  return el(
+    "details",
+    { class: "task", open: openTasks.has(key), ontoggle: (e) => (e.currentTarget.open ? openTasks.add(key) : openTasks.delete(key)) },
+    el("summary", {}, first.length > 120 ? `${first.slice(0, 119)}…` : first),
+    el("p", { class: "full" }, text),
+  );
+}
+
 const time = (iso) => new Date(iso).toLocaleTimeString(TEXTS.locale, { hour: "2-digit", minute: "2-digit" });
 const empty = (text) => el("p", { class: "empty" }, text);
 
@@ -136,17 +154,22 @@ function renderActivity({ activity }) {
           chain.map((a, i) =>
             el(
               "li",
-              { "data-dept": a.id.split("-")[0], class: i === chain.length - 1 ? "active" : null },
+              { "data-dept": dept(a), class: i === chain.length - 1 ? "active" : null },
               el("time", { datetime: a.time, class: "mono" }, time(a.time)),
               el(
                 "span",
                 { class: "dot" },
                 el("strong", {}, a.codeName),
                 ` — ${a.role}${TEXTS.department(a.department)}`,
-                a.director && el("span", { class: "tag" }, TEXTS.director),
-                i === chain.length - 1 && el("span", { class: "now" }, TEXTS.active),
+                // Lo spazio separa le parole anche nel testo copiato e per i lettori di schermo (il margine non basta).
+                a.director && [" ", el("span", { class: "tag" }, TEXTS.director)],
+                i === chain.length - 1 && [" ", el("span", { class: "now" }, TEXTS.active)],
               ),
-              a.task && el("span", { class: "task" }, a.task),
+              a.task && taskBlock(`${a.id} ${a.time}`, a.task),
+              // Il resoconto dal tool report; per l'agente attivo, che lavora ancora, non si segnala la mancanza.
+              a.report
+                ? el("div", { class: "report" }, el("strong", {}, TEXTS.report), el("p", {}, a.report))
+                : i < chain.length - 1 && el("span", { class: "task muted" }, TEXTS.noReport),
             ),
           ),
         ),
@@ -176,8 +199,6 @@ function renderSubagents({ subagents = [] }) {
 
 // Un modulo per agente usato, creato una volta sola: un aggiornamento non deve cancellare un commento a metà.
 function renderRatings({ activity, rating }) {
-  const card = $("ratings-card");
-  card.hidden = !rating;
   if (!rating) return;
   const box = $("ratings");
   const agents = [...new Map(activity.map((a) => [a.id, a])).values()];
@@ -191,7 +212,7 @@ function renderRatings({ activity, rating }) {
   if (!box.querySelector("[data-agent]")) box.append(empty(TEXTS.rateEmpty));
 }
 
-const ratedNote = (agent) => el("p", { class: "sent", "data-agent": agent.id, "data-dept": agent.department }, el("strong", {}, agent.codeName), TEXTS.rated);
+const ratedNote = (agent) => el("p", { class: "sent", "data-agent": agent.id, "data-dept": dept(agent) }, el("strong", {}, agent.codeName), TEXTS.rated);
 
 function rateForm(agent, rating) {
   const name = `r-${agent.id}`;
@@ -201,7 +222,7 @@ function rateForm(agent, rating) {
   );
   const form = el(
     "form",
-    { class: "question", "data-agent": agent.id, "data-dept": agent.department, onsubmit: (event) => sendRating(event, agent, form, error) },
+    { class: "question", "data-agent": agent.id, "data-dept": dept(agent), onsubmit: (event) => sendRating(event, agent, form, error) },
     el(
       "fieldset",
       {},
@@ -341,9 +362,14 @@ function renderFindings({ project }) {
   );
 }
 
-function renderCounts({ project, questions }) {
+function renderCounts({ project, questions, activity, rating }) {
   const waiting = questions.length;
   const findings = project.findings.length;
+  // Valutazioni (pagina propria): gli agenti usati non ancora valutati; la scheda c'è solo con le valutazioni accese.
+  const toRate = rating ? new Set(activity.map((a) => a.id).filter((id) => !rating.rated.includes(id))).size : 0;
+  $("tab-ratings").hidden = !rating;
+  $("count-ratings").textContent = toRate ? String(toRate) : "";
+  $("count-ratings").parentElement.setAttribute("aria-label", TEXTS.ratingsLabel(toRate));
   $("count-session").textContent = waiting ? String(waiting) : "";
   $("count-findings").textContent = String(findings);
   // Il solo numero non dice cosa conta: il nome completo è per i lettori di schermo.
@@ -464,11 +490,13 @@ async function previewShare() {
 }
 
 // Una vista per volta, scelta dall'hash: avanti e indietro del browser funzionano senza toccare il server.
-const VIEWS = ["session", "plan", "findings", "usage"];
+const VIEWS = ["session", "plan", "findings", "ratings", "usage"];
 
 function showView(moveFocus) {
   const name = location.hash.slice(1);
-  const current = VIEWS.includes(name) ? name : VIEWS[0];
+  // Senza valutazioni (--no-ratings) la pagina non c'è: il suo indirizzo porta alla sessione.
+  const allowed = VIEWS.filter((v) => v !== "ratings" || !state || state.rating);
+  const current = allowed.includes(name) ? name : VIEWS[0];
   for (const view of document.querySelectorAll(".view")) view.hidden = view.dataset.view !== current;
   for (const tab of document.querySelectorAll(".tabs a")) {
     if (tab.dataset.view === current) tab.setAttribute("aria-current", "page");
@@ -479,8 +507,43 @@ function showView(moveFocus) {
   if (state) $("share").hidden = !state.rating;
 }
 
+// Avvisi (F34): un agente nuovo in uso o un agente in più da valutare. Nella pagina sempre; con il permesso del browser
+// anche come notifica di sistema, quando la scheda del pannello non è in vista.
+let seen = null;
+let pendingRatings = null;
+
+function notify(text) {
+  const toast = $("toast");
+  toast.textContent = text;
+  toast.hidden = false;
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => (toast.hidden = true), 8000);
+  if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
+    new Notification(TITLE, { body: text });
+  }
+}
+
+function watchChanges({ activity, rating }) {
+  const keys = new Set(activity.map((a) => `${a.id} ${a.time}`));
+  const toRate = rating ? new Set(activity.map((a) => a.id).filter((id) => !rating.rated.includes(id))).size : 0;
+  if (seen) {
+    const added = activity.filter((a) => !seen.has(`${a.id} ${a.time}`));
+    if (added.length > 0) notify(TEXTS.newAgent(added[0].codeName));
+    else if (toRate > pendingRatings) notify(TEXTS.toRate(toRate));
+  }
+  seen = keys;
+  pendingRatings = toRate;
+}
+
+function renderNotifyButton() {
+  const button = $("notify");
+  button.hidden = !("Notification" in window) || Notification.permission !== "default";
+}
+
 function render() {
   if (!state) return;
+  watchChanges(state);
+  renderNotifyButton();
   renderHeader(state);
   renderCounts(state);
   renderQuestions(state);
@@ -488,6 +551,7 @@ function render() {
   renderSubagents(state);
   renderRatings(state);
   renderPhases(state);
+  if (location.hash === "#ratings" && !state.rating) showView(false);
   renderFilters();
   renderFindings(state);
   $("share").hidden = !state.rating;
@@ -516,6 +580,7 @@ function connect() {
 }
 
 window.addEventListener("hashchange", () => showView(true));
+$("notify").addEventListener("click", () => Notification.requestPermission().then(renderNotifyButton));
 $("usage-refresh").addEventListener("click", renderUsage);
 $("share-preview").addEventListener("click", previewShare);
 showView(false);

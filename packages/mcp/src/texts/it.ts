@@ -46,7 +46,7 @@ export const it = {
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}.` +
       (o.panel
-        ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina. Il pannello mostra in ordine gli agenti caricati con agent; i subagent di Claude Code solo in una sezione a parte."
+        ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina. Il pannello mostra in ordine gli agenti caricati con agent; i subagent di Claude Code solo in una sezione a parte. Quando un agente finisce il suo compito, manda il suo resoconto con report."
         : "") +
       (o.ratings
         ? " Se il testo di un agente chiede di proporre la valutazione, fallo con rate_agent (una volta per agente per sessione); niente parte senza il sì dell'utente all'anteprima." +
@@ -173,6 +173,16 @@ export const it = {
       needRating: "Serve il voto da 1 a 5 per preparare l'anteprima.",
     },
 
+    report: {
+      title: "Resoconto di un agente per il pannello",
+      description:
+        "Salva nel pannello locale il resoconto di ciò che un agente ha fatto, mostrato sotto l'agente fra gli agenti in uso. " +
+        "Chiamalo quando l'agente finisce il suo compito, prima di passare a un altro. Resta sul computer dell'utente.",
+      summary: "Cosa ha fatto l'agente, in breve: risultato, file toccati, decisioni prese o da prendere, rilievi aperti. Al più 4000 caratteri.",
+      saved: (name: string) => `Resoconto di ${name} salvato nel pannello.`,
+      notLoaded: "Resoconto non salvato: l'agente non è stato caricato in questa sessione (tool agent).",
+    },
+
     openPanel: {
       title: "Apri il pannello di Agentrica",
       description: "Apre nel browser il pannello locale del progetto (fasi, backlog, rilievi, agenti in uso, scelte in attesa) e ne restituisce l'URL.",
@@ -238,6 +248,9 @@ export const it = {
     rules: "Regole comuni del reparto",
     role: (role: string) => `Ruolo: ${role}`,
     task: "Compito",
+    report: "Resoconto",
+    reportAsk: (id: string) =>
+      `Quando hai finito il compito, manda il resoconto al pannello con il tool report (id ${id}): cosa hai fatto, file toccati, decisioni e rilievi aperti, in breve.`,
     rating: "Valutazione",
     ratingAsk: (id: string) =>
       `Quando hai finito il compito, proponi all'utente di valutarti da 1 a 5 con un commento facoltativo (tool rate_agent, id ${id}), una volta sola in questa sessione; se rifiuta, non insistere.`,

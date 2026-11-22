@@ -44,7 +44,7 @@ export const en: Texts = {
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}.` +
       (o.panel
-        ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section."
+        ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section. When an agent finishes its task, send its report with report."
         : "") +
       (o.ratings
         ? " If an agent's text asks you to offer a rating, do it with rate_agent (once per agent per session); nothing is sent without the user's yes to the preview." +
@@ -171,6 +171,16 @@ export const en: Texts = {
       needRating: "A score from 1 to 5 is needed to prepare the preview.",
     },
 
+    report: {
+      title: "Report of an agent for the panel",
+      description:
+        "Saves in the local panel the report of what an agent did, shown under the agent among the agents in use. " +
+        "Call it when the agent finishes its task, before moving to another one. It stays on the user's computer.",
+      summary: "What the agent did, briefly: result, files touched, decisions taken or to take, open findings. At most 4000 characters.",
+      saved: (name: string) => `Report of ${name} saved in the panel.`,
+      notLoaded: "Report not saved: the agent has not been loaded in this session (agent tool).",
+    },
+
     openPanel: {
       title: "Open the Agentrica panel",
       description: "Opens the project's local panel in the browser (phases, backlog, findings, agents in use, pending choices) and returns its URL.",
@@ -236,6 +246,9 @@ export const en: Texts = {
     rules: "Department common rules",
     role: (role: string) => `Role: ${role}`,
     task: "Task",
+    report: "Report",
+    reportAsk: (id: string) =>
+      `When you have finished the task, send the report to the panel with the report tool (id ${id}): what you did, files touched, decisions and open findings, briefly.`,
     rating: "Rating",
     ratingAsk: (id: string) =>
       `When you have finished the task, offer the user to rate you from 1 to 5 with an optional comment (rate_agent tool, id ${id}), only once in this session; if they decline, do not insist.`,

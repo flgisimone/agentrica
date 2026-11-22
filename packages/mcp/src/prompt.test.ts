@@ -165,6 +165,14 @@ test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell
   assert.deepEqual(measured, ["AIBPD-05:sonnet", "AICA-04:sonnet", "AIPCA-02:sonnet", "AISA-08:haiku", "AISA-09:sonnet"]);
 });
 
+test("resoconto: con il pannello il testo chiede il tool report, prima della valutazione", () => {
+  const qa = findAgent(catalog, "aisa-08")!;
+  assert.doesNotMatch(agentText(qa), /tool report/);
+  const text = agentText(qa, "Prova", { report: true, ratings: true });
+  assert.match(text, /## Resoconto\n\n.*tool report \(id AISA-08\)/);
+  assert.ok(text.indexOf("## Resoconto") < text.indexOf("## Valutazione"));
+});
+
 test("gerarchia (F34-04): il direttore coordina, lo specialista riporta al direttore o, fuori squadra, all'utente", () => {
   assert.match(agentText(findAgent(catalog, "aisa-01")!), /Sei il direttore del reparto: .*department AISA/);
   assert.match(agentText(findAgent(catalog, "aiwda-08")!), /Riporti a AIWDA-01 · [A-Z]+, il direttore del reparto: .*agent \(id AIWDA-01\)/);

@@ -174,6 +174,25 @@ test("subagent di Claude Code nello stato, separati dagli agenti del server (F34
   }
 });
 
+test("resoconto (tool report): sull'ultima chiamata dell'agente, solo per agenti caricati; compito intero", async () => {
+  const panel = await startPanel(root);
+  try {
+    const cookie = await login(panel.url);
+    const state = async () => JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    const task = `Prima riga\n${"x".repeat(500)}`;
+    assert.equal(panel.report("AISA-02", "Fatto."), false, "agente non caricato");
+    panel.record({ id: "AISA-02", codeName: "AISA-02 · ALTAIR", role: "Architect", department: "AISA · Software", director: false, task });
+    panel.record({ id: "AISA-08", codeName: "AISA-08 · DENEB", role: "QA", department: "AISA · Software", director: false, task: "Test" });
+    panel.record({ id: "AISA-02", codeName: "AISA-02 · ALTAIR", role: "Architect", department: "AISA · Software", director: false, task: "Di nuovo" });
+    assert.equal(panel.report("AISA-02", "Confini rivisti.\nNessun rilievo."), true);
+    const { activity } = await state();
+    assert.deepEqual(activity.map((a: { id: string; report?: string }) => [a.id, a.report ?? null]), [["AISA-02", "Confini rivisti.\nNessun rilievo."], ["AISA-08", null], ["AISA-02", null]]);
+    assert.equal(activity[2].task, task, "compito intero");
+  } finally {
+    await panel.close();
+  }
+});
+
 test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async () => {
   const panel = await startPanel(root);
   const base = new URL(panel.url).origin;
@@ -256,7 +275,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "ask_user", "library", "list_agents", "open_panel", "rate_agent", "share_usage", "submit_project"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "ask_user", "library", "list_agents", "open_panel", "rate_agent", "report", "share_usage", "submit_project"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;
@@ -269,7 +288,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
       state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     } while (state.questions.length === 0);
     assert.deepEqual(state.project.problems, [], "il piano di questo repository si legge");
-    assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.director, a.task]), [["AISA-02", "AISA · Software", false, "Rivedi i confini del modulo."]]);
+    assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.director, a.task]), [["AISA-02", "AISA · Software", false, "Rivedi   i confini\ndel modulo."]]);
     assert.deepEqual(state.subagents, [], "nessun file di Claude Code in questa HOME");
 
     const headers = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };

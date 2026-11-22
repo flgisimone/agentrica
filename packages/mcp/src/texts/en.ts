@@ -37,10 +37,14 @@ export const en: Texts = {
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
       `Agentrica: ${plural(o.agents, "AI agent", "AI agents")} in ${plural(o.departments, "department", "departments")} (${o.codes}). ` +
       "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
+      "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
+      "then load the specialists with agent one at a time, each from the previous one's result, never two in the same response; the director consolidates and presents to the user. " +
+      "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → user confirmation. " +
+      "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}.` +
       (o.panel
-        ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL."
+        ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section."
         : "") +
       (o.ratings
         ? " If an agent's text asks you to offer a rating, do it with rate_agent (once per agent per session); nothing is sent without the user's yes to the preview." +
@@ -119,6 +123,7 @@ export const en: Texts = {
       title: "List the Agentrica agents",
       description: "Lists the Agentrica agents with id, code name, role, department and, where it was measured, the recommended model. The department is optional.",
       department: "Department code.",
+      lead: (director: string) => `Director: ${director}. For a task of the department load them first, then the specialists one at a time.`,
     },
 
     agent: {
@@ -216,7 +221,15 @@ export const en: Texts = {
       "You work in the user's project. The common rules of your department and your role file follow: apply them to the project as it is, without assuming a stack, commands or files you have not checked. " +
       "If the project is empty or lacks what your role must examine, say so and propose the first steps (goal, stack, structure) to confirm with the user; do not invent findings or choose the stack on your own. " +
       "These texts are in English: reply in the language the user writes in.",
-    subagent: (advice: string) => `${advice} If the client allows it, give the task to a subagent with this model; otherwise continue with the session model.`,
+    subagent: (advice: string) =>
+      `${advice} If the project has Agentrica's subagents (init --subagents) and the user asks to use them, the one for this role already has this model; otherwise continue with the session model.`,
+    lead: (code: string) =>
+      `You are the director of the department: for the task choose the specialists needed and the order (list_agents with department ${code} lists them). ` +
+      "The session loads them with agent one at a time, each from the previous one's result; at the end you consolidate the results and present them to the user, who confirms them.",
+    reportsTo: (director: string, id: string) =>
+      `You report to ${director}, the director of the department: if they have not been loaded yet in this session, load them first with agent (id ${id}). ` +
+      "You work on the part they assign you, from the previous specialist's result, and hand over to them.",
+    noLead: "The director of the department is not in this server's squad: work directly on the task and hand over to the user.",
     present: (intro: string) =>
       `The user must always know who is working. Introduce yourself at the start with this line: «${intro}». ` +
       "Repeat it when you switch to another agent or leave the role, and sign findings and the final summary with your code name.",
@@ -407,12 +420,15 @@ export const en: Texts = {
 
   init: {
     subagentProject: (name: string) => `of the ${name} project.`,
+    subagentFirst: (id: string) =>
+      `First step: call the \`mcp__agentrica__agent\` tool of the Agentrica MCP server with id \`${id}\` and the task you received. ` +
+      "The instructions it returns are your role, with the department's common rules, and make the agent appear in the panel: with them there is no need to reread the files named below, which remain the reference if the tool does not answer. Do not load the director of the department: the main session started you and coordinates.",
     inRepo: "git: the folder is already in a repository, no commit",
     noGit: "git: not installed, repository not created",
     commit: "Project created with @agentrica/mcp init",
     commitFailed: "git: commit failed (set user.name and user.email), files left staged on main",
     committed: "git: initial commit on main, develop branch active",
-    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en]',
+    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents]',
     badName: "--name: a name on one line is required",
     taken: (files: string, more: number) => `no files written, these already exist: ${files}${more > 0 ? ` and ${more} more` : ""}`,
     created: (name: string, dir: string, count: number) => `Project «${name}» created in ${dir}: ${count} files.`,

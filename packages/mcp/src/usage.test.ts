@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
-import { claudeProjectDir, family, groupTotals, MAIN, MAX_SHARE_ROWS, parseLine, readUsage, shareRows, totals, usageReport, type Usage } from "./usage.ts";
+import { claudeProjectDir, family, groupTotals, MAIN, MAX_SHARE_ROWS, parseLine, readUsage, shareRows, subagentRuns, totals, usageReport, type Usage } from "./usage.ts";
 
 const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-")));
 const outside = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-out-")));
@@ -169,4 +169,32 @@ test("shareRows: solo gli ultimi 30 giorni, senza righe vuote, al più 300 dalle
   assert.equal(cut.rows.length, MAX_SHARE_ROWS);
   assert.equal(cut.omitted, 5);
   assert.ok(cut.rows.every((r) => r.day === "2026-11-18"), "restano fuori le più vecchie");
+});
+
+test("subagentRuns (F34-06): solo i subagent della sessione, con tipo, descrizione corta e stato, dal più vecchio", async () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-runs-")));
+  try {
+    const sub = join(dir, "sessione-1", "subagents");
+    mkdirSync(sub, { recursive: true });
+    const meta = (name: string, body: object) => writeFileSync(join(sub, `${name}.meta.json`), JSON.stringify(body));
+    meta("agent-a1", { agentType: "design-ux-writer", description: "Testi\ndel modulo", finished: true, prompt: "segreto" });
+    meta("agent-b2", { agentType: "<script>", description: "x".repeat(300) });
+    writeFileSync(join(sub, "agent-a1.jsonl"), "{}");
+    writeFileSync(join(sub, "nota.meta.json"), "{}");
+    mkdirSync(join(dir, "vecchia", "subagents"), { recursive: true });
+    const old = join(dir, "vecchia", "subagents");
+    writeFileSync(join(old, "agent-c3.meta.json"), JSON.stringify({ agentType: "Explore" }));
+    utimesSync(old, new Date(0), new Date(0));
+
+    const runs = await subagentRuns(dir, Date.now() - 60_000);
+    assert.deepEqual(runs.map(({ type, finished }) => [type, finished]).sort(), [["design-ux-writer", true], ["subagent", false]]);
+    const writer = runs.find((r) => r.type === "design-ux-writer")!;
+    assert.equal(writer.description, "Testi del modulo");
+    assert.equal(runs.find((r) => r.type === "subagent")!.description.length, 120);
+    assert.ok(!JSON.stringify(runs).includes("segreto"), "il prompt non esce");
+    assert.deepEqual(await subagentRuns(dir, Date.now() + 60_000), [], "avviati prima della sessione");
+    assert.deepEqual(await subagentRuns(join(dir, "manca"), 0), []);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

@@ -37,7 +37,13 @@
           </section>
           <section aria-labelledby="h-agents" class="card">
             <h2 id="h-agents">Agenti in uso</h2>
+            <p class="hint">In ordine di chiamata, con il direttore di ogni reparto segnato: di regola si carica per primo, poi gli specialisti uno alla volta.</p>
             <div id="activity"></div>
+          </section>
+          <section aria-labelledby="h-subagents" class="card">
+            <h2 id="h-subagents">Subagent di Claude Code</h2>
+            <p class="hint">Avviati con il tool Agent di Claude Code, fuori dal server di Agentrica. Qui ne vedi tipo, descrizione e stato, letti dai file che Claude Code salva per il progetto; i testi delle conversazioni non si leggono. Un subagent creato con <code>init --subagents</code> che carica il suo agente compare anche fra gli agenti in uso.</p>
+            <div id="subagents"></div>
           </section>
           <section aria-labelledby="h-ratings" class="card" id="ratings-card" hidden>
             <h2 id="h-ratings">Valuta gli agenti</h2>

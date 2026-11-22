@@ -19,7 +19,7 @@
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/business-product/` e rimandano a questi file.
+- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/business-product/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Chief Business & Product Officer riceve l'obiettivo.

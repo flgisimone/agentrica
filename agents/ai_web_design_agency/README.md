@@ -17,7 +17,7 @@
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/web-design/` e rimandano a questi file.
+- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/web-design/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Director definisce perimetro, pagine e flussi da analizzare e attiva gli specialisti pertinenti.

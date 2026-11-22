@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, cardText, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
+import { agentText, cardText, directorOf, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -156,13 +156,21 @@ test("agentText: nessun agente supera i 10 KB, con la proposta di valutazione e 
 test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell'agente", () => {
   const qa = findAgent(catalog, "aisa-08")!;
   assert.equal(qa.agent.model, "haiku");
-  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di Agentrica\. Se il client lo permette/);
+  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di Agentrica\. Se il progetto ha i subagent di Agentrica \(init --subagents\)/);
   const architect = findAgent(catalog, "aisa-02")!;
   assert.equal(architect.agent.model, "inherit");
   assert.equal(modelAdvice(architect.agent), undefined);
   assert.doesNotMatch(agentText(architect), /Modello consigliato/);
   const measured = catalog.flatMap((d) => d.agents.filter((a) => a.model !== "inherit").map((a) => `${a.id}:${a.model}`));
   assert.deepEqual(measured, ["AIBPD-05:sonnet", "AICA-04:sonnet", "AIPCA-02:sonnet", "AISA-08:haiku", "AISA-09:sonnet"]);
+});
+
+test("gerarchia (F34-04): il direttore coordina, lo specialista riporta al direttore o, fuori squadra, all'utente", () => {
+  assert.match(agentText(findAgent(catalog, "aisa-01")!), /Sei il direttore del reparto: .*department AISA/);
+  assert.match(agentText(findAgent(catalog, "aiwda-08")!), /Riporti a AIWDA-01 · [A-Z]+, il direttore del reparto: .*agent \(id AIWDA-01\)/);
+  const alone = findAgent(selectSquad(loadCatalog(), "aiwda-08"), "aiwda-08")!;
+  assert.match(agentText(alone), /Il direttore del reparto non è nella squadra/);
+  assert.equal(directorOf(alone.department), undefined);
 });
 
 test("subagent: model: uguale al modello consigliato del catalogo per il file di ruolo", () => {

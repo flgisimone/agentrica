@@ -124,20 +124,50 @@ async function submit(event, question, form, error) {
   }, 5000);
 }
 
+// La catena degli agenti (F34-07): in ordine di chiamata, il direttore segnato, l'ultimo caricato attivo.
 function renderActivity({ activity }) {
+  const chain = [...activity].reverse();
   $("activity").replaceChildren(
-    activity.length === 0
+    chain.length === 0
       ? empty(TEXTS.noActivity)
       : el(
           "ol",
           { class: "activity" },
-          activity.map((a, i) =>
+          chain.map((a, i) =>
             el(
               "li",
-              { "data-dept": a.department, class: i === 0 ? "active" : null },
+              { "data-dept": a.id.split("-")[0], class: i === chain.length - 1 ? "active" : null },
               el("time", { datetime: a.time, class: "mono" }, time(a.time)),
-              el("span", { class: "dot" }, el("strong", {}, a.codeName), ` — ${a.role}${TEXTS.department(a.department)}`, i === 0 && el("span", { class: "now" }, TEXTS.active)),
+              el(
+                "span",
+                { class: "dot" },
+                el("strong", {}, a.codeName),
+                ` — ${a.role}${TEXTS.department(a.department)}`,
+                a.director && el("span", { class: "tag" }, TEXTS.director),
+                i === chain.length - 1 && el("span", { class: "now" }, TEXTS.active),
+              ),
               a.task && el("span", { class: "task" }, a.task),
+            ),
+          ),
+        ),
+  );
+}
+
+// I subagent di Claude Code (F34-06), a parte: non passano dal server, il pannello li legge dai file di Claude Code.
+function renderSubagents({ subagents = [] }) {
+  $("subagents").replaceChildren(
+    subagents.length === 0
+      ? empty(TEXTS.noSubagents)
+      : el(
+          "ol",
+          { class: "activity" },
+          subagents.map((s) =>
+            el(
+              "li",
+              {},
+              el("time", { datetime: s.time, class: "mono" }, time(s.time)),
+              el("span", {}, el("strong", {}, s.type), ` — ${s.finished ? TEXTS.subagentDone : TEXTS.subagentRunning}`),
+              s.description && el("span", { class: "task" }, s.description),
             ),
           ),
         ),
@@ -455,6 +485,7 @@ function render() {
   renderCounts(state);
   renderQuestions(state);
   renderActivity(state);
+  renderSubagents(state);
   renderRatings(state);
   renderPhases(state);
   renderFilters();

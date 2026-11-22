@@ -152,6 +152,49 @@ export async function readUsage(dir: string): Promise<UsageRead> {
   return { dir, records: [...byKey.values()], skipped };
 }
 
+/** Un subagent di Claude Code visto dal pannello (F34-06): solo tipo, descrizione breve, stato e ora. */
+export interface SubagentRun {
+  time: string;
+  type: string;
+  description: string;
+  finished: boolean;
+}
+
+const MAX_RUNS = 50;
+const MAX_DESCRIPTION = 120;
+
+/**
+ * I subagent avviati da `since` (ms) nelle sessioni del progetto, dal più vecchio: Claude Code scrive per ognuno
+ * `<sessione>/subagents/agent-*.meta.json` con il tipo. Si leggono solo le cartelle cambiate da `since`, e dei file
+ * solo i campi di `SubagentRun`; un subagent avviato prima di `since` e finito dopo può comparire (ora di nascita
+ * del file non disponibile, es. su alcuni Linux).
+ */
+export async function subagentRuns(dir: string, since: number): Promise<SubagentRun[]> {
+  const runs: SubagentRun[] = [];
+  for (const entry of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
+    if (!entry.isDirectory()) continue;
+    const sub = join(dir, entry.name, "subagents");
+    const changed = await lstat(sub).catch(() => undefined);
+    if (!changed?.isDirectory() || changed.mtimeMs < since) continue;
+    for (const file of await readdir(sub).catch(() => [])) {
+      if (!/^agent-[\w-]+\.meta\.json$/.test(file)) continue;
+      const path = join(sub, file);
+      const s = await lstat(path).catch(() => undefined);
+      const born = s ? s.birthtimeMs || s.mtimeMs : 0;
+      if (!s?.isFile() || s.size > 64 * 1024 || born < since) continue;
+      const meta = (await readFile(path, "utf8").then(JSON.parse).catch(() => ({}))) as Record<string, unknown>;
+      const description = typeof meta.description === "string" ? meta.description.replace(/\p{Cc}/gu, " ").trim() : "";
+      runs.push({
+        time: new Date(born).toISOString(),
+        type: label(meta.agentType, "subagent"),
+        description: description.length > MAX_DESCRIPTION ? `${description.slice(0, MAX_DESCRIPTION - 1)}…` : description,
+        finished: meta.finished === true,
+      });
+    }
+  }
+  return runs.sort((a, b) => a.time.localeCompare(b.time)).slice(-MAX_RUNS);
+}
+
 /** Somme di un gruppo di risposte. Ogni numero è misurato, tranne `modelSavingUsd`, che è una stima. */
 export interface Totals {
   requests: number;

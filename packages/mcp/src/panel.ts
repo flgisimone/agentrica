@@ -13,7 +13,7 @@ import { readProject } from "./project.ts";
 import { MAX_COMMENT, notice, type SendResult } from "./ratings.ts";
 import { shareNotice, type SharePayload, type ShareResult } from "./share.ts";
 import { lang, T } from "./texts/index.ts";
-import { usageReport } from "./usage.ts";
+import { usageReport, type SubagentRun } from "./usage.ts";
 
 export interface Choice {
   label: string;
@@ -43,6 +43,8 @@ export interface Activity {
   codeName: string;
   role: string;
   department: string;
+  /** Il direttore del reparto (agente 01): nella catena del pannello è segnato (F34-07). */
+  director: boolean;
   task: string;
 }
 
@@ -90,6 +92,8 @@ export function keepActivity<T extends { id: string }>(list: T[], max = MAX_ACTI
   });
 }
 const KEEPALIVE_MS = 25_000;
+// Ogni quanto si guarda se Claude Code ha avviato subagent, solo con la pagina aperta (F34-06).
+const SUBAGENTS_MS = 5_000;
 
 const SECURITY_HEADERS = {
   "Content-Security-Policy": "default-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
@@ -181,8 +185,16 @@ export function openBrowser(url: string): void {
   }
 }
 
-/** `update` dà l'avviso di versione nuova (F23), se c'è: il pannello lo mostra in un banner. */
-export async function startPanel(root: string, ratings?: PanelRatings, update: () => string | undefined = () => undefined): Promise<Panel> {
+/**
+ * `update` dà l'avviso di versione nuova (F23), se c'è: il pannello lo mostra in un banner. `subagents` dà i subagent
+ * di Claude Code avviati in questa sessione (F34-06), che la pagina mostra a parte dagli agenti caricati dal server.
+ */
+export async function startPanel(
+  root: string,
+  ratings?: PanelRatings,
+  update: () => string | undefined = () => undefined,
+  subagents: () => Promise<SubagentRun[]> = async () => [],
+): Promise<Panel> {
   const pageDir = join(import.meta.dirname, "page");
   const token = randomBytes(32).toString("hex");
   const pages = Object.fromEntries(Object.entries(pageFiles()).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
@@ -229,7 +241,8 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
       const questions = [...pending.values()].map((p) => p.question);
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
       const rating = ratings ? { notice: notice(), maxComment: MAX_COMMENT, rated } : null;
-      return send(res, 200, JSON.stringify({ project, questions, activity, rating, update: update() ?? null }), "application/json; charset=utf-8");
+      const runs = await subagents();
+      return send(res, 200, JSON.stringify({ project, questions, activity, subagents: runs, rating, update: update() ?? null }), "application/json; charset=utf-8");
     }
     // Consumo di token dai file di Claude Code del progetto (F24): si legge solo quando la pagina apre la vista.
     if (req.method === "GET" && url.pathname === "/api/usage") {
@@ -305,6 +318,22 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
   const port = (server.address() as AddressInfo).port;
   const keepalive = setInterval(() => viewers.forEach((viewer) => viewer.write(": ping\n\n")), KEEPALIVE_MS);
   keepalive.unref();
+  // Claude Code non avvisa il server quando avvia un subagent: con la pagina aperta si rileggono i file e, se sono
+  // cambiati, la pagina si aggiorna.
+  let seen = "";
+  const watch = setInterval(() => {
+    if (viewers.size === 0) return;
+    void subagents()
+      .then((runs) => {
+        const now = JSON.stringify(runs);
+        if (now !== seen) {
+          seen = now;
+          changed();
+        }
+      })
+      .catch(() => {});
+  }, SUBAGENTS_MS);
+  watch.unref();
   server.unref();
 
   return {
@@ -341,6 +370,7 @@ export async function startPanel(root: string, ratings?: PanelRatings, update: (
     hasViewers: () => viewers.size > 0,
     close() {
       clearInterval(keepalive);
+      clearInterval(watch);
       for (const viewer of viewers) viewer.end();
       return new Promise((resolve) => server.close(() => resolve()));
     },

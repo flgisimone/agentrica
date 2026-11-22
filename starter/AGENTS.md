@@ -2,6 +2,8 @@
 
 Prima di implementare leggi le sezioni pertinenti di [CONVENTIONS.md](CONVENTIONS.md) e il file della fase in [plan/](plan/README.md): queste regole li completano, non li sostituiscono (CONVENTIONS §16).
 
+**Regola principale: ogni lavoro sul progetto passa dagli agenti di Agentrica, anche se l'utente non li nomina.** Una funzione nuova, una modifica, una scelta di stack, la fase F0, un audit o un rilievo da correggere si cominciano dal server MCP di Agentrica: carica i suoi tool con ToolSearch (`mcp__agentrica__`), poi `list_agents` e il direttore del reparto con `agent`, come dice «Come si consulta un agente». Le domande all'utente si fanno con `ask_user`, che le mostra nel pannello. Senza agenti si lavora solo se l'utente lo chiede, o per le risposte brevi che non toccano il progetto.
+
 <!-- Se il framework scrive da solo un blocco di regole qui in testa (per esempio Next.js con `next dev`), lascialo e committalo. -->
 
 ## Esplorare il codice: tokensave
@@ -63,8 +65,8 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 
 ### Due regole che valgono sempre
 
-- **Attivazione su richiesta.** Le agenzie non sono un sistema sempre acceso: nessun agente parte senza un'attività che lo richieda, e non si avviano mai tutte le agenzie o tutti gli agenti insieme. Per ogni attività si scelgono l'agenzia e i soli specialisti pertinenti, nel momento in cui servono.
-- **Conferma dell'utente.** Ogni decisione finale delle agenzie è una proposta finché l'utente non la conferma: priorità e contenuto del backlog, requisiti e specifiche, scelte di architettura e di modello dei dati, rilievi accettati o respinti, chiusura di un'attività, dipendenze nuove, commit, merge, push, deploy e migrazioni. Si presentano le alternative con le motivazioni (con AskUserQuestion) e si procede solo dopo il suo ok. A fine fase commit, merge in `develop`, push e `tokensave sync` si confermano con un'unica domanda (CONVENTIONS §13.7).
+- **Solo gli agenti pertinenti.** Ogni lavoro sul progetto passa dagli agenti (regola principale, in testa), ma non si avviano mai tutte le agenzie o tutti gli agenti insieme. Per ogni attività si scelgono l'agenzia e i soli specialisti pertinenti, nel momento in cui servono.
+- **Conferma dell'utente.** Ogni decisione finale delle agenzie è una proposta finché l'utente non la conferma: priorità e contenuto del backlog, requisiti e specifiche, scelte di architettura e di modello dei dati, rilievi accettati o respinti, chiusura di un'attività, dipendenze nuove, commit, merge, push, deploy e migrazioni. Si presentano le alternative con le motivazioni (con `ask_user`, nel pannello di Agentrica; AskUserQuestion solo se il pannello è spento) e si procede solo dopo il suo ok. A fine fase commit, merge in `develop`, push e `tokensave sync` si confermano con un'unica domanda (CONVENTIONS §13.7).
 
 ### Come si consulta un agente
 

@@ -15,6 +15,7 @@ Each version with its npm publication date and its changes by type: Added, Chang
 - Panel: ratings on a page of their own, «Ratings», with the number of agents to rate in the menu; a notice when a new agent starts working or there is an agent to rate, also as a system notification if you turn it on.
 
 ### Changed
+- Agents are used even without naming them: a main rule at the top of `AGENTS.md` of new projects and in the server instructions, all work on the project goes through the agents; F0 decisions are proposed by the software director, and questions to the user go through `ask_user`.
 - Server instructions: director before the specialists, one agent at a time, order across departments, `agent` instead of local subagents unless the user asks.
 - The recommended model no longer asks to hand the task to a subagent.
 - `AGENTS.md` of new projects: «How to consult an agent» section; department READMEs without subagents by default.

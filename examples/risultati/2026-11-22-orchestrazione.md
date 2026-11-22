@@ -87,3 +87,11 @@ OK  C1–C6
 ```
 
 Nel pannello, viste dall'utente: la Sessione con gli ultimi tre agenti e il link alla pagina Agenti; la pagina Agenti con tre colonne (Design, Privacy, Software), il direttore in cima a ognuna, i numeri #1–#7 e il resoconto apribile; l'avviso «New agent at work: AISA-06 · POLLUX» all'arrivo dello specialista. AISA-01 ha mandato il suo resoconto (il piano per POLLUX) prima di passare allo specialista, quindi «coordina il reparto» non compare. Non verificata la notifica di sistema con la scheda in secondo piano. Ritocco dopo la prova: la prima riga del compito in peso normale e colore secondario.
+
+## Senza «Utilizza gli agenti di agentrica»
+
+Prima prova dell'utente in VS Code, con la richiesta senza la frase, sul server di `main` (0.10.0 non pubblicata): il modello legge il piano, vede F0 da fare e chiede lo stack con il suo `AskUserQuestion`, senza ToolSearch né tool di Agentrica e senza il pannello. Cause: `AGENTS.md` dello starter non diceva che ogni lavoro passa dagli agenti, e «Attivazione su richiesta» si leggeva come «solo se l'utente li chiede»; il piano F0 e la regola della conferma nominavano solo `AskUserQuestion`. Il rilascio 0.10.0 è stato fermato (run annullato, tag cancellato) prima della pubblicazione.
+
+Correzione su `fix/agenti-senza-frase`: regola principale in testa ad `AGENTS.md` dello starter (ogni lavoro sul progetto passa dagli agenti, anche se l'utente non li nomina; ToolSearch, `list_agents`, direttore; domande con `ask_user`), «Solo gli agenti pertinenti» al posto di «Attivazione su richiesta», la stessa regola nelle istruzioni del server, F0 e conferme con il direttore software e `ask_user`.
+
+Dopo la correzione: controllo da terminale (primo turno, `claude -p`) e prova dell'utente in VS Code, entrambi senza la frase. Il modello parte da solo con `list_agents` → AIBPD-01, manda il resoconto con `report` e fa le domande dal pannello (`ask_user`); nessun subagent; C1–C6 verdi per la parte fatta.

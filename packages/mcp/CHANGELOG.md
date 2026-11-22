@@ -15,6 +15,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 - Pannello: le valutazioni in una pagina propria, «Valutazioni», con il numero degli agenti da valutare nel menu; un avviso quando un agente nuovo si mette al lavoro o c'è un agente da valutare, anche come notifica di sistema se la attivi.
 
 ### Cambiato
+- Gli agenti si usano anche senza nominarli: regola principale in testa ad `AGENTS.md` dei progetti nuovi e nelle istruzioni del server, ogni lavoro sul progetto passa dagli agenti; le decisioni di F0 le propone il direttore software, e le domande all'utente passano da `ask_user`.
 - Istruzioni del server: direttore prima degli specialisti, un agente alla volta, ordine fra reparti, `agent` invece dei subagent locali salvo richiesta dell'utente.
 - Il modello consigliato non chiede più di affidare il compito a un subagent.
 - `AGENTS.md` dei progetti nuovi: sezione «Come si consulta un agente»; README dei reparti senza subagent di predefinito.

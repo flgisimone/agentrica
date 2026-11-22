@@ -37,7 +37,13 @@
           </section>
           <section aria-labelledby="h-agents" class="card">
             <h2 id="h-agents">Agents in use</h2>
+            <p class="hint">In call order, with the director of each department marked: as a rule it is loaded first, then the specialists one at a time.</p>
             <div id="activity"></div>
+          </section>
+          <section aria-labelledby="h-subagents" class="card">
+            <h2 id="h-subagents">Claude Code subagents</h2>
+            <p class="hint">Started with Claude Code's Agent tool, outside the Agentrica server. Here you see their type, description and state, read from the files Claude Code saves for the project; conversation texts are not read. A subagent created with <code>init --subagents</code> that loads its agent also appears among the agents in use.</p>
+            <div id="subagents"></div>
           </section>
           <section aria-labelledby="h-ratings" class="card" id="ratings-card" hidden>
             <h2 id="h-ratings">Rate the agents</h2>

@@ -22,12 +22,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, cardText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentSummary, agentText, cardText, codeName, directorOf, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, ratingForm, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { createShare, SHARE_URL, sharePreviewText, type Share } from "./share.ts";
 import { createShowcase, parseProjectFields, projectForm, PROJECTS_URL, projectFormMessage, projectPreviewText, sentText, type Showcase } from "./showcase.ts";
 import { chooseLang, isLang, lang, setLang, T } from "./texts/index.ts";
-import { claudeProjectDir, readUsage, shareRows, type Usage } from "./usage.ts";
+import { claudeProjectDir, readUsage, shareRows, subagentRuns, type Usage } from "./usage.ts";
 import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "./update.ts";
 
 // Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
@@ -182,7 +182,9 @@ if (withPanel && (panelAllowed || flags.panel)) {
       previewShare: () => draftShare(share),
       confirmShare: (code: string) => share.confirm(code),
     };
-    panel = await startPanel(realpathSync(process.cwd()), panelRatings, () => update);
+    const root = realpathSync(process.cwd());
+    const started = Date.now();
+    panel = await startPanel(root, panelRatings, () => update, () => subagentRuns(claudeProjectDir(root), started));
   } catch (error) {
     if (flags.panel) fail(T.server.panelFailed(reason(error)));
     process.stderr.write(`agentrica: ${T.server.panelSkipped(reason(error).replace(/\p{Cc}/gu, " "))}\n`);
@@ -209,6 +211,7 @@ async function used({ department, agent }: Found, task: string | undefined): Pro
     codeName: codeName(agent),
     role: agent.role,
     department: `${department.code} · ${department.short}`,
+    director: agent.number === 1,
     task: line.length > 120 ? `${line.slice(0, 119)}…` : line,
   });
   if (!previous || previous === agent.id) return undefined;
@@ -502,6 +505,7 @@ server.registerTool(
       .flatMap((d) => [
         `## ${d.code} — ${d.name}`,
         d.summary,
+        ...[directorOf(d)].filter((a) => a !== undefined).map((a) => T.server.listAgents.lead(codeName(a))),
         ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
         "",
       ]);

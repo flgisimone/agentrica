@@ -19,7 +19,7 @@
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/software/` e rimandano a questi file.
+- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/software/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Director/CTO analizza la richiesta e coordina il lavoro.
@@ -38,7 +38,7 @@
 ## Uso con Claude Code
 Estrai la cartella nel repository o nella directory di progetto. Chiedi a Claude Code di leggere questo README e i file degli agenti prima di assegnare il lavoro. Integra queste istruzioni con le convenzioni e i permessi effettivi del repository.
 
-I file Markdown definiscono ruoli e comportamenti: non creano da soli subagent eseguibili. L'attivazione dei ruoli dipende dalla configurazione e dalle funzionalità di Claude Code.
+I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con il tool `agent` del server MCP di Agentrica.
 
 ## Biblioteca
 Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.

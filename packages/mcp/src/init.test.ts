@@ -1,4 +1,4 @@
-// Prove di `init` (F18): file del progetto nuovo, segnaposto, subagent con il nome del progetto, conflitti e git.
+// Prove di `init` (F18): file del progetto nuovo, segnaposto, subagent con il nome del progetto (con --subagents, F34), conflitti e git.
 // Il comando gira come lo lancia npx: server.ts con «init», da una cartella temporanea.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -20,14 +20,14 @@ const init = (...args: string[]) =>
   spawnSync(process.execPath, [server, "init", "--lang", "it", ...args], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
 
 test("i subagent di Agentrica nominano il progetto una volta sola, nella frase che init sostituisce", () => {
-  const files = [...projectFiles("X", "/x", "2026-01-01").keys()].filter((file) => file.startsWith(".claude/"));
+  const files = [...projectFiles("X", "/x", "2026-01-01", "linux", "it", true).keys()].filter((file) => file.startsWith(".claude/"));
   assert.equal(files.length, 56);
   const dir = join(AGENTS_DIR, "..");
   for (const file of files) assert.equal(readFileSync(join(dir, file), "utf8").split(subagentProject("it")).length, 2, file);
 });
 
 test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, senza segnaposto", () => {
-  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01", "linux");
+  const files = projectFiles("Prova App", "/tmp/prova", "2026-01-01", "linux", "it", true);
   // I file di ruolo, le schede della biblioteca e i fonti.json dei reparti (F25).
   const agents = readdirSync(AGENTS_DIR, { recursive: true }).filter((f) => /\.md$|(^|[\\/])fonti\.json$/.test(String(f))).length;
   assert.equal([...files.keys()].filter((file) => file.startsWith("agents/")).length, agents);
@@ -41,13 +41,30 @@ test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, s
   assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@agentrica/mcp@${VERSION}`]);
   for (const [file, text] of files) {
     assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
-    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /Agentrica/, file);
+    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /progetto Agentrica/, file);
+  }
+});
+
+test("subagent solo con --subagents (F34-05): con il flag caricano il loro agente dal server per primo", () => {
+  assert.ok(![...projectFiles("X", "/x", "2026-01-01", "linux", "it").keys()].some((file) => file.startsWith(".claude/")));
+  for (const lang of ["it", "en"] as const) {
+    const files = [...projectFiles("X", "/x", "2026-01-01", "linux", lang, true)].filter(([file]) => file.startsWith(".claude/"));
+    assert.equal(files.length, 56, lang);
+    for (const [file, text] of files) {
+      assert.match(text, /^tools: .+, mcp__agentrica__agent, mcp__agentrica__library$/m, file);
+      assert.match(text, /^---\n[\s\S]+?\n---\n\n(Primo passo|First step): .+`mcp__agentrica__agent`.+`A[A-Z]+-\d{2}`.+\n\n\S/, file);
+    }
+    const cto = new Map(files).get(".claude/agents/software/sw-cto.md")!;
+    assert.match(cto, /id `AISA-01`/);
   }
 });
 
 test("init crea il progetto con git su main e develop, e il pannello ne legge il piano", () => {
   const result = init("nuovo", "--name", "Nuovo");
   assert.equal(result.status, 0, result.stderr);
+  assert.throws(() => readdirSync(join(tmp, "nuovo", ".claude")), "senza --subagents niente .claude/");
+  assert.equal(init("con-subagent", "--subagents").status, 0);
+  assert.equal(readdirSync(join(tmp, "con-subagent", ".claude", "agents"), { recursive: true }).filter((f) => String(f).endsWith(".md")).length, 56);
   assert.match(result.stdout, /Progetto «Nuovo» creato/);
   const dir = join(tmp, "nuovo");
   const git = (...args: string[]) => spawnSync("git", args, { cwd: dir, encoding: "utf8" }).stdout.trim();
@@ -83,8 +100,8 @@ test("docs: il quadro delle agenzie di starter/ è uguale a quello del repositor
 });
 
 test("init in inglese (F32): starter e subagent di starter/en/, agents/ intero, stessi file dell'italiano", () => {
-  const it = projectFiles("X", "/x", "2026-01-01", "linux", "it");
-  const en = projectFiles("Test App", "/tmp/test", "2026-01-01", "linux", "en");
+  const it = projectFiles("X", "/x", "2026-01-01", "linux", "it", true);
+  const en = projectFiles("Test App", "/tmp/test", "2026-01-01", "linux", "en", true);
   assert.deepEqual([...en.keys()].sort(), [...it.keys()].sort(), "stessi percorsi nelle due lingue");
   assert.ok(![...it.keys()].some((file) => file.startsWith("en/")), "l'italiano non copia starter/en/");
   assert.match(en.get("AGENTS.md")!, /^# Rules for agents/);

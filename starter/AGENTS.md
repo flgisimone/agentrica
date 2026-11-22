@@ -49,7 +49,7 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 ## Agenzie
 
-Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); in `.claude/agents/` ogni ruolo è anche un subagent che rimanda al suo file (56 in tutto). Il quadro completo è in `docs/AI Multi-Agency System.md`.
+Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); gli agenti si consultano dal server MCP di Agentrica (`.mcp.json`), come dice «Come si consulta un agente». Il quadro completo è in `docs/AI Multi-Agency System.md`.
 
 | Agenzia | Ruoli | Prefisso | Cosa fa | Attiva |
 |---|---|---|---|---|
@@ -59,16 +59,28 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 | Business & Product (`agents/ai_business_product_development_agency/`) | 12 | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | <!-- sì/no --> |
 | Cybersecurity (`agents/ai_cybersecurity_agency/`) | 12 | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | <!-- sì/no --> |
 
-<!-- In F0 si decide con l'utente quali agenzie restano attive. Quelle non attive si tolgono da agents/ e .claude/agents/ (quando servono si ricopiano dalle stesse cartelle del pacchetto `@agentrica/mcp`) e la decisione va nella tabella di plan/README.md. Togli dai subagent anche i ruoli che il progetto non usa. -->
+<!-- In F0 si decide con l'utente quali agenzie restano attive. Quelle non attive si tolgono da agents/ e, se il progetto ha i subagent, da .claude/agents/ (quando servono si ricopiano dalle stesse cartelle del pacchetto `@agentrica/mcp`) e la decisione va nella tabella di plan/README.md. Togli dai subagent, se ci sono, anche i ruoli che il progetto non usa. -->
 
 ### Due regole che valgono sempre
 
 - **Attivazione su richiesta.** Le agenzie non sono un sistema sempre acceso: nessun agente parte senza un'attività che lo richieda, e non si avviano mai tutte le agenzie o tutti gli agenti insieme. Per ogni attività si scelgono l'agenzia e i soli specialisti pertinenti, nel momento in cui servono.
 - **Conferma dell'utente.** Ogni decisione finale delle agenzie è una proposta finché l'utente non la conferma: priorità e contenuto del backlog, requisiti e specifiche, scelte di architettura e di modello dei dati, rilievi accettati o respinti, chiusura di un'attività, dipendenze nuove, commit, merge, push, deploy e migrazioni. Si presentano le alternative con le motivazioni (con AskUserQuestion) e si procede solo dopo il suo ok. A fine fase commit, merge in `develop`, push e `tokensave sync` si confermano con un'unica domanda (CONVENTIONS §13.7).
 
+### Come si consulta un agente
+
+Gli agenti si caricano dal server MCP di Agentrica, che li mostra nel pannello locale. In Claude Code i tool del server si caricano con ToolSearch (`mcp__agentrica__`).
+
+1. `list_agents` per scegliere: il direttore di ogni reparto è segnato come tale.
+2. `agent` con l'id del **direttore** del reparto (`-01`) e il compito: dice quali specialisti servono e in che ordine.
+3. `agent` con l'id di ogni specialista, **uno alla volta**: ciascuno parte dal risultato del precedente, e non si caricano due agenti nella stessa risposta.
+4. Il direttore consolida i risultati e li presenta all'utente. Fra reparti vale l'ordine di «Come si usano».
+5. Le scelte dell'utente si chiedono con `ask_user`, che le mostra nel pannello (`open_panel` dà l'indirizzo). Se il testo di un agente propone la valutazione, si usa `rate_agent`.
+
+Per gli agenti di Agentrica non si usa il tool `Agent` di Claude Code (subagent): il pannello mostra gli agenti caricati dal server, e i subagent solo in una sezione a parte. I subagent in `.claude/agents/` ci sono solo se il progetto è stato creato con `init --subagents`; si avviano solo quando l'utente li chiede o per un audit in parallelo, e ciascuno carica il suo agente dal server.
+
 ### Come si usano
 
-- Nel lavoro di tutti i giorni i ruoli sono un modo di lavorare della sessione principale; i subagent si avviano per gli audit e quando l'utente li chiede.
+- Nel lavoro di tutti i giorni i ruoli sono un modo di lavorare della sessione principale, caricati con `agent` come sopra.
 - Funzioni o iniziative nuove: ruoli business per obiettivo, valore, requisiti e priorità, prima del design.
 - Modifiche con effetti visibili: ruoli di design pertinenti prima (controlli) e dopo (revisione nell'app).
 - Trattamenti di dati personali (dati nuovi, import ed export, fornitori, conservazione): ruoli privacy prima (requisiti) e dopo (verifica delle misure).
@@ -85,5 +97,5 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 - **Stack.** <!-- es. «Vite e TypeScript strict; logica pura e testata in src/lib» -->
 - **Dati.** <!-- Mock e dati finti, oppure dati reali dell'utente: dove stanno, cosa gli agenti non devono mai fare (salvare, importare, eliminare, copiare nel repository). -->
 - **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
-- **Versionati.** `agents/`, `.claude/agents/`, `audit/`, `docs/` e `plan/` sono nel repository. Se le evidenze degli audit mostrano dati personali, si attiva la riga `audit/*/evidenze/` del `.gitignore`.
+- **Versionati.** `agents/`, `.claude/agents/` (se c'è), `audit/`, `docs/` e `plan/` sono nel repository. Se le evidenze degli audit mostrano dati personali, si attiva la riga `audit/*/evidenze/` del `.gitignore`.
 - Push, deploy e migrazioni in produzione richiedono l'approvazione esplicita dell'utente.

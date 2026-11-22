@@ -2,6 +2,23 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.10.0 — 2026-11-22
+
+### Breaking
+- `init` no longer copies the subagents into `.claude/agents/`: agents are consulted from the server with `agent`, one at a time. With `--subagents` it copies them, and each subagent has `mcp__agentrica__agent` and `mcp__agentrica__library` among its `tools` and, as its first step, loads its agent from the server, so it appears in the panel.
+
+### Added
+- Hierarchy: `list_agents` marks the director of each department; the director's text says how to coordinate the specialists, a specialist's text whom it reports to and to load the director first.
+- Panel: the agents in use in call order, with the director marked, and a separate «Claude Code subagents» section with type, description and state of the subagents started in the session, read from the files Claude Code saves for the project.
+
+### Changed
+- Server instructions: director before the specialists, one agent at a time, order across departments, `agent` instead of local subagents unless the user asks.
+- The recommended model no longer asks to hand the task to a subagent.
+- `AGENTS.md` of new projects: «How to consult an agent» section; department READMEs without subagents by default.
+
+### Fixed
+- Panel: the department colour in the agents in use.
+
 ## 0.9.0 — 2026-11-22
 
 ### Breaking

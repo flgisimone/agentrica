@@ -19,7 +19,7 @@
 ## Structure
 - `00-common-rules.md`: rules common to all roles of the agency.
 - `01-…` onwards: one file per role, in the order of the workflow, without frontmatter.
-- The executable subagents (with frontmatter, tools and model) are in `.claude/agents/cybersecurity/` and point to these files.
+- The agents are consulted through the Agentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/cybersecurity/` exist only in projects created with `init --subagents` and load their agent from the same server.
 
 ## Workflow
 1. The CISO defines goals and priorities.
@@ -30,6 +30,7 @@
 6. Risk & Compliance checks security governance.
 7. The Penetration Testing Specialist works only with approved rules of engagement.
 8. Awareness prepares the training.
+9. The CISO consolidates findings and priorities and presents them to the user.
 
 ## Collaboration with the other agencies
 - Software: secure development lifecycle, code review, threat model, vulnerabilities and fixes.

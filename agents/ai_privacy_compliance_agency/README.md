@@ -17,7 +17,7 @@
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- I subagent eseguibili (con frontmatter, strumenti e modello) sono in `.claude/agents/privacy-compliance/` e rimandano a questi file.
+- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/privacy-compliance/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Chief definisce perimetro e piano.
@@ -42,7 +42,7 @@ Gli agenti svolgono audit e formulano raccomandazioni: non implementano modifich
 
 Gli agenti supportano ma non sostituiscono titolare del trattamento, DPO, consulente legale o professionisti qualificati. Non costituiscono certificazione né garanzia di conformità.
 
-I Markdown definiscono ruoli e istruzioni ma non creano da soli subagent eseguibili. Per Claude Code o altri strumenti occorre configurarli nel formato di agenti supportato.
+I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con il tool `agent` del server MCP di Agentrica.
 
 I riferimenti normativi nei file sono indicativi: verificare sempre testo vigente, giurisdizione, linee guida e applicabilità al caso concreto.
 

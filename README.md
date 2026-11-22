@@ -48,7 +48,7 @@ The departments serve twice: they are the **content** of the product and also th
 
 ## Status
 
-Phases F0–F33 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F33 (the website in Italian and English, at `/it` and `/en`) is complete and released with 0.9.0.
+Phases F0–F34 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F34 (agents orchestrated from the MCP server one at a time, director first, subagents only with `init --subagents` and shown in the panel) prepares 0.10.0.
 
 ## Getting started
 

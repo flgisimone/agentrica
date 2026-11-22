@@ -105,7 +105,7 @@ test("valutazioni nel pannello: stato, difese e invio con le valutazioni del ser
   try {
     const cookie = await login(panel.url);
     const state = async () => JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
-    panel.record({ id: "AISA-02", codeName: "AISA-02 · ALTAIR", role: "Senior Software Architect", department: "AISA", task: "" });
+    panel.record({ id: "AISA-02", codeName: "AISA-02 · ALTAIR", role: "Senior Software Architect", department: "AISA", director: false, task: "" });
     assert.match((await state()).rating.notice, /note-legali#valutazioni/);
     assert.deepEqual((await state()).rating.rated, []);
     const json = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
@@ -156,6 +156,19 @@ test("avviso di versione nuova nello stato, per il banner (F23)", async () => {
     const cookie = await login(panel.url);
     const state = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
     assert.equal(state.update, "È uscita la versione 9.9.9 di Agentrica.");
+  } finally {
+    await panel.close();
+  }
+});
+
+test("subagent di Claude Code nello stato, separati dagli agenti del server (F34-06)", async () => {
+  const run = { time: "2026-11-22T10:00:00.000Z", type: "design-ux-writer", description: "Testi del modulo", finished: false };
+  const panel = await startPanel(root, undefined, undefined, async () => [run]);
+  try {
+    const cookie = await login(panel.url);
+    const state = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    assert.deepEqual(state.subagents, [run]);
+    assert.deepEqual(state.activity, []);
   } finally {
     await panel.close();
   }
@@ -251,12 +264,13 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
     await client.getPrompt({ name: "aisa-02-software", arguments: { task: "Rivedi   i confini\ndel modulo." } });
 
     const result = client.callTool({ name: "ask_user", arguments: question });
-    let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string }[]; project: { problems: string[] } };
+    let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string; director: boolean }[]; subagents: unknown[]; project: { problems: string[] } };
     do {
       state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     } while (state.questions.length === 0);
     assert.deepEqual(state.project.problems, [], "il piano di questo repository si legge");
-    assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.task]), [["AISA-02", "AISA · Software", "Rivedi i confini del modulo."]]);
+    assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.director, a.task]), [["AISA-02", "AISA · Software", false, "Rivedi i confini del modulo."]]);
+    assert.deepEqual(state.subagents, [], "nessun file di Claude Code in questa HOME");
 
     const headers = { Cookie: cookie, Origin: base, "Content-Type": "application/json" };
     const body = JSON.stringify({ id: state.questions[0]!.id, choices: ["A (Consigliata)"], note: "procedi" });

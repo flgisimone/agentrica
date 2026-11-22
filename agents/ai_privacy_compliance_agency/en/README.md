@@ -17,7 +17,7 @@
 ## Structure
 - `00-common-rules.md`: rules common to all roles of the agency.
 - `01-…` onwards: one file per role, in the order of the workflow, without frontmatter.
-- The executable subagents (with frontmatter, tools and model) are in `.claude/agents/privacy-compliance/` and point to these files.
+- The agents are consulted through the Agentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/privacy-compliance/` exist only in projects created with `init --subagents` and load their agent from the same server.
 
 ## Workflow
 1. The Chief defines scope and plan.
@@ -42,7 +42,7 @@ The agents carry out audits and make recommendations: they do not implement chan
 
 The agents support but do not replace the data controller, DPO, legal adviser or qualified professionals. They are not a certification or a guarantee of compliance.
 
-The Markdown files define roles and instructions but on their own they do not create executable subagents. For Claude Code or other tools they must be configured in a supported agent format.
+The Markdown files define roles and instructions; in Claude Code they are loaded with the `agent` tool of the Agentrica MCP server.
 
 The legal references in the files are indicative: always check the text in force, jurisdiction, guidelines and applicability to the specific case.
 

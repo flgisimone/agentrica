@@ -112,5 +112,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F32 | [32-contenuti-en.md](32-contenuti-en.md) | File di ruolo, regole comuni e biblioteche in inglese; tool, prompt e testi del server in inglese, lingua dal sistema con `--lang` | completata |
 | F33 | [33-sito-multilingua.md](33-sito-multilingua.md) | Sito in italiano e inglese con `/it` e `/en`, lingua dal browser, selettore; rilascio di pacchetto e sito | completata |
 | F34 | [34-orchestrazione.md](34-orchestrazione.md) | Orchestrazione: agenti dal server MCP uno alla volta, direttore prima degli specialisti, subagent solo con `--subagents` e visibili nel pannello, pagina del sito sull’orchestrazione | completata (0.10.0) |
+| F35 | [35-progetti-esistenti.md](35-progetti-esistenti.md) | Progetti già avviati: `init --existing`, piano creato dal codice esistente, pannello senza errore; sessioni per fase (la pianificazione si ferma al backlog, `/clear` fra le fasi) | da fare |
 
-Ordine: F0 → F34 in sequenza.
+Ordine: F0 → F35 in sequenza.

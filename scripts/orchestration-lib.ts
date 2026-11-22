@@ -72,10 +72,13 @@ export function checkOrchestration(calls: readonly Call[], subagentsAsked = fals
   const known = firstSeen.filter((code) => (ORDER as readonly string[]).includes(code));
   const inOrder = known.every((code, i) => i === 0 || ORDER.indexOf(code as never) > ORDER.indexOf(known[i - 1] as never));
 
-  const firstSoftware = calls.findIndex((c) => isServerAgent(c.name) && c.target && department(c.target) === "AISA");
+  // La conferma serve prima che il software lavori: il direttore AISA-01 può prepararla e chiederla, lo specialista no.
+  const firstSoftware = calls.findIndex((c) => isServerAgent(c.name) && c.target && department(c.target) === "AISA" && !c.target.endsWith("-01"));
   const before = firstSoftware < 0 ? [] : calls.slice(0, firstSoftware);
   const othersBefore = before.some((c) => isServerAgent(c.name) && c.target && department(c.target) !== "AISA");
-  const confirmed = !othersBefore || before.slice(before.findLastIndex((c) => isServerAgent(c.name))).some((c) => isConfirmation(c.name));
+  // Dopo l'ultimo agente degli altri reparti (il direttore software può stare in mezzo).
+  const lastOther = before.findLastIndex((c) => isServerAgent(c.name) && c.target !== undefined && department(c.target) !== "AISA");
+  const confirmed = !othersBefore || before.slice(lastOther).some((c) => isConfirmation(c.name));
 
   return [
     {
@@ -106,7 +109,7 @@ export function checkOrchestration(calls: readonly Call[], subagentsAsked = fals
     {
       criterion: "Conferma dell'utente prima del software",
       ok: confirmed,
-      detail: firstSoftware < 0 ? "nessun agente software" : confirmed ? "domanda all'utente prima del primo agente software" : "nessuna domanda fra gli altri reparti e il software",
+      detail: firstSoftware < 0 ? "nessuno specialista software" : confirmed ? "domanda all'utente prima del primo specialista software" : "nessuna domanda fra gli altri reparti e lo specialista software",
     },
   ];
 }

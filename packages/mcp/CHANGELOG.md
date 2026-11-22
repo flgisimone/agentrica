@@ -11,6 +11,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 - Gerarchia: `list_agents` segna il direttore di ogni reparto; il testo del direttore dice come coordinare gli specialisti, quello di uno specialista a chi riporta e di caricare prima il direttore.
 - Pannello: gli agenti in uso in ordine di chiamata, con il direttore segnato, e una sezione a parte «Subagent di Claude Code» con tipo, descrizione e stato dei subagent avviati nella sessione, letti dai file che Claude Code salva per il progetto.
 - Tool `report`, con il pannello: il resoconto di ciò che un agente ha fatto, che il testo dell'agente chiede a fine compito; il pannello lo mostra sotto l'agente, con il compito intero.
+- Pannello: gli agenti in una pagina propria, «Agenti», come albero per reparto (una colonna per reparto, il direttore in cima, il numero d'ordine sulla scheda); la Sessione mostra gli ultimi tre.
 - Pannello: le valutazioni in una pagina propria, «Valutazioni», con il numero degli agenti da valutare nel menu; un avviso quando un agente nuovo si mette al lavoro o c'è un agente da valutare, anche come notifica di sistema se la attivi.
 
 ### Cambiato

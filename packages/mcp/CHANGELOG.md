@@ -2,6 +2,20 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu.
 
+## 0.8.1 — 2026-11-22
+
+### Corretto
+- Pannello: un agente usato all'inizio di una sessione lunga resta fra quelli da valutare; prima usciva dall'elenco dopo 20 chiamate ad altri agenti.
+- `/mcp__agentrica__progetto` con un testo che non è il codice di una proposta: il messaggio spiega che per proporre un progetto il comando si lancia senza argomenti.
+
+### Cambiato
+- `add` e `install` avvisano se Agentrica è registrato anche in un altro ambito di Claude Code (user, project o local), con il comando per togliere la registrazione che non serve.
+- Regole comuni dei reparti: un agente ferma solo i processi che ha avviato, per PID, mai per nome.
+- AIWDA-08 · GACRUX cita i criteri WCAG giusti per l'indicatore di focus (2.4.7) e per `autocomplete` (1.3.5).
+- Biblioteca AIWDA: EN 301 549 (in Gazzetta è citata la V3.2.1, non ancora la V4.1.1) e D.lgs. 82/2022 (microimprese, periodi transitori, vigilanza e sanzioni).
+- I subagent copiati da `init` rimandano alle schede della biblioteca del loro reparto.
+- README inglese: sezione dei modelli consigliati.
+
 ## 0.8.0 — 2026-11-21
 
 ### Nuovo

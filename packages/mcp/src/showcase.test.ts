@@ -146,7 +146,7 @@ test("progetto: il modulo inviato parte con la versione e dà il codice; chiuso 
   assert.equal(site.requests.length, 1);
   assert.match(said(await client.getPrompt({ name: "progetto", arguments: { rimuovi: code! } })), /Richiesta di ritiro registrata/);
   assert.deepEqual(site.requests[1], { path: "/api/projects/withdraw", body: { code } });
-  assert.match(said(await client.getPrompt({ name: "progetto", arguments: { rimuovi: "123" } })), /formato giusto/);
+  assert.match(said(await client.getPrompt({ name: "progetto", arguments: { rimuovi: "123" } })), /per proporre un progetto si lancia il comando progetto senza argomenti/);
   assert.equal(site.requests.length, 2);
 });
 

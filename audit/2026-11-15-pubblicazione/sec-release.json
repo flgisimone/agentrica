@@ -44,7 +44,7 @@
       "priorita": "P3",
       "motivazione": "Necessario agli script inline di Next nelle pagine statiche; il sito non ha input degli utenti né script di terzi, quindi il rischio di XSS è basso.",
       "raccomandazione": "Accettato con commento ponytail; nonce o SRI se arrivano contenuti dinamici.",
-      "stato": "Accettata",
+      "stato": "Chiuso: rischio accettato dall'utente (2026-11-21, F30-04). 'unsafe-inline' negli script resta: i nonce renderebbero dinamiche le pagine statiche. Il sito non ha input degli utenti nell'HTML e la CSP limita le origini. Riaprire se il sito mostra contenuti degli utenti non filtrati o passa a pagine dinamiche.",
       "ricontrollo_f29": {
         "data": "2026-11-19",
         "esito": "confermato, rischio ancora accettato",
@@ -58,7 +58,7 @@
       "priorita": "P3",
       "motivazione": "Scelta dell'utente (tsc, catalogo incluso): chi installa riceve gli aggiornamenti di sicurezza dei transitivi, ma anche eventuali versioni compromesse.",
       "raccomandazione": "npm audit e audit signatures a ogni rilascio (fatto); Dependabot sulle dipendenze dirette in una fase futura.",
-      "stato": "Accettata",
+      "stato": "Chiuso: rischio accettato dall'utente (2026-11-21, F30-04). Transitivi dell'SDK a range per chi installa, con npm audit e audit signatures nella CI di release. Riaprire con un advisory su una dipendenza transitiva caricata dal server.",
       "ricontrollo_f29": {
         "data": "2026-11-19",
         "esito": "confermato, rischio ancora accettato",

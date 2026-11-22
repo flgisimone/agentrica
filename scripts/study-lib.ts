@@ -52,6 +52,14 @@ function safeChar(code: number): string {
   return Number.isInteger(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : " ";
 }
 
+/** Dove porta un redirect, solo se https e nei domini della fonte: si controlla ogni salto prima di seguirlo (F30-07). */
+export function redirectTarget(from: string, location: string | null, domains: readonly string[]): URL {
+  if (!location) throw new Error("reindirizzamento senza Location");
+  const url = new URL(location, from);
+  if (url.protocol !== "https:" || !inDomains(url.hostname, domains)) throw new Error(`reindirizzato fuori dai domini (${url.hostname})`);
+  return url;
+}
+
 /** Il link di una novità, solo se https, nei domini della fonte, senza credenziali e corto. */
 export function cleanLink(raw: string | undefined, domains: readonly string[]): string | undefined {
   if (!raw) return undefined;

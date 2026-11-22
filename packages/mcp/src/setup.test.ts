@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import { test } from "node:test";
 import { VERSION } from "./prompt.ts";
-import { cmdLine, runSetup, serverCommand, type RunResult, type SetupDeps } from "./setup.ts";
+import { cmdLine, registeredScopes, runSetup, serverCommand, type RunResult, type SetupDeps } from "./setup.ts";
 
 const PKG = `@agentrica/mcp@${VERSION}`;
 
@@ -113,4 +113,39 @@ test("serverCommand e cmdLine: argomenti fra virgolette per cmd, rifiutati se co
   assert.equal(cmdLine("claude", ["mcp", "add", "C:\\Users\\Ada Rossi\\x.js"]), '"claude "mcp" "add" "C:\\Users\\Ada Rossi\\x.js""');
   assert.equal(cmdLine("claude", ["%PATH%"]), undefined);
   assert.equal(cmdLine("claude", ['a"b']), undefined);
+});
+
+test("registeredScopes: user e local da ~/.claude.json, project da .mcp.json; file illeggibili non contano (F30-08)", () => {
+  const files: Record<string, string> = {
+    [join("/casa", ".claude.json")]: JSON.stringify({ mcpServers: { agentrica: {} }, projects: { "/prog": { mcpServers: { agentrica: {} } }, "/altro": { mcpServers: {} } } }),
+    [join("/prog", ".mcp.json")]: JSON.stringify({ mcpServers: { agentrica: {} } }),
+    [join("/rotto", ".mcp.json")]: "{",
+  };
+  const read = (path: string) => {
+    if (!(path in files)) throw new Error("ENOENT");
+    return files[path]!;
+  };
+  assert.deepEqual(registeredScopes("/casa", "/prog", read), ["user", "project", "local"]);
+  assert.deepEqual(registeredScopes("/casa", "/altro", read), ["user"]);
+  assert.deepEqual(registeredScopes("/vuota", "/rotto", read), []);
+});
+
+test("add --local con Agentrica già in ambito user: registra e avvisa con il comando per togliere l'altra (F30-08)", () => {
+  const { deps, output } = fake("darwin");
+  deps.registered = () => ["user", "local"];
+  assert.equal(runSetup("add", ["--local"], deps), 0);
+  assert.match(output(), /registrato anche con ambito user: tutti i tuoi progetti/);
+  assert.match(output(), /claude mcp remove agentrica --scope user/);
+  assert.ok(!output().includes("--scope local\n"));
+
+  const install = fake("darwin", { "npm root -g": { stdout: "/globale\n" } });
+  install.deps.registered = () => ["user", "project"];
+  assert.equal(runSetup("install", [], install.deps), 0);
+  assert.match(install.output(), /anche con ambito project/);
+  assert.ok(!install.output().includes("anche con ambito user"));
+
+  const single = fake("darwin");
+  single.deps.registered = () => ["user"];
+  runSetup("add", [], single.deps);
+  assert.ok(!single.output().includes("Attenzione"));
 });

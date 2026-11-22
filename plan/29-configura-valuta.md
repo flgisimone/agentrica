@@ -98,12 +98,20 @@ Confermato all'apertura (2026-11-19), senza F29-02; F29-08 aggiunto dall'utente.
 - Prova nel client (F29-07), estensione VS Code: il server 0.8.0 risponde, il modulo della configurazione non compare (vedi «Fatto»). Il comando si chiama `/mcp__agentrica-dev__…` perché il server di sviluppo ha quel nome. Il file salvato senza modulo è stato cancellato con il consenso dell'utente.
 - I test usano una cartella personale finta (`HOME`, `USERPROFILE`): nei primi giri la prova delle valutazioni aveva scritto `~/.agentrica/config.json` dell'utente, cancellato subito.
 
+## Rilascio 0.8.0 (2026-11-21)
+
+Su richiesta dell'utente, pacchetto e sito in produzione insieme («sempre in parallelo, mai uno avanti e uno indietro»).
+
+- **Pacchetto**: PR #24 in `main`, tag `v0.8.0`, release con provenance dopo l'approvazione dell'ambiente `npm`; `@agentrica/mcp@0.8.0` su npm. CHANGELOG con la data del 2026-11-21.
+- **Registro MCP**: `mcp-publisher publish` dell'utente dopo un nuovo `login github` (token scaduto); `io.github.flgisimone/agentrica` 0.8.0 è latest (mancano 0.6.x, saltate).
+- **Sito**: dipendenza a 0.8.0 e testi del pannello (home, `/installa`, comandi, vista Consumo) con `--no-panel`; verify (61 test e build), e2e completa (102 prove) e `npm audit --omit=dev` a 0; PR #11 in `main` e deploy Vercel. `db/004-projects.sql` eseguito dall'utente su Neon (tabelle e funzioni presenti).
+- **Prova in produzione**: `/rilasci` con 0.8.0, note legali con `~/.agentrica/config.json`, `/installa` con `--no-panel`, `POST /api/projects` con corpo non valido 400, ritiro con un codice a caso 200 (funzione su Neon presente), senza scrivere dati.
+- `develop` allineato a `main` nei due repository; `tokensave sync` fatto.
+
 ## Rilievi aperti
 
-- **SQL su Neon**: `db/004-projects.sql` va eseguito dall'utente prima del deploy del sito (il job chiama `purge_projects()`) e del rilascio 0.8.0; poi da provare limite, ritiro, approvazione e pulizia.
-- **Moduli da terminale**: il modulo della configurazione e i comandi `valuta`, `configura`, `progetto` sono provati con il client MCP dei test e in VS Code (senza moduli), non ancora in Claude Code da terminale.
-- **Testi del sito sul pannello**: home, `/installa` (opzioni e comando), `scripts.ts` (comando `install --panel`) e la vista Consumo dicono ancora `--panel`. Si cambiano insieme all'aggiornamento del sito a `@agentrica/mcp` 0.8.0: con la 0.7.1 installata `--no-panel` fermerebbe il server.
-- **Rilascio 0.8.0**: tag `v0.8.0` su `main` (CONVENTIONS §13.8), poi `mcp-publisher publish` (registro MCP fermo alla 0.7.0) e aggiornamento del comando nel sito.
-- **Soglia di 300 ms**: semplice ed efficace oggi; se un client mostrasse davvero i moduli e li chiudesse da solo più tardi, servirà un altro segnale (es. `clientInfo`).
-- SEC-ARCH-01: revisione obbligatoria del code owner con un secondo manutentore (invariato).
+- **Progetti su Neon**: limite giornaliero, approvazione e pulizia provati solo con i test locali; da guardare alla prima proposta reale. Chiuso in F30 (F30-13, P2, 2026-11-22): su Neon invio, ref pubblico (SHA-256 del codice, verificato), ritiro immediato di una proposta in attesa, limite di 3 al giorno per rete (la quarta rifiutata), approvazione e rifiuto con `npm run projects`. La pulizia dopo 90 giorni si prova con il job in P5.
+- **Moduli da terminale**: il modulo della configurazione e i comandi `valuta`, `configura`, `progetto` sono provati con il client MCP dei test e in VS Code (senza moduli), non ancora in Claude Code da terminale. Chiuso in F30 (F30-13, P1, 2026-11-22): in Claude Code 2.1.330 da terminale il modulo compare alla prima chiamata e salva `config.json` con le sole cinque chiavi; `configura` lo riapre con i valori salvati e cambia solo il campo scelto; `valuta` apre il modulo di AISA-02 e con Esc non parte nulla; `progetto` apre il modulo e invia.
+- **Soglia di 300 ms**: semplice ed efficace oggi; se un client mostrasse davvero i moduli e li chiudesse da solo più tardi, servirà un altro segnale (es. `clientInfo`). Chiuso in F30 (F30-12): accettato dall'utente il 2026-11-21, si riapre se un client chiude i moduli da solo dopo più di 300 ms.
+- SEC-ARCH-01: revisione obbligatoria del code owner con un secondo manutentore (invariato). Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, si riapre con un secondo manutentore.
 

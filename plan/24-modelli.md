@@ -118,9 +118,9 @@ Confermato all'apertura (2026-11-18). Le voci F24-12…F24-15 della proposta son
 
 ## Rilievi aperti
 
-- P2 · Misure dei 50 ruoli non provati, in particolare i direttori e gli specialisti simili a quelli passati (altri cyber e privacy su Sonnet): stessi metodo e soglia, con casi nuovi.
-- P2 · AIWDA-08: Sonnet cita criteri WCAG sbagliati (2.4.11/2.4.13, 3.3.7); da valutare un chiarimento nel file di ruolo prima di rimisurare.
-- P3 · Nelle esecuzioni che scrivono il rapporto in un file la firma con il nome in codice manca spesso: effetto del metodo, da evitare nelle prossime prove facendo restituire il rapporto.
-- P3 · Un'esecuzione Haiku ha usato `pkill -f "node server.js"`: valutare una regola comune («ferma solo i processi che hai avviato tu, per PID»).
-- P3 · Il limite delle cinque ore ha fermato 27 esecuzioni (532k token spesi senza risultato): nelle prossime misure, gruppi da 7.
+- P2 · Misure dei 50 ruoli non provati, in particolare i direttori e gli specialisti simili a quelli passati (altri cyber e privacy su Sonnet): stessi metodo e soglia, con casi nuovi e più difficili (difetti sottili, progetti più realistici: voci di F13 e F15 unite qui in F30). Rinviato in F30 a una fase dedicata (scelta dell'utente, 2026-11-21).
+- P2 · AIWDA-08: Sonnet cita criteri WCAG sbagliati (2.4.11/2.4.13, 3.3.7); da valutare un chiarimento nel file di ruolo prima di rimisurare. Chiuso in F30 (F30-05): chiarimento nel file di ruolo, nuova misura su Sonnet 8/8 e 0 falsi; AIWDA-08 resta `inherit` fino a un secondo caso.
+- P3 · Nelle esecuzioni che scrivono il rapporto in un file la firma con il nome in codice manca spesso: effetto del metodo, da evitare nelle prossime prove facendo restituire il rapporto. Chiuso in F30 (F30-06): metodo aggiornato in `examples/README.md`.
+- P3 · Un'esecuzione Haiku ha usato `pkill -f "node server.js"`: valutare una regola comune («ferma solo i processi che hai avviato tu, per PID»). Chiuso in F30 (F30-06): regola nei cinque `00-common-rules.md`.
+- P3 · Il limite delle cinque ore ha fermato 27 esecuzioni (532k token spesi senza risultato): nelle prossime misure, gruppi da 7. Chiuso in F30 (F30-06): gruppi di al più 7 in `examples/README.md`.
 

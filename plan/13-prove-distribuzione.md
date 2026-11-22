@@ -71,5 +71,5 @@
 
 ## Rilievi aperti
 
-- P2: le prove sono facili (difetti piantati ed evidenti, un modello, un'esecuzione). Prossimo passo utile: un caso su un progetto vero o con difetti sottili, e una seconda esecuzione per vedere la variabilità.
+- P2: le prove sono facili (difetti piantati ed evidenti, un modello, un'esecuzione). Prossimo passo utile: un caso su un progetto vero o con difetti sottili, e una seconda esecuzione per vedere la variabilità. Chiuso in F30: superato dalle misure di F24 (7 casi, 4 configurazioni, 56 esecuzioni); casi più difficili e altri ruoli sono nella voce di F24 sulle misure, rinviata a una fase dedicata (scelta dell'utente, 2026-11-22).
 - P3: scala di gravità comune fra i reparti (vedi F13-03), da decidere se diventa una regola comune. Risolto in F15 (F15-08): riga comune nei cinque `00-common-rules.md`, scala in Software, regola WCAG livello A in Design.

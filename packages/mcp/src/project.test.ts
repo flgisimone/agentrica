@@ -100,7 +100,6 @@ test("il piano di questo repository si legge senza problemi", async () => {
   const plan = readPlan(repo);
   assert.deepEqual(plan.problems, []);
   assert.ok(plan.phases.length >= 15);
-  assert.ok(plan.findings.some((f) => f.source.endsWith("sec-release.json")));
   const git = await readGit(repo);
   assert.ok(git && git.branch.length > 0 && git.changed >= 0 && git.untracked >= 0);
   assert.equal(await readGit(outside), null);

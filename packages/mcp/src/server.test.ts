@@ -63,6 +63,18 @@ test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli un
   }
   assert.match(client.getInstructions() ?? "", /rate_agent/);
   assert.match(client.getInstructions() ?? "", /share_usage/);
+  // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
+  assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
+  assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);
+});
+
+test("istruzioni del server entro 4096 caratteri in tutte e due le lingue, con pannello e valutazioni (F35-R1)", async () => {
+  // Claude Code (2.1.330) tronca le istruzioni di un server stdio a 4096 caratteri, salvo CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH:
+  // il numero non è documentato, viene dal codice del client. ponytail: se Claude Code lo cambia, si aggiorna qui.
+  const { it } = await import("./texts/it.ts");
+  const { en } = await import("./texts/en.ts");
+  const o = { agents: 56, departments: 5, codes: "AIBPD, AICA, AIPCA, AISA, AIWDA", example: "aibpd-01-business", exampleId: "AIBPD-01", panel: true, ratings: true };
+  for (const texts of [it, en]) assert.ok(texts.server.instructions(o).length <= 4096, texts.locale);
 });
 
 test("share_usage: senza file di Claude Code nulla da inviare; un codice sconosciuto è un errore", async () => {

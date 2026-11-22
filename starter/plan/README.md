@@ -6,6 +6,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 
 ## Come si lavora a una fase
 
+- Le fasi si creano in una sessione di pianificazione, che scrive solo `plan/` e si chiude con la conferma dell'utente e la proposta di `/clear`; poi una fase per sessione, ciascuna in una sessione nuova.
 - Ogni fase ha un file `NN-nome.md` con obiettivo, stato, agenzie, backlog, criteri di accettazione e, a fine fase, «Fatto», «Verifiche» e «Rilievi aperti» (modello: [00-base.md](00-base.md)).
 - Si lavora su un branch `fase/fN-nome`, partendo da `develop`; le correzioni fuori fase su `fix/nome`.
 - Le «proposte da confermare» nei file di fase si decidono con l'utente all'apertura di ciascuna.

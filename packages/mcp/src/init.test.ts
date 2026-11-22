@@ -2,12 +2,12 @@
 // Il comando gira come lo lancia npx: server.ts con «init», da una cartella temporanea.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import { AGENTS_DIR } from "./catalog.ts";
-import { projectFiles, subagentProject } from "./init.ts";
+import { existingFiles, projectFiles, subagentProject } from "./init.ts";
 import { readPlan } from "./project.ts";
 import { VERSION } from "./prompt.ts";
 
@@ -128,4 +128,49 @@ test("init --lang en: il pannello legge il piano inglese senza problemi", () => 
   assert.equal(plan.phases[0]?.id, "F0");
   assert.equal(plan.openPhase?.tasks.length, 7);
   assert.equal(plan.openPhase?.goal.startsWith("a project that starts"), true);
+});
+
+test("init --existing (F35): scrive solo i file mancanti, salta gli altri e li elenca, niente commit", () => {
+  const dir = join(tmp, "avviato");
+  mkdirSync(join(dir, "agents", "mio"), { recursive: true });
+  writeFileSync(join(dir, "CLAUDE.md"), "# Regole mie\n");
+  writeFileSync(join(dir, ".gitignore"), "node_modules\n");
+  writeFileSync(join(dir, "agents", "mio", "README.md"), "mio\n");
+  spawnSync("git", ["init", "-q", "-b", "main"], { cwd: dir });
+  const result = init("avviato", "--existing");
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Regole di Agentrica aggiunte a «avviato»/);
+  assert.match(result.stdout, /Saltati perché esistono già: .*CLAUDE\.md/);
+  assert.match(result.stdout, /aggiungi una riga «@AGENTS\.md»/);
+  assert.match(result.stdout, /git: nessun commit/);
+  assert.equal(readFileSync(join(dir, "CLAUDE.md"), "utf8"), "# Regole mie\n", "file dell'utente intatti");
+  assert.equal(readFileSync(join(dir, ".gitignore"), "utf8"), "node_modules\n");
+  assert.match(readFileSync(join(dir, "AGENTS.md"), "utf8"), /^# Regole per gli agenti/);
+  // Niente base tecnica di un progetto nuovo.
+  for (const file of [".github", ".nvmrc", ".env.example", join("plan", "00-base.md")]) assert.throws(() => readFileSync(join(dir, file)), file);
+  assert.equal(spawnSync("git", ["log"], { cwd: dir, encoding: "utf8" }).status, 128, "nessun commit");
+  const plan = readPlan(realpathSync(dir));
+  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(plan.phases, []);
+  assert.match(plan.notice!, /non ha ancora fasi/);
+  assert.match(readFileSync(join(dir, "plan", "README.md"), "utf8"), /`npx @agentrica\/mcp init --existing`[\s\S]+Nessuna fase ancora/);
+  // Una seconda volta non scrive nulla e non si ferma.
+  const again = init("avviato", "--existing");
+  assert.equal(again.status, 0, again.stderr);
+  assert.match(again.stdout, /0 file nuovi/);
+  assert.match(again.stdout, /agents\/ \(\d+\)/, "i file di agents/ contati per cartella");
+  // F35-R2: un .mcp.json già presente non si dà per scritto.
+  assert.match(again.stdout, /\.mcp\.json c'era già ed è stato saltato/);
+  assert.doesNotMatch(result.stdout, /c'era già/);
+});
+
+test("init --existing in inglese: piano senza fasi con la stessa indicazione", () => {
+  for (const lang of ["it", "en"] as const) {
+    const files = existingFiles(projectFiles("X", "/x", "2026-01-01", "linux", lang), lang);
+    const plan = files.get("plan/README.md")!;
+    assert.doesNotMatch(plan, /^\| F0 \|/m, lang);
+    assert.doesNotMatch(plan, /^(Ordine|Order): F0/m, lang);
+    assert.match(plan, /init --existing/, lang);
+    assert.ok(!files.has("plan/00-base.md") && !files.has(".nvmrc") && files.has(".mcp.json"), lang);
+  }
 });

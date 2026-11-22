@@ -1,11 +1,14 @@
-// `agentrica-mcp init [cartella] [--name "Nome"] [--subagents]` (F18, al posto di agentic-starter): crea un progetto con la
-// governance di Agentrica. Copia starter/ (AGENTS, CONVENTIONS, plan/, audit/, docs/, CI), gli agents/ del pacchetto e, solo
-// con --subagents (F34-05), i subagent di .claude/agents/ con il nome del progetto e il tool agent del server come primo
-// passo; scrive .mcp.json con questo pacchetto a versione esatta e, fuori da un repository git, fa il primo commit su main
-// e lascia attivo develop. È l'unico comando che scrive: il server resta in sola lettura. Se anche un solo file esiste già
-// non scrive nulla.
+// `agentrica-mcp init [cartella] [--name "Nome"] [--subagents] [--existing]` (F18, al posto di agentic-starter): crea un
+// progetto con la governance di Agentrica. Copia starter/ (AGENTS, CONVENTIONS, plan/, audit/, docs/, CI), gli agents/ del
+// pacchetto e, solo con --subagents (F34-05), i subagent di .claude/agents/ con il nome del progetto e il tool agent del
+// server come primo passo; scrive .mcp.json con questo pacchetto a versione esatta e, fuori da un repository git, fa il
+// primo commit su main e lascia attivo develop. È l'unico comando che scrive: il server resta in sola lettura. Senza
+// --existing, se anche un solo file esiste già non scrive nulla.
 // Da F32 nella lingua scelta (--lang, configurazione o sistema): in inglese starter e subagent vengono da starter/en/
 // (i subagent in starter/en/.claude/agents/); agents/ si copia intero, con i file italiani e quelli di en/.
+// Da F35 `--existing` porta le regole in un progetto già avviato: scrive solo i file che mancano, salta gli altri e li
+// elenca, non fa commit; il piano parte senza fasi (niente F0 «base tecnica») e niente CI, .nvmrc ed .env.example, che
+// sono la base tecnica di un progetto nuovo.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
@@ -69,6 +72,20 @@ export function projectFiles(name: string, path: string, date: string, platform:
   return files;
 }
 
+// I file della base tecnica di un progetto nuovo: in un progetto avviato ci sono già, o li sceglie chi lo mantiene.
+const NEW_ONLY = [/^\.github\//, /^\.nvmrc$/, /^\.env\.example$/, /^plan\/00-base\.md$/];
+
+/** I file di `init --existing`: niente base tecnica e un piano senza fasi, con l'indicazione di crearle. */
+export function existingFiles(files: Map<string, string>, lang: Lang): Map<string, string> {
+  const out = new Map([...files].filter(([file]) => !NEW_ONLY.some((pattern) => pattern.test(file))));
+  const plan = out.get("plan/README.md")!
+    .split("`npx @agentrica/mcp init`").join("`npx @agentrica/mcp init --existing`")
+    .replace(/^\| F0 \|.*\n/m, "")
+    .replace(/^(Ordine|Order): F0 .*$/m, TEXTS[lang].init.noPhases);
+  out.set("plan/README.md", plan);
+  return out;
+}
+
 function git(dir: string, args: string[]): string {
   return execFileSync("git", args, { cwd: dir, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 }
@@ -91,10 +108,20 @@ function initGit(dir: string): string {
   return T.init.committed;
 }
 
+// I file saltati per cartella: agents/ e .claude/agents/ contano decine di file, l'elenco resta di poche righe.
+function summarize(files: string[]): string {
+  const groups = new Map<string, number>();
+  for (const file of files) {
+    const key = /^(agents|\.claude\/agents)\//.exec(file)?.[0] ?? file;
+    groups.set(key, (groups.get(key) ?? 0) + 1);
+  }
+  return [...groups].map(([key, count]) => (key.endsWith("/") ? `${key} (${count})` : key)).join(", ");
+}
+
 /** Esegue il comando; restituisce il codice di uscita. */
 export function runInit(args: string[]): number {
   try {
-    const { values, positionals } = parseArgs({ args, options: { name: { type: "string" }, lang: { type: "string" }, subagents: { type: "boolean" } }, allowPositionals: true });
+    const { values, positionals } = parseArgs({ args, options: { name: { type: "string" }, lang: { type: "string" }, subagents: { type: "boolean" }, existing: { type: "boolean" } }, allowPositionals: true });
     if (positionals.length > 1) throw new Error(T.init.usage);
     if (values.lang !== undefined && !isLang(values.lang)) throw new Error(T.server.langInvalid(values.lang));
     const dir = resolve(positionals[0] ?? ".");
@@ -102,25 +129,22 @@ export function runInit(args: string[]): number {
     if (!name || /\p{Cc}/u.test(name)) throw new Error(T.init.badName);
 
     // La lingua è già quella del server (server.ts legge --lang prima di init): qui serve solo a scegliere i file.
-    const files = projectFiles(name, dir, new Date().toISOString().slice(0, 10), process.platform, serverLang, values.subagents);
+    const all = projectFiles(name, dir, new Date().toISOString().slice(0, 10), process.platform, serverLang, values.subagents);
+    const files = values.existing ? existingFiles(all, serverLang) : all;
     const taken = [...files.keys()].filter((file) => existsSync(join(dir, file)));
-    if (taken.length > 0) throw new Error(T.init.taken(taken.slice(0, 5).join(", "), Math.max(0, taken.length - 5)));
-    for (const [file, text] of files) {
+    if (taken.length > 0 && !values.existing) throw new Error(T.init.taken(taken.slice(0, 5).join(", "), Math.max(0, taken.length - 5)));
+    const written = [...files].filter(([file]) => !taken.includes(file));
+    for (const [file, text] of written) {
       mkdirSync(dirname(join(dir, file)), { recursive: true });
       writeFileSync(join(dir, file), text, { flag: "wx" });
     }
 
-    process.stdout.write(
-      [
-        T.init.created(name, dir, files.size),
-        initGit(dir),
-        "",
-        T.init.next,
-        T.init.step1(dir),
-        T.init.step2,
-        "",
-      ].join("\n"),
-    );
+    // Un CLAUDE.md dell'utente non importa l'AGENTS.md appena scritto: lo si dice, senza toccarlo.
+    const claude = taken.includes("CLAUDE.md") && !taken.includes("AGENTS.md") ? [T.init.importAgents] : [];
+    const lines = values.existing
+      ? [T.init.added(name, dir, written.length), ...(taken.length > 0 ? [T.init.skipped(summarize(taken))] : []), ...claude, T.init.noCommit, "", T.init.next, taken.includes(".mcp.json") ? T.init.step1Registered(dir) : T.init.step1(dir), T.init.stepExisting]
+      : [T.init.created(name, dir, files.size), initGit(dir), "", T.init.next, T.init.step1(dir), T.init.step2];
+    process.stdout.write([...lines, ""].join("\n"));
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -63,6 +63,10 @@ function renderHeader({ project, update }) {
   const problems = $("problems");
   problems.hidden = project.problems.length === 0;
   problems.textContent = project.problems.join("\n");
+  // Piano mancante o senza fasi (F35): un'informazione con le strade per crearlo, non un errore.
+  const notice = $("notice");
+  notice.hidden = !project.notice;
+  notice.textContent = project.notice ?? "";
 }
 
 // Le domande non si ridisegnano a ogni aggiornamento: una scelta a metà resterebbe persa.

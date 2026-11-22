@@ -2,6 +2,17 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.11.0 — 2026-11-22
+
+### Nuovo
+- `init --existing` per un progetto già avviato: scrive solo i file che mancano, salta quelli presenti e li elenca, non fa commit; niente F0 «base tecnica», CI, `.nvmrc` ed `.env.example`, e il piano parte senza fasi. Se c'è già un `CLAUDE.md` dice di aggiungere `@AGENTS.md`.
+- Istruzioni del server: formato di `plan/`, con la proposta di crearlo leggendo il codice se manca, e sessioni per fase: la pianificazione scrive solo `plan/`, si fa confermare e propone `/clear`; una fase per sessione, con `/clear` alla chiusura.
+
+### Cambiato
+- Pannello: senza `plan/README.md`, o con un piano senza fasi, un'informazione con le strade per crearlo (`init --existing` o la richiesta a Claude) invece di un errore.
+- `AGENTS.md`, `CONVENTIONS.md` e `plan/README.md` dei progetti nuovi: la pianificazione è una sessione a sé e ogni fase si apre in una sessione nuova.
+- Istruzioni del server con un test sulla lunghezza: entro i 4096 caratteri oltre i quali Claude Code le tronca.
+
 ## 0.10.0 — 2026-11-22
 
 ### Incompatibile

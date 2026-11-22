@@ -43,7 +43,9 @@ export const en: Texts = {
       "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → user confirmation. " +
       "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
-      `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}.` +
+      `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
+      "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
+      "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
       (o.panel
         ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section. When an agent finishes its task, send its report with report."
         : "") +
@@ -442,13 +444,20 @@ export const en: Texts = {
     commit: "Project created with @agentrica/mcp init",
     commitFailed: "git: commit failed (set user.name and user.email), files left staged on main",
     committed: "git: initial commit on main, develop branch active",
-    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents]',
+    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents] [--existing]',
     badName: "--name: a name on one line is required",
     taken: (files: string, more: number) => `no files written, these already exist: ${files}${more > 0 ? ` and ${more} more` : ""}`,
     created: (name: string, dir: string, count: number) => `Project «${name}» created in ${dir}: ${count} files.`,
     next: "Next steps:",
     step1: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json registers the Agentrica server with the panel)`,
+    step1Registered: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json already existed and was skipped: the Agentrica server must be in it, or registered with add)`,
     step2: "  2. ask to open phase F0 (plan/00-base.md): stack, active agencies, «to fill in» sections",
+    added: (name: string, dir: string, count: number) => `Agentrica's rules added to «${name}» in ${dir}: ${count} new files.`,
+    skipped: (files: string) => `Skipped because they already exist: ${files}`,
+    importAgents: "Your CLAUDE.md was not touched: add a line «@AGENTS.md» so that Claude Code reads Agentrica's rules.",
+    noCommit: "git: no commit, review the new files and add them yourself",
+    stepExisting: "  2. ask Claude «Create the project phases from the existing code»: it writes only plan/, stops at the backlog and suggests /clear",
+    noPhases: "No phases yet: ask Claude to create them by reading the existing code. In that session only the phases with backlog and criteria are written, then `/clear`; each phase opens in a new session.",
   },
 
   panel: {
@@ -467,7 +476,9 @@ export const en: Texts = {
   },
 
   project: {
-    noPlan: "plan/README.md not found: the panel reads the format created by `agentrica-mcp init` (see the package README).",
+    noPlan:
+      "This project has no plan yet (plan/README.md). To create one run `npx @agentrica/mcp init --existing`, which adds Agentrica's rules without touching your files, or ask Claude «Create the project plan from the existing code».",
+    emptyPlan: "The plan has no phases yet. Ask Claude «Create the project phases from the existing code»: it writes only plan/ and stops at the backlog.",
     noPhases: "plan/README.md lacks the «## Phases» table (Phase | File | Content | Status).",
     noPhaseFile: (file: string, id: string) => `plan/${file} not found, the file of phase ${id}.`,
     noBacklog: (file: string) => `plan/${file} lacks the «## Backlog» section.`,

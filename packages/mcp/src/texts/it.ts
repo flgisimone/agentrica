@@ -45,7 +45,9 @@ export const it = {
       "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → conferma dell'utente. " +
       "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
-      `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}.` +
+      `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
+      "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
+      "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
       (o.panel
         ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina. Il pannello mostra in ordine gli agenti caricati con agent; i subagent di Claude Code solo in una sezione a parte. Quando un agente finisce il suo compito, manda il suo resoconto con report."
         : "") +
@@ -445,13 +447,21 @@ export const it = {
     commit: "Progetto creato con @agentrica/mcp init",
     commitFailed: "git: commit non riuscito (configura user.name e user.email), file lasciati in stage su main",
     committed: "git: commit iniziale su main, branch develop attivo",
-    usage: 'uso: agentrica-mcp init [cartella] [--name "Nome"] [--lang it|en] [--subagents]',
+    usage: 'uso: agentrica-mcp init [cartella] [--name "Nome"] [--lang it|en] [--subagents] [--existing]',
     badName: "--name: serve un nome su una riga",
     taken: (files: string, more: number) => `nessun file scritto, esistono già: ${files}${more > 0 ? ` e altri ${more}` : ""}`,
     created: (name: string, dir: string, count: number) => `Progetto «${name}» creato in ${dir}: ${count} file.`,
     next: "Prossimi passi:",
     step1: (dir: string) => `  1. cd "${dir}" e apri Claude Code (.mcp.json registra il server di Agentrica con il pannello)`,
+    step1Registered: (dir: string) => `  1. cd "${dir}" e apri Claude Code (.mcp.json c'era già ed è stato saltato: il server di Agentrica deve esserci, o registrato con add)`,
     step2: "  2. chiedi di aprire la fase F0 (plan/00-base.md): stack, agenzie attive, sezioni «da compilare»",
+    added: (name: string, dir: string, count: number) => `Regole di Agentrica aggiunte a «${name}» in ${dir}: ${count} file nuovi.`,
+    skipped: (files: string) => `Saltati perché esistono già: ${files}`,
+    importAgents: "Il tuo CLAUDE.md non è stato toccato: aggiungi una riga «@AGENTS.md» perché Claude Code legga le regole di Agentrica.",
+    noCommit: "git: nessun commit, i file nuovi sono da rivedere e da aggiungere tu",
+    stepExisting: "  2. chiedi a Claude «Crea le fasi del progetto dal codice esistente»: scrive solo plan/, si ferma al backlog e propone /clear",
+    /** L'ultima riga di plan/README.md con --existing, al posto dell'ordine delle fasi. */
+    noPhases: "Nessuna fase ancora: chiedi a Claude di crearle leggendo il codice esistente. In quella sessione si scrivono solo le fasi con backlog e criteri, poi `/clear`; ogni fase si apre in una sessione nuova.",
   },
 
   panel: {
@@ -470,7 +480,9 @@ export const it = {
   },
 
   project: {
-    noPlan: "Non trovo plan/README.md: il pannello legge il formato creato da `agentrica-mcp init` (vedi il README del pacchetto).",
+    noPlan:
+      "Questo progetto non ha ancora un piano (plan/README.md). Per crearlo esegui `npx @agentrica/mcp init --existing`, che aggiunge le regole di Agentrica senza toccare i tuoi file, oppure chiedi a Claude «Crea il piano del progetto dal codice esistente».",
+    emptyPlan: "Il piano non ha ancora fasi. Chiedi a Claude «Crea le fasi del progetto dal codice esistente»: scrive solo plan/ e si ferma al backlog.",
     noPhases: "In plan/README.md manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).",
     noPhaseFile: (file: string, id: string) => `Non trovo plan/${file}, il file della fase ${id}.`,
     noBacklog: (file: string) => `In plan/${file} manca la sezione «## Backlog».`,

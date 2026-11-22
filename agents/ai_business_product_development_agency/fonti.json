@@ -34,7 +34,7 @@
     ],
     "update": "page",
     "access": "libero",
-    "checked": "2026-11-19"
+    "checked": "2026-11-22"
   },
   {
     "id": "banca-italia",
@@ -167,6 +167,6 @@
     ],
     "update": "page",
     "access": "pagamento",
-    "checked": "2026-11-19"
+    "checked": "2026-11-22"
   }
 ]

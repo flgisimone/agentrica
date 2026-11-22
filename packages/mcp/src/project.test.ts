@@ -17,13 +17,23 @@ const write = (path: string, text: string) => {
   writeFileSync(join(root, path), text);
 };
 
-test("senza plan/ il pannello dice cosa manca", () => {
+test("senza plan/ il pannello dà un'informazione con le due strade, non un problema (F35)", () => {
   const empty = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-empty-")));
   const plan = readPlan(empty);
+  mkdirSync(join(empty, "plan"));
+  writeFileSync(join(empty, "plan", "README.md"), "# Piano\n\n## Fasi\n\n| Fase | File | Contenuto | Stato |\n|---|---|---|---|\n");
+  const noPhases = readPlan(empty);
+  writeFileSync(join(empty, "plan", "README.md"), "# Piano\n");
+  const noTable = readPlan(empty);
   rmSync(empty, { recursive: true });
   assert.deepEqual(plan.phases, []);
   assert.equal(plan.openPhase, null);
-  assert.match(plan.problems[0]!, /Non trovo plan\/README\.md/);
+  assert.deepEqual(plan.problems, []);
+  assert.match(plan.notice!, /init --existing.*Crea il piano del progetto dal codice esistente/);
+  assert.deepEqual(noPhases.problems, []);
+  assert.match(noPhases.notice!, /non ha ancora fasi/);
+  assert.equal(noTable.notice, null, "un README senza la tabella «Fasi» resta un problema di formato");
+  assert.match(noTable.problems[0]!, /manca la tabella «## Fasi»/);
 });
 
 test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {

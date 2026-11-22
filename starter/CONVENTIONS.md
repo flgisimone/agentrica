@@ -29,7 +29,8 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
 - **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
 - **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l’evidenza: il pannello di `@agentrica/mcp` (acceso di predefinito) legge questo formato.
-- **Apertura.** Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
+- **Pianificazione.** Le fasi si creano in una sessione a sé, che scrive solo `plan/` (in un progetto già avviato leggendo il codice esistente): fasi in «Fasi», file di fase con backlog e criteri, nessuna modifica al codice. Si fa confermare il piano all'utente e ci si ferma proponendo `/clear`.
+- **Apertura.** Ogni fase si apre in una sessione nuova, una sola fase per sessione. Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
 - **Durante.** Ciò che esce dal perimetro diventa una voce del backlog o un rilievo aperto, non una modifica di passaggio (§14). Le correzioni fuori fase vanno su `fix/nome`.
 - **Chiusura.** Procedura di §13.7; i «Rilievi aperti» restano visibili finché una fase successiva non li chiude con un'evidenza.
 
@@ -142,7 +143,7 @@ Si lavora su `fase/fN-nome` (o `fix/nome` per una correzione fuori fase), parten
 5. **Merge** in `develop` con `--no-ff` e messaggio «Merge fase/fN-nome in develop».
 6. **Push** di `develop` e del branch della fase; la CI (`.github/workflows/ci.yml`) deve diventare verde (`gh run list`, `gh run watch`). Se è rossa, la si corregge su un `fix/…` prima di aprire la fase successiva.
 7. **Indice.** `tokensave sync` dalla root.
-8. **Sessione nuova.** Si dice all'utente che lo stato è completo in `plan/` e in git e che può fare `/clear`; la fase successiva riparte leggendo `plan/README.md` e il suo file.
+8. **Sessione nuova.** Si propone all'utente `/clear`: lo stato è completo in `plan/` e in git. La fase successiva si apre in una sessione nuova, leggendo `plan/README.md` e il suo file.
 
 Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi successivi. Una correzione `fix/…` segue gli stessi passi; il messaggio del merge è «Merge fix/nome in develop».
 

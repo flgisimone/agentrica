@@ -6,6 +6,7 @@ This plan collects the decisions taken and the work phases, one per file.
 
 ## How we work on a phase
 
+- Phases are created in a planning session, which writes only `plan/` and ends with the user's confirmation and the suggestion of `/clear`; then one phase per session, each in a new session.
 - Each phase has a file `NN-name.md` with goal, status, agencies, backlog, acceptance criteria and, at the end of the phase, «Done», «Checks» and «Open findings» (template: [00-base.md](00-base.md)).
 - Work happens on a `phase/fN-name` branch, starting from `develop`; fixes outside a phase on `fix/name`.
 - The «proposals to confirm» in the phase files are decided with the user when each phase opens.

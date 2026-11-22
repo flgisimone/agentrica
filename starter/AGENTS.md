@@ -35,7 +35,8 @@ Un bug si corregge alla causa, nel punto per cui passano tutti i chiamanti. Nien
 Il costo di una sessione cresce con le chiamate e con la dimensione del contesto: ogni chiamata lo rilegge tutto. L'abbonamento ha limiti di cinque ore e settimanali.
 
 - **Agenti**: sono la voce più cara. Si avviano solo quando un'attività lo richiede e solo gli specialisti pertinenti, mai tutte le agenzie insieme (sezione «Agenzie»).
-- Una sessione per fase: dopo la chiusura (CONVENTIONS §13.7) se ne apre una nuova (`/clear`). Lo stato è nel piano, in git e nella memoria.
+- **Pianificare è una sessione a sé.** Quando l'utente chiede le fasi (o il piano di un progetto già avviato), si scrive solo `plan/`: fasi con backlog e criteri, nessuna modifica al codice. Si fa confermare il piano e ci si ferma proponendo `/clear`, senza cominciare a sviluppare (CONVENTIONS §2.6).
+- Una sessione per fase: ogni fase si apre in una sessione nuova, una sola per sessione, e alla chiusura (CONVENTIONS §13.7) si propone `/clear`. Lo stato è nel piano, in git e nella memoria.
 - Dentro la fase, `/compact` quando il contesto diventa grande.
 - Durante lo sviluppo test mirati (un file di test, una spec e2e); la verifica completa con `npm run verify`, in un comando solo.
 - Letture indipendenti nella stessa chiamata; righe mirate invece di file interi; non rileggere un file già nel contesto.

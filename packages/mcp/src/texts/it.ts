@@ -38,6 +38,7 @@ export const it = {
       `L'utente ha chiuso il modulo della configurazione: salvati i valori predefiniti in ${path}, il modulo non ricompare. Si cambiano con il comando configure di Agentrica.`,
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
       `Agentrica: ${plural(o.agents, "agente IA", "agenti IA")} in ${plural(o.departments, "reparto", "reparti")} (${o.codes}). ` +
+      "Ogni lavoro sul progetto dell'utente (funzioni, modifiche, scelte di stack, fasi, audit) passa dagli agenti di Agentrica, anche se l'utente non li nomina; senza agenti solo se l'utente lo chiede. " +
       "Per scegliere un agente usa list_agents; per lavorare come quell'agente carica le sue istruzioni con agent. " +
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
       "poi carica gli specialisti con agent uno alla volta, ognuno dal risultato del precedente, mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +

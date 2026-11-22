@@ -2,6 +2,8 @@
 
 Before implementing, read the relevant sections of [CONVENTIONS.md](CONVENTIONS.md) and the phase file in [plan/](plan/README.md): these rules complete them, they do not replace them (CONVENTIONS §16).
 
+**Main rule: all work on the project goes through Agentrica's agents, even if the user does not name them.** A new feature, a change, a stack choice, phase F0, an audit or a finding to fix starts from the Agentrica MCP server: load its tools with ToolSearch (`mcp__agentrica__`), then `list_agents` and the department director with `agent`, as «How to consult an agent» says. Questions to the user are asked with `ask_user`, which shows them in the panel. Work without agents only if the user asks for it, or for short answers that do not touch the project.
+
 <!-- If the framework writes its own block of rules here at the top (for example Next.js with `next dev`), leave it and commit it. -->
 
 ## Exploring the code: tokensave
@@ -63,8 +65,8 @@ Five teams of roles. The role files are in `agents/`, in English in the `en/` su
 
 ### Two rules that always apply
 
-- **Activation on request.** The agencies are not an always-on system: no agent starts without a task that needs it, and never all agencies or all agents together. For each task choose the agency and only the relevant specialists, at the moment they are needed.
-- **User confirmation.** Every final decision of the agencies is a proposal until the user confirms it: priorities and content of the backlog, requirements and specifications, architecture and data model choices, findings accepted or rejected, closing a task, new dependencies, commits, merges, pushes, deploys and migrations. Present the alternatives with their reasons (with AskUserQuestion) and proceed only after the user's go-ahead. At the end of a phase, commit, merge into `develop`, push and `tokensave sync` are confirmed with a single question (CONVENTIONS §13.7).
+- **Only the relevant agents.** All work on the project goes through the agents (main rule, at the top), but never all agencies or all agents together. For each task choose the agency and only the relevant specialists, at the moment they are needed.
+- **User confirmation.** Every final decision of the agencies is a proposal until the user confirms it: priorities and content of the backlog, requirements and specifications, architecture and data model choices, findings accepted or rejected, closing a task, new dependencies, commits, merges, pushes, deploys and migrations. Present the alternatives with their reasons (with `ask_user`, in Agentrica's panel; AskUserQuestion only if the panel is off) and proceed only after the user's go-ahead. At the end of a phase, commit, merge into `develop`, push and `tokensave sync` are confirmed with a single question (CONVENTIONS §13.7).
 
 ### How to consult an agent
 

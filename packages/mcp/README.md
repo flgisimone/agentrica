@@ -311,7 +311,7 @@ The same catalog can be read from code, without starting the server: `import { l
 
 ## Versions
 
-What changed in each version, with its date, is in [CHANGELOG.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.md) (in Italian). 0.6.0 renames the prompts (`aisa-02` becomes `aisa-02-software`); 0.9.0 renames tools, commands and arguments into English (table in [Usage](#usage)).
+What changed in each version, with its date, is in [CHANGELOG.en.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.en.md) (in Italian: [CHANGELOG.md](https://github.com/flgisimone/agentrica/blob/main/packages/mcp/CHANGELOG.md)). 0.6.0 renames the prompts (`aisa-02` becomes `aisa-02-software`); 0.9.0 renames tools, commands and arguments into English (table in [Usage](#usage)).
 
 ## License
 

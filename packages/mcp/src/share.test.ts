@@ -53,7 +53,7 @@ test("sharePreviewText: ogni riga, l'avviso con l'informativa e il codice", () =
   assert.match(text, /1 righe, ultimi 30 giorni, versione 0\.7\.0/);
   assert.match(text, /- 2026-11-18 · AISA-02 · sonnet · medium: ingresso 12\.000, uscita 30, letti dalla cache 5, scritti in cache 0/);
   assert.match(text, /2 righe più vecchie restano fuori/);
-  assert.match(text, /note-legali#consumo/);
+  assert.match(text, /\/it\/note-legali#consumo/);
   assert.match(text, /code "0123abcd"/);
   assert.match(sharePreviewText("0123abcd", { mcpVersion: "0.7.0", rows: [] }, 0), /non c'è nulla da inviare/);
 });

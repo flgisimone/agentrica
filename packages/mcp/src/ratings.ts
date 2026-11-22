@@ -4,10 +4,9 @@
 // dell'anteprima e manda esattamente il contenuto mostrato. Niente compito, file o percorsi: solo i campi di Rating.
 // Tutto resta in memoria (nessun file); i tempi e fetch si passano dall'esterno per i test.
 import { randomBytes, randomUUID } from "node:crypto";
-import { T } from "./texts/index.ts";
+import { legalUrl, T } from "./texts/index.ts";
 
 export const RATINGS_URL = "https://agentrica.vercel.app/api/ratings";
-export const PRIVACY_URL = "https://agentrica.vercel.app/note-legali#valutazioni";
 export const MAX_COMMENT = 1000;
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
@@ -40,7 +39,7 @@ export interface RatingsOptions {
 }
 
 /** Cosa parte e cosa non scrivere, nell'anteprima, nel modulo e nel pannello. */
-export const notice = () => T.ratings.notice(PRIVACY_URL);
+export const notice = () => T.ratings.notice(legalUrl("valutazioni"));
 
 export function createRatings({ version, url = RATINGS_URL, fetch: doFetch = fetch, now = Date.now }: RatingsOptions) {
   // Un id casuale per agente e sessione: non collega sessioni né agenti diversi, ferma solo i doppi invii.

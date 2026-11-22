@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { legalUrl, setLang } from "./texts/index.ts";
 import { createRatings, formMessage, MAX_COMMENT, notice, parseForm, previewText, ratingForm, REMINDER_AFTER_MS, type Rating } from "./ratings.ts";
 
 /** fetch finto: registra le richieste e risponde con lo stato dato (o fallisce come la rete assente). */
@@ -110,9 +111,21 @@ test("anteprima: campi, avviso con l'informativa, codice e istruzione di chieder
   assert.match(text, /commento: \(nessuno\)/);
   assert.match(text, /pubblicazione del commento sul sito: no/);
   assert.ok(text.includes(notice()));
-  assert.match(notice(), /note-legali#valutazioni/);
+  assert.match(notice(), /\/it\/note-legali#valutazioni/);
   assert.ok(text.includes(`code "${code}"`));
   assert.match(text, /Solo dopo il suo sì/);
+});
+
+test("legalUrl (F33-08): le note legali nella lingua del server, con le ancore tradotte", () => {
+  assert.equal(legalUrl("progetti"), "https://agentrica.vercel.app/it/note-legali#progetti");
+  setLang("en");
+  try {
+    assert.equal(legalUrl("valutazioni"), "https://agentrica.vercel.app/en/legal#ratings");
+    assert.equal(legalUrl("consumo"), "https://agentrica.vercel.app/en/legal#usage");
+    assert.match(notice(), /\/en\/legal#ratings/);
+  } finally {
+    setLang("it");
+  }
 });
 
 test("modulo (F23): una volta per agente caricato e non valutato; dopo il modulo niente promemoria", async () => {

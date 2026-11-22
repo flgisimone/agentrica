@@ -6,10 +6,9 @@
 // ponytail: la validazione dei testi copia plainText di agentrica-site (src/lib/projects.ts), che resta il controllo
 // finale. Se cambia una delle due, cambiare anche l'altra; da unire se il sito legge un giorno le regole dal pacchetto.
 import { randomBytes, randomUUID } from "node:crypto";
-import { T } from "./texts/index.ts";
+import { legalUrl, T } from "./texts/index.ts";
 
 export const PROJECTS_URL = "https://agentrica.vercel.app/api/projects";
-export const PROJECTS_PRIVACY_URL = "https://agentrica.vercel.app/note-legali#progetti";
 export const PROJECT_LIMITS = { name: 60, description: 280, author: 40, agents: 10, url: 200 } as const;
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
@@ -79,9 +78,9 @@ export function parseProjectFields(input: Record<string, unknown>, known: Known)
   const agents = list(input.agents);
   if (agents.length > PROJECT_LIMITS.agents || agents.some((a) => !known.agents.has(a))) return t.badAgents(PROJECT_LIMITS.agents);
   const given = typeof input.author === "string" && input.author.trim() !== "";
-  // ponytail: il nome predefinito parte nella lingua del server e il sito lo mostra così com'è; da rivedere in F33.
-  const author = given ? plainText(input.author, PROJECT_LIMITS.author) : t.defaultAuthor;
-  if (!author) return t.badAuthor(PROJECT_LIMITS.author);
+  // F33-09: senza nome da mostrare l'autore parte vuoto e il sito scrive il nome predefinito nella lingua della pagina.
+  const author = given ? plainText(input.author, PROJECT_LIMITS.author) : "";
+  if (author === null) return t.badAuthor(PROJECT_LIMITS.author);
   return { name, url, description, departments, agents, author, consent: true, license: true };
 }
 
@@ -159,7 +158,7 @@ export function createShowcase({ version, url = PROJECTS_URL, fetch: doFetch = f
 
 export type Showcase = ReturnType<typeof createShowcase>;
 
-export const projectNotice = () => T.showcase.notice(PROJECTS_PRIVACY_URL);
+export const projectNotice = () => T.showcase.notice(legalUrl("progetti"));
 
 /** Il modulo della proposta (elicitation). */
 export function projectForm() {
@@ -191,7 +190,8 @@ export function projectPreviewText(code: string, p: ProjectPayload): string {
     description: p.description,
     departments: p.departments.join(", "),
     agents: p.agents.join(", "),
-    author: p.author,
+    // Autore vuoto (F33-09): l'anteprima dice che non parte un nome e quale scrive il sito.
+    author: p.author || T.showcase.noAuthor,
     version: p.mcpVersion,
     consent: T.showcase.consent,
     license: T.showcase.license,
@@ -200,4 +200,4 @@ export function projectPreviewText(code: string, p: ProjectPayload): string {
 }
 
 /** La frase per il modello dopo un invio riuscito, con il codice per ritirare la proposta. */
-export const sentText = (name: string, code: string) => T.showcase.sent(name, code, PROJECTS_PRIVACY_URL);
+export const sentText = (name: string, code: string) => T.showcase.sent(name, code, legalUrl("progetti"));

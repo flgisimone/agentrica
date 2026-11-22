@@ -18,7 +18,8 @@
       "default": "./dist/mcp/src/catalog.js"
     },
     "./package.json": "./package.json",
-    "./CHANGELOG.md": "./CHANGELOG.md"
+    "./CHANGELOG.md": "./CHANGELOG.md",
+    "./CHANGELOG.en.md": "./CHANGELOG.en.md"
   },
   "bin": {
     "agentrica-mcp": "dist/mcp/src/server.js"
@@ -29,7 +30,8 @@
     "starter",
     ".claude/agents",
     "README.it.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "CHANGELOG.en.md"
   ],
   "engines": {
     "node": ">=22"

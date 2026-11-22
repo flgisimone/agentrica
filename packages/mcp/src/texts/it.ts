@@ -287,6 +287,7 @@ export const it = {
       "Acconsento a che Agentrica pubblichi sul suo sito i dati di questo modulo (nome da mostrare, nome, link, descrizione, reparti, agenti, versione) e la data di approvazione, finché non chiedo di toglierli.",
     license: "Concedo ad Agentrica, senza compenso, il permesso di mostrare sul sito nome e descrizione del progetto finché non chiedo di toglierli, e dichiaro di poterlo fare.",
     defaultAuthor: "Utente di Agentrica",
+    noAuthor: "nessuno (il sito scrive «Utente di Agentrica» o, in inglese, «Agentrica user»)",
     needConsent: "servono il consenso e la licenza",
     badName: (max: number) => `nome mancante, oltre ${max} caratteri o con link e simboli < > [ ] \``,
     badUrl: "il link deve essere un indirizzo https:// completo, senza porta né credenziali, al più 200 caratteri",

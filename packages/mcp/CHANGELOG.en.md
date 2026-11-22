@@ -2,6 +2,17 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.11.0 — 2026-11-22
+
+### Added
+- `init --existing` for a project already under way: it writes only the missing files, skips and lists those already there, and does not commit; no F0 «technical base», CI, `.nvmrc` or `.env.example`, and the plan starts without phases. If a `CLAUDE.md` already exists it says to add `@AGENTS.md`.
+- Server instructions: the `plan/` format, with the offer to create it by reading the code if it is missing, and sessions per phase: planning writes only `plan/`, gets confirmed and suggests `/clear`; one phase per session, with `/clear` at its close.
+
+### Changed
+- Panel: without `plan/README.md`, or with a plan without phases, a piece of information with the ways to create it (`init --existing` or the request to Claude) instead of an error.
+- `AGENTS.md`, `CONVENTIONS.md` and `plan/README.md` of new projects: planning is a session of its own and each phase opens in a new session.
+- Shorter server instructions, within 2048 characters.
+
 ## 0.10.0 — 2026-11-22
 
 ### Breaking

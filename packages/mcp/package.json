@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "mcpName": "io.github.flgisimone/agentrica",
   "description": "Agentrica's 56 AI agents as a local MCP server (stdio): one prompt per agent, three read-only tools (including the departments' library) and two tools that send only after confirmation: agent ratings and token totals.",
   "license": "MIT",

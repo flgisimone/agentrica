@@ -29,7 +29,8 @@ Reread the diff, run the checks (§13), verify the acceptance criteria on the re
 Work is divided into phases, one at a time, listed in `plan/README.md` (table «Phases») with the decisions taken.
 - **Phase file.** Each phase has `plan/NN-name.md` with goal, status, agencies, starting situation, the user's decisions, `## Backlog`, `## Acceptance criteria` and, at closure, «Done», «Checks» and «Open findings» (template: `plan/00-base.md`).
 - **Backlog.** A table with id `FN-NN`, task and priority (`P0`–`P3`, as in `AGENTS.md`), confirmed by the user when the phase opens. A task is done when «Done» cites its id in bold (`**FN-NN**`) with the evidence: the panel of `@agentrica/mcp` (on by default) reads this format.
-- **Opening.** The «proposals to confirm» in the file are decided with the user; `phase/fN-name` is opened from `develop`.
+- **Planning.** Phases are created in a session of their own, which writes only `plan/` (in a project already under way, by reading the existing code): phases in «Phases», phase files with backlog and criteria, no change to the code. Have the plan confirmed by the user and stop by suggesting `/clear`.
+- **Opening.** Each phase opens in a new session, only one phase per session. The «proposals to confirm» in the file are decided with the user; `phase/fN-name` is opened from `develop`.
 - **During.** Whatever falls outside the scope becomes a backlog item or an open finding, not a change in passing (§14). Fixes outside a phase go on `fix/name`.
 - **Closure.** Procedure in §13.7; the «Open findings» stay visible until a later phase closes them with evidence.
 
@@ -142,7 +143,7 @@ Work happens on `phase/fN-name` (or `fix/name` for a fix outside a phase), start
 5. **Merge** into `develop` with `--no-ff` and the message «Merge phase/fN-name into develop».
 6. **Push** `develop` and the phase branch; CI (`.github/workflows/ci.yml`) must turn green (`gh run list`, `gh run watch`). If it is red, fix it on a `fix/…` branch before opening the next phase.
 7. **Index.** `tokensave sync` from the root.
-8. **New session.** Tell the user that the state is complete in `plan/` and in git and that they can run `/clear`; the next phase starts again by reading `plan/README.md` and its own file.
+8. **New session.** Suggest `/clear` to the user: the state is complete in `plan/` and in git. The next phase opens in a new session, by reading `plan/README.md` and its own file.
 
 If a step fails, stop, report the error and do not skip to the next steps. A `fix/…` follows the same steps; the merge message is «Merge fix/name into develop».
 

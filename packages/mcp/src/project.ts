@@ -1,7 +1,8 @@
 // Lettura del progetto dell'utente per il pannello: fasi e backlog da plan/, rilievi da plan/ e audit/, stato di git.
 // Il formato è quello che crea `init` (init.ts), descritto nel README del pacchetto. Si legge solo dentro plan/ e audit/
 // della cartella del progetto: i link simbolici che escono sono rifiutati e ogni file ha un limite di dimensione.
-// Un file mancante o fuori formato diventa un problema in `problems`, mai un errore che ferma il pannello.
+// Un file mancante o fuori formato diventa un problema in `problems`, mai un errore che ferma il pannello. Da F35 un piano
+// che manca o non ha ancora fasi (progetto già avviato, `init --existing`) è un'informazione in `notice`, non un problema.
 // Da F32 il formato esiste in italiano e in inglese (starter/ e starter/en/): titoli, stati e chiavi degli audit si
 // leggono in entrambe le lingue, qualunque sia quella del server.
 import { execFile } from "node:child_process";
@@ -59,6 +60,8 @@ export interface Project {
   openPhase: OpenPhase | null;
   findings: Finding[];
   problems: string[];
+  /** Un'informazione, non un errore (F35): il piano manca o non ha ancora fasi, con le strade per crearlo. */
+  notice: string | null;
 }
 
 const MAX_FILE_BYTES = 1_000_000;
@@ -114,18 +117,19 @@ export function bullets(lines: readonly string[]): string[] {
 const linkTarget = (cell: string) => /\]\(([^)]+)\)/.exec(cell)?.[1] ?? null;
 const priorityOf = (text: string) => PRIORITY.exec(text)?.[0] ?? "";
 
-function readPhases(root: string, plan: string, problems: string[]): Phase[] {
+function readPhases(root: string, plan: string, problems: string[], notice: (text: string) => void): Phase[] {
   let readme: string;
   try {
     readme = readInside(root, join(plan, "README.md"));
   } catch {
-    problems.push(T.project.noPlan);
+    notice(T.project.noPlan);
     return [];
   }
   const phasesSection = section(readme, HEADINGS.phases);
   const rows = phasesSection ? tableRows(phasesSection) : [];
   if (rows.length === 0) {
-    problems.push(T.project.noPhases);
+    if (phasesSection) notice(T.project.emptyPlan);
+    else problems.push(T.project.noPhases);
     return [];
   }
   return rows.map(([id = "", file = "", summary = "", status = ""]) => {
@@ -246,8 +250,9 @@ export async function readGit(root: string): Promise<GitState | null> {
 /** Legge plan/ e audit/ di `root` (la cartella del progetto, già risolta con realpath). */
 export function readPlan(root: string): Omit<Project, "git"> {
   const problems: string[] = [];
+  let notice: string | null = null;
   const plan = join(root, "plan");
-  const phases = readPhases(root, plan, problems);
+  const phases = readPhases(root, plan, problems, (text) => (notice = text));
   const open = phases.find((phase) => !CLOSED.has(phase.status.toLowerCase()));
   return {
     name: basename(root),
@@ -255,6 +260,7 @@ export function readPlan(root: string): Omit<Project, "git"> {
     openPhase: open ? readOpenPhase(root, plan, open, problems) : null,
     findings: [...readPhaseFindings(root, plan, phases), ...readAuditFindings(root, problems)],
     problems,
+    notice,
   };
 }
 

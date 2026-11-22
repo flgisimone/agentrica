@@ -35,7 +35,8 @@ A bug is fixed at its cause, at the point all callers go through. No abstraction
 The cost of a session grows with the number of calls and the size of the context: every call rereads all of it. The subscription has five-hour and weekly limits.
 
 - **Agents**: they are the most expensive item. They are started only when a task needs them and only the relevant specialists, never all the agencies together (section «Agencies»).
-- One session per phase: after the closure (CONVENTIONS §13.7) a new one is opened (`/clear`). The state is in the plan, in git and in memory.
+- **Planning is a session of its own.** When the user asks for the phases (or the plan of a project already under way), only `plan/` is written: phases with backlog and criteria, no change to the code. Have the plan confirmed and stop by suggesting `/clear`, without starting development (CONVENTIONS §2.6).
+- One session per phase: each phase opens in a new session, only one per session, and at the closure (CONVENTIONS §13.7) suggest `/clear`. The state is in the plan, in git and in memory.
 - Within the phase, `/compact` when the context gets large.
 - During development, targeted tests (one test file, one e2e spec); the full check with `npm run verify`, in a single command.
 - Independent reads in the same call; targeted lines instead of whole files; do not reread a file already in the context.

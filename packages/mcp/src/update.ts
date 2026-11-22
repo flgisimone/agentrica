@@ -3,6 +3,8 @@
 // x.y.z e nel testo per il modello entra solo quella. Rete assente o negata, timeout, risposta strana: niente avviso.
 // La versione resta fissata: l'avviso dice solo come aggiornare. --no-update-check lo spegne.
 
+import { T } from "./texts/index.ts";
+
 export const REGISTRY_URL = "https://registry.npmjs.org/-/package/@agentrica/mcp/dist-tags";
 const TIMEOUT_MS = 3_000;
 const MAX_BYTES = 4_096;
@@ -57,11 +59,6 @@ export async function fetchLatest(url: string = REGISTRY_URL, doFetch: typeof fe
 
 /** L'avviso per l'utente (anche nel banner del pannello), con il comando giusto per come è installato il server. */
 export function updateMessage(current: string, latest: string, kind: InstallKind): string {
-  const how =
-    kind === "global"
-      ? `Per aggiornare: npx -y @agentrica/mcp@${latest} install, poi riavvia il client.`
-      : kind === "npx"
-        ? `Per aggiornare cambia la versione in @agentrica/mcp@${latest} nel comando del server (claude mcp add o .mcp.json), poi riavvia il client.`
-        : "Per aggiornare il clone: git pull, poi riavvia il client.";
-  return `È uscita la versione ${latest} di Agentrica (in uso la ${current}). ${how}`;
+  const how = kind === "global" ? T.update.global(latest) : kind === "npx" ? T.update.npx(latest) : T.update.source;
+  return T.update.message(latest, current, how);
 }

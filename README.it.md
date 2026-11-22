@@ -80,7 +80,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F29 | Configurazione salvata, comandi `valuta`, `configura` e `progetto`, progetti proposti dal server MCP (0.8.0) | completata |
 | F30 | Rilievi aperti da F16 a F29: privilegio minimo del database, rischi accettati, correzioni e prove guidate | completata |
 | F31 | Lingua: una lingua per file, anglicismi tolti dai testi italiani, README inglesi di predefinito | completata |
-| F32 | Ruoli, biblioteche e server MCP anche in inglese | da aprire |
+| F32 | Ruoli, biblioteche e server MCP anche in inglese, `--lang`, tool in inglese (0.9.0) | completata |
 | F33 | Sito in italiano e inglese | da aprire |
 
 Il dettaglio è in [plan/README.md](plan/README.md).

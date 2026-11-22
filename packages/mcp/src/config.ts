@@ -5,8 +5,11 @@
 import { chmodSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
+import { isLang, T } from "./texts/index.ts";
 
 export interface Config {
+  /** Lingua dei testi (F32): «it», «en» o vuota per quella del sistema. */
+  lang: string;
   /** La squadra, come --agents; vuota o assente: tutti gli agenti. */
   agents: string;
   panel: boolean;
@@ -16,10 +19,10 @@ export interface Config {
 export type ConfigKey = keyof Config;
 
 // Da F29 tutto acceso alla prima installazione (scelta dell'utente, 2026-11-21): pannello, valutazioni, avviso.
-export const DEFAULTS: Config = { agents: "", panel: true, ratings: true, updateCheck: true };
+export const DEFAULTS: Config = { lang: "", agents: "", panel: true, ratings: true, updateCheck: true };
 export const MAX_CONFIG_BYTES = 4096;
 export const MAX_AGENTS = 500;
-const KEYS = ["agents", "panel", "ratings", "updateCheck"] as const satisfies readonly ConfigKey[];
+export const KEYS = ["lang", "agents", "panel", "ratings", "updateCheck"] as const satisfies readonly ConfigKey[];
 
 export const configPath = (home = homedir()) => join(home, ".agentrica", "config.json");
 /** Il percorso da mostrare all'utente, con ~ al posto della cartella personale. */
@@ -55,20 +58,22 @@ export function parseConfig(raw: string): Config | undefined {
     if (typeof value !== typeof DEFAULTS[key]) return undefined;
     (config as Record<string, unknown>)[key] = value;
   }
-  return config.agents.length > MAX_AGENTS ? undefined : config;
+  return valid(config) ? config : undefined;
 }
+
+const valid = (config: Config) => config.agents.length <= MAX_AGENTS && (config.lang === "" || isLang(config.lang));
 
 export type ReadResult = { config: Config } | { missing: true } | { invalid: string };
 
 /** Il file salvato: mancante, valido o non valido (con il motivo, mai il contenuto). */
 export function readConfig(path: string): ReadResult {
   try {
-    if (statSync(path).size > MAX_CONFIG_BYTES) return { invalid: "più grande di 4 KB" };
+    if (statSync(path).size > MAX_CONFIG_BYTES) return { invalid: T.config.tooBig };
     const config = parseConfig(readFileSync(path, "utf8"));
-    return config ? { config } : { invalid: "formato non valido" };
+    return config ? { config } : { invalid: T.config.badFormat };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return { missing: true };
-    return { invalid: (error as NodeJS.ErrnoException).code ?? "non leggibile" };
+    return { invalid: (error as NodeJS.ErrnoException).code ?? T.config.unreadable };
   }
 }
 
@@ -82,34 +87,18 @@ export function writeConfig(path: string, config: Config): void {
   renameSync(temp, path);
 }
 
+const SYSTEM = "system";
+
 /** I campi del modulo, senza quelli fissati da un flag; i valori proposti sono quelli di `base`. */
 export function configForm(base: Config, fixed: ReadonlySet<ConfigKey>) {
+  const f = T.config.form;
   const fields = {
-    agents: {
-      type: "string" as const,
-      title: "Squadra",
-      description: "Id di agenti e sigle di reparti separati da virgole, es. aisa,aiwda-08. Vuoto: tutti gli agenti.",
-      maxLength: MAX_AGENTS,
-      default: base.agents,
-    },
-    panel: {
-      type: "boolean" as const,
-      title: "Pannello locale",
-      description: "Una pagina su questo computer con fasi, rilievi, agenti in uso e le scelte da prendere.",
-      default: base.panel,
-    },
-    ratings: {
-      type: "boolean" as const,
-      title: "Valutazioni degli agenti",
-      description: "Il server ti chiede ogni tanto un voto sugli agenti. Non parte nulla senza la tua conferma.",
-      default: base.ratings,
-    },
-    updateCheck: {
-      type: "boolean" as const,
-      title: "Avviso di versione nuova",
-      description: "All'avvio il server controlla sul registro npm se c'è una versione più recente.",
-      default: base.updateCheck,
-    },
+    // Una scelta con «system» al posto del vuoto, che nel file resta "" (lingua del sistema).
+    lang: { type: "string" as const, title: f.lang, description: f.langHelp, enum: [SYSTEM, "it", "en"], enumNames: f.langNames, default: base.lang || SYSTEM },
+    agents: { type: "string" as const, title: f.agents, description: f.agentsHelp, maxLength: MAX_AGENTS, default: base.agents },
+    panel: { type: "boolean" as const, title: f.panel, description: f.panelHelp, default: base.panel },
+    ratings: { type: "boolean" as const, title: f.ratings, description: f.ratingsHelp, default: base.ratings },
+    updateCheck: { type: "boolean" as const, title: f.updateCheck, description: f.updateCheckHelp, default: base.updateCheck },
   };
   return { type: "object" as const, properties: Object.fromEntries(KEYS.filter((key) => !fixed.has(key)).map((key) => [key, fields[key]])) };
 }
@@ -123,15 +112,8 @@ export function parseConfigForm(base: Config, content: Record<string, unknown> |
     if (typeof value !== typeof DEFAULTS[key]) return undefined;
     (config as Record<string, unknown>)[key] = typeof value === "string" ? value.trim() : value;
   }
-  return config.agents.length > MAX_AGENTS ? undefined : config;
+  if (config.lang === SYSTEM) config.lang = "";
+  return valid(config) ? config : undefined;
 }
 
-export const configMessage = (fixed: ReadonlySet<ConfigKey>) =>
-  [
-    "Configura Agentrica.",
-    `Le scelte si salvano sul tuo computer in ${shownPath} e valgono dalla prossima sessione. Ad Agentrica non arriva nulla.`,
-    "Per cambiarle usa il comando configura di Agentrica (in Claude Code /mcp__<nome del server>__configura); per tornare ai valori predefiniti cancella il file.",
-    fixed.size > 0 ? "Le opzioni scritte nel comando del server non compaiono qui: hanno la precedenza." : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+export const configMessage = (fixed: ReadonlySet<ConfigKey>) => T.config.message(shownPath, fixed.size > 0);

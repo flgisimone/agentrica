@@ -29,7 +29,7 @@ Every agent has a **star code name**: the department code, the number of its rol
 
 Agentrica has no people, clients or success stories, and the website does not make any up.
 
-The role files are in Italian today; English versions are planned (F32), followed by a bilingual website (F33).
+The role files, the libraries and the MCP server exist in English and in Italian (F32; English files in each agency's `en/` folder); a bilingual website follows (F33).
 
 ## Structure
 
@@ -48,7 +48,7 @@ The departments serve twice: they are the **content** of the product and also th
 
 ## Status
 
-Phases F0–F31 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F31 (one language per file, English READMEs by default) is complete; next are F32 and F33.
+Phases F0–F32 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F32 (agents and server in English, `--lang`) is complete; next is F33.
 
 ## Getting started
 

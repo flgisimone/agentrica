@@ -2,7 +2,7 @@
 
 - **Agente**: AISA-09 · REGULUS, Senior Application Security Engineer (`aisa-09`)
 - **Progetto**: [`progetti/api-note`](../progetti/api-note/), API REST in Node senza dipendenze
-- **Compito** (argomento `compito`, da copiare così com'è):
+- **Compito** (argomento `task`, da copiare così com'è):
 
   > Esegui una revisione di sicurezza di questa API e riporta i rilievi con gravità, file e riga.
 

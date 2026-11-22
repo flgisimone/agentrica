@@ -3,6 +3,7 @@
 // fonti.json porta gli URL e non va mai al modello: servono al controllo delle fonti e al rilevatore delle novità.
 // Formato e ciclo di studio: docs/Biblioteca degli agenti.md.
 import { contentProblems } from "./content.ts";
+import type { Lang } from "./departments.ts";
 import { parseRole } from "./markdown.ts";
 
 /** 1 fonti primarie, 2 documentazione ufficiale, 3 solo segnale, «citata» a pagamento: solo titolo e versione. */
@@ -52,9 +53,11 @@ const ID = /^[a-z0-9][a-z0-9-]{0,59}$/;
 const HOST = /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/;
 // Nomi di parametri che portano credenziali: un URL di fonte non ne ha mai bisogno.
 const SECRET_PARAM = /token|key|secret|pass|auth|sig|session|code/i;
-const FIELDS = ["Fonte", "Versione", "Verificata il", "Da ricontrollare entro", "Ruoli"] as const;
-const NOTION = "Nozione";
-const APPLICATION = "Come si applica";
+// Etichette di una scheda per lingua: metadati nell'ordine fonte, versione, verifica, scadenza, ruoli; poi le due sezioni.
+const LABELS: Record<Lang, { fields: readonly [string, string, string, string, string]; notion: string; application: string }> = {
+  it: { fields: ["Fonte", "Versione", "Verificata il", "Da ricontrollare entro", "Ruoli"], notion: "Nozione", application: "Come si applica" },
+  en: { fields: ["Source", "Version", "Verified on", "Recheck by", "Roles"], notion: "Notion", application: "How it applies" },
+};
 
 /** Una data AAAA-MM-GG esistente. */
 export function isDate(value: unknown): value is string {
@@ -148,9 +151,12 @@ export function parseSources(text: string, where: string): Source[] {
 
 /**
  * Legge una scheda: titolo, riga dei metadati (Fonte · Versione · Verificata il · Da ricontrollare entro · Ruoli),
- * «## Nozione» e «## Come si applica». `roles` sono gli id del reparto; la fonte deve essere di livello 1 o 2.
+ * «## Nozione» e «## Come si applica», con le etichette di `lang`. `roles` sono gli id del reparto; la fonte deve essere
+ * di livello 1 o 2.
  */
-export function parseCard(text: string, file: string, path: string, sources: readonly Source[], roles: ReadonlySet<string>): Card {
+export function parseCard(text: string, file: string, path: string, sources: readonly Source[], roles: ReadonlySet<string>, lang: Lang = "it"): Card {
+  const { fields: FIELDS, notion: NOTION, application: APPLICATION } = LABELS[lang];
+  const [SOURCE, VERSION, VERIFIED, REVIEW, ROLES] = FIELDS;
   const match = CARD_FILE.exec(file);
   if (!match) throw new Error(`${path}: nome del file nella forma NN-nome.md`);
   const fail = (message: string): never => {
@@ -166,14 +172,14 @@ export function parseCard(text: string, file: string, path: string, sources: rea
     fields.set(part.slice(0, colon).trim(), part.slice(colon + 2).trim());
   }
   if (fields.size !== FIELDS.length || FIELDS.some((f) => !fields.get(f))) fail(`riga dei metadati con ${FIELDS.join(" · ")}`);
-  const source = sources.find((s) => s.id === fields.get("Fonte"));
-  if (!source) fail(`fonte «${fields.get("Fonte")}» non in fonti.json`);
+  const source = sources.find((s) => s.id === fields.get(SOURCE));
+  if (!source) fail(`fonte «${fields.get(SOURCE)}» non in fonti.json`);
   if (source!.level !== 1 && source!.level !== 2) fail(`fonte «${source!.id}» di livello ${source!.level}: serve una fonte di livello 1 o 2`);
-  const verified = fields.get("Verificata il")!;
-  const review = fields.get("Da ricontrollare entro")!;
+  const verified = fields.get(VERIFIED)!;
+  const review = fields.get(REVIEW)!;
   if (!isDate(verified) || !isDate(review)) fail("date nella forma AAAA-MM-GG");
-  if (review <= verified) fail("«Da ricontrollare entro» deve venire dopo «Verificata il»");
-  const cardRoles = fields.get("Ruoli")!.split(",").map((r) => r.trim());
+  if (review <= verified) fail(`«${REVIEW}» deve venire dopo «${VERIFIED}»`);
+  const cardRoles = fields.get(ROLES)!.split(",").map((r) => r.trim());
   const unknown = cardRoles.filter((r) => !roles.has(r));
   if (unknown.length > 0) fail(`ruoli non del reparto: ${unknown.join(", ")}`);
   if (sections.length !== 2 || sections[0]!.heading !== NOTION || sections[1]!.heading !== APPLICATION) {
@@ -185,7 +191,7 @@ export function parseCard(text: string, file: string, path: string, sources: rea
     number: Number(match[1]),
     title,
     source: { id: source!.id, name: source!.name, level: source!.level as 1 | 2 },
-    version: fields.get("Versione")!,
+    version: fields.get(VERSION)!,
     verified,
     review,
     roles: cardRoles,

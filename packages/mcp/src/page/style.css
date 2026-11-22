@@ -54,7 +54,7 @@ code { background: var(--secondary); border-radius: 4px; padding: 0 0.25em; }
 .tabs a:hover { color: var(--foreground); }
 .tabs a[aria-current="page"] { color: var(--foreground); border-bottom-color: var(--aisa); }
 .count:not(:empty) { display: inline-block; min-width: 1.6em; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--secondary); color: var(--foreground); font-size: 0.8rem; text-align: center; }
-#count-sessione:not(:empty) { background: var(--aibpd); color: var(--background); }
+#count-session:not(:empty) { background: var(--aibpd); color: var(--background); }
 
 main.wrap { display: grid; gap: 16px; padding-block: 16px 48px; }
 .view { display: grid; gap: 16px; }

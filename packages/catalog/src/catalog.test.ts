@@ -3,7 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { DEPARTMENTS, findAgentsDir, loadCatalog } from "./index.ts";
+import { DEPARTMENTS, findAgentsDir, loadCatalog, twinProblems } from "./index.ts";
 import { parseRole } from "./markdown.ts";
 
 const catalog = loadCatalog();
@@ -62,7 +62,7 @@ test("un file di ruolo senza nome in codice fa fallire il caricamento", () => {
     cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
     const folder = join(copy, "agents", DEPARTMENTS[3]!.folder);
     writeFileSync(join(folder, "13-nuovo-ruolo.md"), "# Nuovo ruolo\n\n## Missione\nProva.\n");
-    assert.throws(() => loadCatalog(join(copy, "agents")), /13 file di ruolo ma 12 nomi in codice/);
+    assert.throws(() => loadCatalog(join(copy, "agents")), /13 file di ruolo in agents\/ai_software_agency\/ ma 12 nomi in codice/);
   } finally {
     rmSync(copy, { recursive: true, force: true });
   }
@@ -77,4 +77,33 @@ test("parseRole separa titolo, introduzione e sezioni", () => {
     { heading: "Limiti", body: "- due" },
   ]);
     assert.throws(() => parseRole("senza titolo"), /senza titolo/);
+});
+
+test("il catalogo inglese ha gli stessi reparti, agenti, nomi in codice e schede di quello italiano", () => {
+  const en = loadCatalog(findAgentsDir(), "en");
+  assert.deepEqual(en.map((d) => d.agents.map((a) => [a.id, a.star, a.slug])), catalog.map((d) => d.agents.map((a) => [a.id, a.star, a.slug])));
+  assert.deepEqual(twinProblems(catalog, en), []);
+  for (const d of en) {
+    assert.equal(d.summary, DEPARTMENTS.find((i) => i.code === d.code)!.summary.en);
+    assert.match(d.workflow, /^1\. /, d.code);
+    assert.match(d.collaboration, /^- /, d.code);
+    for (const a of d.agents) assert.match(a.source, new RegExp(`^agents/${DEPARTMENTS.find((i) => i.code === d.code)!.folder}/en/`));
+  }
+});
+
+test("il catalogo inglese si ferma se manca un gemello o se le sezioni non coincidono", () => {
+  const copy = mkdtempSync(join(tmpdir(), "agentrica-"));
+  try {
+    cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
+    const en = join(copy, "agents", DEPARTMENTS[3]!.folder, "en");
+    const role = join(en, "02-senior-software-architect.md");
+    writeFileSync(role, `${readFileSync(role, "utf8")}\n## Extra\nOne more.\n`);
+    assert.throws(() => loadCatalog(join(copy, "agents"), "en"), /en\/02-senior-software-architect\.md: numero di sezioni diversi/);
+    rmSync(role);
+    assert.throws(() => loadCatalog(join(copy, "agents"), "en"), /AISA: 11 file di ruolo in agents\/ai_software_agency\/en\//);
+    rmSync(en, { recursive: true });
+    assert.throws(() => loadCatalog(join(copy, "agents"), "en"), /AISA: cartella agents\/ai_software_agency\/en\/ mancante/);
+  } finally {
+    rmSync(copy, { recursive: true, force: true });
+  }
 });

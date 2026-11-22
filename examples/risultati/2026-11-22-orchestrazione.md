@@ -72,3 +72,18 @@ OK  C1–C6; C7 verificato dall'utente nella pagina
 **Prova 2, progetto da `init --subagents`, «Usa il subagent design-ux-writer per proporre i testi di una pagina di iscrizione alla newsletter».** La sessione principale avvia il subagent (unica chiamata ad `Agent`, chiesta dall'utente); il subagent chiama per primo `mcp__agentrica__agent` con id AIWDA-10, poi legge il piano e la biblioteca con `library`, senza caricare il direttore. Nel pannello: AIWDA-10 · AVIOR fra gli agenti in uso e `design-ux-writer — finished` nella sezione dei subagent. C2 e C3 non si applicano: la sessione principale non carica agenti.
 
 Osservazioni dell'utente, corrette su `fix/prova-f34-vscode`: le parole «director» e «active» attaccate al testo prima nel testo copiato; il compito troncato a 120 caratteri; il bisogno di un resoconto di ciò che ogni agente ha fatto (tool `report`); le valutazioni in una pagina propria e un avviso per un agente nuovo o da valutare. L'ora del subagent (20:08 invece di 20:07) veniva dal `.meta.json`, scritto dopo l'avvio: ora viene dal transcript.
+
+## Terza prova in VS Code: resoconti, pagina Agenti, avvisi
+
+Fatta dall'utente il 2026-11-22 sul server di `develop` dopo `fix/pannello-agenti`, progetto `newsletter4` da `init`, richiesta del caso (con «Utilizza gli agenti di agentrica»), Opus 5.5.
+
+```text
+5. agent AIWDA-01 · 6. agent AIWDA-08 · 9. agent AIWDA-10 · 12. agent AIPCA-01 · 13. agent AIPCA-02
+report: 8, 10, 11, 14, 15, 27 (sei resoconti, uno per agente finito)
+ask_user: cinque domande (stack, conferma dell’iscrizione, conservazione, nome e titolare, dipendenze nuove), tutte prima degli specialisti software
+24. agent AISA-01 · 28. agent AISA-06
+
+OK  C1–C6
+```
+
+Nel pannello, viste dall'utente: la Sessione con gli ultimi tre agenti e il link alla pagina Agenti; la pagina Agenti con tre colonne (Design, Privacy, Software), il direttore in cima a ognuna, i numeri #1–#7 e il resoconto apribile; l'avviso «New agent at work: AISA-06 · POLLUX» all'arrivo dello specialista. AISA-01 ha mandato il suo resoconto (il piano per POLLUX) prima di passare allo specialista, quindi «coordina il reparto» non compare. Non verificata la notifica di sistema con la scheda in secondo piano. Ritocco dopo la prova: la prima riga del compito in peso normale e colore secondario.

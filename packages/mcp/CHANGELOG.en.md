@@ -19,7 +19,7 @@ Each version with its npm publication date and its changes by type: Added, Chang
 - `AGENTS.md` of new projects: «How to consult an agent» section; department READMEs without subagents by default.
 
 ### Fixed
-- Panel: the department colour in the agents in use and in the rating forms; the task is no longer cut at 120 characters; the start time of subagents comes from their transcript.
+- Panel: the department colour in the agents in use and in the rating forms; the task is no longer cut at 120 characters; the start time of subagents comes from their transcript, and a subagent whose files Claude Code writes in a different format still appears, with «format not recognised», instead of disappearing.
 
 ## 0.9.0 — 2026-11-22
 

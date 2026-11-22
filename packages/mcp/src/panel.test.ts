@@ -162,7 +162,7 @@ test("avviso di versione nuova nello stato, per il banner (F23)", async () => {
 });
 
 test("subagent di Claude Code nello stato, separati dagli agenti del server (F34-06)", async () => {
-  const run = { time: "2026-11-22T10:00:00.000Z", type: "design-ux-writer", description: "Testi del modulo", finished: false };
+  const run = { time: "2026-11-22T10:00:00.000Z", type: "design-ux-writer", description: "Testi del modulo", finished: false, recognized: true };
   const panel = await startPanel(root, undefined, undefined, async () => [run]);
   try {
     const cookie = await login(panel.url);

@@ -177,8 +177,12 @@ function renderActivity({ activity }) {
 }
 
 // I subagent di Claude Code (F34-06), a parte: non passano dal server, il pannello li legge dai file di Claude Code.
+// Se Claude Code cambia il formato dei suoi file (F34-R3) il subagent compare lo stesso, con una nota: non sparisce.
 function renderSubagents({ subagents = [] }) {
+  const unknown = subagents.filter((s) => !s.recognized).length;
+  const state = (s) => (!s.recognized ? TEXTS.subagentUnknown : s.finished ? TEXTS.subagentDone : TEXTS.subagentRunning);
   $("subagents").replaceChildren(
+    unknown > 0 && el("p", { class: "problems" }, TEXTS.subagentFormat(unknown)),
     subagents.length === 0
       ? empty(TEXTS.noSubagents)
       : el(
@@ -189,7 +193,7 @@ function renderSubagents({ subagents = [] }) {
               "li",
               {},
               el("time", { datetime: s.time, class: "mono" }, time(s.time)),
-              el("span", {}, el("strong", {}, s.type), ` — ${s.finished ? TEXTS.subagentDone : TEXTS.subagentRunning}`),
+              el("span", {}, el("strong", {}, s.type), ` — ${state(s)}`),
               s.description && el("span", { class: "task" }, s.description),
             ),
           ),

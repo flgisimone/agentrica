@@ -159,6 +159,9 @@ test("init --existing (F35): scrive solo i file mancanti, salta gli altri e li e
   assert.equal(again.status, 0, again.stderr);
   assert.match(again.stdout, /0 file nuovi/);
   assert.match(again.stdout, /agents\/ \(\d+\)/, "i file di agents/ contati per cartella");
+  // F35-R2: un .mcp.json già presente non si dà per scritto.
+  assert.match(again.stdout, /\.mcp\.json c'era già ed è stato saltato/);
+  assert.doesNotMatch(result.stdout, /c'era già/);
 });
 
 test("init --existing in inglese: piano senza fasi con la stessa indicazione", () => {

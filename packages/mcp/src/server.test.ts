@@ -68,13 +68,13 @@ test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli un
   assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);
 });
 
-test("istruzioni del server entro 2048 caratteri in tutte e due le lingue, con pannello e valutazioni (F35)", async () => {
-  // ponytail: Claude Code tronca le istruzioni lunghe (segnala instructionsTruncated); 2048 è il limite che si assume
-  // finché la documentazione non dà un numero: se lo dà, si aggiorna qui.
+test("istruzioni del server entro 4096 caratteri in tutte e due le lingue, con pannello e valutazioni (F35-R1)", async () => {
+  // Claude Code (2.1.330) tronca le istruzioni di un server stdio a 4096 caratteri, salvo CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH:
+  // il numero non è documentato, viene dal codice del client. ponytail: se Claude Code lo cambia, si aggiorna qui.
   const { it } = await import("./texts/it.ts");
   const { en } = await import("./texts/en.ts");
   const o = { agents: 56, departments: 5, codes: "AIBPD, AICA, AIPCA, AISA, AIWDA", example: "aibpd-01-business", exampleId: "AIBPD-01", panel: true, ratings: true };
-  for (const texts of [it, en]) assert.ok(texts.server.instructions(o).length <= 2048, texts.locale);
+  for (const texts of [it, en]) assert.ok(texts.server.instructions(o).length <= 4096, texts.locale);
 });
 
 test("share_usage: senza file di Claude Code nulla da inviare; un codice sconosciuto è un errore", async () => {

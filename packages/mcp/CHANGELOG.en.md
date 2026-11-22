@@ -11,7 +11,7 @@ Each version with its npm publication date and its changes by type: Added, Chang
 ### Changed
 - Panel: without `plan/README.md`, or with a plan without phases, a piece of information with the ways to create it (`init --existing` or the request to Claude) instead of an error.
 - `AGENTS.md`, `CONVENTIONS.md` and `plan/README.md` of new projects: planning is a session of its own and each phase opens in a new session.
-- Shorter server instructions, within 2048 characters.
+- Server instructions with a length test: within the 4096 characters beyond which Claude Code truncates them.
 
 ## 0.10.0 — 2026-11-22
 

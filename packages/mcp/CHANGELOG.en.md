@@ -11,6 +11,7 @@ Each version with its npm publication date and its changes by type: Added, Chang
 - Hierarchy: `list_agents` marks the director of each department; the director's text says how to coordinate the specialists, a specialist's text whom it reports to and to load the director first.
 - Panel: the agents in use in call order, with the director marked, and a separate «Claude Code subagents» section with type, description and state of the subagents started in the session, read from the files Claude Code saves for the project.
 - `report` tool, with the panel: the report of what an agent did, which the agent's text asks for at the end of the task; the panel shows it under the agent, with the whole task.
+- Panel: the agents on a page of their own, «Agents», as a tree by department (one column per department, the director at the top, the call order number on the card); the Session shows the last three.
 - Panel: ratings on a page of their own, «Ratings», with the number of agents to rate in the menu; a notice when a new agent starts working or there is an agent to rate, also as a system notification if you turn it on.
 
 ### Changed

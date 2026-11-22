@@ -233,9 +233,10 @@ The server also opens a page on your computer where you follow the project and m
 npx -y @agentrica/mcp@0.10.0 install --no-panel
 ```
 
-Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has five pages, with a menu at the top counting pending choices, findings and agents to rate:
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has six pages, with a menu at the top counting pending choices, agents called, findings and agents to rate:
 
-- **Session**: pending choices (*To decide*), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the Agentrica agents called in this session (*Agents in use*), in call order, with the department, the director marked, the whole task (the first line in view, the rest on demand) and the report of what it did, if the agent sent one with the `report` tool; below, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
+- **Session**: pending choices (*To decide*), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the last three Agentrica agents called (*Agents in use*); below, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
+- **Agents**: all the agents called in the session, in a tree by department: one column per department in the order they came in (a department that comes back, like the review after software, opens a column marked «return»), the director at the top and the specialists below. Each card has the call order number, the director and the active agent marked, the whole task and the report of what it did, if the agent sent one with the `report` tool (for a director whose department is still working: «coordinating the department»);
 - **Plan**: the open phase with backlog and acceptance criteria, and all project phases;
 - **Findings**: open findings from phases and audits, by priority and department;
 - **Ratings**: a form for each agent used and not yet rated (see [Ratings](#ratings)); absent with `--no-ratings`;

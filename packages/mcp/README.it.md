@@ -231,9 +231,10 @@ Il server apre anche una pagina sul tuo computer da cui segui il progetto e pren
 npx -y @agentrica/mcp@0.10.0 install --no-panel
 ```
 
-Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha cinque pagine, con il menu in alto che conta le scelte in attesa, i rilievi e gli agenti da valutare:
+Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha sei pagine, con il menu in alto che conta le scelte in attesa, gli agenti chiamati, i rilievi e gli agenti da valutare:
 
-- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli agenti di Agentrica chiamati in questa sessione (*Agenti in uso*), in ordine di chiamata, con il reparto, il direttore segnato, il compito intero (la prima riga in vista, il resto da aprire) e il resoconto di ciò che ha fatto, se l'agente l'ha mandato con il tool `report`; sotto, in una sezione a parte, i subagent di Claude Code avviati nella sessione (*Subagent di Claude Code*), con tipo, descrizione e stato;
+- **Sessione**: le scelte da prendere (*Da decidere*), con le opzioni e le motivazioni, la cui risposta, con una nota facoltativa, torna all'agente; accanto, gli ultimi tre agenti di Agentrica chiamati (*Agenti in uso*); sotto, in una sezione a parte, i subagent di Claude Code avviati nella sessione (*Subagent di Claude Code*), con tipo, descrizione e stato;
+- **Agenti**: tutti gli agenti chiamati nella sessione, in un albero per reparto: una colonna per reparto nell'ordine in cui sono entrati (un reparto che torna, come la revisione dopo il software, apre una colonna segnata «ritorno»), in cima il direttore e sotto gli specialisti. Ogni scheda ha il numero d'ordine di chiamata, il direttore e l'agente attivo segnati, il compito intero e il resoconto di ciò che ha fatto, se l'agente l'ha mandato con il tool `report` (per un direttore il cui reparto lavora ancora: «coordina il reparto»);
 - **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
 - **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
 - **Valutazioni**: un modulo per ogni agente usato e non ancora valutato (vedi [Valutazioni](#valutazioni)); non c'è con `--no-ratings`;

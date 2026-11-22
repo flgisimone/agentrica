@@ -45,7 +45,9 @@ test("subagent, specialista prima del direttore, agenti insieme, ordine e confer
   assert.equal(result["Direttore prima degli specialisti"], false);
   assert.equal(result["Un agente alla volta"], false);
   assert.equal(result["Ordine fra reparti"], false);
-  assert.equal(ok([list, agent("a", "AIWDA-01"), agent("b", "AISA-01")])["Conferma dell'utente prima del software"], false);
+  assert.equal(ok([list, agent("a", "AIWDA-01"), agent("b", "AISA-01"), agent("c", "AISA-02")])["Conferma dell'utente prima del software"], false);
+  // Il direttore software può chiedere la conferma prima degli specialisti (prova di VS Code del 2026-11-22).
+  assert.equal(ok([list, agent("a", "AIWDA-01"), agent("b", "AISA-01"), ask, agent("c", "AISA-02")])["Conferma dell'utente prima del software"], true);
   assert.equal(ok([{ message: "s", name: "Task" }], true)["Nessun subagent senza richiesta"], true);
 });
 

@@ -163,6 +163,17 @@ Le può lanciare la sessione, sono richieste senza dati:
 ## Rilievi aperti
 
 - (P2) Prova in produzione di F30-02 e F30-03 (P5): dopo il merge in `main` di `agentrica-site`, `curl` sul ritiro con un codice inventato (atteso `Registrato.`), Run del job su Vercel (atteso JSON con `deleted` e `projects`), frase su Neon nelle note legali. Chiude anche la voce di F20 sulle credenziali del proprietario. Chiuso il 2026-11-22: P5 superata (vedi «Esiti»).
-- (P3) Correzioni del pacchetto (F30-07, F30-08, F30-09, F30-R1, README, subagent, regole comuni) senza rilascio: arrivano agli utenti con la prossima versione.
+- (P3) Correzioni del pacchetto (F30-07, F30-08, F30-09, F30-R1, README, subagent, regole comuni) senza rilascio: arrivano agli utenti con la prossima versione. Chiuso il 2026-11-22 con il rilascio 0.8.1 (vedi «Rilascio 0.8.1»).
 
 Restano aperti nelle loro fasi, per decisione dell'utente: F23-10 (Windows), le misure dei 50 ruoli (F24, con le voci di F13 e F15), le due voci di F21 sulle statistiche sopra le soglie, la verifica a mano di OECD, ISO e Gartner (F25).
+
+## Rilascio 0.8.1 (2026-11-22)
+
+Su richiesta dell'utente, pacchetto e sito in produzione insieme, alla stessa versione.
+
+- **Pacchetto**: versione, `VERSION`, `server.json`, comandi dei README e CHANGELOG a 0.8.1; PR #25 in `main` (eb7b58f), tag `v0.8.1`, release con provenance dopo l'approvazione dell'ambiente `npm`; `@agentrica/mcp@0.8.1` latest su npm.
+- **Registro MCP**: `mcp-publisher publish` dell'utente; `io.github.flgisimone/agentrica` 0.8.1 attiva e latest.
+- **Sito**: dipendenza a 0.8.1, `verify` (63 test e build), e2e completa (102), `npm audit --omit=dev` a 0 e `npm audit signatures`; PR #15 in `main` (9dd6c8d) e deploy Vercel. L'utente ha visto `/installa` con `@agentrica/mcp@0.8.1`.
+- Prima del rilascio, sul sito: PR #12 (F30), #13 (funzioni a Francoforte), #14 (note legali con le funzioni a Francoforte).
+- `develop` allineato a `main` nei due repository.
+

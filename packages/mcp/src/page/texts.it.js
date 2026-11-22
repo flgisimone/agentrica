@@ -29,6 +29,9 @@ const TEXTS = {
   noSubagents: "Nessun subagent avviato in questa sessione.",
   subagentRunning: "in corso",
   subagentDone: "finito",
+  subagentUnknown: "formato non riconosciuto",
+  subagentFormat: (n) =>
+    `${n === 1 ? "Di un subagent" : `Di ${n} subagent`} non riesco a leggere tipo e stato: Claude Code ha probabilmente cambiato il formato dei suoi file. Aggiorna Agentrica; se succede anche con l'ultima versione, segnalalo su GitHub (flgisimone/agentrica).`,
   rateEmpty: "Quando usi un agente, qui puoi dargli un voto.",
   rated: " — valutato in questa sessione.",
   scoreLegend: (role, code) => ` — ${role}, reparto ${code}. Voto da 1 a 5:`,

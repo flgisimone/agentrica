@@ -19,7 +19,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 - `AGENTS.md` dei progetti nuovi: sezione «Come si consulta un agente»; README dei reparti senza subagent di predefinito.
 
 ### Corretto
-- Pannello: il colore del reparto negli agenti in uso e nei moduli di valutazione; il compito non si tronca più a 120 caratteri; l'ora di avvio dei subagent viene dal loro transcript.
+- Pannello: il colore del reparto negli agenti in uso e nei moduli di valutazione; il compito non si tronca più a 120 caratteri; l'ora di avvio dei subagent viene dal loro transcript, e un subagent i cui file Claude Code scrive in un formato diverso compare lo stesso, con «formato non riconosciuto», invece di sparire.
 
 ## 0.9.0 — 2026-11-22
 

@@ -171,31 +171,49 @@ test("shareRows: solo gli ultimi 30 giorni, senza righe vuote, al più 300 dalle
   assert.ok(cut.rows.every((r) => r.day === "2026-11-18"), "restano fuori le più vecchie");
 });
 
-test("subagentRuns (F34-06): solo i subagent della sessione, con tipo, descrizione corta e stato, dal più vecchio", async () => {
+test("subagentRuns (F34-06, R3, R4): dai transcript della sessione, con tipo, descrizione corta e stato se il .meta.json si riconosce", async () => {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-runs-")));
   try {
     const sub = join(dir, "sessione-1", "subagents");
     mkdirSync(sub, { recursive: true });
     const meta = (name: string, body: object) => writeFileSync(join(sub, `${name}.meta.json`), JSON.stringify(body));
-    meta("agent-a1", { agentType: "design-ux-writer", description: "Testi\ndel modulo", finished: true, prompt: "segreto" });
-    meta("agent-b2", { agentType: "<script>", description: "x".repeat(300) });
+    const transcript = (name: string, timestamp: string) => writeFileSync(join(sub, `${name}.jsonl`), `${JSON.stringify({ type: "user", timestamp })}\n{}\n`);
     const start = new Date(Date.now() - 10_000).toISOString();
-    writeFileSync(join(sub, "agent-a1.jsonl"), `${JSON.stringify({ type: "user", timestamp: start })}\n{}\n`);
+    meta("agent-a1", { agentType: "design-ux-writer", description: "Testi\ndel modulo", finished: true, prompt: "segreto" });
+    transcript("agent-a1", start);
+    meta("agent-b2", { agentType: "general-purpose", description: "x".repeat(300) });
+    transcript("agent-b2", start);
+    // Formato cambiato (F34-R3): il subagent compare lo stesso, non riconosciuto.
+    meta("agent-c3", { kind: "Explore", done: true });
+    transcript("agent-c3", start);
+    // .meta.json mancante, e tipo non ammesso: non riconosciuti.
+    transcript("agent-e5", start);
+    meta("agent-f6", { agentType: "<script>", description: "x", finished: true });
+    transcript("agent-f6", start);
     // Avviato prima della sessione, .meta.json scritto dopo (F34-R4): l'ora è quella del transcript, quindi resta fuori.
     meta("agent-d4", { agentType: "Explore", finished: true });
-    writeFileSync(join(sub, "agent-d4.jsonl"), `${JSON.stringify({ type: "user", timestamp: "2020-01-01T00:00:00.000Z" })}\n`);
-    writeFileSync(join(sub, "nota.meta.json"), "{}");
-    mkdirSync(join(dir, "vecchia", "subagents"), { recursive: true });
+    transcript("agent-d4", "2020-01-01T00:00:00.000Z");
+    // Un .meta.json senza transcript non è un subagent avviato.
+    meta("agent-g7", { agentType: "Plan" });
     const old = join(dir, "vecchia", "subagents");
-    writeFileSync(join(old, "agent-c3.meta.json"), JSON.stringify({ agentType: "Explore" }));
+    mkdirSync(old, { recursive: true });
+    writeFileSync(join(old, "agent-h8.jsonl"), `${JSON.stringify({ timestamp: start })}\n`);
     utimesSync(old, new Date(0), new Date(0));
 
     const runs = await subagentRuns(dir, Date.now() - 60_000);
-    assert.deepEqual(runs.map(({ type, finished }) => [type, finished]).sort(), [["design-ux-writer", true], ["subagent", false]]);
+    const shape = runs.map(({ type, finished, recognized }) => [type, finished, recognized]).sort((a, b) => String(a).localeCompare(String(b)));
+    assert.deepEqual(shape, [
+      ["design-ux-writer", true, true],
+      ["general-purpose", false, true],
+      ["subagent", false, false],
+      ["subagent", false, false],
+      ["subagent", false, false],
+    ]);
     const writer = runs.find((r) => r.type === "design-ux-writer")!;
     assert.equal(writer.description, "Testi del modulo");
     assert.equal(writer.time, start, "ora di avvio dal transcript");
-    assert.equal(runs.find((r) => r.type === "subagent")!.description.length, 120);
+    assert.equal(runs.find((r) => r.type === "general-purpose")!.description.length, 120);
+    assert.ok(runs.filter((r) => !r.recognized).every((r) => r.description === ""));
     assert.ok(!JSON.stringify(runs).includes("segreto"), "il prompt non esce");
     assert.deepEqual(await subagentRuns(dir, Date.now() + 60_000), [], "avviati prima della sessione");
     assert.deepEqual(await subagentRuns(join(dir, "manca"), 0), []);

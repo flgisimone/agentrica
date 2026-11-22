@@ -158,6 +158,8 @@ export interface SubagentRun {
   type: string;
   description: string;
   finished: boolean;
+  /** false se il .meta.json manca o non ha il formato atteso (F34-R3): tipo e stato non sono noti. */
+  recognized: boolean;
 }
 
 const MAX_RUNS = 50;
@@ -181,10 +183,12 @@ async function startedAt(path: string): Promise<number | undefined> {
 }
 
 /**
- * I subagent avviati da `since` (ms) nelle sessioni del progetto, dal più vecchio: Claude Code scrive per ognuno
- * `<sessione>/subagents/agent-*.meta.json` con il tipo. Si leggono solo le cartelle cambiate da `since`, e dei file
- * solo i campi di `SubagentRun`. L'ora di avvio viene dalla prima riga del transcript del subagent (F34-R4): il
- * .meta.json nasce dopo, e non tutti i sistemi danno l'ora di nascita di un file.
+ * I subagent avviati da `since` (ms) nelle sessioni del progetto, dal più vecchio. Si parte dai transcript
+ * `<sessione>/subagents/agent-<id>.jsonl`, il cui percorso è nella documentazione di Claude Code (pagina dei subagent,
+ * verificata il 2026-11-22); tipo, descrizione e stato vengono da `agent-<id>.meta.json`, che la documentazione nomina
+ * senza descriverne il contenuto (F34-R3). Se quel file manca o cambia formato, il subagent compare lo stesso, con
+ * `recognized: false`, invece di sparire in silenzio. Si leggono solo le cartelle cambiate da `since`, e dei file solo i
+ * campi di `SubagentRun`. L'ora di avvio viene dalla prima riga del transcript (F34-R4).
  */
 export async function subagentRuns(dir: string, since: number): Promise<SubagentRun[]> {
   const runs: SubagentRun[] = [];
@@ -194,19 +198,23 @@ export async function subagentRuns(dir: string, since: number): Promise<Subagent
     const changed = await lstat(sub).catch(() => undefined);
     if (!changed?.isDirectory() || changed.mtimeMs < since) continue;
     for (const file of await readdir(sub).catch(() => [])) {
-      if (!/^agent-[\w-]+\.meta\.json$/.test(file)) continue;
-      const path = join(sub, file);
-      const s = await lstat(path).catch(() => undefined);
-      if (!s?.isFile() || s.size > 64 * 1024) continue;
-      const born = (await startedAt(path.replace(/\.meta\.json$/, ".jsonl"))) ?? (s.birthtimeMs || s.mtimeMs);
+      if (!/^agent-[\w-]+\.jsonl$/.test(file)) continue;
+      const transcript = join(sub, file);
+      const s = await lstat(transcript).catch(() => undefined);
+      if (!s?.isFile()) continue;
+      const born = (await startedAt(transcript)) ?? (s.birthtimeMs || s.mtimeMs);
       if (born < since) continue;
-      const meta = (await readFile(path, "utf8").then(JSON.parse).catch(() => ({}))) as Record<string, unknown>;
-      const description = typeof meta.description === "string" ? meta.description.replace(/\p{Cc}/gu, " ").trim() : "";
+      const metaPath = transcript.replace(/\.jsonl$/, ".meta.json");
+      const m = await lstat(metaPath).catch(() => undefined);
+      const meta = (m?.isFile() && m.size <= 64 * 1024 ? await readFile(metaPath, "utf8").then(JSON.parse).catch(() => ({})) : {}) as Record<string, unknown>;
+      const recognized = typeof meta.agentType === "string" && label(meta.agentType, "") !== "";
+      const description = recognized && typeof meta.description === "string" ? meta.description.replace(/\p{Cc}/gu, " ").trim() : "";
       runs.push({
         time: new Date(born).toISOString(),
-        type: label(meta.agentType, "subagent"),
+        type: recognized ? (meta.agentType as string) : "subagent",
         description: description.length > MAX_DESCRIPTION ? `${description.slice(0, MAX_DESCRIPTION - 1)}…` : description,
-        finished: meta.finished === true,
+        finished: recognized && meta.finished === true,
+        recognized,
       });
     }
   }

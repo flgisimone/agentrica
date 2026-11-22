@@ -49,7 +49,7 @@ Verifica del 2026-11-22 sul codice della 0.10.0:
 ## Fatto
 
 - **F35-01** `init --existing` in [init.ts](../packages/mcp/src/init.ts) (`existingFiles`): solo i file mancanti, saltati elencati per cartella, nessun commit, niente F0, CI, `.nvmrc` ed `.env.example`; il `plan/README.md` ha la tabella «Fasi» vuota e l'indicazione di crearle. Due test in `init.test.ts` (scrittura, file dell'utente intatti, seconda esecuzione senza errori, inglese).
-- **F35-02** Istruzioni del server (it/en): formato di `plan/` con id, stati e tabella del backlog, proposta di crearlo leggendo il codice, sessione di pianificazione che si ferma con `/clear`, una fase per sessione e `/clear` alla chiusura. Per stare nei 2048 caratteri (Claude Code tronca le istruzioni lunghe) alcune frasi sono più corte; test sul contenuto e sulla lunghezza in `server.test.ts`.
+- **F35-02** Istruzioni del server (it/en): formato di `plan/` con id, stati e tabella del backlog, proposta di crearlo leggendo il codice, sessione di pianificazione che si ferma con `/clear`, una fase per sessione e `/clear` alla chiusura. Test sul contenuto e sulla lunghezza (entro 4096 caratteri, F35-R1) in `server.test.ts`.
 - **F35-03** Starter it/en: «Pianificare è una sessione a sé» e una fase per sessione in `AGENTS.md` («Efficienza»), punto «Pianificazione» e «Apertura» in `CONVENTIONS.md` §2.6, passo 8 di §13.7 che propone `/clear`, riga in `plan/README.md`.
 - **F35-04** Pannello: campo `notice` in `project.ts` per il piano che manca o è senza fasi, riquadro informativo nella pagina (`#notice`), testi it/en; un README senza la tabella «Fasi» resta un problema di formato.
 - **F35-05** README del pacchetto it/en («Progetto già avviato», «Sessioni per fase», formato di `plan/`), CHANGELOG it/en 0.11.0, versione in `package.json`, `server.json` e `VERSION`; paragrafo in `/installa` (it/en) sul branch `fase/f35-progetti-esistenti` di `agentrica-site`.
@@ -63,5 +63,5 @@ Verifica del 2026-11-22 sul codice della 0.10.0:
 
 ## Rilievi aperti
 
-- F35-R1 (P3): il limite di 2048 caratteri delle istruzioni è presunto (Claude Code segnala `instructionsTruncated` senza documentare il numero); se la documentazione lo dà, si aggiorna il test in `server.test.ts`.
-- F35-R2 (P3): con `--existing` il passo 1 dell'output dice che `.mcp.json` registra il server anche quando `.mcp.json` c'era già ed è stato saltato.
+- F35-R1 (P3): il limite di 2048 caratteri delle istruzioni era presunto. Risolto in `fix/rilievi-f35`: nel codice di Claude Code 2.1.330 le istruzioni di un server stdio si troncano a 4096 caratteri (`CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` lo cambia); il test usa 4096 e le frasi accorciate per il limite sbagliato sono tornate com'erano.
+- F35-R2 (P3): con `--existing` il passo 1 dell'output diceva che `.mcp.json` registra il server anche quando era stato saltato. Risolto in `fix/rilievi-f35`: se `.mcp.json` c'era già, il passo dice che è stato saltato e che il server deve esserci o essere registrato con `add`; test in `init.test.ts`.

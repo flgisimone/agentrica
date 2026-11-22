@@ -11,7 +11,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 ### Cambiato
 - Pannello: senza `plan/README.md`, o con un piano senza fasi, un'informazione con le strade per crearlo (`init --existing` o la richiesta a Claude) invece di un errore.
 - `AGENTS.md`, `CONVENTIONS.md` e `plan/README.md` dei progetti nuovi: la pianificazione è una sessione a sé e ogni fase si apre in una sessione nuova.
-- Istruzioni del server più corte, entro 2048 caratteri.
+- Istruzioni del server con un test sulla lunghezza: entro i 4096 caratteri oltre i quali Claude Code le tronca.
 
 ## 0.10.0 — 2026-11-22
 

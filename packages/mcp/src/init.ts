@@ -142,7 +142,7 @@ export function runInit(args: string[]): number {
     // Un CLAUDE.md dell'utente non importa l'AGENTS.md appena scritto: lo si dice, senza toccarlo.
     const claude = taken.includes("CLAUDE.md") && !taken.includes("AGENTS.md") ? [T.init.importAgents] : [];
     const lines = values.existing
-      ? [T.init.added(name, dir, written.length), ...(taken.length > 0 ? [T.init.skipped(summarize(taken))] : []), ...claude, T.init.noCommit, "", T.init.next, T.init.step1(dir), T.init.stepExisting]
+      ? [T.init.added(name, dir, written.length), ...(taken.length > 0 ? [T.init.skipped(summarize(taken))] : []), ...claude, T.init.noCommit, "", T.init.next, taken.includes(".mcp.json") ? T.init.step1Registered(dir) : T.init.step1(dir), T.init.stepExisting]
       : [T.init.created(name, dir, files.size), initGit(dir), "", T.init.next, T.init.step1(dir), T.init.step2];
     process.stdout.write([...lines, ""].join("\n"));
     return 0;

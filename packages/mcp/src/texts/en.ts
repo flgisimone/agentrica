@@ -36,21 +36,21 @@ export const en: Texts = {
       `The user closed the configuration form: the default values were saved in ${path}, so the form will not appear again. They can be changed with Agentrica's configure command.`,
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
       `Agentrica: ${plural(o.agents, "AI agent", "AI agents")} in ${plural(o.departments, "department", "departments")} (${o.codes}). ` +
-      "All work on the user's project goes through Agentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
-      "Choose the agent with list_agents and load its instructions with agent. " +
+      "All work on the user's project (features, changes, stack choices, phases, audits) goes through Agentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
+      "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
       "then load the specialists with agent one at a time, each from the previous one's result, never two in the same response; the director consolidates and presents to the user. " +
       "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → user confirmation. " +
-      "For Agentrica's agents use agent, not local subagents (Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
-      "Read the agent's library cards with library. " +
-      `Prompts are named like ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
+      "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
+      "The instructions contain the index of the department library: read the cards the task needs with library. " +
+      `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
       "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
       (o.panel
-        ? " The local panel is on: for choices that belong to the user use ask_user (question in the page); open_panel gives the URL. When an agent finishes its task, send its report with report."
+        ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section. When an agent finishes its task, send its report with report."
         : "") +
       (o.ratings
-        ? " If an agent's text asks you to offer a rating, do it with rate_agent (once per agent); nothing is sent without the user's yes to the preview." +
+        ? " If an agent's text asks you to offer a rating, do it with rate_agent (once per agent per session); nothing is sent without the user's yes to the preview." +
           " At the end of the session, together with the rating and only once, you can offer to send the project's token totals with share_usage; if the user declines, do not insist."
         : ""),
     task: "The task to give the agent in the current project.",
@@ -450,6 +450,7 @@ export const en: Texts = {
     created: (name: string, dir: string, count: number) => `Project «${name}» created in ${dir}: ${count} files.`,
     next: "Next steps:",
     step1: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json registers the Agentrica server with the panel)`,
+    step1Registered: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json already existed and was skipped: the Agentrica server must be in it, or registered with add)`,
     step2: "  2. ask to open phase F0 (plan/00-base.md): stack, active agencies, «to fill in» sections",
     added: (name: string, dir: string, count: number) => `Agentrica's rules added to «${name}» in ${dir}: ${count} new files.`,
     skipped: (files: string) => `Skipped because they already exist: ${files}`,

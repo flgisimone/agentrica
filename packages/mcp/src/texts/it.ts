@@ -38,21 +38,21 @@ export const it = {
       `L'utente ha chiuso il modulo della configurazione: salvati i valori predefiniti in ${path}, il modulo non ricompare. Si cambiano con il comando configure di Agentrica.`,
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
       `Agentrica: ${plural(o.agents, "agente IA", "agenti IA")} in ${plural(o.departments, "reparto", "reparti")} (${o.codes}). ` +
-      "Ogni lavoro sul progetto dell'utente passa dagli agenti di Agentrica, anche se l'utente non li nomina; senza agenti solo se l'utente lo chiede. " +
-      "Scegli l'agente con list_agents e carica le sue istruzioni con agent. " +
+      "Ogni lavoro sul progetto dell'utente (funzioni, modifiche, scelte di stack, fasi, audit) passa dagli agenti di Agentrica, anche se l'utente non li nomina; senza agenti solo se l'utente lo chiede. " +
+      "Per scegliere un agente usa list_agents; per lavorare come quell'agente carica le sue istruzioni con agent. " +
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
       "poi carica gli specialisti con agent uno alla volta, ognuno dal risultato del precedente, mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
       "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → conferma dell'utente. " +
-      "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
-      "Le schede della biblioteca dell'agente si leggono con library. " +
-      `I prompt si chiamano come ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
+      "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
+      "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
+      `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
       "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
       "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
       (o.panel
-        ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user (domanda nella pagina); open_panel dà l'URL. Quando un agente finisce il compito, manda il suo resoconto con report."
+        ? " Il pannello locale è attivo: per le scelte che spettano all'utente usa ask_user, che mostra la domanda nella pagina; open_panel dà l'URL della pagina. Il pannello mostra in ordine gli agenti caricati con agent; i subagent di Claude Code solo in una sezione a parte. Quando un agente finisce il suo compito, manda il suo resoconto con report."
         : "") +
       (o.ratings
-        ? " Se il testo di un agente chiede di proporre la valutazione, fallo con rate_agent (una volta per agente); niente parte senza il sì dell'utente all'anteprima." +
+        ? " Se il testo di un agente chiede di proporre la valutazione, fallo con rate_agent (una volta per agente per sessione); niente parte senza il sì dell'utente all'anteprima." +
           " A fine sessione, insieme alla valutazione e una volta sola, puoi proporre di inviare i totali di token del progetto con share_usage; se l'utente rifiuta, non insistere."
         : ""),
     task: "Il compito da affidare all'agente nel progetto corrente.",
@@ -453,6 +453,7 @@ export const it = {
     created: (name: string, dir: string, count: number) => `Progetto «${name}» creato in ${dir}: ${count} file.`,
     next: "Prossimi passi:",
     step1: (dir: string) => `  1. cd "${dir}" e apri Claude Code (.mcp.json registra il server di Agentrica con il pannello)`,
+    step1Registered: (dir: string) => `  1. cd "${dir}" e apri Claude Code (.mcp.json c'era già ed è stato saltato: il server di Agentrica deve esserci, o registrato con add)`,
     step2: "  2. chiedi di aprire la fase F0 (plan/00-base.md): stack, agenzie attive, sezioni «da compilare»",
     added: (name: string, dir: string, count: number) => `Regole di Agentrica aggiunte a «${name}» in ${dir}: ${count} file nuovi.`,
     skipped: (files: string) => `Saltati perché esistono già: ${files}`,

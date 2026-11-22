@@ -4,7 +4,7 @@ import { isExpired, type Agent, type Card, type Department, type Section } from 
 import { T } from "./texts/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.9.0";
+export const VERSION = "0.10.0";
 
 /**
  * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori
@@ -117,16 +117,29 @@ export function cardText(card: Card, date: string): string {
   ].join("\n\n");
 }
 
+/** Il direttore del reparto nella squadra: è l'agente 01, assente se --agents l'ha lasciato fuori. */
+export function directorOf(department: SquadDepartment): Agent | undefined {
+  return department.agents.find((a) => a.number === 1);
+}
+
+/** Il posto dell'agente nella gerarchia (F34-04): il direttore coordina, lo specialista riporta al direttore. */
+function hierarchy({ department, agent }: Found): string {
+  if (agent.number === 1) return T.prompt.lead(department.code);
+  const director = directorOf(department);
+  return director ? T.prompt.reportsTo(codeName(director), director.id) : T.prompt.noLead;
+}
+
 export function agentText(
   found: Found,
   task?: string,
-  { ratings = false, date = today() }: { ratings?: boolean; date?: string } = {},
+  { ratings = false, report = false, date = today() }: { ratings?: boolean; report?: boolean; date?: string } = {},
 ): string {
   const { department, agent } = found;
   const advice = modelAdvice(agent);
   const parts = [
     `# ${codeName(agent)} — ${agent.role}`,
     T.prompt.you(codeName(agent), agentSummary({ department, agent })),
+    hierarchy(found),
     ...(advice ? [T.prompt.subagent(advice)] : []),
     T.prompt.present(introLine(found)),
     `## ${T.prompt.rules}`,
@@ -139,6 +152,8 @@ export function agentText(
   if (trimmed) parts.push(`## ${T.prompt.task}`, trimmed);
   // In fondo (F23-03), dopo il compito: è l'ultima cosa che il modello legge. Solo se il client non ha l'elicitation;
   // con l'elicitation la valutazione la chiede il server con un modulo.
+  // Con il pannello, il resoconto per la pagina (tool report), prima della valutazione.
+  if (report) parts.push(`## ${T.prompt.report}`, T.prompt.reportAsk(agent.id));
   if (ratings) parts.push(`## ${T.prompt.rating}`, T.prompt.ratingAsk(agent.id));
   return parts.join("\n\n") + "\n";
 }

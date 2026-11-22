@@ -13,6 +13,7 @@ Sono una prova interna: servono a confrontare modelli, livelli di ragionamento (
 | [aibpd-05-requisiti-abbonamenti](casi/aibpd-05-requisiti-abbonamenti.md) | AIBPD-05 · ALGIEBA, Business Analyst | [requisiti-abbonamenti](progetti/requisiti-abbonamenti/) |
 | [aica-04-config-deploy](casi/aica-04-config-deploy.md) | AICA-04 · ALNILAM, Cloud Security | [config-deploy](progetti/config-deploy/) |
 | [aisa-08-calcolo-sconti](casi/aisa-08-calcolo-sconti.md) | AISA-08 · DENEB, QA | [calcolo-sconti](progetti/calcolo-sconti/) |
+| [orchestrazione-newsletter](casi/orchestrazione-newsletter.md) | tutti, scelti dal modello | progetto nuovo creato con `init` |
 
 I progetti sono difettosi di proposito: non usarli come modello e non metterli in rete.
 

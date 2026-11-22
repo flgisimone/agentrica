@@ -19,7 +19,7 @@
 ## Structure
 - `00-common-rules.md`: rules common to all roles of the agency.
 - `01-…` onwards: one file per role, in the order of the workflow, without frontmatter.
-- The executable subagents (with frontmatter, tools and model) are in `.claude/agents/business-product/` and point to these files.
+- The agents are consulted through the Agentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/business-product/` exist only in projects created with `init --subagents` and load their agent from the same server.
 
 ## Workflow
 1. The Chief Business & Product Officer receives the goal.

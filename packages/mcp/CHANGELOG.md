@@ -2,6 +2,26 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.10.0 — 2026-11-22
+
+### Incompatibile
+- `init` non copia più i subagent in `.claude/agents/`: gli agenti si consultano dal server con `agent`, uno alla volta. Con `--subagents` li copia, e ogni subagent ha fra i `tools` `mcp__agentrica__agent` e `mcp__agentrica__library` e come primo passo carica il suo agente dal server, così compare nel pannello.
+
+### Nuovo
+- Gerarchia: `list_agents` segna il direttore di ogni reparto; il testo del direttore dice come coordinare gli specialisti, quello di uno specialista a chi riporta e di caricare prima il direttore.
+- Pannello: gli agenti in uso in ordine di chiamata, con il direttore segnato, e una sezione a parte «Subagent di Claude Code» con tipo, descrizione e stato dei subagent avviati nella sessione, letti dai file che Claude Code salva per il progetto.
+- Tool `report`, con il pannello: il resoconto di ciò che un agente ha fatto, che il testo dell'agente chiede a fine compito; il pannello lo mostra sotto l'agente, con il compito intero.
+- Pannello: gli agenti in una pagina propria, «Agenti», come albero per reparto (una colonna per reparto, il direttore in cima, il numero d'ordine sulla scheda); la Sessione mostra gli ultimi tre.
+- Pannello: le valutazioni in una pagina propria, «Valutazioni», con il numero degli agenti da valutare nel menu; un avviso quando un agente nuovo si mette al lavoro o c'è un agente da valutare, anche come notifica di sistema se la attivi.
+
+### Cambiato
+- Istruzioni del server: direttore prima degli specialisti, un agente alla volta, ordine fra reparti, `agent` invece dei subagent locali salvo richiesta dell'utente.
+- Il modello consigliato non chiede più di affidare il compito a un subagent.
+- `AGENTS.md` dei progetti nuovi: sezione «Come si consulta un agente»; README dei reparti senza subagent di predefinito.
+
+### Corretto
+- Pannello: il colore del reparto negli agenti in uso e nei moduli di valutazione; il compito non si tronca più a 120 caratteri; l'ora di avvio dei subagent viene dal loro transcript, e un subagent i cui file Claude Code scrive in un formato diverso compare lo stesso, con «formato non riconosciuto», invece di sparire.
+
 ## 0.9.0 — 2026-11-22
 
 ### Incompatibile

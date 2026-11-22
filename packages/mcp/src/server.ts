@@ -22,12 +22,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, cardText, codeName, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentSummary, agentText, cardText, codeName, directorOf, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, ratingForm, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { createShare, SHARE_URL, sharePreviewText, type Share } from "./share.ts";
 import { createShowcase, parseProjectFields, projectForm, PROJECTS_URL, projectFormMessage, projectPreviewText, sentText, type Showcase } from "./showcase.ts";
 import { chooseLang, isLang, lang, setLang, T } from "./texts/index.ts";
-import { claudeProjectDir, readUsage, shareRows, type Usage } from "./usage.ts";
+import { claudeProjectDir, readUsage, shareRows, subagentRuns, type Usage } from "./usage.ts";
 import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "./update.ts";
 
 // Un errore all'avvio ferma il server con una riga sola su stderr, che il client mostra nei log. Il messaggio può
@@ -182,7 +182,9 @@ if (withPanel && (panelAllowed || flags.panel)) {
       previewShare: () => draftShare(share),
       confirmShare: (code: string) => share.confirm(code),
     };
-    panel = await startPanel(realpathSync(process.cwd()), panelRatings, () => update);
+    const root = realpathSync(process.cwd());
+    const started = Date.now();
+    panel = await startPanel(root, panelRatings, () => update, () => subagentRuns(claudeProjectDir(root), started));
   } catch (error) {
     if (flags.panel) fail(T.server.panelFailed(reason(error)));
     process.stderr.write(`agentrica: ${T.server.panelSkipped(reason(error).replace(/\p{Cc}/gu, " "))}\n`);
@@ -203,13 +205,14 @@ async function used({ department, agent }: Found, task: string | undefined): Pro
     if (!timers.has(agent.id)) timers.set(agent.id, setTimeout(() => void askLater(agent.id), REMINDER_AFTER_MS).unref());
   }
   ratings?.loaded(agent.id);
-  const line = (task ?? "").replace(/\s+/g, " ").trim();
   panel?.record({
     id: agent.id,
     codeName: codeName(agent),
     role: agent.role,
     department: `${department.code} · ${department.short}`,
-    task: line.length > 120 ? `${line.slice(0, 119)}…` : line,
+    director: agent.number === 1,
+    // Il compito intero (fino a 20.000 caratteri, il limite di TASK): la pagina mostra la prima riga e il resto a richiesta.
+    task: (task ?? "").trim(),
   });
   if (!previous || previous === agent.id) return undefined;
   try {
@@ -356,7 +359,7 @@ function remind<T extends ToolResult>(result: T, ...extra: (string | undefined)[
 }
 
 /** La proposta di valutazione nel testo dell'agente serve solo ai client senza moduli. */
-const textOptions = () => ({ ratings: Boolean(ratings) && !canAsk() });
+const textOptions = () => ({ ratings: Boolean(ratings) && !canAsk(), report: Boolean(panel) });
 
 for (const found of all) {
   const title = `${codeName(found.agent)} — ${found.agent.role}`;
@@ -502,6 +505,7 @@ server.registerTool(
       .flatMap((d) => [
         `## ${d.code} — ${d.name}`,
         d.summary,
+        ...[directorOf(d)].filter((a) => a !== undefined).map((a) => T.server.listAgents.lead(codeName(a))),
         ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
         "",
       ]);
@@ -634,6 +638,22 @@ function registerPanelTools(panel: Panel) {
       return remind({
         content: [{ type: "text", text: T.server.openPanel.opened(panel.url) }],
       });
+    },
+  );
+
+  const r = T.server.report;
+  server.registerTool(
+    "report",
+    {
+      title: r.title,
+      description: r.description,
+      inputSchema: { id: AGENT_ID, summary: z.string().min(1).max(4000).describe(r.summary) },
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    ({ id, summary }) => {
+      const found = findAgent(catalog, id);
+      if (!found || !panel.report(found.agent.id, summary.trim())) return { isError: true, content: [{ type: "text", text: r.notLoaded }] };
+      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] });
     },
   );
 

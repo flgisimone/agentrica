@@ -1,6 +1,6 @@
 # AI Business & Product Development Agency
 
-12 agents for business strategy, business development, market research, innovation, product management, monetisation, growth, sales and economic assessment. The agency analyses, plans and recommends; it does not take binding decisions.
+Agents for business strategy, business development, market research, innovation, product management, monetisation, growth, sales and economic assessment. The agency analyses, plans and recommends; it does not take binding decisions.
 
 ## Agents
 1. Chief Business & Product Officer

@@ -1,6 +1,6 @@
 # AI Software Agency
 
-12 senior agents for analysis, design, development, testing, security and maintenance of existing software. It is the only agency that changes the code.
+Senior agents for analysis, design, development, testing, security and maintenance of existing software. It is the only agency that changes the code.
 
 ## Agents
 1. Software Agency Director / CTO — `01-software-agency-director-cto.md`

@@ -1,6 +1,6 @@
 # AI Business & Product Development Agency
 
-12 agenti per strategia aziendale, sviluppo business, ricerca di mercato, innovazione, gestione del prodotto, monetizzazione, crescita, vendite e valutazione economica. L'agenzia analizza, pianifica e raccomanda; non prende decisioni vincolanti.
+Agenti per strategia aziendale, sviluppo business, ricerca di mercato, innovazione, gestione del prodotto, monetizzazione, crescita, vendite e valutazione economica. L'agenzia analizza, pianifica e raccomanda; non prende decisioni vincolanti.
 
 ## Agenti
 1. Chief Business & Product Officer

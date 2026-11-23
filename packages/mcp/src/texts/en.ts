@@ -40,7 +40,7 @@ export const en: Texts = {
       "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
       "then load the specialists with agent one at a time, each from the previous one's result, never two in the same response; the director consolidates and presents to the user. " +
-      "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → user confirmation. " +
+      "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → Code Reviewer → user confirmation. " +
       "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +

@@ -54,13 +54,13 @@ The cost of a session grows with the number of calls and the size of the context
 
 Five teams of roles. The role files are in `agents/`, in English in the `en/` subfolder of each agency (in each folder `README.md`, `00-common-rules.md` with the common rules and one numbered file per role; the Italian files sit next to `en/`); the agents are consulted through the Agentrica MCP server (`.mcp.json`), as «How to consult an agent» says. The full picture is in `docs/AI Multi-Agency System.md`.
 
-| Agency | Roles | Prefix | What it does | Active |
-|---|---|---|---|---|
-| Software (`agents/ai_software_agency/en/`) | 12 | `sw-` | analysis, development and verification. It is the only one that changes the code | yes |
-| Web Design (`agents/ai_web_design_agency/en/`) | 10 | `design-` | audits of UX, UI, information architecture, design system, data and charts, accessibility, usability and copy. Read-only | <!-- yes/no --> |
-| Privacy & Compliance (`agents/ai_privacy_compliance_agency/en/`) | 10 | `privacy-` | data processing, legal bases, retention, vendors, data security, DPIA. Read-only, does not declare compliance | <!-- yes/no --> |
-| Business & Product (`agents/ai_business_product_development_agency/en/`) | 12 | `biz-` | goals, requirements, priorities, roadmap, business case, market. Read-only, no external contact | <!-- yes/no --> |
-| Cybersecurity (`agents/ai_cybersecurity_agency/en/`) | 12 | `sec-` | threat model, hosting and database configuration, access, dependencies and vulnerabilities, logs, incident response. Read-only, no active tests without written authorisation | <!-- yes/no --> |
+| Agency | Prefix | What it does | Active |
+|---|---|---|---|
+| Software (`agents/ai_software_agency/en/`) | `sw-` | analysis, development and verification. It is the only one that changes the code | yes |
+| Web Design (`agents/ai_web_design_agency/en/`) | `design-` | audits of UX, UI, information architecture, design system, data and charts, accessibility, usability and copy. Read-only | <!-- yes/no --> |
+| Privacy & Compliance (`agents/ai_privacy_compliance_agency/en/`) | `privacy-` | data processing, legal bases, retention, vendors, data security, DPIA. Read-only, does not declare compliance | <!-- yes/no --> |
+| Business & Product (`agents/ai_business_product_development_agency/en/`) | `biz-` | goals, requirements, priorities, roadmap, business case, market. Read-only, no external contact | <!-- yes/no --> |
+| Cybersecurity (`agents/ai_cybersecurity_agency/en/`) | `sec-` | threat model, hosting and database configuration, access, dependencies and vulnerabilities, logs, incident response. Read-only, no active tests without written authorisation | <!-- yes/no --> |
 
 <!-- In F0 decide with the user which agencies stay active. Inactive ones are removed from agents/ and, if the project has subagents, from .claude/agents/ (when needed they can be copied again from the same folders of the `@agentrica/mcp` package) and the decision goes in the table of plan/README.md. If there are subagents, also remove the roles the project does not use. -->
 

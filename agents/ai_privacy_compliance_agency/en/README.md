@@ -1,6 +1,6 @@
 # AI Privacy & Compliance Agency
 
-10 agents for audits and advice on GDPR, privacy and product compliance.
+Agents for audits and advice on GDPR, privacy and product compliance.
 
 ## Agents
 1. Chief Privacy & Compliance Officer

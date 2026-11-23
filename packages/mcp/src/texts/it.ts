@@ -42,7 +42,7 @@ export const it = {
       "Per scegliere un agente usa list_agents; per lavorare come quell'agente carica le sue istruzioni con agent. " +
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
       "poi carica gli specialisti con agent uno alla volta, ognuno dal risultato del precedente, mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
-      "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → conferma dell'utente. " +
+      "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → Code Reviewer → conferma dell'utente. " +
       "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +

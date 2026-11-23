@@ -2,6 +2,12 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.11.1 — 2026-11-23
+
+### Cambiato
+- Istruzioni del server e README: l'ordine fra reparti comprende il Code Reviewer prima dell'ultima conferma, come in `AGENTS.md`.
+- README: Agentrica si presenta come server MCP con agenti IA organizzati in reparti, non più come società fittizia.
+
 ## 0.11.0 — 2026-11-22
 
 ### Nuovo

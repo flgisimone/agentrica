@@ -4,26 +4,24 @@
 
 [Italiano](README.it.md)
 
-**Agentrica is a fictional consulting firm made entirely of AI agents.** It has five departments, one per area of expertise, and 56 specialised agents, each with a precise role, a working method and declared limits.
+**Agentrica is an MCP server with AI agents organised in departments, for use in your projects.** Each department covers one area of expertise and each agent has a precise role, a working method and declared limits.
 
-The repository has two goals, in this order:
+This repository contains:
 
-1. **A website that presents Agentrica**: the landing page, the five departments and a profile for every agent, built from its role file.
-2. **An MCP server**: the same agents, usable as tools in any project (Claude Code or another MCP client), without copying their prompts by hand.
-
-The website is online at https://agentrica.vercel.app; the MCP server is installed with `npx -y @agentrica/mcp@0.8.1 install` (see [packages/mcp/README.md](packages/mcp/README.md)).
+1. **The MCP server** `@agentrica/mcp`: the agents, usable as tools in any project (Claude Code or another MCP client), without copying their prompts by hand. It is installed with `npx -y @agentrica/mcp@0.11.1 install` (see [packages/mcp/README.md](packages/mcp/README.md)).
+2. **The catalogue**: the role files in [`agents/`](agents/) and the `packages/catalog` package that reads them. The website https://agentrica.vercel.app presents the agents from this catalogue.
 
 The website and the MCP server read the **same source**: the Markdown files in [`agents/`](agents/). A role is edited in one place and changes in both. Since F17 the website code lives in a private repository that reads the catalogue from `@agentrica/mcp/catalog`: an edited role reaches the website with the next package version.
 
 ## Departments
 
-| Code | Department | Agents | What it does | Folder |
-|---|---|---|---|---|
-| **AIBPD** | AI Business & Product Development | 12 | goals, requirements, priorities, roadmap, business case, market | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
-| **AICA** | AI Cybersecurity | 12 | threat model, configuration, access, vulnerabilities, incident response | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
-| **AIPCA** | AI Privacy & Compliance | 10 | GDPR, legal bases, retention, vendors, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
-| **AISA** | AI Software | 12 | analysis, architecture, development, testing, application security, code review | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
-| **AIWDA** | AI Web Design | 10 | UX research, UI, information architecture, design system, accessibility, copy | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
+| Code | Department | What it does | Folder |
+|---|---|---|---|
+| **AIBPD** | AI Business & Product Development | goals, requirements, priorities, roadmap, business case, market | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
+| **AICA** | AI Cybersecurity | threat model, configuration, access, vulnerabilities, incident response | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
+| **AIPCA** | AI Privacy & Compliance | GDPR, legal bases, retention, vendors, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
+| **AISA** | AI Software | analysis, architecture, development, testing, application security, code review | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
+| **AIWDA** | AI Web Design | UX research, UI, information architecture, design system, accessibility, copy | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
 
 Every agent has a **star code name**: the department code, the number of its role file and a star, for example `AISA-02 · ALTAIR` for the Senior Software Architect. Number 01 of each department is the director.
 
@@ -44,11 +42,11 @@ agentrica/
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # working rules (in Italian)
 ```
 
-The departments serve twice: they are the **content** of the product and also the **team** the project is developed with in Claude Code (currently Software and Web Design, see [AGENTS.md](AGENTS.md)).
+The departments serve twice: they are the **content** of the product and also the **team** the project is developed with in Claude Code (the active departments are listed in [AGENTS.md](AGENTS.md)).
 
 ## Status
 
-Phases F0–F35 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F34 (agents orchestrated from the MCP server one at a time, director first, subagents only with `init --subagents` and shown in the panel) is complete and released with 0.10.0. F35 (projects already under way with `init --existing`, the panel without an error when the plan is missing, one phase per session) is complete and released with 0.11.0.
+Phases F0–F36 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F34 (agents orchestrated from the MCP server one at a time, director first, subagents only with `init --subagents` and shown in the panel) is complete and released with 0.10.0. F35 (projects already under way with `init --existing`, the panel without an error when the plan is missing, one phase per session) is complete and released with 0.11.0. F36 (animated hero on the website, the library and `report` on the website, README and documents aligned with the positioning) is complete, for 0.11.1.
 
 ## Getting started
 

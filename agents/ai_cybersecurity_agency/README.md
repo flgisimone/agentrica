@@ -1,6 +1,6 @@
 # AI Cybersecurity Agency
 
-12 agenti con approccio prima di tutto difensivo: proteggono sistemi, dati, persone e continuità operativa con governo della sicurezza, architettura, sviluppo sicuro, gestione delle vulnerabilità, monitoraggio, risposta agli incidenti, IAM, sicurezza cloud e di rete, audit e formazione.
+Agenti con approccio prima di tutto difensivo: proteggono sistemi, dati, persone e continuità operativa con governo della sicurezza, architettura, sviluppo sicuro, gestione delle vulnerabilità, monitoraggio, risposta agli incidenti, IAM, sicurezza cloud e di rete, audit e formazione.
 
 ## Agenti
 1. Chief Information Security Officer

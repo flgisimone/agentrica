@@ -4,7 +4,7 @@ Regole per chi lavora al codice di Agentrica, persone o agenti. `AGENTS.md` le c
 
 ## 1. Scopo
 
-Agentrica è una società di consulenza fittizia fatta di agenti IA: un sito la presenta (landing, reparti, biografie) e un server MCP renderà gli stessi agenti usabili nei progetti di terzi. La cosa da non rompere mai è la **fonte unica**: i file di `agents/` sono il catalogo, e sito e server MCP li leggono da `packages/catalog` senza copiarne i testi. Il sito non inventa persone, clienti, risultati o recensioni e dice sempre che gli agenti sono IA.
+Agentrica è un server MCP con agenti IA organizzati in reparti, da usare nei propri progetti; un sito lo presenta (catalogo, reparti, pagine degli agenti, installazione). La cosa da non rompere mai è la **fonte unica**: i file di `agents/` sono il catalogo, e sito e server MCP li leggono da `packages/catalog` senza copiarne i testi. Il sito non inventa persone, clienti, risultati o recensioni e dice sempre che gli agenti sono IA.
 
 Le regole servono a tre cose, in quest'ordine: tenere il catalogo coerente e onesto, tenere il codice semplice e leggibile, consegnare modifiche verificate.
 

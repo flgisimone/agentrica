@@ -4,14 +4,12 @@
 
 [English](README.md)
 
-**Agentrica è una società di consulenza fittizia fatta interamente di agenti IA.** Ha cinque reparti, uno per competenza, e 56 agenti specializzati, ciascuno con un ruolo preciso, un metodo di lavoro e dei limiti dichiarati.
+**Agentrica è un server MCP con agenti IA organizzati in reparti, da usare nei tuoi progetti.** Ogni reparto copre una competenza e ogni agente ha un ruolo preciso, un metodo di lavoro e dei limiti dichiarati.
 
-Il repository ha due obiettivi, in quest'ordine:
+Questo repository contiene:
 
-1. **Un sito che presenta Agentrica**: la landing, i cinque reparti e una biografia per ogni agente, ricavata dal suo file di ruolo.
-2. **Un server MCP**: gli stessi agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt.
-
-Il sito è online su https://agentrica.vercel.app; il server MCP si installa con `npx -y @agentrica/mcp@0.8.1 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.11.1 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
@@ -42,7 +40,7 @@ agentrica/
 └── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
 ```
 
-Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il **team** con cui il progetto viene sviluppato in Claude Code (oggi Software e Web Design, vedi [AGENTS.md](AGENTS.md)).
+Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il **team** con cui il progetto viene sviluppato in Claude Code (le agenzie attive sono in [AGENTS.md](AGENTS.md)).
 
 ## Stato
 
@@ -84,6 +82,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F33 | Sito in italiano e inglese (`/it`, `/en`), selettore di lingua, CHANGELOG inglese | completata (0.9.0) |
 | F34 | Orchestrazione degli agenti: server MCP, gerarchia, subagent con `--subagents` | completata (0.10.0) |
 | F35 | Progetti già avviati: `init --existing`, pannello senza errore, sessioni per fase | completata (0.11.0) |
+| F36 | Hero animata nel sito, biblioteca e `report` sul sito, README e documenti allineati al posizionamento (0.11.1) | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

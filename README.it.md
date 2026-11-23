@@ -82,7 +82,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F33 | Sito in italiano e inglese (`/it`, `/en`), selettore di lingua, CHANGELOG inglese | completata (0.9.0) |
 | F34 | Orchestrazione degli agenti: server MCP, gerarchia, subagent con `--subagents` | completata (0.10.0) |
 | F35 | Progetti già avviati: `init --existing`, pannello senza errore, sessioni per fase | completata (0.11.0) |
-| F36 | Hero animata nel sito, biblioteca e `report` sul sito, README e documenti allineati al posizionamento (0.11.1) | completata |
+| F36 | Hero animata nel sito, biblioteca e `report` sul sito, README e documenti allineati al posizionamento | completata (0.11.1) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

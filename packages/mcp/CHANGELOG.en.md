@@ -2,6 +2,12 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.11.1 — 2026-11-23
+
+### Changed
+- Server instructions and README: the order across departments includes the Code Reviewer before the last confirmation, as in `AGENTS.md`.
+- README: Agentrica presents itself as an MCP server with AI agents organised in departments, no longer as a fictional company.
+
 ## 0.11.0 — 2026-11-22
 
 ### Added

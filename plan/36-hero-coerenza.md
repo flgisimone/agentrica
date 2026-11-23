@@ -2,7 +2,7 @@
 
 **Obiettivo**: la home del sito ha una hero animata che mostra come lavorano gli agenti (catalogo, attivazione su richiesta, gerarchia, ordine fra reparti, fase, conferma dell'utente), nella palette e con i dati del sito. Il sito dice tutto ciò che il server MCP fa oggi (0.11.0) e niente che non faccia. README e file Markdown dei due repository sono allineati al posizionamento di F28: Agentrica è un progetto, non una società di consulenza.
 
-> **Stato: completata (0.11.1 da pubblicare, pacchetto e sito insieme).**
+> **Stato: completata (0.11.1, pubblicata il 2026-11-23 su npm e sul sito).**
 
 **Agenzie**: design (UI Designer per palette e layout, Accessibility Specialist per animazione, contrasto e lettori di schermo, UX Writer per i testi della hero e la frase del posizionamento, revisione nell'app); software (Frontend per la hero nel sito, Performance per canvas e peso della pagina, QA, Code Reviewer); business (Product Marketing Manager solo per la frase che sostituisce «società di consulenza fittizia»).
 

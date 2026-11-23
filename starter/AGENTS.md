@@ -54,13 +54,13 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); gli agenti si consultano dal server MCP di Agentrica (`.mcp.json`), come dice «Come si consulta un agente». Il quadro completo è in `docs/AI Multi-Agency System.md`.
 
-| Agenzia | Ruoli | Prefisso | Cosa fa | Attiva |
-|---|---|---|---|---|
-| Software (`agents/ai_software_agency/`) | 12 | `sw-` | analisi, sviluppo e verifica. È l'unica che modifica il codice | sì |
-| Web Design (`agents/ai_web_design_agency/`) | 10 | `design-` | audit di UX, UI, architettura informativa, design system, dati e grafici, accessibilità, usabilità e testi. Sola lettura | <!-- sì/no --> |
-| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | 10 | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | <!-- sì/no --> |
-| Business & Product (`agents/ai_business_product_development_agency/`) | 12 | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | <!-- sì/no --> |
-| Cybersecurity (`agents/ai_cybersecurity_agency/`) | 12 | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | <!-- sì/no --> |
+| Agenzia | Prefisso | Cosa fa | Attiva |
+|---|---|---|---|
+| Software (`agents/ai_software_agency/`) | `sw-` | analisi, sviluppo e verifica. È l'unica che modifica il codice | sì |
+| Web Design (`agents/ai_web_design_agency/`) | `design-` | audit di UX, UI, architettura informativa, design system, dati e grafici, accessibilità, usabilità e testi. Sola lettura | <!-- sì/no --> |
+| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | <!-- sì/no --> |
+| Business & Product (`agents/ai_business_product_development_agency/`) | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | <!-- sì/no --> |
+| Cybersecurity (`agents/ai_cybersecurity_agency/`) | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | <!-- sì/no --> |
 
 <!-- In F0 si decide con l'utente quali agenzie restano attive. Quelle non attive si tolgono da agents/ e, se il progetto ha i subagent, da .claude/agents/ (quando servono si ricopiano dalle stesse cartelle del pacchetto `@agentrica/mcp`) e la decisione va nella tabella di plan/README.md. Togli dai subagent, se ci sono, anche i ruoli che il progetto non usa. -->
 

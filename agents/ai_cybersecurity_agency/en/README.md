@@ -1,6 +1,6 @@
 # AI Cybersecurity Agency
 
-12 agents with a defence-first approach: they protect systems, data, people and business continuity through security governance, architecture, secure development, vulnerability management, monitoring, incident response, IAM, cloud and network security, audit and training.
+Agents with a defence-first approach: they protect systems, data, people and business continuity through security governance, architecture, secure development, vulnerability management, monitoring, incident response, IAM, cloud and network security, audit and training.
 
 ## Agents
 1. Chief Information Security Officer

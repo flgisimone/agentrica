@@ -1,6 +1,6 @@
 # AI Web Design Agency
 
-10 senior agents for audits and advice on UX, UI, information architecture, design system, accessibility and content of the existing product. They do not write or change code.
+Senior agents for audits and advice on UX, UI, information architecture, design system, accessibility and content of the existing product. They do not write or change code.
 
 ## Agents
 1. Agency Director / Chief UX & Design Officer

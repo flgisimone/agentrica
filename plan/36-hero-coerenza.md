@@ -95,6 +95,7 @@ Pagina HTML autonoma: canvas con le cinque costellazioni, didascalie in sei capi
 
 ## Rilievi aperti
 
-- F36-R1 (P3): sul telefono la hero è più alta dello schermo (titolo, scena e didascalia non entrano in 844 px); la richiesta riguardava il computer.
-- F36-R2 (P3): `package-lock.json` ha ancora la voce del workspace `apps/site`, uscito in F17.
-- F36-R3 (P3): il README della radice ha ancora il numero di agenti per reparto nella tabella dei reparti e `AGENTS.md` «56 in tutto» per i subagent: sono descrizioni del repository, da decidere se togliere.
+- F36-R1 (P3): sul telefono la hero è più alta dello schermo (titolo, scena e didascalia non entrano in 844 px); la richiesta riguardava il computer. Risolto in `fix/rilievi-f36`: la hero è alta `100svh` meno l'header anche in verticale, la scena prende lo spazio rimasto; sotto 60 rem di altezza spariscono testo introduttivo e seconda riga della didascalia, sotto 46 rem il secondo pulsante (l'installazione resta nel menu); il binario si rimpicciolisce per stare su una riga; con una scena bassa solo direttore e agente attivo hanno l'etichetta, e «TU» resta nella scena. Provato a 390×844, 375×667, 430×932, 820×1180 e 1512×790: niente tagliato, nessuno scorrimento orizzontale. A 375×667 la scena è piccola (120 px).
+- F36-R2 (P3): `package-lock.json` ha ancora la voce del workspace `apps/site`, uscito in F17. Risolto in `fix/rilievi-f36`: voce tolta; `npm install --package-lock-only` non la rimette.
+- F36-R3 (P3): il README della radice ha ancora il numero di agenti per reparto nella tabella dei reparti e `AGENTS.md` «56 in tutto» per i subagent: sono descrizioni del repository, da decidere se togliere. Risolto in `fix/rilievi-f36`: colonna dei numeri tolta dalle tabelle di `README.md`, `README.it.md`, `AGENTS.md` e `starter/AGENTS.md` (it/en), «56 in tutto» tolto.
+- F36-R4 (P3): i README dei reparti in `agents/` (it/en) cominciano con il numero di agenti («12 agenti per…»). Sono contenuto del prodotto: cambiarli chiede la conferma dell'utente. Risolto in `fix/rilievi-f36` con la conferma dell'utente (2026-11-23): «Agenti per…», «Agents for…», senza numero; arriva sul sito con la 0.11.1.

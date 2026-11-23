@@ -2,7 +2,7 @@
 
 **Obiettivo**: Agentrica funziona anche in un progetto già avviato. Il piano si crea senza ricominciare da `init` e il pannello lo legge. Il lavoro segue sempre il ritmo previsto: in una sessione si pianifica (fasi e backlog), poi `/clear`, poi una fase per sessione, chiusa con la proposta di `/clear`. Nasce da due segnalazioni dell'utente del 2026-11-22 (0.10.0, progetto beaflow installato con `add`).
 
-> **Stato: completata (0.11.0, da pubblicare).**
+> **Stato: completata (0.11.0, pubblicata il 2026-11-23 su npm e sul sito).**
 
 **Agenzie**: software (Architect per il formato del piano e `init --existing`; Backend per `init`, `project.ts` e istruzioni del server; Frontend per il messaggio del pannello; QA, Code Reviewer); design (UX Writer per istruzioni, messaggio del pannello e testi dello starter).
 

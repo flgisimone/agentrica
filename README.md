@@ -15,13 +15,13 @@ The website and the MCP server read the **same source**: the Markdown files in [
 
 ## Departments
 
-| Code | Department | Agents | What it does | Folder |
-|---|---|---|---|---|
-| **AIBPD** | AI Business & Product Development | 12 | goals, requirements, priorities, roadmap, business case, market | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
-| **AICA** | AI Cybersecurity | 12 | threat model, configuration, access, vulnerabilities, incident response | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
-| **AIPCA** | AI Privacy & Compliance | 10 | GDPR, legal bases, retention, vendors, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
-| **AISA** | AI Software | 12 | analysis, architecture, development, testing, application security, code review | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
-| **AIWDA** | AI Web Design | 10 | UX research, UI, information architecture, design system, accessibility, copy | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
+| Code | Department | What it does | Folder |
+|---|---|---|---|
+| **AIBPD** | AI Business & Product Development | goals, requirements, priorities, roadmap, business case, market | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
+| **AICA** | AI Cybersecurity | threat model, configuration, access, vulnerabilities, incident response | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
+| **AIPCA** | AI Privacy & Compliance | GDPR, legal bases, retention, vendors, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
+| **AISA** | AI Software | analysis, architecture, development, testing, application security, code review | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
+| **AIWDA** | AI Web Design | UX research, UI, information architecture, design system, accessibility, copy | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
 
 Every agent has a **star code name**: the department code, the number of its role file and a star, for example `AISA-02 · ALTAIR` for the Senior Software Architect. Number 01 of each department is the director.
 

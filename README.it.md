@@ -15,13 +15,13 @@ Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](ag
 
 ## I reparti
 
-| Sigla | Reparto | Agenti | Cosa fa | Cartella |
-|---|---|---|---|---|
-| **AIBPD** | AI Business & Product Development | 12 | obiettivi, requisiti, priorità, roadmap, business case, mercato | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
-| **AICA** | AI Cybersecurity | 12 | threat model, configurazioni, accessi, vulnerabilità, risposta agli incidenti | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
-| **AIPCA** | AI Privacy & Compliance | 10 | GDPR, basi giuridiche, conservazione, fornitori, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
-| **AISA** | AI Software | 12 | analisi, architettura, sviluppo, test, sicurezza applicativa, revisione del codice | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
-| **AIWDA** | AI Web Design | 10 | ricerca UX, UI, architettura informativa, design system, accessibilità, testi | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
+| Sigla | Reparto | Cosa fa | Cartella |
+|---|---|---|---|
+| **AIBPD** | AI Business & Product Development | obiettivi, requisiti, priorità, roadmap, business case, mercato | [`agents/ai_business_product_development_agency/`](agents/ai_business_product_development_agency/) |
+| **AICA** | AI Cybersecurity | threat model, configurazioni, accessi, vulnerabilità, risposta agli incidenti | [`agents/ai_cybersecurity_agency/`](agents/ai_cybersecurity_agency/) |
+| **AIPCA** | AI Privacy & Compliance | GDPR, basi giuridiche, conservazione, fornitori, DPIA | [`agents/ai_privacy_compliance_agency/`](agents/ai_privacy_compliance_agency/) |
+| **AISA** | AI Software | analisi, architettura, sviluppo, test, sicurezza applicativa, revisione del codice | [`agents/ai_software_agency/`](agents/ai_software_agency/) |
+| **AIWDA** | AI Web Design | ricerca UX, UI, architettura informativa, design system, accessibilità, testi | [`agents/ai_web_design_agency/`](agents/ai_web_design_agency/) |
 
 Ogni agente ha un **nome in codice di stella**: la sigla del reparto, il numero del suo file di ruolo e una stella, per esempio `AISA-02 · ALTAIR` per il Senior Software Architect. Il numero 01 di ogni reparto è il direttore.
 

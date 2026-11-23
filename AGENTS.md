@@ -47,15 +47,15 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 ## Agenzie
 
-Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); in `.claude/agents/` ogni ruolo è anche un subagent che rimanda al suo file (56 in tutto). Il quadro completo è in `docs/AI Multi-Agency System.md`.
+Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); in `.claude/agents/` ogni ruolo è anche un subagent che rimanda al suo file. Il quadro completo è in `docs/AI Multi-Agency System.md`.
 
-| Agenzia | Ruoli | Prefisso | Cosa fa | Attiva |
-|---|---|---|---|---|
-| Software (`agents/ai_software_agency/`) | 12 | `sw-` | analisi, sviluppo e verifica. È l'unica che modifica il codice | sì |
-| Web Design (`agents/ai_web_design_agency/`) | 10 | `design-` | audit di UX, UI, architettura informativa, design system, dati e grafici, accessibilità, usabilità e testi. Sola lettura | sì |
-| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | 10 | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | da F5 |
-| Business & Product (`agents/ai_business_product_development_agency/`) | 12 | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | su richiesta |
-| Cybersecurity (`agents/ai_cybersecurity_agency/`) | 12 | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | da F5 |
+| Agenzia | Prefisso | Cosa fa | Attiva |
+|---|---|---|---|
+| Software (`agents/ai_software_agency/`) | `sw-` | analisi, sviluppo e verifica. È l'unica che modifica il codice | sì |
+| Web Design (`agents/ai_web_design_agency/`) | `design-` | audit di UX, UI, architettura informativa, design system, dati e grafici, accessibilità, usabilità e testi. Sola lettura | sì |
+| Privacy & Compliance (`agents/ai_privacy_compliance_agency/`) | `privacy-` | trattamenti di dati, basi giuridiche, conservazione, fornitori, sicurezza dei dati, DPIA. Sola lettura, non dichiara conformità | da F5 |
+| Business & Product (`agents/ai_business_product_development_agency/`) | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | su richiesta |
+| Cybersecurity (`agents/ai_cybersecurity_agency/`) | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | da F5 |
 
 In questo repository le agenzie hanno due parti: sono il **contenuto** del prodotto (Agentrica le presenta come reparti AIBPD, AICA, AIPCA, AISA, AIWDA) e il **team** che lo sviluppa. Per questo `agents/` resta completo anche per le agenzie non attive: modificare un file di ruolo cambia il sito e, da F5, il server MCP.
 

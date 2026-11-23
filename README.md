@@ -48,7 +48,7 @@ The departments serve twice: they are the **content** of the product and also th
 
 ## Status
 
-Phases F0–F35 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F34 (agents orchestrated from the MCP server one at a time, director first, subagents only with `init --subagents` and shown in the panel) is complete and released with 0.10.0. F35 (projects already under way with `init --existing`, the panel without an error when the plan is missing, one phase per session) is complete in 0.11.0, not yet published.
+Phases F0–F35 are complete; the full list, with what each one did, is in [README.it.md](README.it.md#stato) and [plan/README.md](plan/README.md). F34 (agents orchestrated from the MCP server one at a time, director first, subagents only with `init --subagents` and shown in the panel) is complete and released with 0.10.0. F35 (projects already under way with `init --existing`, the panel without an error when the plan is missing, one phase per session) is complete and released with 0.11.0.
 
 ## Getting started
 

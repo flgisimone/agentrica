@@ -83,7 +83,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F32 | Ruoli, biblioteche e server MCP anche in inglese, `--lang`, tool in inglese (0.9.0) | completata |
 | F33 | Sito in italiano e inglese (`/it`, `/en`), selettore di lingua, CHANGELOG inglese | completata (0.9.0) |
 | F34 | Orchestrazione degli agenti: server MCP, gerarchia, subagent con `--subagents` | completata (0.10.0) |
-| F35 | Progetti già avviati: `init --existing`, pannello senza errore, sessioni per fase | completata (0.11.0, da pubblicare) |
+| F35 | Progetti già avviati: `init --existing`, pannello senza errore, sessioni per fase | completata (0.11.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

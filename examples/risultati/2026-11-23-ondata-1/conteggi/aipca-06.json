@@ -1,0 +1,82 @@
+{
+  "ruolo": "aipca-06",
+  "rapporti": {
+    "aipca-06-R1": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "/tmp/prod.dump resta sul disco se il refresh fallisce (set -e prima di rm, scripts/refresh-staging.sh)",
+        "Scansione del documento d'identità del pagatore senza periodo di conservazione (payers.documento_key)",
+        "note_salute (art. 9) raccolte all'iscrizione senza consenso esplicito o base art. 9 distinta",
+        "parent_id mai valorizzato all'iscrizione: lo studente minore non è collegato al genitore (src/auth.js)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G1 in AIPCA-06-11 (campi senza finalità), G6 in -02 con dati cancellati che sopravvivono 10 anni. audit_log 90 giorni toccato solo come 'potrebbero non bastare' (irrobustimento su T4, non falso). Conteggio del riepilogo sbagliato (dice 10 P1 e 4 P2, sono 9 e 5): errore marginale. P1, P4, P5, V1, V2, V3, V4, V6, D1, D5 trovati in più (altri ruoli, non contano)."
+    },
+    "aipca-06-R2": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "DG-11 · Conservazione dell'audit_log senza motivazione, e in conflitto con la responsabilizzazione (parzialmente_conforme, P2)",
+          "motivo": "Trappola T4: audit_log a 90 giorni è dichiarato e applicato; un rilievo dedicato che lo presenta come in conflitto con l'art. 5(2) va oltre il consiglio di irrobustimento. Caso al limite."
+        }
+      ],
+      "extra_validi": [
+        "/tmp/prod.dump resta sul disco se il refresh fallisce (set -e prima di rm)",
+        "Scansione del documento d'identità del pagatore senza periodo di conservazione",
+        "note_salute (art. 9) raccolte senza consenso esplicito o base art. 9 valutata",
+        "users.email UNIQUE con cancellazione solo logica: l'interessato non può reiscriversi"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rinvii ad altri ruoli con id sbagliati (AIPCA-08 per il vendor, AIPCA-07 per l'audit log, AIPCA-05 per i diritti): marginale. DG-05 cita il CF fra i dati del body di /signup, che non lo contiene: marginale. Privacy Shield indicato correttamente come invalidato (C-311/18)."
+    },
+    "aipca-06-R3": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "R-13: 'Non nel registro: TextBlast, Coldvault, ChatNow, endpoint di statistiche' (e R-08: 'Il registro dei fornitori non cita l'endpoint')",
+          "motivo": "Trappola T7: le statistiche sono su un server proprio su Nimbus (src/analytics.js), nessun fornitore nuovo da registrare."
+        }
+      ],
+      "extra_validi": [
+        "/tmp/prod.dump resta sul disco se pg_restore fallisce (set -e prima di rm)",
+        "Scansione del documento d'identità del genitore senza scadenza (R-10)",
+        "note_salute (art. 9) senza finalità/base art. 9 né consenso esplicito nel modulo (R-05)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G6 in R-02 (dump mensili 10 anni con dati cancellati). Rinvii con id sbagliati (AIPCA-07 per la sicurezza, AIPCA-04 per i diritti, AIPCA-05 per i fornitori) e riga inesistente docs/procedura-diritti.md:10: marginali. R-14 su audit_log 90 giorni è P3 e ipotetico ('può essere troppo breve'): irrobustimento su T4. R-06 (export per scuola, P3 dell'altro ruolo) declassato a P2."
+    },
+    "aipca-06-R4": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "/tmp/prod.dump resta sul disco se un comando fallisce (set -e prima di rm)",
+        "Scansione del documento d'identità del genitore senza scadenza dopo la verifica (M-10)",
+        "note_salute raccolte per tutti, minori compresi, senza finalità/motivazione documentata (M-10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G1 in M-10 con la causa completa (per la fattura bastano CF e indirizzo del pagatore). Unico rapporto con un P0 (M-01, InsightAI: difetto V2 di un altro ruolo). Riga inesistente procedura-diritti:10: marginale. M-13 su audit_log P3 (motivazione): irrobustimento su T4. Firma nella forma '— AIPCA-06 · MERAK'."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere come extra atteso o accettabile per AIPCA-06: /tmp/prod.dump che resta se refresh-staging.sh fallisce (set -e prima di rm), trovato da tutti e quattro i rapporti",
+    "Aggiungere come accettabile per AIPCA-06: scansione del documento d'identità in payers senza periodo di conservazione (trovata da tutti e quattro)",
+    "Aggiungere come accettabile per AIPCA-06: note_salute (art. 9) raccolte senza consenso esplicito o base art. 9 documentata (tutti e quattro)",
+    "Chiarire T4: dire se notare che manca una motivazione scritta per i 90 giorni dell'audit_log (retention.json non ne ha) sia falso o irrobustimento; oggi tre rapporti lo trattano come consiglio e uno (R2) con un rilievo dedicato",
+    "Chiarire T7 per AIPCA-06: elencare l'endpoint delle statistiche fra i fornitori non registrati è falso (R3)",
+    "Accettabile per AIPCA-06: fatture a 10 anni senza job di cancellazione alla scadenza (citato da tutti; non contraddice T5)",
+    "Accettabile per AIPCA-06: log pino e statistiche senza periodo di conservazione definito (tutti)"
+  ]
+}

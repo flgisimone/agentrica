@@ -1,0 +1,81 @@
+{
+  "ruolo": "aipca-05",
+  "rapporti": {
+    "aipca-05-R1": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "CSV dell'export senza escape: rottura del formato e iniezione di formule (src/export.js:13)",
+        "Nessun limite ai tentativi né blocco su /login e nessuna regola sulla password (src/auth.js:6-8,18)",
+        "Audit trail con soli tre eventi (niente login, azioni di admin e support) e tabella senza protezione dalla modifica (db/schema.sql:83)",
+        "Dump in /tmp/prod.dump che resta sul disco se pg_restore fallisce (set -e, scripts/refresh-staging.sh:4-7)",
+        "express-session senza store dichiarato (MemoryStore predefinito)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e cinque trovati: P1, P2 e la copia a Coldvault in R3; P3 in R2; P4 in R6; P5 in R1, con staging che eredita la chiave. R8 giudica «insufficienti» i 90 giorni dell'audit_log (T4). Non lo conto falso: è un irrobustimento, vicino all'accettabile «audit log cancellato insieme agli altri log». Errore marginale: i riferimenti backup.yml:12 e :13 vanno spostati di una riga (keep_monthly è alla 13, last_restore_test alla 14). Accettabili o rilievi di altri ruoli: MFA, staging (G4), disiscrizione senza firma, G2, G3, G5, G6, D1, D5, V1-V5, D3/D4/D6/D7. Il rapporto dichiara di girare su un modello più piccolo (Sonnet)."
+    },
+    "aipca-05-R2": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "CSV dell'export senza escape (CSV injection, src/export.js:13)",
+        "rclone sync replica anche cancellazioni e corruzioni, senza versioning né immutabilità: il backup dello storage non protegge da ransomware o errori (config/backup.yml:7)",
+        "Script di chat di terzi senza SRI e senza CSP nella stessa pagina del form con password e note di salute: può leggere i campi (public/index.html:19,21,26). Il solo mancato censimento di ChatNow è V6",
+        "Nessun limite ai tentativi di login; enumerazione degli account dai tempi di risposta (argon2 saltato per utente inesistente, src/auth.js:8); nessuna verifica dell'email all'iscrizione",
+        "Audit trail incompleto e modificabile o cancellabile con le stesse credenziali dell'app",
+        "Dump in /tmp che resta se pg_restore fallisce (set -e)",
+        "Cancellazione dell'account che chiude solo la sessione corrente, non le altre (src/account.js:15)",
+        "Session store non configurato (MemoryStore)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e cinque trovati: P1 e P2 in MIZAR-04, P3 in MIZAR-02, P4 in MIZAR-09, P5 in MIZAR-01. MIZAR-10 chiede di motivare i 90 giorni dell'audit_log e di separarlo dagli altri log: è un irrobustimento vicino all'accettabile, non un falso. La numerazione salta da MIZAR-15 a MIZAR-19 (le righe 16-18 della matrice sono i controlli conformi). Errore marginale: note_salute indicata a schema.sql:22, invece è alla 26. MIZAR-07 riprende D3 e D7 (altro ruolo) e MIZAR-14 l'accettabile su support e documenti. Cita l'art. 8 per InsightAI: è un rimando tangenziale, non sbagliato."
+    },
+    "aipca-05-R3": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "CSV dell'export senza escape (CSV injection, src/export.js:13)",
+        "rclone sync propaga cancellazioni e ransomware alla copia, senza versioning (config/backup.yml:7)",
+        "Nessun limite ai tentativi su /login e /signup",
+        "Audit trail incompleto (niente login né azioni del personale) e senza protezione dalla modifica",
+        "Dump in /tmp che resta se pg_restore fallisce (set -e)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e cinque trovati: P1 in R3, P2 in R4, P3 in R2, P4 in R8, P5 in R1. R9 definisce i 90 giorni dell'audit_log «troppo poco» e lo dice trattato come log applicativi: coincide con l'accettabile, è un irrobustimento, non un falso. Riferimenti di riga corretti. R10 sulla segregazione dei documenti fra scuole resta ipotetico (multi-scuola non dimostrato): non lo conto. Il rapporto dichiara un modello più piccolo. R16 coincide con D3 e D7 (altro ruolo)."
+    },
+    "aipca-05-R4": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "CSV senza protezione dalle formule (PSE-16, src/export.js:13)",
+        "Nessun limite ai tentativi né blocco su /login, e il login non viene registrato nell'audit_log",
+        "Audit trail cancellabile dallo stesso utente del database e privo di ruolo dell'autore, IP ed eventi (PSE-10)",
+        "Dump in /tmp che resta se un passo fallisce (set -e)",
+        "Script di chat di terzi senza SRI né CSP, caricato senza consenso, nella pagina con note di salute e password (PSE-14, aspetto di sicurezza oltre a V6)",
+        "MemoryStore per le sessioni: nessuna revoca centrale, nemmeno alla cancellazione dell'account"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e cinque trovati: P1, P2 e la copia a Coldvault in PSE-03; P3 in PSE-01; P4 in PSE-05 (P1); P5 in PSE-02. Riferimenti normativi corretti: art. 122 del Codice privacy, Linee guida EDPB 01/2022, Schrems II nel 2020. PSE-10 chiede una motivazione per i 90 giorni: è un irrobustimento. PSE-08 (cifratura a livello di campo e RLS per school_id) è un irrobustimento ragionevole, non contato. La firma finale è «— MIZAR (AIPCA-05)», seguita dalla riga con il nome in codice completo."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli extra noti o agli accettabili di AIPCA-05 la CSV injection in src/export.js:13: è nei quattro rapporti su quattro.",
+    "Aggiungere agli accettabili di AIPCA-05 il dump /tmp/prod.dump che resta se pg_restore fallisce con set -e: è nei quattro rapporti.",
+    "Aggiungere agli accettabili di AIPCA-05 il login senza limiti ai tentativi e l'audit trail senza eventi di login e azioni del personale né protezione dalla modifica: sono nei quattro rapporti.",
+    "Aggiungere il session store non configurato (MemoryStore) e rclone sync senza versioning (cancellazioni e ransomware propagati alla copia).",
+    "Per ChatNow, distinguere l'aspetto di sicurezza (script di terzi senza SRI né CSP nella pagina con password e note di salute), che è di AIPCA-05, dal mancato censimento (V6).",
+    "Ambiguità fra T4 («audit_log 90 giorni corretto») e l'accettabile «audit log cancellato insieme agli altri log»: i quattro rapporti chiedono di motivare o allungare i 90 giorni, e non li ho contati falsi. Chiarire se criticare la durata sia una trappola o un irrobustimento (il provvedimento del Garante sugli amministratori di sistema chiede almeno sei mesi per i log di accesso)."
+  ]
+}

@@ -2,6 +2,12 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.12.0 — 2026-11-24
+
+### Changed
+- Recommended model for 12 more agents, measured on the test cases (F37, `examples/risultati/2026-11-23-ondata-1.md`): Haiku for AICA-09 Vulnerability Management; Sonnet for AICA-03 AppSec, AICA-05 Network, AICA-07 SOC, AIPCA-05 Privacy Security, AIPCA-06 Data Governance, AIPCA-07 Vendor, AIPCA-08 Data Subject Rights, AISA-05 Frontend, AISA-07 Database, AISA-10 DevOps, AISA-11 Performance. It shows in `list_agents`, in the agent's text and in the subagents of `init --subagents`.
+- README: the recommended-models table lists the 17 measured agents; the other 39 (directors and judgment roles by choice, the rest not measured or below the threshold) stay on the session's model.
+
 ## 0.11.1 — 2026-11-23
 
 ### Changed

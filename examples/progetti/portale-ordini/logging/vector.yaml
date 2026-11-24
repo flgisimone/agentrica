@@ -1,0 +1,45 @@
+# Raccolta dei log del portale e invio al SIEM
+sources:
+  app:
+    type: docker_logs
+    include_containers: [app, admin]
+  nginx:
+    type: file
+    include: [/var/log/nginx/access.log]
+
+transforms:
+  app_parsed:
+    type: remap
+    inputs: [app]
+    source: |
+      . = parse_json!(.message)
+      .service = "portale-ordini"
+  # pino: 30 = info, 40 = warn, 50 = error
+  app_filtered:
+    type: filter
+    inputs: [app_parsed]
+    condition: .level >= 40
+  nginx_parsed:
+    type: remap
+    inputs: [nginx]
+    source: |
+      . |= parse_regex!(.message, r'^(?P<client_ip>\S+) - \[(?P<ts>[^\]]+)\] "(?P<request>[^"]*)" (?P<status>\d+) (?P<bytes>\d+)')
+  nginx_no_health:
+    type: filter
+    inputs: [nginx_parsed]
+    condition: '!starts_with(string!(.request), "GET /healthz")'
+
+sinks:
+  siem:
+    type: http
+    inputs: [app_filtered, nginx_no_health]
+    uri: https://siem.ferramentanord.example/ingest
+    encoding: { codec: json }
+    auth:
+      strategy: bearer
+      token: "${SIEM_TOKEN}"
+  local_archive:
+    type: file
+    inputs: [app_parsed, nginx_parsed]
+    path: /var/log/archive/%Y-%m-%d.log
+    # rotazione: logrotate, maxage 7

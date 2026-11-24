@@ -1,0 +1,14 @@
+# Backup del database (pg_dump notturno) e dello storage
+schedule: "0 2 * * *"
+database:
+  tool: pg_dump --format=custom
+  encryption: none        # il bucket è privato
+storage:
+  sync: rclone sync nimbus:parlasubito-prod nimbus:parlasubito-backup
+copies:
+  - target: nimbus:parlasubito-backup        # Francoforte
+  - target: coldvault:ps-offsite             # Coldvault Storage, Singapore: copia fuori sede, costa meno
+retention:
+  keep_daily: 30
+  keep_monthly: 120       # dieci anni, per sicurezza
+last_restore_test: null

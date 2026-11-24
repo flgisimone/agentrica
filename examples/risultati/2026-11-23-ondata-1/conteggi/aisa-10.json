@@ -1,0 +1,86 @@
+{
+  "ruolo": "aisa-10",
+  "rapporti": {
+    "aisa-10-R1": {
+      "trovati": ["O1", "O2", "O3", "O4", "O5", "O6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "known_hosts non fornito sul runner con StrictHostKeyChecking=yes: deploy.sh fallisce o dipende da un file non versionato (rilievo 9)",
+        "update_config senza failure_action: rollback, monitor né rollback_config: un aggiornamento difettoso non torna indietro da solo",
+        "data/listino.json copiato nell'immagine mentre un job esterno lo aggiorna ogni giorno: in produzione resta quello del giorno della build",
+        "CMD con sh -c: PID 1 è sh, e il server non gestisce SIGTERM: richieste perse durante l'aggiornamento",
+        "Servizio postgres della CI senza --health-cmd pg_isready: migrazione instabile",
+        "Nessun .dockerignore: .env e .git nel contesto di build",
+        "Nessun concurrency sul deploy e nessun backup del database"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "O1 trovato ma classificato P2 (rilievo 6), basso per un deploy con test rossi. Errore marginale: dice che main() senza .catch non garantisce un codice di uscita non zero; in Node 22 il rifiuto non gestito termina con 1. Unisce O3 (:previous e :latest) in un solo rilievo con entrambe le cause."
+    },
+    "aisa-10-R2": {
+      "trovati": ["O1", "O2", "O3", "O4", "O5", "O6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "known_hosts non fornito nel workflow con StrictHostKeyChecking=yes: la connessione fallisce se l'host non è già noto",
+        "update_config senza failure_action: rollback, monitor né rollback_config",
+        "data/listino.json nell'immagine, aggiornato ogni giorno da un job esterno",
+        "Servizio postgres della CI senza --health-cmd pg_isready",
+        "deploy.sh applica /srv/magazzino/docker-compose.prod.yml del server, non il compose del repository: possono divergere",
+        "Nessun .dockerignore",
+        "Nessun concurrency sul deploy, nessun backup né ripristino del database"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "O1 classificato P2. O4: la concorrenza fra repliche è esplicita; la rottura della versione vecchia è detta per il rollback più che per lo start-first, ma la causa (migrazioni all'avvio di ogni replica) è nominata. Errore marginale: dice che con start-first Swarm considera pronta la replica senza verificare la salute, mentre con un healthcheck definito ne attende l'esito. Nota corretta che il listino nella copia pesa 2 KB."
+    },
+    "aisa-10-R3": {
+      "trovati": ["O1", "O2", "O3", "O4", "O5", "O6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "known_hosts non popolato sul runner con StrictHostKeyChecking=yes: il deploy fallisce con Host key verification failed (P1)",
+        "update_config senza failure_action: rollback, monitor né rollback_config",
+        "data/listino.json nell'immagine, aggiornato ogni giorno",
+        "sh -c come PID 1 e nessuna gestione di SIGTERM: richieste in corso perse a ogni aggiornamento",
+        "Servizio postgres della CI senza pg_isready; DATABASE_URL passato solo a migrate e non a npm test",
+        "deploy.sh usa il compose sul server, non quello versionato: possono divergere",
+        "Nessun .dockerignore; nessun concurrency sul deploy; nessun backup del database"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": false,
+      "note": "Manca la firma finale con il nome in codice: il rapporto chiude con «Riepilogo (CASTOR)» e l'elenco delle attività residue. Riporta anche D5, D6 (CASTOR-07) e P3 (nota fuori perimetro): difetti di altri ruoli, non contati. O3 diviso fra CASTOR-05 (:previous) e CASTOR-08 (:latest). O4 diviso fra CASTOR-06 (parallelo) e CASTOR-07 (start-first sotto la versione vecchia)."
+    },
+    "aisa-10-R4": {
+      "trovati": ["O1", "O2", "O3", "O4", "O5", "O6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "known_hosts non preparato sul runner con StrictHostKeyChecking=yes: il deploy si ferma con Host key verification failed",
+        "update_config senza failure_action: rollback, monitor né rollback_config; nessun controllo all'avvio delle variabili obbligatorie (senza PAYMENTS_WEBHOOK_SECRET createHmac lancia a ogni webhook)",
+        "data/listino.json nell'immagine, aggiornato ogni giorno",
+        "sh -c come PID 1 e nessuna gestione di SIGTERM",
+        "ESLint 9 senza eslint.config.js: npm run lint fallisce sempre; postgres della CI senza pg_isready e DATABASE_URL non passato a npm test",
+        "package-lock.json senza dipendenze transitive né campi integrity: npm ci non riproducibile",
+        "deploy.sh usa il compose sul server, non quello versionato",
+        "Nessun .dockerignore; nessun concurrency sul deploy; nessun backup prima delle migrazioni"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Il più completo; O1 a P1. Errore marginale: dice che :latest pubblicato prima dell'approvazione può essere preso da un riavvio di Swarm, ma docker stack deploy con --with-registry-auth fissa il digest e la ripianificazione usa quello. Cita «nessun test» e il 003_sku (D5): accettabile e difetto di altri ruoli, non contati. Dichiara come deduzioni non verificate i punti su known_hosts, lint e lockfile."
+    }
+  },
+  "proposte_scheda": [
+    "known_hosts assente sul runner con StrictHostKeyChecking=yes: lo trovano tutti e quattro (due a P1). T13 dice che la gestione SSH è corretta; va chiarito: aggiungere un passo known_hosts al workflow oppure mettere il rilievo fra gli accettabili, per non lasciare la trappola ambigua.",
+    "Extra ricorrenti in tutti i rapporti da aggiungere agli accettabili: update_config senza failure_action: rollback/monitor; listino da 30 MB copiato nell'immagine (COPY data); servizio postgres della CI senza pg_isready; nessun .dockerignore; nessun concurrency sul deploy; nessun backup del database.",
+    "Ricorrenti in tre rapporti: sh -c come PID 1 senza gestione di SIGTERM; compose applicato da /srv/magazzino invece di quello versionato.",
+    "Semplificazioni del progetto di prova trovate da R4 (eslint.config.js mancante con ESLint 9, package-lock.json senza transitive e integrity, DATABASE_URL non passato a npm test): aggiungerle agli accettabili o correggere la copia.",
+    "O1 è classificato P2 da due rapporti su quattro: valutare se la scheda debba indicare una priorità attesa.",
+    "I file .down.sql mai eseguiti da migrate.js compaiono in tutti i rapporti come limite del rollback: è vicino all'accettabile AISA-07 «nessuna migrazione di ritorno», conviene citarlo anche fra gli accettabili di AISA-10."
+  ]
+}

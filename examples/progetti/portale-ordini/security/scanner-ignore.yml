@@ -1,0 +1,12 @@
+# Eccezioni ai rilievi dello scanner
+- id: FNSA-2026-0102
+  package: pino-abstract-transport
+  reason: "fix in arrivo con pino 9.6, aggiorniamo appena esce"
+  owner: a.bianchi
+  expires: 2026-09-30
+
+- id: FNSA-2026-0140
+  package: minimatch
+  reason: "dipendenza di eslint, solo in CI; ReDoS su pattern controllati da noi nella configurazione del lint"
+  owner: a.bianchi
+  expires: 2027-02-28

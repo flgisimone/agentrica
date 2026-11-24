@@ -162,7 +162,13 @@ test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell
   assert.equal(modelAdvice(architect.agent), undefined);
   assert.doesNotMatch(agentText(architect), /Modello consigliato/);
   const measured = catalog.flatMap((d) => d.agents.filter((a) => a.model !== "inherit").map((a) => `${a.id}:${a.model}`));
-  assert.deepEqual(measured, ["AIBPD-05:sonnet", "AICA-04:sonnet", "AIPCA-02:sonnet", "AISA-08:haiku", "AISA-09:sonnet"]);
+  // F24 (2026-11-19-modelli.md) e F37 (2026-11-23-ondata-1.md): solo i ruoli che superano la soglia.
+  assert.deepEqual(measured, [
+    "AIBPD-05:sonnet",
+    ...["AICA-03:sonnet", "AICA-04:sonnet", "AICA-05:sonnet", "AICA-07:sonnet", "AICA-09:haiku"],
+    ...["AIPCA-02:sonnet", "AIPCA-05:sonnet", "AIPCA-06:sonnet", "AIPCA-07:sonnet", "AIPCA-08:sonnet"],
+    ...["AISA-05:sonnet", "AISA-07:sonnet", "AISA-08:haiku", "AISA-09:sonnet", "AISA-10:sonnet", "AISA-11:sonnet"],
+  ]);
 });
 
 test("resoconto: con il pannello il testo chiede il tool report, prima della valutazione", () => {

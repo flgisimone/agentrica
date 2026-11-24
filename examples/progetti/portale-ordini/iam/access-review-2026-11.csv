@@ -1,0 +1,11 @@
+account;persona;tipo;ruolo;mfa;stato;scadenza;ultimo_accesso;note
+a.bianchi;Anna Bianchi;dipendente;admin;si;attivo;;2026-11-20;IT
+l.verdi;Luca Verdi;dipendente;operator;no;attivo;;2026-11-21;magazzino
+magazzino;turno A/B;dipendente;operator;no;attivo;;2026-11-21;postazione condivisa del magazzino, usata dai due turni
+g.neri;Giorgio Neri;dipendente;admin;si;attivo;;2026-11-12;cessato il 2026-09-30 (HR)
+s.galli;Sara Galli;dipendente;operator;no;disattivato;;2026-04-02;cessata il 2026-04-02
+c.ferri;Chiara Ferri;esterno;admin;si;attivo;;2026-11-18;consulente gestionale, contratto annuale
+revisore.kpmx;Studio Revisori KPMX;esterno;auditor;no;attivo;2026-12-31;2026-11-10;revisione contabile 2026, referente a.bianchi
+emergency-admin;—;emergenza;admin;si (chiave hardware);disattivato;;mai;busta in cassaforte, ultimo controllo 2026-10-01
+svc-backup;servizio;servizio;—;—;attivo;;2026-11-22;backup notturno del database
+svc-deploy;servizio;servizio;—;—;attivo;;2026-11-21;pipeline CI (OIDC)

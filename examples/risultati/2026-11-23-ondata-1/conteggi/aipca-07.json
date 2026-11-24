@@ -1,0 +1,60 @@
+{
+  "ruolo": "aipca-07",
+  "rapporti": {
+    "aipca-07-R1": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ChatNow caricato a ogni visita senza consenso preventivo (art. 122 Codice privacy) su una pagina con note di salute: lo script di terzi può leggere i campi del form"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo e accurato; riferimenti di riga verificati (transcribe.js:8-12, backup.yml:5,10,13,14, index.html:19,26, auth.js:11,27,28). InsightAI P0, Coldvault P1 con possibile P0. Statistiche su Nimbus (T7) trattate come non verificabili, non come difetto: irrobustimento, non falso. Destinazione dei log e sub-responsabili di Nimbus «poco plausibili» sono richieste di verifica speculative, non contate. Mailorbit sub-responsabili solo sul sito e staging: accettabili. Disiscrizione Mailorbit (D5), log (P4), chiave (P5) passati ad altri ruoli: non contano. Dichiara il modello usato (Opus) nel testo."
+    },
+    "aipca-07-R2": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ChatNow caricato senza consenso preventivo, può leggere il modulo e impostare identificatori (art. 122 Codice privacy; possibile contitolarità, CGUE C-40/17 Fashion ID)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo; InsightAI e Coldvault P0. Riferimenti normativi corretti (Schrems II 16/07/2020, DPF 10/07/2023, Fashion ID). V-04 (disiscrizione e sync Mailorbit) è D5 di AIPCA-08: non conta. Osserva anche che il nome inviato a Mailorbit viene da students (possibili minori): vero, non contato come extra (marginale). Nimbus ISO e sub-responsabili: richieste di verifica speculative, non contate. Staging e verifica preventiva dei fornitori: accettabili."
+    },
+    "aipca-07-R3": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ChatNow carica codice di terzi e raccoglie dati (IP, metadati) prima di qualunque consenso (art. 122 Codice privacy)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto più breve ma con tutti e sei i difetti; V1 e V6 uniti in ALCOR-04 con entrambe le cause. Art. 28(10) per InsightAI corretto. Errori marginali: nella nota ad altri ruoli dice che i log contengono la password, ma redact copre body.password; «SOC 2 non copre la protezione dei dati personali» è approssimativo (esiste il criterio Privacy, non dichiarato qui); «il registro non deve più dichiararsi completo» (il registro non si dichiara completo). Non cambiano i rilievi. Presentazione in grassetto, firma «— AIPCA-07 · ALCOR»."
+    },
+    "aipca-07-R4": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ChatNow caricato prima di qualunque consenso, riceve almeno IP e user agent (art. 5(3) ePrivacy)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sei i difetti, ma con priorità più basse: InsightAI (voce di minori negli USA senza accordo) solo P1, nessun P0. V1 e V6 uniti in ALCOR-04 con entrambe le cause. ALCOR-05 staging con dati veri è accettabile (G4 / storage di staging); «/tmp/prod.dump non è protetto» è un irrobustimento marginale (lo script lo rimuove, ma resta in caso di errore con set -e). Il rapporto riporta il percorso della cartella di lavoro della prova (copie/aipca-07-sonnet-1), che rivela il modello: da togliere nei prompt futuri o nella copia anonima. Firma solo «— ALCOR»: nome in codice presente."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili di AIPCA-07 (o come difetto) il widget ChatNow caricato senza consenso preventivo (art. 122 Codice privacy / art. 5(3) ePrivacy): lo segnalano tutti e quattro i rapporti.",
+    "Aggiungere fra gli accettabili di AIPCA-07: ISO 27001 di Nimbus limitata al data center e sub-responsabili «nessuno» da verificare; destinazione dei log non dichiarata; PagaFacile con AoC PCI DSS senza data; SOC 2 di Mailorbit senza ambito e periodo; nome degli studenti (anche minori) inviato a Mailorbit.",
+    "Chiarire in T7 che trattare le statistiche come «non verificabili» (commento senza evidenza) è un irrobustimento e non un falso.",
+    "Chiarire se la priorità conta: un rapporto mette InsightAI (V2) a P1 invece di P0; la scheda non fissa una priorità attesa.",
+    "Anonimato: un rapporto riporta il percorso della copia di lavoro con il nome del modello; nelle prossime ondate usare cartelle senza il modello nel nome o ripulire i rapporti."
+  ]
+}

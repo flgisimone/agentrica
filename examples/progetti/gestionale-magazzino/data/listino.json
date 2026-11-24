@@ -1,0 +1,106 @@
+{
+  "_nota": "estratto: il file reale ha circa 180.000 voci (30 MB)",
+  "aggiornato": "2026-11-22",
+  "items": [
+    {
+      "sku": "OE-00001",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.41
+    },
+    {
+      "sku": "OE-00002",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.43
+    },
+    {
+      "sku": "OE-00003",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.44
+    },
+    {
+      "sku": "OE-00004",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.45
+    },
+    {
+      "sku": "OE-00005",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.47
+    },
+    {
+      "sku": "OE-00006",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.48
+    },
+    {
+      "sku": "OE-00007",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.49
+    },
+    {
+      "sku": "OE-00008",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.5
+    },
+    {
+      "sku": "OE-00009",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.52
+    },
+    {
+      "sku": "OE-00010",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.53
+    },
+    {
+      "sku": "OE-00011",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.54
+    },
+    {
+      "sku": "OE-00012",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.56
+    },
+    {
+      "sku": "OE-00013",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.57
+    },
+    {
+      "sku": "OE-00014",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.58
+    },
+    {
+      "sku": "OE-00015",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.59
+    },
+    {
+      "sku": "OE-00016",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.61
+    },
+    {
+      "sku": "OE-00017",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.62
+    },
+    {
+      "sku": "OE-00018",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.63
+    },
+    {
+      "sku": "OE-00019",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.65
+    },
+    {
+      "sku": "OE-00020",
+      "supplier": "Consorzio Frutta Romagna",
+      "price": 0.66
+    }
+  ]
+}

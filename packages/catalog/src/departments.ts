@@ -23,7 +23,8 @@ export interface DepartmentInfo {
   stars: readonly string[];
   /**
    * Modello consigliato per numero di file di ruolo; gli altri ruoli restano «inherit». Ogni voce ha una misura che
-   * supera la soglia in examples/risultati/ (F24, 2026-11-19-modelli.md): un ruolo nuovo entra solo dopo una misura.
+   * supera la soglia in examples/risultati/ (F24, 2026-11-19-modelli.md; F37, 2026-11-23-ondata-1.md): un ruolo nuovo
+   * entra solo dopo una misura.
    */
   models?: Readonly<Record<number, Model>>;
 }
@@ -51,7 +52,7 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "Threat model, configurations, access, vulnerabilities and incident response.",
     },
     stars: ["VEGA", "RIGEL", "BETELGEUSE", "ALNILAM", "ALNITAK", "MINTAKA", "SAIPH", "ELNATH", "WEZEN", "SARGAS", "ATRIA", "NUNKI"],
-    models: { 4: "sonnet" },
+    models: { 3: "sonnet", 4: "sonnet", 5: "sonnet", 7: "sonnet", 9: "haiku" },
   },
   {
     code: "AIPCA",
@@ -63,7 +64,7 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "GDPR, legal bases, data retention, vendors and DPIA.",
     },
     stars: ["ARCTURUS", "ALIOTH", "DUBHE", "ALKAID", "MIZAR", "MERAK", "ALCOR", "PHECDA", "MEGREZ", "THUBAN"],
-    models: { 2: "sonnet" },
+    models: { 2: "sonnet", 5: "sonnet", 6: "sonnet", 7: "sonnet", 8: "sonnet" },
   },
   {
     code: "AISA",
@@ -75,7 +76,7 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "Analysis, architecture, development, testing, application security and code review.",
     },
     stars: ["SIRIUS", "ALTAIR", "ALDEBARAN", "ANTARES", "SPICA", "POLLUX", "FOMALHAUT", "DENEB", "REGULUS", "CASTOR", "BELLATRIX", "MIRFAK"],
-    models: { 8: "haiku", 9: "sonnet" },
+    models: { 5: "sonnet", 7: "sonnet", 8: "haiku", 9: "sonnet", 10: "sonnet", 11: "sonnet" },
   },
   {
     code: "AIWDA",

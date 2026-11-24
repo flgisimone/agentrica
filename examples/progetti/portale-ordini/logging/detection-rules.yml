@@ -1,0 +1,39 @@
+# Regole di rilevamento del SIEM per il portale ordini
+rules:
+  - id: PO-001
+    name: Brute force sul login
+    query: event = "login_failed"
+    group_by: [user]
+    threshold: "count > 10"
+    window: 5m
+    severity: high
+
+  - id: PO-002
+    name: Accesso da paese nuovo per l'utente
+    query: event = "login_success"
+    group_by: [user]
+    condition: "geoip(ip).country not in history(user, 30d).countries"
+    severity: medium
+
+  - id: PO-003
+    name: Esportazione massiva dei clienti
+    query: event = "admin_export" and rows > 1000
+    severity: high
+
+  - id: PO-004
+    name: Picco di errori 5xx
+    source: nginx
+    query: status >= 500
+    threshold: "count > 50"
+    window: 5m
+    severity: medium
+
+  - id: PO-005
+    name: Scansione di percorsi (molti 404 dallo stesso IP)
+    source: nginx
+    query: status = 404
+    group_by: [client_ip]
+    threshold: "count > 100"
+    window: 10m
+    exclude: { client_ip: ["198.51.100.20"] }
+    severity: low

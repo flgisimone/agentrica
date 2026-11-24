@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere una parte del rilievo aperto di F24 sui 50 ruoli non misurati. Quattordici specialisti di cybersecurity, privacy e software, simili a quelli che in F24 sono passati su Sonnet, si provano con lo stesso metodo e la stessa soglia. Un ruolo riceve un modello più piccolo solo dove la qualità regge.
 
-> **Stato: in pianificazione** (aperta il 2026-11-23). Perimetro, configurazioni, casi e trattamento dei direttori decisi con l'utente il 2026-11-23; backlog confermato lo stesso giorno. La pianificazione si ferma al backlog: le esecuzioni partono in una sessione nuova.
+> **Stato: completata** (aperta il 2026-11-23, chiusa il 2026-11-24). Perimetro, configurazioni, casi e trattamento dei direttori decisi con l'utente il 2026-11-23; backlog confermato lo stesso giorno. Esecuzioni del 2026-11-23 e 2026-11-24; tabella dei modelli, versione e trattamento delle schede decisi con l'utente il 2026-11-24.
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer); cybersecurity, privacy e software come **oggetto** della misura, non come revisori. Business e design non sono coinvolti.
 
@@ -44,3 +44,38 @@ Confermato all'apertura (2026-11-23).
 - Token sul compito finito riportati per ogni configurazione, dai file di Claude Code, senza stime presentate come misure.
 - Catalogo, testo dell'agente, `list_agents` e subagent mostrano lo stesso modello.
 - `npm run verify` verde.
+
+## Decisioni dai risultati (2026-11-24)
+
+| Tema | Decisione |
+|---|---|
+| Modelli per ruolo | Soglia stretta: Haiku ad AICA-09; Sonnet ad AICA-03, 05, 07, AIPCA-05, 06, 07, 08, AISA-05, 07, 10, 11. AICA-06 e AISA-04 restano `inherit` (un falso in più su Sonnet) |
+| Mancati e falsi | Nessun cambio ai file di ruolo: i falsi sono su trappole vicine a un consiglio di irrobustimento o sul file `004_stock.down.sql`. Si chiariscono le schede e si aggiungono gli extra validi ricorrenti fra gli accettabili; i conteggi del 2026-11-24 restano |
+| Versione | 0.12.0, minore come in F24 (0.7.0): cambia il modello consigliato di 12 agenti |
+
+## Fatto
+
+- **F37-01** Tre progetti in `examples/progetti/`: [portale-ordini](../examples/progetti/portale-ordini/) (cyber: API Node, nginx, Compose, security group, WireGuard, IAM, log e regole del SIEM, rapporto dello scanner), [scuola-lingue](../examples/progetti/scuola-lingue/) (privacy: codice, schema, configurazioni, registro dei fornitori, procedura dei diritti, studenti minorenni e note di salute), [gestionale-magazzino](../examples/progetti/gestionale-magazzino/) (software: Express e Postgres, pagina web, migrazioni, CI, immagine e deploy). Da 5 a 8 difetti sottili per ruolo.
+- **F37-02** Tre schede in `examples/casi/` ([aica](../examples/casi/aica-portale-ordini.md), [aipca](../examples/casi/aipca-scuola-lingue.md), [aisa](../examples/casi/aisa-gestionale-magazzino.md)): compito per ruolo, difetti attesi per ruolo, trappole con i ruoli a cui valgono, accettabili per ruolo, regole di conteggio; tabella dei casi in `examples/README.md`.
+- **F37-03, F37-04** 58 esecuzioni (28 Opus effort medio, 28 Sonnet, 2 Haiku su AICA-09), un subagent per esecuzione su una copia nuova, in gruppi di 7; rapporti e token in [`2026-11-23-ondata-1/`](../examples/risultati/2026-11-23-ondata-1/), letti dai file dei subagent (anche quando il rapporto arriva con la consegna del subagent invece che come testo).
+- **F37-05** Conteggio con un valutatore Opus per ruolo, istruzioni uguali e rapporti anonimi; falsi ricontrollati sul progetto. Risultato in [`2026-11-23-ondata-1.md`](../examples/risultati/2026-11-23-ondata-1.md): Sonnet supera la soglia in 12 ruoli su 14, Haiku su AICA-09; sul compito finito Sonnet −58% del costo equivalente e −15% di token, Haiku −95% del costo e +28% di token.
+- **F37-06** Tabella dei modelli decisa con l'utente (sopra).
+- **F37-07** `models` in [`departments.ts`](../packages/catalog/src/departments.ts) per AICA, AIPCA e AISA; `model:` nei 12 subagent di `.claude/agents/` e di `starter/en/.claude/agents/`; test del catalogo aggiornato con i 17 ruoli misurati. Il testo dell'agente e `list_agents` leggono il modello dal catalogo.
+- **F37-08** Nessuna proposta ai file di ruolo. Schede chiarite (sezione «Chiarimenti dopo la prima ondata»: trappole T4, T7, T11, T13, T14, T15, T16, T19, una trappola nuova sui `.down.sql`, descrizioni di F5, S7 e D7 corrette) e accettabili aggiunti per ogni ruolo. Metodo in `examples/README.md`: un valutatore per ruolo e copie senza il modello nel nome.
+- **F37-09** README del pacchetto (it, en) con i 17 agenti e i 39 che restano sul modello della sessione; CHANGELOG 0.12.0 (it, en); versione 0.12.0 in `package.json`, `server.json`, lockfile e README.
+- **F37-10** Direttori e ruoli di giudizio nelle decisioni di [README.md](README.md) («Modelli»); rilievo di F24 aggiornato con i ruoli che restano.
+- `eslint.config.js`: `examples/progetti/**` escluso dal lint (progetti difettosi di proposito, in CommonJS).
+
+## Verifiche
+
+- `npm run verify` verde: 173 test, compreso il confronto fra i subagent e il catalogo.
+- `npm run agent-text -- aica-09 …` mostra «Modello consigliato: Haiku».
+- Falsi ricontrollati a mano sul progetto: la riga `RENAME COLUMN stock TO qty` è solo in `004_stock.down.sql` (copia identica all'originale).
+- Non fatto: la prova nel sito, che legge il catalogo dal pacchetto e mostra il modello solo dopo il rilascio in parallelo; il rilascio 0.12.0, che è a parte (CONVENTIONS §13.8).
+
+## Rilievi aperti
+
+- P2 · Seconda ondata di misure: 26 ruoli non misurati (business e design, più AICA-08, 10, 12, AIPCA-03, 09, 10, AISA-03, 06) e le nuove misure di AICA-06 e AISA-04 dopo il chiarimento delle schede; AIWDA-08 resta in attesa di un secondo caso.
+- P3 · Anonimato parziale verso il valutatore: alcuni rapporti dicono il modello (percorso della copia, regola di riesame). Metodo corretto in `examples/README.md` per le prossime ondate.
+- P3 · Il subagent non ha il tool `library`: nessun rapporto ha letto le schede della biblioteca (come in F24 e F30). Da valutare se dare il tool ai subagent di prova.
+- P3 · `portale-ordini`: manca `app/mail.js` e il README descrive il bilanciatore in modo incoerente (TCP e `X-Forwarded-For`). Non toccano i difetti attesi; da correggere prima della seconda ondata, con le schede.

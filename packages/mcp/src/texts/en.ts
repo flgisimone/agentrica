@@ -46,6 +46,10 @@ export const en: Texts = {
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
       "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
+      // F39-04: what leaves the computer, for those working under a «nothing leaves» rule.
+      " Data stays on the computer: " +
+      (o.ratings ? "only rate_agent, share_usage and submit_project send to Agentrica, after the preview and the user's yes; " : "") +
+      "the only other outbound request, if on, is the check for new versions on the npm registry." +
       (o.panel
         ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section. When an agent finishes its task, send its report with report."
         : "") +
@@ -444,7 +448,7 @@ export const en: Texts = {
     commit: "Project created with @agentrica/mcp init",
     commitFailed: "git: commit failed (set user.name and user.email), files left staged on main",
     committed: "git: initial commit on main, develop branch active",
-    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents] [--existing]',
+    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents] [--existing] [--no-reminder]',
     badName: "--name: a name on one line is required",
     taken: (files: string, more: number) => `no files written, these already exist: ${files}${more > 0 ? ` and ${more} more` : ""}`,
     created: (name: string, dir: string, count: number) => `Project «${name}» created in ${dir}: ${count} files.`,
@@ -454,6 +458,9 @@ export const en: Texts = {
     step2: "  2. ask to open phase F0 (plan/00-base.md): stack, active agencies, «to fill in» sections",
     added: (name: string, dir: string, count: number) => `Agentrica's rules added to «${name}» in ${dir}: ${count} new files.`,
     skipped: (files: string) => `Skipped because they already exist: ${files}`,
+    /** Il promemoria dell'hook UserPromptSubmit (F39-01), a ogni richiesta: niente ' " $ ` % ! \ perché passa dalla shell. */
+    reminder: "Agentrica: if this request is work on the project, first load the right agent with the Agentrica agent tool (choose it with list_agents); work without agents only if the user asks.",
+    reminderSkipped: "The reminder was not added because .claude/settings.json already existed: to add it by hand see «Reminder» in the @agentrica/mcp README.",
     importAgents: "Your CLAUDE.md was not touched: add a line «@AGENTS.md» so that Claude Code reads Agentrica's rules.",
     noCommit: "git: no commit, review the new files and add them yourself",
     stepExisting: "  2. ask Claude «Create the project phases from the existing code»: it writes only plan/, stops at the backlog and suggests /clear",

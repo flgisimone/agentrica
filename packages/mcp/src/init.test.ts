@@ -7,9 +7,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import { AGENTS_DIR } from "./catalog.ts";
-import { existingFiles, projectFiles, subagentProject } from "./init.ts";
+import { existingFiles, projectFiles, reminderCommand, subagentProject } from "./init.ts";
 import { readPlan } from "./project.ts";
 import { VERSION } from "./prompt.ts";
+import { TEXTS } from "./texts/index.ts";
 
 const tmp = mkdtempSync(join(tmpdir(), "agentrica-init-"));
 after(() => rmSync(tmp, { recursive: true, force: true }));
@@ -20,7 +21,7 @@ const init = (...args: string[]) =>
   spawnSync(process.execPath, [server, "init", "--lang", "it", ...args], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
 
 test("i subagent di Agentrica nominano il progetto una volta sola, nella frase che init sostituisce", () => {
-  const files = [...projectFiles("X", "/x", "2026-01-01", "linux", "it", true).keys()].filter((file) => file.startsWith(".claude/"));
+  const files = [...projectFiles("X", "/x", "2026-01-01", "linux", "it", true).keys()].filter((file) => file.startsWith(".claude/agents/"));
   assert.equal(files.length, 56);
   const dir = join(AGENTS_DIR, "..");
   for (const file of files) assert.equal(readFileSync(join(dir, file), "utf8").split(subagentProject("it")).length, 2, file);
@@ -46,9 +47,9 @@ test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, s
 });
 
 test("subagent solo con --subagents (F34-05): con il flag caricano il loro agente dal server per primo", () => {
-  assert.ok(![...projectFiles("X", "/x", "2026-01-01", "linux", "it").keys()].some((file) => file.startsWith(".claude/")));
+  assert.ok(![...projectFiles("X", "/x", "2026-01-01", "linux", "it").keys()].some((file) => file.startsWith(".claude/agents/")));
   for (const lang of ["it", "en"] as const) {
-    const files = [...projectFiles("X", "/x", "2026-01-01", "linux", lang, true)].filter(([file]) => file.startsWith(".claude/"));
+    const files = [...projectFiles("X", "/x", "2026-01-01", "linux", lang, true)].filter(([file]) => file.startsWith(".claude/agents/"));
     assert.equal(files.length, 56, lang);
     for (const [file, text] of files) {
       assert.match(text, /^tools: .+, mcp__agentrica__agent, mcp__agentrica__library$/m, file);
@@ -62,7 +63,7 @@ test("subagent solo con --subagents (F34-05): con il flag caricano il loro agent
 test("init crea il progetto con git su main e develop, e il pannello ne legge il piano", () => {
   const result = init("nuovo", "--name", "Nuovo");
   assert.equal(result.status, 0, result.stderr);
-  assert.throws(() => readdirSync(join(tmp, "nuovo", ".claude")), "senza --subagents niente .claude/");
+  assert.deepEqual(readdirSync(join(tmp, "nuovo", ".claude")), ["settings.json"], "senza --subagents in .claude/ solo il promemoria");
   assert.equal(init("con-subagent", "--subagents").status, 0);
   assert.equal(readdirSync(join(tmp, "con-subagent", ".claude", "agents"), { recursive: true }).filter((f) => String(f).endsWith(".md")).length, 56);
   assert.match(result.stdout, /Progetto «Nuovo» creato/);
@@ -173,4 +174,34 @@ test("init --existing in inglese: piano senza fasi con la stessa indicazione", (
     assert.match(plan, /init --existing/, lang);
     assert.ok(!files.has("plan/00-base.md") && !files.has(".nvmrc") && files.has(".mcp.json"), lang);
   }
+});
+
+test("promemoria (F39-01): hook UserPromptSubmit in .claude/settings.json, che stampa la riga della lingua; --no-reminder lo toglie", () => {
+  for (const lang of ["it", "en"] as const) {
+    const settings = JSON.parse(projectFiles("X", "/x", "2026-01-01", "linux", lang).get(".claude/settings.json")!);
+    const command: string = settings.hooks.UserPromptSubmit[0].hooks[0].command;
+    assert.equal(settings.hooks.UserPromptSubmit[0].hooks[0].type, "command", lang);
+    assert.match(command, /^node -e "console\.log\('[\x20-\x7e]+'\)"$/, `${lang}: solo ASCII, uguale in sh, PowerShell e cmd`);
+    // Lo stesso comando in una shell vera stampa il testo, con gli accenti.
+    const out = spawnSync(command, { shell: true, encoding: "utf8" });
+    assert.equal(out.stdout.trim(), TEXTS[lang].init.reminder, lang);
+  }
+  assert.ok(!projectFiles("X", "/x", "2026-01-01", "linux", "it", false, false).has(".claude/settings.json"));
+  assert.throws(() => reminderCommand("l'agente"), /caratteri della shell/);
+  const result = init("senza-promemoria", "--no-reminder");
+  assert.equal(result.status, 0, result.stderr);
+  assert.throws(() => readFileSync(join(tmp, "senza-promemoria", ".claude", "settings.json")));
+});
+
+test("init --existing con .claude/settings.json già presente: non lo tocca e dice come aggiungere il promemoria", () => {
+  const dir = join(tmp, "con-impostazioni");
+  mkdirSync(join(dir, ".claude"), { recursive: true });
+  writeFileSync(join(dir, ".claude", "settings.json"), "{}\n");
+  const result = init("con-impostazioni", "--existing");
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Il promemoria non è stato aggiunto.+«Promemoria» nel README/);
+  assert.equal(readFileSync(join(dir, ".claude", "settings.json"), "utf8"), "{}\n");
+  const fresh = init("con-hook", "--existing");
+  assert.doesNotMatch(fresh.stdout, /promemoria non è stato aggiunto/);
+  assert.match(readFileSync(join(tmp, "con-hook", ".claude", "settings.json"), "utf8"), /UserPromptSubmit/);
 });

@@ -51,10 +51,12 @@ function taskBlock(key, text) {
 const time = (iso) => new Date(iso).toLocaleTimeString(TEXTS.locale, { hour: "2-digit", minute: "2-digit" });
 const empty = (text) => el("p", { class: "empty" }, text);
 
-function renderHeader({ project, update }) {
+function renderHeader({ project, update, noAgent }) {
   const banner = $("update");
   banner.hidden = !update;
   banner.textContent = update ?? "";
+  // F39-02: plan/ cambiato dopo l'avvio e nessun agente caricato; sparisce al primo agente.
+  $("no-agent").hidden = !noAgent;
   const files = project.git
     ? [project.git.changed > 0 && TEXTS.changed(project.git.changed), project.git.untracked > 0 && TEXTS.untracked(project.git.untracked)].filter(Boolean)
     : [];

@@ -21,6 +21,24 @@ Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA
 - **Dove vanno i dati.** Il testo dell'agente, il compito e i file che il modello legge nel tuo progetto vanno al fornitore del modello attraverso il tuo client, secondo le condizioni di quel fornitore. Agentrica non li riceve. Nel compito non inserire dati personali, segreti o dati di clienti che non servono.
 - Gli agenti sono IA: le loro conclusioni sono proposte da verificare. Gli agenti di privacy e sicurezza non sostituiscono un DPO, un avvocato o un responsabile della sicurezza, e i loro rilievi non sono una certificazione di conformità.
 
+### Cosa resta sul computer
+
+Per ogni tool, comando e pagina, se resta sul tuo computer o cosa esce, verso chi e quando. Il testo che il modello legge e scrive va comunque al fornitore del modello attraverso il tuo client (vedi sopra).
+
+| Tool, comando o pagina | Cosa esce dal computer, e quando |
+|---|---|
+| `list_agents`, `agent`, `library` e i prompt degli agenti | niente: leggono `agents/` del pacchetto |
+| `report`, `ask_user`, `open_panel` e il [pannello](#pannello-locale) | niente: memoria del server e pagina su `127.0.0.1`, che legge `plan/`, `audit/`, `git status` e i conteggi di token di Claude Code |
+| `/mcp__agentrica__configure` | niente: scrive solo `~/.agentrica/config.json` |
+| `rate_agent`, `/mcp__agentrica__rate`, «Valuta gli agenti» nel pannello | voto, commento e versione, ad Agentrica, dopo l'anteprima e il tuo sì |
+| `share_usage`, «Prepara l'anteprima» nel pannello | totali di token per giorno, agente, modello ed effort, ad Agentrica, dopo l'anteprima e il codice di conferma |
+| `submit_project`, `/mcp__agentrica__project` | i campi del modulo, ad Agentrica, dopo la tua conferma |
+| controllo della versione | all'avvio una richiesta senza dati al registro npm; `--no-update-check` la spegne |
+| `init` e il [promemoria](#promemoria) che scrive | niente: scrive i file del progetto; l'hook stampa una riga in locale |
+| `add`, `install` | `install` scarica il pacchetto da npm (`npm install -g`), come `npx`; poi registrano il server con `claude mcp add` |
+
+`--no-ratings` toglie le tre righe che inviano ad Agentrica: con `--no-ratings --no-update-check` non esce niente.
+
 ## Installazione
 
 Serve Node 22 o successivo, con npm. I comandi sono gli stessi su Mac, Windows (PowerShell o cmd) e Linux.
@@ -28,7 +46,7 @@ Serve Node 22 o successivo, con npm. I comandi sono gli stessi su Mac, Windows (
 **Su tutto il computer (consigliato)**, per Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 install
+npx -y @agentrica/mcp@0.13.0 install
 ```
 
 Installa il pacchetto con `npm install -g` e lo registra in Claude Code con ambito `user`: ogni progetto che apri ha già Agentrica. Il server parte con `node` dalla cartella globale di npm: parte in fretta e funziona anche offline. Riavvia Claude Code e controlla con `claude mcp list`.
@@ -36,13 +54,13 @@ Installa il pacchetto con `npm install -g` e lo registra in Claude Code con ambi
 **Senza installare nulla**, per Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 add
+npx -y @agentrica/mcp@0.13.0 add
 ```
 
 Registra il server avviato con npx (su Windows `cmd /c npx`), che al primo avvio scarica il pacchetto nella sua cache. L'ambito è `user`, tutti i tuoi progetti; con `--project` scrive `.mcp.json` nella cartella corrente, da condividere con il team (vale per il sistema su cui l'hai creato), con `--local` vale solo per il progetto corrente e solo per te. Per il team, dalla cartella del progetto:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 add --project
+npx -y @agentrica/mcp@0.13.0 add --project
 ```
 
 Le opzioni del server (`--lang`, `--agents`, `--no-panel`, `--no-ratings`, `--no-update-check`) si aggiungono in fondo a `install` e `add`, che le passano al server. Lanciati di nuovo, sostituiscono la registrazione di Agentrica nello stesso ambito. Se mancano Node 22, npm o il comando `claude`, lo dicono e stampano i comandi da lanciare a mano.
@@ -52,10 +70,10 @@ La versione resta quella indicata finché non la cambi tu: un aggiornamento dei 
 **A mano in Claude Code**, senza `install` né `add`:
 
 ```sh
-claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.12.0
+claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.13.0
 ```
 
-Su Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.12.0`.
+Su Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.13.0`.
 
 **Altri client MCP**: aggiungi il server alla configurazione del client, di solito un file JSON come questo:
 
@@ -64,7 +82,7 @@ Su Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/m
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.12.0"]
+      "args": ["-y", "@agentrica/mcp@0.13.0"]
     }
   }
 }
@@ -77,7 +95,7 @@ Su Windows:
   "mcpServers": {
     "agentrica": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.12.0"]
+      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.13.0"]
     }
   }
 }
@@ -86,7 +104,7 @@ Su Windows:
 **Permessi minimi (consigliato).** Installa il pacchetto in una cartella sua e avvialo con il permission model di Node: il server può solo leggere quella cartella, e Node blocca scritture su file, connessioni di rete e processi figli. Il server non ne ha bisogno, quindi funziona uguale; i permessi limitano i danni di un eventuale difetto futuro. Con questi permessi l'invio di una [valutazione](#valutazioni) fallisce con un messaggio chiaro e il controllo della versione non parte: se vuoi votare gli agenti aggiungi `--allow-net`, altrimenti aggiungi `--no-ratings --no-update-check` in fondo al comando. Il [pannello](#pannello-locale) con questi permessi non parte.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.12.0
+npm install -g --ignore-scripts @agentrica/mcp@0.13.0
 npm root -g
 ```
 
@@ -121,7 +139,7 @@ Metti il compito fra virgolette: Claude Code separa gli argomenti con gli spazi.
 **Squadra.** Con `--agents` il server carica solo gli agenti che indichi: id di agenti e sigle di reparti, separati da virgole, senza distinguere maiuscole. Per esempio tutto il reparto software più l'agente dell'accessibilità:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 install --agents aisa,aiwda-08
+npx -y @agentrica/mcp@0.13.0 install --agents aisa,aiwda-08
 ```
 
 Nel menu dei comandi restano solo i prompt della squadra, e anche `list_agents` e `agent` vedono solo quelli. Senza `--agents` ci sono tutti gli agenti. Un id o una sigla sconosciuti fermano il server con un messaggio che li nomina, nei log del client. In Claude Code i prompt non entrano nel contesto del modello (lo abbiamo verificato con `/context`): la squadra rende il menu più corto, ma non fa risparmiare token.
@@ -240,7 +258,7 @@ Le conoscenze di un modello si fermano alla sua data di addestramento. Ogni repa
 Il server apre anche una pagina sul tuo computer da cui segui il progetto e prendi le scelte che l'agente ti chiede, invece di rispondere nel terminale. Da 0.8.0 è acceso di predefinito: chiedi «apri il pannello di Agentrica». Alla prima scelta da fare, se la pagina non è aperta, il server apre il browser. Per spegnerlo scegli nel modulo della [configurazione](#configurazione) o aggiungi `--no-panel`:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 install --no-panel
+npx -y @agentrica/mcp@0.13.0 install --no-panel
 ```
 
 Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si apre nel browser. Ha sei pagine, con il menu in alto che conta le scelte in attesa, gli agenti chiamati, i rilievi e gli agenti da valutare:
@@ -264,7 +282,7 @@ Con il pannello il modello ha tre tool in più:
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
-**Cosa fa il pannello.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Con la pagina aperta, ogni 5 secondi guarda nella stessa cartella i transcript dei subagent avviati dopo la partenza del server (`<sessione>/subagents/agent-<id>.jsonl`, di cui legge solo l'ora della prima riga) e i loro `.meta.json`, da cui prende solo tipo, descrizione e stato. Il contenuto dei `.meta.json` non è documentato da Claude Code: se cambia, il subagent compare lo stesso, con «formato non riconosciuto». Tiene in memoria le ultime 20 chiamate agli agenti, con il compito e il resoconto. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il pannello ha bisogno della rete locale e di `git`: con il permission model di Node consigliato sopra non parte, e il server funziona senza (con `--panel` esplicito, invece, si ferma con un messaggio).
+**Cosa fa il pannello.** Il server apre una porta casuale solo su `127.0.0.1` (se c'è una versione nuova, la pagina lo dice in alto), legge `plan/`, `audit/` e lo stato di git (`git status`) della cartella del progetto e, quando apri «Consumo», i file che Claude Code salva per quel progetto (`~/.claude/projects/<progetto>/`), da cui prende solo conteggi dei token, modello, effort e giorno, mai i testi delle conversazioni (niente link simbolici, file oltre 64 MB saltati). Con la pagina aperta, ogni 5 secondi guarda nella stessa cartella i transcript dei subagent avviati dopo la partenza del server (`<sessione>/subagents/agent-<id>.jsonl`, di cui legge solo l'ora della prima riga) e i loro `.meta.json`, da cui prende solo tipo, descrizione e stato. Il contenuto dei `.meta.json` non è documentato da Claude Code: se cambia, il subagent compare lo stesso, con «formato non riconosciuto». Tiene in memoria le ultime 20 chiamate agli agenti, con il compito e il resoconto, e guarda la data di modifica dei file di `plan/` per l'[avviso](#promemoria) quando cambiano senza agenti. Non scrive file e non manda dati fuori dal computer, salvo le valutazioni e i totali di token che invii dalla pagina. La pagina si apre solo con il token casuale contenuto nell'URL, che vale per quella sessione; le richieste da altri siti o con un altro `Host` sono rifiutate. Il pannello ha bisogno della rete locale e di `git`: con il permission model di Node consigliato sopra non parte, e il server funziona senza (con `--panel` esplicito, invece, si ferma con un messaggio).
 
 **Formato di `plan/` e `audit/`.** Il pannello legge il formato dei piani creati da `init`, in italiano o in inglese (qui in italiano, con i nomi inglesi fra parentesi), lo stesso del [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) e dell'[`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit) di Agentrica; se qualcosa manca, la pagina dice cosa. Se manca il piano, o non ha ancora fasi, la pagina lo dice come informazione, con le strade per crearlo ([progetto già avviato](#progetto-già-avviato)).
 
@@ -277,7 +295,7 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 `init` crea un progetto con il metodo di lavoro di Agentrica, pronto per Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 init mio-progetto --name "Mio progetto"
+npx -y @agentrica/mcp@0.13.0 init mio-progetto --name "Mio progetto"
 ```
 
 Senza cartella usa quella corrente; senza `--name` il nome è quello della cartella. Scrive, nella lingua del server (`--lang it` o `--lang en` per sceglierla):
@@ -287,16 +305,43 @@ Senza cartella usa quella corrente; senza `--name` il nome è quello della carte
 - `agents/`: i 56 ruoli di questa versione, nelle due lingue (l'inglese nella cartella `en/` di ogni agenzia), che il modello carica dal server con `agent`;
 - solo con `--subagents`, `.claude/agents/`: un subagent di Claude Code per ruolo nella lingua scelta, con il nome del progetto, che come primo passo carica il suo agente dal server (così compare nel pannello). Dalla 0.10.0 senza il flag non si copiano: gli agenti si consultano dal server uno alla volta, e i subagent si avviano solo se li chiedi o per un audit in parallelo;
 - `.github/workflows/ci.yml` (`npm run verify` e `verify:e2e`, saltati finché F0 non li crea), `.gitignore`, `.nvmrc`, `.env.example`;
-- `.mcp.json` con questo server a versione esatta (il pannello è acceso di predefinito e legge subito il piano) (su Windows con `cmd /c npx`).
+- `.mcp.json` con questo server a versione esatta (il pannello è acceso di predefinito e legge subito il piano) (su Windows con `cmd /c npx`);
+- `.claude/settings.json` con il [promemoria](#promemoria) a ogni richiesta, salvo `--no-reminder`.
 
 Se anche un solo file esiste già, `init` non scrive nulla e dice quali sono. Fuori da un repository git fa il primo commit su `main` e lascia attivo `develop`; dentro un repository non fa commit. Poi apri Claude Code nella cartella e chiedi di aprire la fase F0. `init` è l'unico comando che scrive file nel progetto: il server scrive solo la sua [configurazione](#configurazione). Prende il posto di agentic-starter, che non si aggiorna più.
+
+### Promemoria
+
+Le istruzioni del server arrivano al modello una volta, all'avvio della sessione. Perché a ogni richiesta nuova si ricordi di caricare un agente, `init` (anche con `--existing`) scrive `.claude/settings.json` con un hook `UserPromptSubmit` di Claude Code: a ogni richiesta stampa una riga, che Claude Code aggiunge al contesto (una quarantina di token). Il comando usa `node`, che c'è già perché avvia il server, ed è lo stesso su Mac, Windows e Linux. Non manda niente fuori dal computer.
+
+- `--no-reminder` non scrive il file; per toglierlo dopo, cancella l'hook da `.claude/settings.json`.
+- Se `.claude/settings.json` esiste già, `init --existing` non lo tocca e lo dice. Con [`add`](#installazione) o `install`, senza `init`, il promemoria non c'è. In entrambi i casi aggiungi a mano la parte `hooks` (la riga in inglese è nel README inglese):
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"console.log('Agentrica: se questa richiesta \\u00e8 un lavoro sul progetto, carica prima l\\u2019agente adatto con il tool agent di Agentrica (sceglilo con list_agents); senza agenti solo se l\\u2019utente lo chiede.')\""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Con il [pannello](#pannello-locale) aperto, se un file di `plan/` cambia dopo l'avvio del server e nella sessione non è stato caricato nessun agente, la pagina Sessione lo dice in alto; l'avviso sparisce al primo agente caricato.
 
 ### Progetto già avviato
 
 In un progetto che esiste già (per esempio installato con [`add`](#installazione)) `init --existing` aggiunge le regole di Agentrica senza toccare i tuoi file:
 
 ```sh
-npx -y @agentrica/mcp@0.12.0 init --existing
+npx -y @agentrica/mcp@0.13.0 init --existing
 ```
 
 Scrive solo i file che mancano e salta quelli presenti, con l'elenco nell'output: un tuo `AGENTS.md` o `CLAUDE.md` resta com'è (se hai già `CLAUDE.md`, aggiungi una riga `@AGENTS.md`). Non fa commit e non copia la base tecnica di un progetto nuovo: niente F0 «base tecnica», CI, `.nvmrc` ed `.env.example`. Il `plan/README.md` parte senza fasi: chiedi a Claude «Crea le fasi del progetto dal codice esistente». Anche senza `init --existing` le istruzioni del server descrivono il formato di `plan/` e, se il piano manca, Claude propone di crearlo.

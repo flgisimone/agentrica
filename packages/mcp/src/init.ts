@@ -1,4 +1,4 @@
-// `agentrica-mcp init [cartella] [--name "Nome"] [--subagents] [--existing]` (F18, al posto di agentic-starter): crea un
+// `agentrica-mcp init [cartella] [--name "Nome"] [--subagents] [--existing] [--no-reminder]` (F18, al posto di agentic-starter): crea un
 // progetto con la governance di Agentrica. Copia starter/ (AGENTS, CONVENTIONS, plan/, audit/, docs/, CI), gli agents/ del
 // pacchetto e, solo con --subagents (F34-05), i subagent di .claude/agents/ con il nome del progetto e il tool agent del
 // server come primo passo; scrive .mcp.json con questo pacchetto a versione esatta e, fuori da un repository git, fa il
@@ -47,8 +47,19 @@ export function serverSubagent(text: string, id: string, lang: Lang): string {
   return `${head}\n${TEXTS[lang].init.subagentFirst(id)}\n${text.slice(end)}`;
 }
 
+/**
+ * Il comando dell'hook UserPromptSubmit (F39-01): Claude Code aggiunge al contesto ciò che stampa, a ogni richiesta.
+ * node c'è perché avvia il server; lo stesso comando va in sh, PowerShell e cmd: il testo è fra virgolette singole
+ * dentro le doppie, e i caratteri non ASCII diventano \uXXXX, che nessuna shell tocca.
+ */
+export function reminderCommand(text: string): string {
+  if (/['"$`%!\\]/.test(text)) throw new Error(`promemoria con caratteri della shell: ${text}`);
+  const ascii = text.replace(/[^\x20-\x7e]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
+  return `node -e "console.log('${ascii}')"`;
+}
+
 /** I file del progetto nuovo, per percorso relativo, con i segnaposto già sostituiti; i subagent solo con `subagents`. */
-export function projectFiles(name: string, path: string, date: string, platform: NodeJS.Platform = process.platform, lang: Lang = "it", subagents = false): Map<string, string> {
+export function projectFiles(name: string, path: string, date: string, platform: NodeJS.Platform = process.platform, lang: Lang = "it", subagents = false, reminder = true): Map<string, string> {
   const values: Record<string, string> = { "{{PROJECT_NAME}}": name, "{{PROJECT_PATH}}": path, "{{DATE}}": date };
   const fill = (text: string) => Object.entries(values).reduce((out, [key, value]) => out.split(key).join(value), text);
   const files = new Map<string, string>();
@@ -69,6 +80,10 @@ export function projectFiles(name: string, path: string, date: string, platform:
   const npx = ["-y", `@agentrica/mcp@${VERSION}`];
   const server = platform === "win32" ? { command: "cmd", args: ["/c", "npx", ...npx] } : { command: "npx", args: npx };
   files.set(".mcp.json", `${JSON.stringify({ mcpServers: { agentrica: server } }, null, 2)}\n`);
+  if (reminder) {
+    const hooks = { UserPromptSubmit: [{ hooks: [{ type: "command", command: reminderCommand(TEXTS[lang].init.reminder) }] }] };
+    files.set(".claude/settings.json", `${JSON.stringify({ hooks }, null, 2)}\n`);
+  }
   return files;
 }
 
@@ -121,7 +136,7 @@ function summarize(files: string[]): string {
 /** Esegue il comando; restituisce il codice di uscita. */
 export function runInit(args: string[]): number {
   try {
-    const { values, positionals } = parseArgs({ args, options: { name: { type: "string" }, lang: { type: "string" }, subagents: { type: "boolean" }, existing: { type: "boolean" } }, allowPositionals: true });
+    const { values, positionals } = parseArgs({ args, options: { name: { type: "string" }, lang: { type: "string" }, subagents: { type: "boolean" }, existing: { type: "boolean" }, "no-reminder": { type: "boolean" } }, allowPositionals: true });
     if (positionals.length > 1) throw new Error(T.init.usage);
     if (values.lang !== undefined && !isLang(values.lang)) throw new Error(T.server.langInvalid(values.lang));
     const dir = resolve(positionals[0] ?? ".");
@@ -129,7 +144,7 @@ export function runInit(args: string[]): number {
     if (!name || /\p{Cc}/u.test(name)) throw new Error(T.init.badName);
 
     // La lingua è già quella del server (server.ts legge --lang prima di init): qui serve solo a scegliere i file.
-    const all = projectFiles(name, dir, new Date().toISOString().slice(0, 10), process.platform, serverLang, values.subagents);
+    const all = projectFiles(name, dir, new Date().toISOString().slice(0, 10), process.platform, serverLang, values.subagents, !values["no-reminder"]);
     const files = values.existing ? existingFiles(all, serverLang) : all;
     const taken = [...files.keys()].filter((file) => existsSync(join(dir, file)));
     if (taken.length > 0 && !values.existing) throw new Error(T.init.taken(taken.slice(0, 5).join(", "), Math.max(0, taken.length - 5)));
@@ -140,7 +155,10 @@ export function runInit(args: string[]): number {
     }
 
     // Un CLAUDE.md dell'utente non importa l'AGENTS.md appena scritto: lo si dice, senza toccarlo.
-    const claude = taken.includes("CLAUDE.md") && !taken.includes("AGENTS.md") ? [T.init.importAgents] : [];
+    const claude = [
+      ...(taken.includes("CLAUDE.md") && !taken.includes("AGENTS.md") ? [T.init.importAgents] : []),
+      ...(taken.includes(".claude/settings.json") ? [T.init.reminderSkipped] : []),
+    ];
     const lines = values.existing
       ? [T.init.added(name, dir, written.length), ...(taken.length > 0 ? [T.init.skipped(summarize(taken))] : []), ...claude, T.init.noCommit, "", T.init.next, taken.includes(".mcp.json") ? T.init.step1Registered(dir) : T.init.step1(dir), T.init.stepExisting]
       : [T.init.created(name, dir, files.size), initGit(dir), "", T.init.next, T.init.step1(dir), T.init.step2];

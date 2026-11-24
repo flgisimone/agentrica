@@ -2,6 +2,16 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.13.0 — 2026-11-24
+
+### Added
+- A reminder on every request: `init` (also `--existing`) writes `.claude/settings.json` with a Claude Code `UserPromptSubmit` hook that reminds the model to load the right agent, because the server instructions arrive only at startup. The command is the same on Mac, Windows and Linux and sends nothing out; `--no-reminder` leaves it out, and if the file already exists `init --existing` leaves it alone and says how to add it by hand.
+- Panel: if a file in `plan/` changes after the server started and no agent has been loaded in the session, the Session page says so at the top; the notice goes away with the first agent.
+- README: a «What stays on your computer» table, with what leaves for each tool, command and page, to whom and when.
+
+### Changed
+- Server instructions: one sentence on what leaves the computer (only `rate_agent`, `share_usage` and `submit_project` after the user's yes, and the version check).
+
 ## 0.12.0 — 2026-11-24
 
 ### Changed

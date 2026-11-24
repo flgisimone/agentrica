@@ -8,7 +8,7 @@
 
 Questo repository contiene:
 
-1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.12.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.13.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
 2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
@@ -85,6 +85,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F36 | Hero animata nel sito, biblioteca e `report` sul sito, README e documenti allineati al posizionamento | completata (0.11.1) |
 | F37 | Misura dei modelli, prima ondata: 14 specialisti cyber, privacy e software, modello consigliato più piccolo per 12 | completata (0.12.0) |
 | F38 | Sito: media degli agenti in un cerchio e commenti in fondo, grafici del consumo in schede, Installa in stile documentazione | completata |
+| F39 | Promemoria per caricare un agente a ogni richiesta, avviso nel pannello per `plan/` senza agenti, cosa resta sul computer | completata (0.13.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

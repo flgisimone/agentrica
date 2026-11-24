@@ -5,7 +5,7 @@
 // esterna. Le rotte sono un elenco chiuso: nessun percorso dell'URL diventa un percorso di file.
 import { spawn } from "node:child_process";
 import { randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { lstatSync, readdirSync, readFileSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
@@ -190,6 +190,20 @@ export function openBrowser(url: string): void {
 }
 
 /**
+ * Vero se un file di plan/ è stato modificato dopo `since` (ms), per l'avviso «plan/ senza agenti» (F39-02). Senza
+ * plan/ è falso; i link simbolici non si seguono, come nel resto della lettura del progetto.
+ */
+export function planTouchedAfter(root: string, since: number): boolean {
+  try {
+    return readdirSync(join(root, "plan"), { recursive: true, withFileTypes: true }).some(
+      (entry) => entry.isFile() && lstatSync(join(entry.parentPath, entry.name)).mtimeMs > since,
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
  * `update` dà l'avviso di versione nuova (F23), se c'è: il pannello lo mostra in un banner. `subagents` dà i subagent
  * di Claude Code avviati in questa sessione (F34-06), che la pagina mostra a parte dagli agenti caricati dal server.
  */
@@ -204,6 +218,7 @@ export async function startPanel(
   const pages = Object.fromEntries(Object.entries(pageFiles()).map(([route, [file, type]]) => [route, { body: readFileSync(join(pageDir, file)), type }]));
   const pending = new Map<string, { question: Question; resolve: (answer: Answer) => void }>();
   const activity: Activity[] = [];
+  const startedAt = Date.now();
   const viewers = new Set<ServerResponse>();
 
   const changed = () => {
@@ -246,7 +261,9 @@ export async function startPanel(
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
       const rating = ratings ? { notice: notice(), maxComment: MAX_COMMENT, rated } : null;
       const runs = await subagents();
-      return send(res, 200, JSON.stringify({ project, questions, activity, subagents: runs, rating, update: update() ?? null }), "application/json; charset=utf-8");
+      // activity tiene le ultime chiamate ad agent, mai svuotata: vuota vuol dire nessun agente da quando il server è partito.
+      const noAgent = activity.length === 0 && planTouchedAfter(root, startedAt);
+      return send(res, 200, JSON.stringify({ project, questions, activity, subagents: runs, rating, update: update() ?? null, noAgent }), "application/json; charset=utf-8");
     }
     // Consumo di token dai file di Claude Code del progetto (F24): si legge solo quando la pagina apre la vista.
     if (req.method === "GET" && url.pathname === "/api/usage") {

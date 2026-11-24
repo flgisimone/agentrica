@@ -117,5 +117,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F36 | [36-hero-coerenza.md](36-hero-coerenza.md) | Hero animata nella home con i dati del catalogo e la palette del sito; sito allineato al server MCP (biblioteca, `report`); README e Markdown senza «società di consulenza fittizia» | completata (0.11.1) |
 | F37 | [37-misura-modelli.md](37-misura-modelli.md) | Misura dei modelli, prima ondata: 14 specialisti di cybersecurity, privacy e software su Opus medio e Sonnet (Haiku per AICA-09), un progetto di prova per reparto | completata (0.12.0) |
 | F38 | [38-reputazione-consumo.md](38-reputazione-consumo.md) | Scheda dell'agente con il cerchio della media e i commenti in fondo, 5 per pagina; grafici SVG nella pagina del consumo; Installa in stile documentazione | completata |
+| F39 | [39-promemoria-agenti.md](39-promemoria-agenti.md) | Promemoria per caricare un agente a ogni richiesta, avviso nel pannello quando si scrive in `plan/` senza agenti, elenco dei tool che restano in locale | da aprire |
 
 Ordine: F0 → F38 in sequenza.

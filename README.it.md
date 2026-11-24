@@ -84,6 +84,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F35 | Progetti già avviati: `init --existing`, pannello senza errore, sessioni per fase | completata (0.11.0) |
 | F36 | Hero animata nel sito, biblioteca e `report` sul sito, README e documenti allineati al posizionamento | completata (0.11.1) |
 | F37 | Misura dei modelli, prima ondata: 14 specialisti cyber, privacy e software, modello consigliato più piccolo per 12 | completata (0.12.0) |
+| F38 | Sito: media degli agenti in un cerchio e commenti in fondo, grafici del consumo in schede, Installa in stile documentazione | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

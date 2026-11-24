@@ -1,6 +1,8 @@
 # Controlli di ogni push e pull request: npm run verify e npm run verify:e2e (CONVENTIONS §13.5). Da F17 qui non c'è
 # verify:e2e (il sito e le sue prove sono nel repository agentrica-site): il passo si salta.
 # Da F23 i controlli girano su Linux, Mac e Windows: il server e i comandi install, add e init valgono sui tre sistemi.
+# Da F37 il Mac gira solo su main (dopo il merge, ogni lunedì e a mano): il runner macOS resta in coda per molti
+# minuti e bloccava le PR; Linux e Windows girano su ogni push e PR.
 # Nessun deploy da qui. I passi senza il loro file o script si saltano, così la CI regge anche prima di F0.
 # ponytail: con un repository privato e GitHub gratuito il merge non si blocca da solo; va verde prima di unire in main.
 name: CI
@@ -10,6 +12,8 @@ on:
     branches: [main, develop, "fase/**", "fix/**"]
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -28,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: ${{ fromJSON(github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && '["ubuntu-latest", "macos-latest", "windows-latest"]' || '["ubuntu-latest", "windows-latest"]') }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     defaults:
@@ -75,7 +79,7 @@ jobs:
           path: test-results/
           retention-days: 3
 
-  # Il controllo «verify» richiesto per unire in main: verde solo se i tre sistemi sono verdi.
+  # Il controllo «verify» richiesto per unire in main: verde solo se tutti i sistemi della matrice sono verdi.
   verify:
     needs: tests
     if: always()

@@ -1,0 +1,71 @@
+{
+  "ruolo": "aipca-08",
+  "rapporti": {
+    "aipca-08-R1": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Il genitore scarica con /me/export i dati del figlio a qualunque età (account.js:6, parent_id senza controllo dell'età), anche maggiorenne (R5)",
+        "Il signup non verifica l'età: un minore di 14 anni si iscrive da solo e presta il consenso alla newsletter (auth.js:16-26; art. 8, art. 2-quinquies)",
+        "L'export non accompagna i dati con le informazioni dell'art. 15(1)-(2) (finalità, destinatari, trasferimenti, conservazione, reclamo)",
+        "Registrazioni e trascrizioni legate solo a class_id: non si possono ricercare per interessato (schema.sql:68-74)",
+        "Note di salute raccolte al signup senza un modo di revocarne il consenso o rimuoverle (art. 7(3), 9(2)(a))",
+        "Cancellazione del genitore: i profili dei figli collegati restano senza regola"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D2: nomina Mailorbit, statistiche, InsightAI e LessonCam ma non TextBlast; la causa (soft delete, nessuna comunicazione art. 19) c'è. D3: nomina esplicitamente il mancato confronto con users.email. Il log con il corpo delle richieste (R10) è P4 di AIPCA-05, accettabile. La conservazione di 90 giorni di audit_log è usata solo come argomento per un registro separato, non come difetto della trappola T4. Limitazione assente e unsubscribe senza firma: accettabili. Rapporto molto completo, 16 casi di test."
+    },
+    "aipca-08-R2": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Il genitore vede con /me/export i dati del figlio a qualunque età, in contrasto con la soglia dei 14 anni della procedura (DSR-08)",
+        "L'export non contiene le informazioni dell'art. 15(1) (finalità, destinatari, conservazione, fonte)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D2: DSR-04 (soft delete) e DSR-06 (nessuna comunicazione a Mailorbit, InsightAI, LessonCam); TextBlast non nominato. Imprecisioni marginali: «la procedura (riga 5) cita solo l'opposizione» per limitazione e opposizione generale (vero solo rispetto a 18 e 21(1)); «la procedura toglie al genitore l'accesso dopo i 14 anni» è una lettura forzata del punto 3, che dice solo che lo studente può presentare da sé. Il rapporto dichiara il modello («Sono su Sonnet»): informazione fuori luogo in un rapporto anonimo. Opposizione art. 21(1) alle statistiche: non verificabile, non conteggiata."
+    },
+    "aipca-08-R3": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Un minore sotto i 14 anni può esportare e cancellare da sé (server.js:28-29 non controlla data_nascita), mentre la procedura prevede che agisca il genitore; il genitore non ha cancellazione né rettifica per conto del figlio (R-08)",
+        "L'export non contiene le informazioni dell'art. 15(1)",
+        "Cancellazione del genitore: i dati dei figli collegati restano senza regola"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D2: R-01 (soft delete) e R-02 (nessuna propagazione a Mailorbit, InsightAI, analytics, backup, staging); TextBlast non nominato. D3: «senza verifica», raccomanda la conferma dall'indirizzo registrato: causa presente. D4 e D6 nello stesso rilievo R-04, entrambe le cause nominate. «parent_id orfano»: impreciso (il genitore è solo marcato deleted_at, la riga resta), marginale. Download dei documenti da parte di support e chiave in chiaro: difetti/accettabili di AIPCA-05, non contati. Dichiara di essere su «un modello più piccolo»: informazione fuori luogo in un rapporto anonimo. Export incompleto messo a P2 (gli altri P1): scelta difendibile."
+    },
+    "aipca-08-R4": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Il genitore riceve con /me/export i dati di tutti i figli a qualunque età, contro la soglia dei 14 anni della procedura; la registrazione raccoglie il consenso alla newsletter anche dai minori senza controllo dell'età (DSR-08)",
+        "Registrazioni legate alla classe e non alla persona: la ricerca per interessato non è progettata (schema.sql:68-74)",
+        "L'export non contiene le informazioni dell'art. 15(1)-(2)",
+        "Cancellazione del genitore: gli studenti collegati non vengono toccati"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D2 completo: nomina anche TextBlast fra i destinatari non raggiunti. Riga di presentazione fra virgolette «…», forma leggermente diversa dagli altri. La firma è «PHECDA (AIPCA-08)»: c'è il nome in codice. Segnalazioni fuori perimetro (S-01…S-07) corrette e attribuite agli altri ruoli, non contate. TC del capitolo 3 rimanda a «S-03» prima di definirlo: marginale."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili (o come difetto D8) il genitore che con /me/export vede i dati dei figli a qualunque età (account.js:6, parent_id senza controllo), in contrasto con il punto 3 della procedura: lo trovano tutti e quattro i rapporti",
+    "Aggiungere fra gli accettabili la mancanza delle informazioni dell'art. 15(1)-(2) nella risposta all'accesso (finalità, destinatari, conservazione, reclamo): ricorre in tutti i rapporti",
+    "Aggiungere fra gli accettabili: registrazioni legate solo a class_id (non ricercabili per interessato); signup senza controllo dell'età e consenso newsletter dei minori; cancellazione del genitore senza regola per i profili dei figli; nessun canale di accesso per support/admin ed ex utenti",
+    "Aggiungere fra gli accettabili di AIPCA-08 l'opposizione art. 21(1) alle statistiche d'uso con email (non verificabile senza base giuridica) e l'audit_log di 90 giorni come argomento per un registro delle richieste separato (non è la trappola T4)",
+    "D2: chiarire se per il trovato basta la causa (soft delete + nessuna comunicazione art. 19) o serve nominare tutti e tre i fornitori: solo R4 nomina TextBlast"
+  ]
+}

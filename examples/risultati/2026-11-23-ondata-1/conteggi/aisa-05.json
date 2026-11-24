@@ -1,0 +1,87 @@
+{
+  "ruolo": "aisa-05",
+  "rapporti": {
+    "aisa-05-R1": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "Note per altri ruoli: «la migrazione 003_sku.sql rinomina stock in qty quando la colonna stock non esiste ancora»", "motivo": "003_sku.sql aggiunge sku e l'indice univoco; il RENAME stock→qty è in 004_stock.down.sql, che migrate.js esclude (filtro .down.sql). Fatto sul progetto sbagliato in modo sostanziale, anche se chiuso con «va verificato»"},
+        {"testo": "SPICA-16 · P3: cache di 1 ora sui file statici (server/app.js:8) come difetto", "motivo": "trappola T15 (express.static con maxAge 1h è corretto) presentata come difetto"}
+      ],
+      "extra_validi": [
+        "Invio dell'ordine senza try/catch: un errore di rete o una risposta non JSON lasciano «Invio in corso…» per sempre (SPICA-03)",
+        "Token assente o scaduto non gestito: Bearer null e nessuna gestione del 401, nessun rimando al login (SPICA-06)",
+        "Risultati della ricerca troncati a 50 in silenzio, nessuna paginazione o «altri risultati» (SPICA-08)",
+        "moment da CDN senza SRI: se la CDN non risponde la lista ordini fallisce (SPICA-12, la parte su peso e blocco è P7 di AISA-11)",
+        "Dopo l'invio il catalogo non si ricarica e «disponibili N» resta vecchio (SPICA-11)",
+        "Stato dell'ordine mostrato come codice interno (pending_payment, picking) (SPICA-13)",
+        "«Caricamento…» fuori da una regione live (SPICA-14)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "F4 coperto da SPICA-04 (spinner senza finally) e SPICA-08 (ricerca vuota senza messaggio). F3 in SPICA-07 con il dettaglio dello spinner che si spegne alla prima risposta. F5 a P2 perché non trova un percorso per cui non-admin scriva i nomi: corretto sul codice (PATCH non tocca name), la scheda dice «modificabile dal magazzino». Accettabili presenti: caricaOrdini senza errori e senza stato vuoto (SPICA-05), ordine vuoto (SPICA-15), quantità non modificabile (SPICA-11). Note per altri ruoli: B2 (non conta)."
+    },
+    "aisa-05-R2": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Invio dell'ordine senza try/catch: un errore di rete lascia «Invio in corso…» per sempre",
+        "Token assente: Bearer null, nessun messaggio né rimando al login con 401",
+        "moment da CDN senza integrity/crossorigin: se la CDN non risponde la lista ordini va in eccezione",
+        "«Caricamento…» senza role=status, non annunciato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "F1 e l'ordine vuoto (accettabile) nello stesso rilievo. F4: spinner nel rilievo sugli errori di caricamento, ricerca vuota nel rilievo «Stati vuoti assenti». Imprecisioni non contate come falsi: «la lista non è paginata e /api/products può restituire migliaia di righe» è sbagliato (limit 50, massimo 100) ma dichiarato non verificato e lasciato come domanda all'utente; «i nomi prodotto arrivano dal listino dei fornitori e li può cambiare admin» non ha riscontro nel codice (nessun endpoint modifica name); «<output> senza aria-live il cambio non viene letto» è discutibile (output ha ruolo status implicito). :focus-visible solo su button e input segnalato come irrobustimento, non come difetto (T7, non falso). Rilievo P3 su listener per pulsante: micro-ottimizzazione, non contata."
+    },
+    "aisa-05-R3": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "F17 · P3: file statici serviti con maxAge 1h e nomi senza hash (server/app.js:8)", "motivo": "trappola T15 (cache dei file statici corretta) presentata come difetto"}
+      ],
+      "extra_validi": [
+        "Per warehouse e admin la pagina non invia customerId: l'INSERT fallisce sul NOT NULL e, senza try/catch nella rotta, lo stato resta «Invio in corso…» (F4; la parte server è B4)",
+        "Token assente o scaduto non gestito: Bearer null, nessun rimando al login (F6)",
+        "Risultati della ricerca troncati a 50 in silenzio, nessuna paginazione (F9)",
+        "moment da CDN senza integrity: se la CDN non risponde la lista ordini va in eccezione (F12, peso e blocco sono P7)",
+        "Pulsanti «Aggiungi» tutti con lo stesso nome accessibile, senza il nome del prodotto (F14)",
+        "Stato dell'ordine come codice interno e «Caricamento…» fuori da una regione live (F15)",
+        "Dopo l'invio il catalogo non si ricarica e le disponibilità restano vecchie (F16)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "F4 da F5 (spinner) e F8 (ricerca vuota). F13 (ordini falliti in elenco con total NULL mostrati come 0,00 €) è vero ma consegue da B2: non contato. P0 fuori perimetro sui segreti in .env come artefatto: è O2 di AISA-10, non contato. Note di integrazione corrette (price come stringa da pg è accettabile di AISA-04)."
+    },
+    "aisa-05-R4": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Invio dell'ordine senza try/catch: errore di rete lascia «Invio in corso…» e un rifiuto non gestito",
+        "Token mai scritto e nessuna pagina di login: 401 non comunicato né gestito",
+        "moment da CDN senza integrity né crossorigin: se la CDN non risponde ReferenceError e lista ordini non disegnata",
+        "Pulsanti «Aggiungi» con lo stesso nome accessibile",
+        "«Caricamento…» senza role=status",
+        "Stato dell'ordine mostrato grezzo (pending_payment, picking)",
+        "Ricerca come unico modo di arrivare oltre i primi 50 prodotti, non detto nell'interfaccia"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "F1 nel rilievo P1 con l'ordine vuoto (accettabile). F4 nel rilievo P2 sul catalogo (spinner da mettere in finally e nessun «nessun prodotto trovato»). Riga citata per lo stock non considerato (app.js:26 e 46-49) imprecisa: è aggiungi, righe 28-33; marginale. «inserito da admin o warehouse» per i nomi: nessun endpoint modifica name, marginale. P3 sul totale in virgola mobile e su role=search: osservazioni minori, non contate. Fuori perimetro: transazione e N+1 (B2, P1), non contati. Firma nella forma della presentazione, valida."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili di AISA-05 (ricorrono in 4 rapporti su 4): invio dell'ordine senza try/catch (errore di rete lascia «Invio in corso…»); token assente o 401 non gestito, nessun rimando al login; moment da CDN senza SRI, con la lista ordini che si rompe se la CDN non risponde.",
+    "Aggiungere fra gli accettabili di AISA-05 (ricorrono in 2-3 rapporti): risultati troncati a 50 senza paginazione nella pagina; pulsanti «Aggiungi» tutti con lo stesso nome; «Caricamento…» fuori da una regione live; stato dell'ordine in codice interno; catalogo non ricaricato dopo l'invio.",
+    "Valutare come difetto o accettabile: per warehouse e admin la pagina non invia customerId e l'ordine fallisce (vero, trovato da un rapporto).",
+    "T15 e AISA-05: due rapporti segnalano maxAge 1h senza hash nei nomi come rischio di versioni miste dopo il deploy. Contato falso per la regola, ma la scheda potrebbe dire se è una trappola anche per AISA-05 o un accettabile.",
+    "F5: la scheda dice che p.name è «modificabile dal magazzino», ma nel codice PATCH /api/products/:id cambia solo stock e price; nessun endpoint scrive name. Correggere la descrizione (per esempio «testo dal database, scritto dall'import o da admin»).",
+    "F4 unisce due cause (spinner senza finally e ricerca vuota senza messaggio): chiarire se servono entrambe per contarlo trovato o dividerlo in due voci."
+  ]
+}

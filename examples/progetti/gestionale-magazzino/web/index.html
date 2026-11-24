@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Magazzino · Ortofrutta Emilia</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/min/moment-with-locales.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Magazzino</h1>
+    </header>
+
+    <main>
+      <section aria-labelledby="catalogo-titolo">
+        <h2 id="catalogo-titolo">Catalogo</h2>
+        <label for="cerca">Cerca un prodotto</label>
+        <input id="cerca" type="search" autocomplete="off" />
+        <div id="caricamento" class="spinner" hidden>Caricamento…</div>
+        <ul id="prodotti"></ul>
+      </section>
+
+      <section aria-labelledby="ordine-titolo">
+        <h2 id="ordine-titolo">Nuovo ordine</h2>
+        <form id="ordine">
+          <ul id="righe"></ul>
+          <p>Totale: <output id="totale">0,00 €</output></p>
+          <button type="submit" id="invia">Invia l'ordine</button>
+        </form>
+        <p id="stato" role="status" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="ordini-titolo">
+        <h2 id="ordini-titolo">Ultimi ordini</h2>
+        <ul id="ordini"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+services:
+  app:
+    image: ghcr.io/ortofrutta-emilia/magazzino:latest
+    env_file: /etc/magazzino/app.env
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        order: start-first
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 15s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"

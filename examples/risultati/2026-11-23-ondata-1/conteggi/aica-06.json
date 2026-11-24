@@ -1,0 +1,76 @@
+{
+  "ruolo": "aica-06",
+  "rapporti": {
+    "aica-06-R1": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "MFA dichiarata in roles.yaml ma non applicata dal login (auth.js:10-22); roles.yaml non letto dall'app nonostante l'intestazione",
+        "requireUser non rilegge active né role dal DB: revoca e declassamento non immediati (JWT di 8 h)",
+        "svc-deploy ha ssm:SendCommand su *: comandi su qualunque istanza, compresa la VM di produzione",
+        "/api/admin/* raggiungibile da Internet via location / di nginx (la restrizione VPN vale solo per /admin/)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i 7 difetti, con I4 come P0 e passaggio alla risposta agli incidenti. Il reset della password (A2) e setRole senza log (S3) sono di altri ruoli: non si contano. ECR su * è un accettabile. Rilievo 12 su revisore.kpmx: ipotesi prudente di account condiviso (l'intestatario è uno studio), non presentata come certa e senza dire che manca la scadenza, quindi non è un falso. Rilievo 14 (trust della VM aperto a qualunque EC2) ricade in I6. Le trappole T12, T13 e T15 sono citate correttamente fra i conformi."
+    },
+    "aica-06-R2": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "MFA per admin dichiarata ma non applicata dal login; roles.yaml non letto dal codice",
+        "Revoca non immediata: JWT di 8 h con il ruolo nel token e requireUser che non rilegge active né role",
+        "svc-deploy ha ssm:SendCommand su *"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Firma nella forma «— MINTAKA (AICA-06)», che contiene il nome in codice: va bene. «43 giorni dopo la cessazione» è corretto. R9 (A2) e R11 (S3) sono di altri ruoli; ECR su * è un accettabile. La scadenza di revisore.kpmx oltre i 90 giorni è indicata come da verificare nel rischio residuo, non come difetto: non è un falso. T2, T5, T1 e T13 sono citate correttamente fra i conformi."
+    },
+    "aica-06-R3": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "Rilievo 8, P2: «Revisore esterno senza MFA, con scadenza oltre i 90 giorni: revisore.kpmx»",
+          "motivo": "Trappola T14: il ruolo auditor non esporta (regola 2) e la scadenza c'è (regola 4). Il titolo dà per certo che la scadenza superi i 90 giorni, ma il corpo ammette che la data di inizio non è nota, e nel file non c'è nulla che lo provi."
+        }
+      ],
+      "extra_validi": [
+        "MFA non implementata nel login nonostante mfa: true per admin",
+        "JWT di 8 h senza revoca; requireUser non rilegge ruolo e stato dal DB",
+        "svc-deploy ha ssm:SendCommand su *",
+        "Enumerazione degli account per differenza di tempo nel login: bcrypt.compare non gira se l'utente non esiste (auth.js:13)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I1 è P0 e I4 è P1, con passaggio alla risposta agli incidenti. Sul tempo di forgotPassword (T6) dà un consiglio di irrobustimento, non un falso. «mail non nell'elenco» è vero. I rilievi su setRole senza log (S3), sul reset (A2) e sui 60 giorni di inattività (accettabile) non si contano. L'aggiunta «anche auditor ha mfa: false» dentro il rilievo 7 è solo un'osservazione."
+    },
+    "aica-06-R4": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "MFA non applicata nel codice: mfa: true in roles.yaml non letto da auth.js",
+        "Sessioni non revocabili: JWT di 8 h, controllo di active solo al login",
+        "svc-deploy ha ssm:SendCommand su *"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I1 è P0 e I4 è P1, con la proposta di aprire un incidente e di conservare i log. Il rilievo 10 su auditor e revisore.kpmx senza MFA è un consiglio di irrobustimento su T14: la regola dei 90 giorni è condizionale e dichiarata non verificabile, quindi non è un falso. Il rilievo 11 su emergency-admin (T12) dice che è conforme e suggerisce solo controlli periodici: irrobustimento, non falso, ma il titolo «controllo non recente» è debole. A2 (rilievo 8) è di un altro ruolo. Nota corretta su app/mail.js mancante."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra i difetti o fra gli accettabili di AICA-06 che la MFA dichiarata in roles.yaml non è applicata dal login di auth.js (e che roles.yaml non è letto dall'app): lo trovano 4 rapporti su 4.",
+    "Aggiungere fra gli accettabili di AICA-06 la revoca non immediata (JWT di 8 h, requireUser che non rilegge active e role): 4 su 4.",
+    "Aggiungere ssm:SendCommand su * di svc-deploy, accanto a I6 o fra gli accettabili: 4 su 4.",
+    "Rendere esplicito in T14 che dire «supera i 90 giorni» senza la data di inizio è un falso, mentre chiedere di verificare la data di inizio va bene (3 rapporti su 4 sollevano il dubbio).",
+    "Aggiungere fra gli accettabili di AICA-06 che revisore.kpmx è intestato a uno studio e quindi forse condiviso, e il trust di vm-portale-ordini senza vincolo di istanza.",
+    "Aggiungere fra gli accettabili di AICA-03 o AICA-06 l'enumerazione per differenza di tempo nel login."
+  ]
+}

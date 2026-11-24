@@ -1,0 +1,72 @@
+{
+  "generated": "2026-11-20T06:00:12Z",
+  "targets": [
+    { "type": "lockfile", "path": "app/package-lock.json", "commit": "3f2a9c1", "commit_date": "2026-08-14" },
+    { "type": "image", "ref": "registry.ferramentanord.example/portale-ordini:2.4.1", "base": "node:22.11.0-bookworm-slim" }
+  ],
+  "findings": [
+    {
+      "id": "FNSA-2026-0311", "package": "docgen-lite", "installed": "0.9.4", "fixed": "0.9.6",
+      "scope": "devDependencies", "path": "app/node_modules/docgen-lite",
+      "title": "Esecuzione di codice tramite template non fidati", "cvss": 9.8, "severity": "critical",
+      "epss": 0.02, "known_exploited": false,
+      "description": "Un template di documentazione costruito ad arte esegue codice durante la generazione."
+    },
+    {
+      "id": "FNSA-2026-0287", "package": "multipart-lite", "installed": "2.3.0", "fixed": "2.3.4",
+      "scope": "dependencies", "path": "app/node_modules/multipart-lite",
+      "title": "Blocco del processo con un boundary costruito ad arte (ReDoS)", "cvss": 5.3, "severity": "medium",
+      "epss": 0.71, "known_exploited": true,
+      "description": "Una richiesta multipart con un'intestazione Content-Type costruita ad arte blocca il ciclo degli eventi di Node per decine di secondi. Sfruttamento osservato in rete da ottobre 2026."
+    },
+    {
+      "id": "FNSA-2026-0198", "package": "express", "installed": "4.19.2", "fixed": "4.20.0",
+      "scope": "dependencies", "path": "app/node_modules/express",
+      "title": "Redirect aperto in res.location con URL malformati", "cvss": 6.1, "severity": "medium",
+      "epss": 0.05, "known_exploited": false,
+      "description": "res.location() e res.redirect() accettano URL malformati che portano fuori dal sito."
+    },
+    {
+      "id": "FNSA-2026-0254", "package": "xml-mapper", "installed": "1.8.2", "fixed": "2.0.0",
+      "scope": "dependencies", "path": "app/node_modules/xml-mapper",
+      "title": "Prototype pollution in parse() con nomi di elemento costruiti ad arte", "cvss": 7.5, "severity": "high",
+      "epss": 0.08, "known_exploited": false,
+      "description": "Qualunque chiamata a parse() su XML non fidato, con qualunque opzione. Corretto solo nella 2.0.0, che cambia l'API (parse diventa parseDocument e restituisce un oggetto senza prototipo); nessuna correzione nella linea 1.x."
+    },
+    {
+      "id": "FNSA-2026-0254", "package": "xml-mapper", "installed": "1.8.2", "fixed": "2.0.0",
+      "scope": "dependencies", "path": "app/node_modules/multipart-lite/node_modules/xml-mapper",
+      "title": "Prototype pollution in parse() con nomi di elemento costruiti ad arte", "cvss": 7.5, "severity": "high",
+      "epss": 0.08, "known_exploited": false,
+      "description": "Qualunque chiamata a parse() su XML non fidato, con qualunque opzione. Corretto solo nella 2.0.0, che cambia l'API (parse diventa parseDocument e restituisce un oggetto senza prototipo); nessuna correzione nella linea 1.x."
+    },
+    {
+      "id": "FNSA-2026-0102", "package": "pino-abstract-transport", "installed": "2.0.0", "fixed": "2.0.1",
+      "scope": "dependencies", "path": "app/node_modules/pino/node_modules/pino-abstract-transport",
+      "title": "Scrittura di file arbitrari tramite destinazione del transport", "cvss": 7.1, "severity": "high",
+      "epss": 0.03, "known_exploited": false, "status": "suppressed (scanner-ignore.yml)",
+      "description": "Con una destinazione controllata dall'esterno il transport scrive in percorsi arbitrari. Corretto in 2.0.1, incluso da pino 9.6.0 (pubblicato il 2026-10-07)."
+    },
+    {
+      "id": "FNSA-2026-0140", "package": "minimatch", "installed": "9.0.4", "fixed": "9.0.6",
+      "scope": "devDependencies", "path": "app/node_modules/eslint/node_modules/minimatch",
+      "title": "ReDoS con pattern costruiti ad arte", "cvss": 7.5, "severity": "high",
+      "epss": 0.01, "known_exploited": false, "status": "suppressed (scanner-ignore.yml)",
+      "description": "Un pattern glob costruito ad arte blocca la valutazione."
+    },
+    {
+      "id": "IMG-2026-4471", "package": "libssl3", "installed": "3.0.15-1~deb12u1", "fixed": "3.0.15-1~deb12u2",
+      "scope": "os", "path": "image layer node:22.11.0-bookworm-slim",
+      "title": "Lettura fuori dai limiti nella verifica dei certificati X.509", "cvss": 7.4, "severity": "high",
+      "epss": 0.04, "known_exploited": false,
+      "description": "Un certificato costruito ad arte presentato durante l'handshake TLS provoca una lettura fuori dai limiti. Riguarda i client e i server TLS che verificano certificati del peer."
+    },
+    {
+      "id": "IMG-2026-3902", "package": "perl-base", "installed": "5.36.0-7+deb12u1", "fixed": null,
+      "scope": "os", "path": "image layer node:22.11.0-bookworm-slim",
+      "title": "Uso di memoria eccessivo con espressioni regolari costruite ad arte", "cvss": 3.3, "severity": "low",
+      "epss": 0.01, "known_exploited": false,
+      "description": "Richiede l'esecuzione di script Perl con input controllato dall'attaccante."
+    }
+  ]
+}

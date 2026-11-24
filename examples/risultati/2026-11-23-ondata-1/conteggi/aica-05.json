@@ -1,0 +1,64 @@
+{
+  "ruolo": "aica-05",
+  "rapporti": {
+    "aica-05-R1": {
+      "trovati": ["N1", "N2", "N3", "N4", "N5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "F-08: l'allow 10.8.0.0/24 di /admin/ ammette anche il peer Prometheus 10.8.0.20, che non ne ha bisogno (privilegio minimo fra i peer VPN)",
+        "F-10: app e admin condividono lo stesso .env con tutti i segreti (docker-compose.yml righe 16 e 23)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "N1 P0, N2 P0, N3 P1, N4 P1, N5 P2. F-04 (/files/ senza autenticazione), F-07 ($remote_addr falsificabile nei log), F-09 (uscita 443 larga) e header mancanti/rate limit di F-10 sono accettabili. F-09 chiede di limitare anche DNS e NTP (T11): irrobustimento, non presentato come esposizione grave, non contato falso. Corretto che /metrics non esista in app/server.js. In sintesi dice '3 rilievi P0/P1' con la stessa conseguenza: imprecisione marginale. Redirect con $host e node-exporter legato a wg0 sono rafforzamenti minori, non contati."
+    },
+    "aica-05-R2": {
+      "trovati": ["N1", "N2", "N3", "N4", "N5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ALNITAK-08: l'allow 10.8.0.0/24 di /admin/ ammette anche il peer Prometheus 10.8.0.20; nessun filtro su wg0 verso le altre porte dell'host",
+        "ALNITAK-13: client_max_body_size non impostato, il default di nginx (1 MB) contrasta con i 10 MB di MAX_BYTES in app/upload.js:8"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "N2 P0, N1 P0, N3 P1, N4 P1, N5 P2. Il rapporto più completo; conteggio delle priorità in sintesi (2/4/3/4) esatto. ALNITAK-04 (/files/) accettabile; ALNITAK-05 (SSRF, app su due reti, uscita 443) è A5 di AICA-03 più accettabili; ALNITAK-12 (IP del socket nei log dell'app) è S5 di AICA-07: non extra. ALNITAK-10 (regola SG 9100 inefficace perché il traffico VPN è nel tunnel) è corretta ma riguarda una parte giusta (T9) e la dichiara innocua: non falso, non contato. ALNITAK-11 su WireGuard (T7) è irrobustimento a rischio basso: non falso. ALNITAK-09 limita anche DNS/NTP (T11): irrobustimento; nota corretta su tcp/53 assente."
+    },
+    "aica-05-R3": {
+      "trovati": ["N1", "N2", "N3", "N4", "N5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "REDIS_PASSWORD passata sulla riga di comando di redis-server (docker-compose.yml:38), visibile in docker inspect e ps"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "N2 P0, N1 P1, N3 P1, N4 P2, N5 P2. R4 (/files/) accettabile, con l'XSS che è A4 di AICA-03; R8 (uscita larga, SSRF) accettabile; osservazione sull'IP del socket è S5 di AICA-07. R7 (regola SG 9100 inutile, node-exporter raggiungibile da tutti i peer) è irrobustimento su T9, non falso. R9 su WireGuard (T7) dichiarato a rischio basso: irrobustimento; l'ipotesi di limitare 80/443 alla subnet del bilanciatore è dichiarata come ipotesi. Non segnala che /admin/ ammette anche il peer Prometheus."
+    },
+    "aica-05-R4": {
+      "trovati": ["N1", "N2", "N3", "N4", "N5"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rilievo 7: l'allow 10.8.0.0/24 di /admin/ ammette anche il peer Prometheus 10.8.0.20",
+        "Rilievo 9: app e admin condividono lo stesso .env con tutti i segreti"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Nessun P0: N2 P1, N3 P1, N1 P1, N4 P2, N5 P2; motivato (P0 se il pannello ha autenticazione debole). Gravità di N1/N2 forse sottostimata ma motivata. Non ha letto app/: rilievo 3 (/files/, accettabile) resta ipotesi sui nomi dei file, dichiarata; non verifica se /metrics esista nell'app. Uscita larga (rilievo 8) accettabile; redirect con $host e regola 9100 superflua sono rafforzamenti, non contati. 'La 443 aperta a 0.0.0.0/0 permette di bypassare il bilanciatore' è un'ipotesi plausibile, non falso."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili di AICA-05 (o come extra valido previsto): l'allow 10.8.0.0/24 di /admin/ include anche il peer Prometheus 10.8.0.20 (trovato da 3 rapporti su 4).",
+    "Aggiungere fra gli accettabili: app e admin condividono lo stesso .env (2 rapporti su 4).",
+    "Aggiungere fra gli accettabili: la regola del security group per la 9100 da 10.8.0.0/24 non filtra nulla perché il traffico VPN arriva nel tunnel UDP 51820 (3 rapporti su 4); precisare che T9 resta corretta per il bind su 10.8.0.1.",
+    "Chiarire T11: limitare DNS e NTP a resolver e server noti è irrobustimento (tutti i rapporti lo propongono), non falso; oggi T11 e l'accettabile sull'uscita 443 si sovrappongono.",
+    "Valutare come accettabili: client_max_body_size di default (1 MB) contro i 10 MB dell'upload; REDIS_PASSWORD sulla riga di comando; redirect sulla porta 80 con $host; limitare 80/443 alla subnet del bilanciatore.",
+    "N5: l'app non definisce /metrics (app/server.js); la scheda potrebbe dire che il difetto è la location pubblica, indipendentemente dall'endpoint, perché due rapporti lo notano."
+  ]
+}

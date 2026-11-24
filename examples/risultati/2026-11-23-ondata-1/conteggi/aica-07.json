@@ -1,0 +1,70 @@
+{
+  "ruolo": "aica-07",
+  "rapporti": {
+    "aica-07-R1": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6", "S7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Azioni sensibili senza audit oltre a setRole (reset della password, 401/403, upload/download, import XML, webhook) e contesto del log senza attore né ID della richiesta (app/auth.js, app/server.js:12)",
+        "Fonti dell'host non raccolte: SSH, WireGuard, demone Docker, Postgres (logging/vector.yaml:2-8)",
+        "La regex di Vector non estrae lo user agent presente nel log_format di nginx (logging/vector.yaml:26, infra/nginx.conf:13)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Spraying contato come 31 tentativi invece di 27 (errore marginale). A2 (a.bianchi, P3) non presenta T17 come difetto: lo giudica un errore di battitura e chiede solo una verifica. B4 (X-Forwarded-For falsificabile) e B7 (pannello admin fuori da nginx) sono N1/N2 o accettabili, non extra. B10 (email nei log) e l'integrità dell'archivio sono accettabili. Dichiara il modello («sono su Opus»)."
+    },
+    "aica-07-R2": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6", "S7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Azioni sensibili senza audit oltre a setRole (lista utenti, reset della password, 401/403, upload, import, webhook), nessun middleware degli errori, nessun ID della richiesta (app/auth.js, app/server.js)",
+        "`. = parse_json!(.message)` sostituisce l'evento e perde il nome del container: app e admin sono tutti etichettati `portale-ordini` e non si distinguono (logging/vector.yaml:15-16)",
+        "Fonti non raccolte: error log di nginx, Postgres, Redis, SSH/WireGuard, cloud; la regex non estrae lo user agent (logging/vector.yaml:2-8, :26)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Conteggio dello spraying corretto (27). SAIPH-07 (esclusione di PO-005 per IP invece che per percorso) e SAIPH-03 (rumore di /status, P3 con correzione alla fonte) sono consigli di irrobustimento su T16, non falsi né extra. SAIPH-02 non presenta T17 come difetto. La quota del 70% per il rumore di uptime è sovrastimata (circa 60 righe su 132), errore marginale. SAIPH-09, SAIPH-11 (porta 8081), SAIPH-12 (integrità) e SAIPH-13 (email) sono di altri ruoli o accettabili."
+    },
+    "aica-07-R3": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6", "S7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Azioni sensibili senza audit oltre a setRole (reset della password, 401/403, import, upload, webhook, accessi negati agli ordini) e `admin_export` senza utente (app/auth.js, app/orders.js:53)",
+        "La regex di Vector estrae `status` come stringa e scarta lo user agent: i confronti numerici di PO-004/PO-005 vanno verificati (logging/vector.yaml:26)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Spraying contato come 30 account invece di 27, e finestra «02:58-03:07» (errori marginali). Non ha incrociato l.verdi con iam/ («non so se abbia un ruolo admin»), ma la sequenza S7 è completa. Il rilievo 9 su PO-005 e /status è un irrobustimento su T16 (P3, «probabile sonda»), non falso. T17 senza rilievo, correttamente. Il rilievo 10 (nessuna regola su /admin/ e /metrics, email nei log) rientra fra gli accettabili o è di altri ruoli. Dichiara il modello («modello più piccolo») e chiede un riesame su Opus."
+    },
+    "aica-07-R4": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S7"],
+      "mancati": ["S6"],
+      "falsi": [],
+      "extra_validi": [
+        "Azioni sensibili senza audit oltre a setRole (lista utenti, reset della password, upload/download, import, webhook, 401/403) ed esportazione senza attore (app/auth.js, app/orders.js)",
+        "Il servizio è fisso a `portale-ordini` anche per il container admin, e un `parse_json!` fallito lascia l'evento senza `.level`, quindi il filtro lo scarta (logging/vector.yaml:15-16)",
+        "Vector non aggiunge `source` e `parse_regex` restituisce stringhe, mentre PO-004/PO-005 dipendono da `source` e da `status` numerico (logging/vector.yaml:26, detection-rules.yml:25,32)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "S6 mancato: C5 dice solo che la rotazione è di 7 giorni e che «il periodo va deciso da DPO e sicurezza». Non cita il requisito dei 90 giorni del README né i 30 giorni del SIEM, quindi non nomina il difetto. Riferimento sbagliato «test webhook (app/orders.js:13)»: la funzione è alla riga 42 (marginale). C6 dice che la redact di pino non serve perché il logger non emette mai quei percorsi: è vero nel codice (il child logger ha solo ip e path) e il rapporto ammette che nulla viene esposto, quindi T18 non è presentato come difetto. «Vettore di iniezione nei log» è debole, perché pino scrive JSON con escape, ma è detto con cautela. L'osservazione sul sink senza buffer su disco è marginale. Le regole proposte in D (esportazioni ripetute ecc.) sono accettabili. Dichiara il modello («lavoro su Sonnet»)."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli accettabili di AICA-07 l'audit mancante sulle altre azioni sensibili (reset della password, 401/403, upload, import, webhook, lista utenti) e l'assenza dell'attore e dell'ID della richiesta nel contesto dei log: compare in 4 rapporti su 4, oppure va esplicitato che S3 copre solo setRole.",
+    "Aggiungere fra gli accettabili, o come difetti minori, la regex di Vector che non estrae lo user agent (3 su 4) e le fonti dell'host non raccolte, cioè SSH, WireGuard, Postgres (2 su 4).",
+    "`parse_json!` sostituisce l'evento e il servizio è fisso a `portale-ordini` anche per admin (2 su 4): extra ricorrente da valutare per la scheda.",
+    "Tipi e campi di nginx: parse_regex dà stringhe e Vector non aggiunge `source`, mentre l'estratto li mostra numerici e con `source` (2 su 4). È un'incoerenza del progetto: chiarirla nella scheda o allineare vector.yaml all'estratto.",
+    "T16: specificare che un consiglio di escludere per percorso (/status) invece che per IP nell'esclusione di PO-005 è un irrobustimento ammesso (3 su 4 lo propongono).",
+    "Aggiungere agli accettabili di AICA-07 l'email in chiaro nei log di login (oggi sta solo fra gli accettabili di AICA-03; 4 su 4 la citano) e l'archivio locale sulla stessa VM (integrità, già coperto).",
+    "S6: chiarire se basta citare i 7 giorni di rotazione o se serve il confronto con il requisito dei 90 giorni (R4 cita solo i 7 giorni e non conta).",
+    "S7: il numero di tentativi è 27 (righe 18-79). Tre rapporti scrivono 31, 30 e 27; la scheda dice «fra 02:58 e 03:05», ma i falliti finiscono alle 03:02:01 e l'accesso è alle 03:05:12: precisare."
+  ]
+}

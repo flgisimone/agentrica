@@ -1,0 +1,17 @@
+{
+  "name": "sg-portale-ordini-prod",
+  "description": "VM del portale ordini",
+  "ingress": [
+    { "protocol": "tcp", "ports": "443", "source": "0.0.0.0/0", "note": "HTTPS pubblico" },
+    { "protocol": "tcp", "ports": "80", "source": "0.0.0.0/0", "note": "redirect a HTTPS" },
+    { "protocol": "udp", "ports": "51820", "source": "0.0.0.0/0", "note": "WireGuard, VPN dell'ufficio" },
+    { "protocol": "tcp", "ports": "22", "source": "0.0.0.0/0", "note": "SSH amministratori" },
+    { "protocol": "tcp", "ports": "8000-8100", "source": "0.0.0.0/0", "note": "servizi applicativi" },
+    { "protocol": "tcp", "ports": "9100", "source": "10.8.0.0/24", "note": "Prometheus dall'ufficio" }
+  ],
+  "egress": [
+    { "protocol": "udp", "ports": "53", "destination": "0.0.0.0/0", "note": "DNS" },
+    { "protocol": "udp", "ports": "123", "destination": "0.0.0.0/0", "note": "NTP" },
+    { "protocol": "tcp", "ports": "443", "destination": "0.0.0.0/0", "note": "webhook dei clienti, registro immagini, SIEM" }
+  ]
+}

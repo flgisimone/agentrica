@@ -1,0 +1,6 @@
+{
+  "recordings_days": 30,
+  "audit_log_days": 90,
+  "messages_days": 365,
+  "invoices_years": 10
+}

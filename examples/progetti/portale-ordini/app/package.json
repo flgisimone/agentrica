@@ -1,0 +1,25 @@
+{
+  "name": "portale-ordini",
+  "version": "2.4.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:docs": "docgen-lite src docs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcrypt": "5.1.1",
+    "express": "4.21.2",
+    "jsonwebtoken": "9.0.2",
+    "multipart-lite": "2.3.0",
+    "pg": "8.13.1",
+    "pino": "9.5.0",
+    "xml-mapper": "1.8.2"
+  },
+  "devDependencies": {
+    "docgen-lite": "0.9.4",
+    "eslint": "9.17.0"
+  }
+}

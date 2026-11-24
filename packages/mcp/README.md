@@ -30,7 +30,7 @@ You need Node 22 or later, with npm. The commands are the same on Mac, Windows (
 **On the whole computer (recommended)**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 install
+npx -y @agentrica/mcp@0.12.0 install
 ```
 
 It installs the package with `npm install -g` and registers it in Claude Code with `user` scope: every project you open already has Agentrica. The server starts with `node` from npm's global folder: it starts fast and also works offline. Restart Claude Code and check with `claude mcp list`.
@@ -38,13 +38,13 @@ It installs the package with `npm install -g` and registers it in Claude Code wi
 **Without installing anything**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 add
+npx -y @agentrica/mcp@0.12.0 add
 ```
 
 It registers the server started with npx (on Windows `cmd /c npx`), which downloads the package to its cache on first start. The scope is `user`, all your projects; with `--project` it writes `.mcp.json` in the current folder, to share with your team (it works on the system it was created on), with `--local` it applies to the current project and to you only. For your team, from the project folder:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 add --project
+npx -y @agentrica/mcp@0.12.0 add --project
 ```
 
 The server options (`--lang`, `--agents`, `--no-panel`, `--no-ratings`, `--no-update-check`) go at the end of `install` and `add`, which pass them to the server. Run again, they replace Agentrica's registration in the same scope. If Node 22, npm or the `claude` command are missing, they say so and print the commands to run by hand.
@@ -54,10 +54,10 @@ The version stays the one you set until you change it: role updates do not arriv
 **By hand in Claude Code**, without `install` or `add`:
 
 ```sh
-claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.11.1
+claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.12.0
 ```
 
-On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.11.1`.
+On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.12.0`.
 
 **Other MCP clients**: add the server to the client configuration, usually a JSON file like this:
 
@@ -66,7 +66,7 @@ On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/m
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.11.1"]
+      "args": ["-y", "@agentrica/mcp@0.12.0"]
     }
   }
 }
@@ -79,7 +79,7 @@ On Windows:
   "mcpServers": {
     "agentrica": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.11.1"]
+      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.12.0"]
     }
   }
 }
@@ -88,7 +88,7 @@ On Windows:
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message and the version check does not run: to rate agents add `--allow-net`, otherwise add `--no-ratings --no-update-check` at the end of the command. The [panel](#local-panel) does not start with these permissions.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.11.1
+npm install -g --ignore-scripts @agentrica/mcp@0.12.0
 npm root -g
 ```
 
@@ -123,7 +123,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 install --agents aisa,aiwda-08
+npx -y @agentrica/mcp@0.12.0 install --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `list_agents` and `agent` see only those agents too. Without `--agents` all the agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -183,8 +183,20 @@ The server does not choose the model: your client does. For some agents, though,
 | AICA-04 · ALNILAM, Cloud Security | Sonnet | −52% |
 | AIPCA-02 · ALIOTH, GDPR | Sonnet | −52% |
 | AIBPD-05 · ALGIEBA, Business Analyst | Sonnet | −52% |
+| AICA-09 · WEZEN, Vulnerability Management | Haiku | −95% |
+| AICA-03 · BETELGEUSE, Application Security | Sonnet | −62% |
+| AICA-05 · ALNITAK, Network Security | Sonnet | −54% |
+| AICA-07 · SAIPH, SOC & Threat Detection | Sonnet | −52% |
+| AIPCA-05 · MIZAR, Privacy Security | Sonnet | −58% |
+| AIPCA-06 · MERAK, Data Governance & Retention | Sonnet | −49% |
+| AIPCA-07 · ALCOR, Third-Party & Vendor Compliance | Sonnet | −61% |
+| AIPCA-08 · PHECDA, Data Subject Rights | Sonnet | −54% |
+| AISA-05 · SPICA, Frontend | Sonnet | −66% |
+| AISA-07 · FOMALHAUT, Database | Sonnet | −56% |
+| AISA-10 · CASTOR, DevOps | Sonnet | −62% |
+| AISA-11 · BELLATRIX, Performance | Sonnet | −54% |
 
-The other 51 agents have not been measured: they work with your session's model. The cost is the average over the test cases of 2026-11-19 (API prices of 2026-11-03); measurements, cases and reports are in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md) (in Italian).
+The other 39 agents work with your session's model: the five department directors and the judgment roles (Architect, Security Architect, Code Reviewer, DPIA, Pentest) by choice, because a mistake there costs a lot, and the rest because they have not been measured yet or did not pass the threshold. The cost is the average over each agent's test cases (API prices of 2026-11-03); measurements, cases and reports are in [`examples/risultati/2026-11-19-modelli.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-19-modelli.md) and [`examples/risultati/2026-11-23-ondata-1.md`](https://github.com/flgisimone/agentrica/blob/main/examples/risultati/2026-11-23-ondata-1.md) (in Italian).
 
 - **Where you see it.** In `list_agents` and at the top of the agent's text ("Recommended model: Sonnet…"). You choose the session model; the subagents of `init --subagents` already have it.
 - **Subagents.** The subagents copied by [`init --subagents`](#new-project) into `.claude/agents/` already have `model:` set to the recommended model (the others `inherit`). To change it, edit that line (`opus`, `sonnet`, `haiku` or `inherit`).
@@ -230,7 +242,7 @@ A model's knowledge stops at its training date. Each department has a library of
 The server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal. From 0.8.0 it is on by default: ask "open the Agentrica panel". At the first choice to make, if the page is not open, the server opens the browser. To turn it off, choose so in the [configuration](#configuration) form or add `--no-panel`:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 install --no-panel
+npx -y @agentrica/mcp@0.12.0 install --no-panel
 ```
 
 Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has six pages, with a menu at the top counting pending choices, agents called, findings and agents to rate:
@@ -267,7 +279,7 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 init my-project --name "My project"
+npx -y @agentrica/mcp@0.12.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in the server's language (`--lang en` or `--lang it` to choose):
@@ -286,7 +298,7 @@ If even one file already exists, `init` writes nothing and lists them. Outside a
 In a project that already exists (for example one installed with [`add`](#installation)) `init --existing` adds Agentrica's rules without touching your files:
 
 ```sh
-npx -y @agentrica/mcp@0.11.1 init --existing
+npx -y @agentrica/mcp@0.12.0 init --existing
 ```
 
 It writes only the missing files and skips those already there, listing them in the output: your own `AGENTS.md` or `CLAUDE.md` stays as it is (if you already have `CLAUDE.md`, add a line `@AGENTS.md`). It does not commit and does not copy the technical base of a new project: no F0 «technical base», CI, `.nvmrc` or `.env.example`. The `plan/README.md` starts without phases: ask Claude «Create the project phases from the existing code». Even without `init --existing` the server instructions describe the `plan/` format and, if the plan is missing, Claude offers to create it.

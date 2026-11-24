@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parla Subito · Corsi di lingue online</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header><h1>Parla Subito</h1></header>
+    <main>
+      <h2>Iscriviti a un corso</h2>
+      <form action="/signup" method="post">
+        <label>Nome <input name="nome" required /></label>
+        <label>Cognome <input name="cognome" required /></label>
+        <label>Data di nascita <input name="data_nascita" type="date" required /></label>
+        <label>Email <input name="email" type="email" required /></label>
+        <label>Telefono <input name="telefono" type="tel" /></label>
+        <label>Note per l'insegnante (allergie, disturbi dell'apprendimento) <textarea name="note_salute"></textarea></label>
+        <label><input type="checkbox" name="newsletter" /> Voglio ricevere la newsletter</label>
+        <label>Password <input name="password" type="password" required /></label>
+        <button>Iscriviti</button>
+      </form>
+      <p><a href="/privacy.html">Informativa privacy</a></p>
+    </main>
+    <script src="https://widget.chatnow.example/v3/loader.js" data-account="parlasubito" async></script>
+  </body>
+</html>

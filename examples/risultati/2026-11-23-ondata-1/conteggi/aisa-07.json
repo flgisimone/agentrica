@@ -1,0 +1,81 @@
+{
+  "ruolo": "aisa-07",
+  "rapporti": {
+    "aisa-07-R1": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Transizioni di stato dell'ordine libere (PATCH /:id/status) e annullamento che non rimette in giacenza (F11)",
+        "Il report conta anche gli ordini annullati e non pagati (F8)",
+        "data/listino.json copiato nell'immagine (Dockerfile COPY data): l'aggiornamento giornaliero non raggiunge le repliche (F10)",
+        "Nessun vincolo fra ruolo shop e users.customer_id (CHECK proposto) (F12)",
+        "Token di sessione salvati in chiaro (F12)",
+        "Pool senza gestore 'error', statement_timeout e idle timeout (F13)",
+        "Nessun indice su order_items(product_id), scansione a ogni cancellazione di prodotto (F9)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D7 trovato in F4 (file e INSERT in schema_migrations non nella stessa transazione, al riavvio fallisce). Lock delle migrazioni concorrenti = O4, B1/B2/B4/B5/B6, P1-P5 di altri ruoli: non contati. Errore marginale in F8: con from/to non validi i confronti con Invalid Date sono sempre falsi e il report include tutto, non 'scarta tutto'; 'fino a 10 connessioni per richiesta' sovrastimato (una query per pool). Riepilogo dei conteggi corretto (1 P0, 5 P1, 6 P2, 2 P3)."
+    },
+    "aisa-07-R2": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Transizioni di stato dell'ordine non controllate e annullamento senza ripristino della giacenza",
+        "Token di sessione salvati in chiaro, nessuna pulizia delle scadute",
+        "Pool senza gestore 'error' e senza timeout",
+        "Nessun indice su order_items(product_id)",
+        "La CI applica le migrazioni solo a un database vuoto: 003 passa in CI e fallisce in produzione",
+        "Nessuno spegnimento ordinato (SIGTERM) in server/app.js durante il rolling update",
+        "Report: con 'to' a mezzanotte la giornata finale è esclusa"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Nota corretta e più precisa della scheda: un file multi-istruzione mandato come query semplice gira in una transazione implicita, il difetto è che l'INSERT in schema_migrations resta fuori (D7 contato). Errori marginali: date non valide 'report vuoto' (in realtà include tutto); 'concatena' per price stringa * quantità (la moltiplicazione converte, segnalato come da verificare; accettabile AISA-04). Irrobustimento su T1 (SET dai nomi delle chiavi) dichiarato non injection: non falso. 003 e 004 a P0: scelta motivata. Firma nella forma 'Firmato: AISA-07 · FOMALHAUT'."
+    },
+    "aisa-07-R3": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Nessun vincolo fra ruolo shop e users.customer_id (INSERT di ordini fallisce con errore non gestito)",
+        "Nessun vincolo sulle transizioni di stato né fra paid_at e stato",
+        "Token di sessione salvati in chiaro",
+        "Nessun indice su order_items(product_id) e sessions(user_id, expires_at)",
+        "La CI applica le migrazioni solo a un database vuoto, nessun test di migrazione su dati né delle down"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Riporta anche O2 e O6 come P0 fuori perimetro, B4, B6, P4 e l'accettabile customerId dal corpo: non contati. Errori marginali: il riepilogo dice 7 P2 e 4 P3, ma i punti sono 8 P2 e 5 P3; il punto 13 rimanda al 'punto 17' per le transizioni, che invece parla di ILIKE. Corretto il comportamento con date non valide (include tutto)."
+    },
+    "aisa-07-R4": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Nessun vincolo fra ruolo shop e users.customer_id (F-09)",
+        "Transizioni di stato libere, annullamento senza ripristino della giacenza, rowCount non controllato (F-15)",
+        "Il report conta anche ordini cancelled e pending_payment (F-13)",
+        "Token di sessione salvati in chiaro (F-11)",
+        "users.email UNIQUE sensibile a maiuscole e minuscole (F-11)",
+        "Nessun indice su order_items(product_id) e sessions(user_id) (F-08)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Il più preciso sulle procedure (CHECK NOT VALID prima di SET NOT NULL, CONCURRENTLY). Riporta anche B3, B6, P4, O4 (lock): non contati. Conteggio del riepilogo coerente (16 + F-17). Il rapporto dichiara il modello ('Lavoro su Opus'): da tenere presente per l'anonimato della valutazione."
+    }
+  },
+  "proposte_scheda": [
+    "D7: riformulare. In Postgres un file multi-istruzione mandato come query semplice (senza BEGIN/COMMIT espliciti) gira già in una transazione implicita, quindi 'resta applicata in parte' è impreciso; il difetto solido è che file e INSERT in schema_migrations non sono atomici (applicata ma non registrata, al riavvio fallisce). R2 lo nota esplicitamente.",
+    "Distinguere D7 (transazione del runner) da O4 (lock per repliche in parallelo): tutti e quattro i rapporti li uniscono; indicare che il lock assente conta come O4.",
+    "Aggiungere agli accettabili di AISA-07: vincolo ruolo shop/users.customer_id (3 rapporti su 4), token di sessione in chiaro (4/4), indice su order_items(product_id) e sessions (4/4), transizioni di stato non vincolate e annullamento senza ripristino giacenza (4/4), pool senza timeout né gestore 'error' (2/4), migrate.js senza catch e senza checksum (4/4), CI che migra solo un database vuoto (2/4), report che include ordini annullati (2/4), orders.total e invoices.amount senza CHECK.",
+    "Possibile extra da valutare per la scheda (AISA-10 o AISA-11): data/listino.json copiato nell'immagine, quindi l'aggiornamento giornaliero del job esterno non raggiunge le repliche (R1).",
+    "Ambiguità sulle date non valide del report: con Invalid Date i confronti sono falsi e il report include tutto; due rapporti dicono il contrario. Se si vuole contare la conseguenza, scriverla nella scheda."
+  ]
+}

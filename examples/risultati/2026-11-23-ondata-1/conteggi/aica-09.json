@@ -1,0 +1,74 @@
+{
+  "ruolo": "aica-09",
+  "rapporti": {
+    "aica-09-R1": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Completo. Rilievo di processo P2 (scansione di un commit vecchio, scadenze delle eccezioni non applicate) dentro V3/V7. libssl3 P2 da verificare con lo scenario testWebhook verso server TLS dell'attaccante (accettabile). Copertura delle altre immagini del compose (nginx, postgres, redis, node-exporter, admin): estensione dell'accettabile, non contata. Note per altri ruoli corrette (N1-N5, A1-A3, A5-A7, S1-S2, S6)."
+    },
+    "aica-09-R2": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Completo. libssl3 declassato a P3 (accettabile). Fatti verificati: eslint richiede minimatch ^9.0.4, nginx senza limit_req né client_max_body_size. Copertura delle altre immagini non contata (vicina all'accettabile sul pannello admin). Chiede il riesame su Opus."
+    },
+    "aica-09-R3": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Completo. libssl3 P2 col vettore testWebhook. Nota corretta: a.bianchi, referente dell'eccezione scaduta, è ancora attivo e admin. Copertura delle altre immagini fra i limiti, non contata."
+    },
+    "aica-09-R4": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": ["Nessun .dockerignore in app/ con COPY . . nel Dockerfile: un node_modules locale (anche con devDependencies) o altri file finirebbero nell'immagine"],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "multipart-lite portato a P0 (SLA già scaduta), con discesa a P1 se i log non mostrano abusi: alzato comunque, scelta motivata. docgen-lite declassato a P2, non P3: declassato comunque. Sulla trappola T19 dubita della motivazione (configurazione eslint assente): irrobustimento, non falso. Molte note per altri ruoli (N1, N2, N3, N5, A3, A5, A7, /files accettabile), tutte vere; real_ip_recursive on presente davvero. Firma nella forma «— WEZEN (AICA-09)». Il registro sta in una tabella con le motivazioni, senza un dettaglio per rilievo."
+    },
+    "aica-09-R5": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Completo ma sintetico. V3: dice che il rapporto non corrisponde al lockfile attuale e chiede una nuova scansione, senza citare il commit del 2026-08-14 (contato). Refuso: scadenza di express 2027-11-27 (marginale). libssl3 a P1 provvisoria se Node usa la libssl del sistema: ipotesi motivata, non falso. Dubbio sulla motivazione di T19: irrobustimento. Molti rilievi di altri ruoli (I3, I4, I5, I2, A1, A5, N1-N5, S2, S6): fatti verificati (g.neri MFA si, regole 3 e 4 citate bene). Apre il rapporto con una nota di processo su un tool negato."
+    },
+    "aica-09-R6": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Il più completo: unico rilascio con immagine fissata per digest, problemi del processo (bersaglio della scansione, scadenze delle eccezioni, duplicati, priorità dalla sola severity), verifiche passive su OpenSSL e sul commit dell'immagine. Su T19 consiglia di correggere e chiudere l'eccezione, visto che 9.0.6 rientra nel range: irrobustimento, non falso. Collega requireAdmin al cambio di ruolo nel campione di log (vero). Firma nella forma «Firmato: **WEZEN** (AICA-09)»."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli accettabili di AICA-09 la copertura incompleta dello scanner su tutte le immagini del compose (nginx, postgres, redis, node-exporter, oltre al pannello admin): l'hanno segnalata R1, R2, R3, R4 e R6.",
+    "Aggiungere agli accettabili di AICA-09 il problema di processo «lo scanner non applica la scadenza delle eccezioni» e la proposta di un controllo in CI che fallisce con un'eccezione scaduta: è un corollario di V7 e compare in quasi tutti i rapporti.",
+    "Aggiungere agli accettabili: pino-abstract-transport non raggiungibile (pino senza transport in server.js), quindi P3 per la vulnerabilità pur riaprendo l'eccezione; libssl3 raggiungibile da testWebhook verso un server TLS scelto dall'attaccante (priorità P2 o P1 provvisoria).",
+    "Chiarire per V1 se un declassamento a P2 (invece di P3) basta: R4 e R5 lo portano a P2 per il rischio della CI su PR di terzi. Qui sono stati contati come trovati.",
+    "Chiarire per V2 se P0 conta come «alzare» (R4: P0 con SLA già scaduta). Qui è stato contato.",
+    "T19: precisare che dubitare della motivazione (configurazione eslint assente nella copia) o consigliare di correggere e chiudere l'eccezione è un irrobustimento, non un falso.",
+    "Valutare se aggiungere l'assenza di .dockerignore con COPY . . come accettabile o come extra atteso (R4)."
+  ]
+}

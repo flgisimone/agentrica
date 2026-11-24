@@ -16,5 +16,6 @@ export default defineConfig([
       "no-restricted-imports": ["error", { patterns: ["next", "next/*", "react", "react/*", "react-dom", "react-dom/*"] }],
     },
   },
-  globalIgnores(["**/dist/**", "**/node_modules/**", "packages/mcp/agents/**"]),
+  // I progetti di examples/ sono difettosi di proposito (casi di prova degli agenti): non si controllano.
+  globalIgnores(["**/dist/**", "**/node_modules/**", "packages/mcp/agents/**", "examples/progetti/**"]),
 ]);

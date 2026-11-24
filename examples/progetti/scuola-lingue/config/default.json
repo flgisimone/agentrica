@@ -1,0 +1,14 @@
+{
+  "logging": {
+    "level": "info",
+    "redact": ["body.password", "req.headers.cookie"],
+    "logRequestBodyOnError": true
+  },
+  "documents": {
+    "encryptionKey": "q3V0bWF0dGVvLXByb3ZhLWNoaWF2ZS1maW50YS0zMmI="
+  },
+  "storage": {
+    "bucket": "parlasubito-prod",
+    "endpoint": "https://s3.fra.nimbus-hosting.example"
+  }
+}

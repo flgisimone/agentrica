@@ -1,0 +1,18 @@
+# Ruoli applicativi del portale ordini (letti da admin e app all'avvio)
+roles:
+  customer:
+    permissions: [orders:read:own, orders:create, files:upload, files:read:own]
+    mfa: false
+  operator:
+    permissions: [orders:read, orders:update, files:read, customers:read, customers:export]
+    mfa: false
+  auditor:
+    permissions: [orders:read, users:read]
+    mfa: false
+  admin:
+    permissions: ["*"]
+    mfa: true
+
+accounts_policy:
+  external_max_days: 90
+  inactivity_disable_days: 60

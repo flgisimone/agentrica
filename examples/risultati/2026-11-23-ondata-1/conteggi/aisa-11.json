@@ -1,0 +1,69 @@
+{
+  "ruolo": "aisa-11",
+  "rapporti": {
+    "aisa-11-R1": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "POST /api/orders: circa 77 query sequenziali per un ordine medio (3 round trip per riga), da ridurre con SELECT ... ANY, UPDATE atomico e INSERT multiplo (BX-07)",
+        "GET /api/orders carica fino a 5.000 righe d'ordine che web/app.js non usa (BX-03)",
+        "Nessun indice su order_items(product_id): DELETE di un prodotto con ON DELETE CASCADE scorre tutta order_items (BX-09)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "P1 da BX-03 + BX-02 (N+1 e indice). BX-10 su maxAge 1h senza nomi con impronta: consiglio, non presenta T15 come difetto. Compressione e pool 20x2 sono accettabili. Le note per altri ruoli (B4, B1/B2, B5, D1, O2, O6) non contano."
+    },
+    "aisa-11-R2": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "POST /api/orders: circa 78 query sequenziali per ordine, una per round trip",
+        "Pool senza statement_timeout né connectionTimeoutMillis (server/db.js:3): una query lenta come il report tiene la connessione senza limite",
+        "data/listino.json copiato nell'immagine (COPY data ./data) mentre si aggiorna ogni giorno da un job esterno: i contenitori restano col listino dell'ultima build, e 30 MB in più a ogni pull",
+        "moment da CDN esterno senza fallback: se il CDN è lento o irraggiungibile la pagina si blocca o si rompe"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Errore marginale: attribuisce all'indice mancante su order_items(order_id) anche le cancellazioni a cascata da products, che dipendono da product_id. «Raddoppia il carico» per la query di sessione è un'esagerazione su una query per chiave primaria, non un falso. Date del report non validate e LIMIT/OFFSET sono accettabili. Webhook con ritentativi e assenza di UNIQUE: difetti di altri ruoli (B5, D8). Nota sul modello alla fine (dice di essere Sonnet): da ignorare per la valutazione."
+    },
+    "aisa-11-R3": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "POST /api/orders: circa 75 round trip per ordine medio, fino a 600 con 200 righe",
+        "app.js è un modulo differito e moment arriva da CDN: se il CDN non risponde moment non è definito e caricaOrdini fallisce"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Dice di non aver visto deploy/ ma cita CMD del Dockerfile e le due repliche (dal README): coerente. Auth con una query per richiesta segnalato P3 con costo basso: corretto. Indice orders(status) dichiarato non necessario oggi: non è un rilievo. OFFSET e compressione accettabili. Migrazioni all'avvio (O4), unit_price real (D1), webhook (B5/D8): altri ruoli."
+    },
+    "aisa-11-R4": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Nessun indice su order_items(product_id): DELETE di un prodotto con ON DELETE CASCADE scandisce order_items (BELLATRIX-04)",
+        "GET /api/orders trasferisce fino a 5.000 righe d'ordine che la pagina non mostra (BELLATRIX-05)",
+        "POST /api/orders: circa 77 query sequenziali, ognuna anche su una connessione diversa del pool (BELLATRIX-06)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "P1 da BELLATRIX-05 + BELLATRIX-04, P3 da BELLATRIX-02 (P2). La tabella sessions senza pulizia delle righe scadute (BELLATRIX-10) non è verificabile: il README dice che sessions è gestita dal login, fuori dalla copia; non contato né come extra né come falso. Volume annuo di order_items stimato in 10-20 milioni (al picco circa 23): marginale. Note per altri ruoli (B1, B2, B4, B5, D1, O2, O6, O4) non contano."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli accettabili di AISA-11 (o come atteso) i round trip sequenziali di POST /api/orders (3 query per riga, circa 77 per ordine medio): lo segnalano tutti e quattro i rapporti, separato da B1/B2 che sono di correttezza.",
+    "Aggiungere agli accettabili di AISA-11 l'indice mancante su order_items(product_id) per il DELETE a cascata (2 rapporti su 4).",
+    "Aggiungere agli accettabili di AISA-11 le righe d'ordine caricate da GET /api/orders e non usate dalla pagina (2 rapporti su 4): è un'alternativa di correzione a P1.",
+    "Aggiungere agli accettabili la dipendenza da CDN di moment (pagina rotta se il CDN non risponde), che si sovrappone a P7.",
+    "Valutare come accettabili: query di sessione a ogni richiesta /api (2 rapporti, costo basso), listener riassegnati a ogni ridisegno (3 rapporti), pool senza statement_timeout, listino copiato nell'immagine e non aggiornato nei contenitori.",
+    "T15 (maxAge 1h): chiarire che la nota «senza nomi con impronta il client tiene app.js vecchio fino a un'ora» è un consiglio e non un falso."
+  ]
+}

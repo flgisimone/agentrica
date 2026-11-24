@@ -1,0 +1,90 @@
+{
+  "ruolo": "aisa-04",
+  "rapporti": {
+    "aisa-04-R1": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "GET /:id/supplier-price senza requireRole: anche shop legge il prezzo d'acquisto dei fornitori (products.js:21-27)",
+        "PATCH /:id/status senza regole di transizione: paid a mano, shipped che torna pending_payment, cancelled che non ripristina la giacenza, id inesistente con ok:true (orders.js:46-52)",
+        "Token di sessione salvati in chiaro in sessions.token (auth.js:6)",
+        "PAYMENTS_WEBHOOK_SECRET non verificato all'avvio: se manca createHmac lancia a ogni chiamata (webhooks.js:8)",
+        "PATCH prodotto su id inesistente risponde ok:true (products.js:42-43)",
+        "Il gestore degli errori registra l'oggetto errore intero con possibili parametri (app.js:16)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B3 trovato dentro il rilievo 1 (quantity 1.5 in colonna integer, correzione 'quantity intera'); l'effetto a metà ordine è coperto dal rilievo 2. B1 e B2 uniti nel rilievo 2, con entrambe le cause. Comportamento di Express 5/Node dichiarato a memoria. D5 e D7 fra le note per altri ruoli (non contati). Il rapporto riporta il percorso della copia, che contiene il nome del modello e dello sforzo ('aisa-04-opus-medio-2'): fuga d'identità, da togliere dalle copie nelle prossime ondate."
+    },
+    "aisa-04-R2": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "P0 n. 1: «Migrazioni che non si applicano su un database nuovo… La 003 esegue RENAME COLUMN stock TO qty, ma stock non esiste, quindi fallisce… Con la 003 rotta il deploy non parte»",
+          "motivo": "003_sku.sql aggiunge solo sku NOT NULL e l'indice univoco; il RENAME stock TO qty è in 004_stock.down.sql, che migrate.js esclude. Su un database nuovo 001-004 si applicano (la tabella è vuota quando arriva la 003). Fatto sul progetto sbagliato in modo sostanziale, presentato come P0. Le parti vere dello stesso rilievo (sku NOT NULL su tabella popolata, migrate.js senza transazione) sono difetti di AISA-07, non contati."
+        }
+      ],
+      "extra_validi": [
+        "GET /:id/supplier-price senza requireRole: shop legge il prezzo d'acquisto (products.js:21-27)",
+        "Cambio di stato senza transizioni ammesse, cancelled senza ripristino giacenza, id inesistente con ok:true (orders.js:46-52)",
+        "Nessun pool.on('error') in db.js: un errore su un client inattivo termina il processo",
+        "PAYMENTS_WEBHOOK_SECRET non verificato all'avvio: createHmac lancia a ogni chiamata",
+        "Token di sessione in chiaro in sessions.token (auth.js:6)",
+        "Caratteri % e _ di q non neutralizzati nell'ILIKE (products.js:15)",
+        "Nessun arresto ordinato su SIGTERM durante il rilascio con due repliche (app.js)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B3 in P2 n. 11 (Number.isInteger, errore SQL dopo che l'ordine è già creato). B6 in P2 n. 16, priorità bassa rispetto al resto. Errori marginali: nel report dice che con Invalid Date 'il confronto con NaN esclude tutto (risposta {})', mentre i confronti falsi non fanno scattare il continue e il report include tutto lo storico (rilievo accettabile, effetto invertito); in P2 n. 12 dice che total += price * quantity 'concatena', ma la moltiplicazione converte a numero. Titolo di P1 n. 5 ('controllo di accesso mancante') esagerato: il README dà a warehouse lo stato degli ordini; il contenuto è il problema delle transizioni. P3 n. 19 su maxAge (T15) è un consiglio, non falso. Il rapporto dichiara 'li ho trovati su Sonnet': fuga d'identità del modello."
+    },
+    "aisa-04-R3": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5"],
+      "mancati": ["B6"],
+      "falsi": [],
+      "extra_validi": [
+        "GET /:id/supplier-price senza requireRole: shop legge il prezzo d'acquisto (products.js:21-27)",
+        "Cambio di stato senza macchina a stati, cancelled senza ripristino giacenza, id inesistente con ok:true (orders.js:46-56)",
+        "Il report delle vendite include ordini cancelled e pending_payment (reports.js:10-21)",
+        "PATCH stock imposta un valore assoluto che sovrascrive i decrementi concorrenti degli ordini (products.js:31-34)",
+        "Nessun pool.on('error') in db.js: un errore su un client inattivo termina il processo",
+        "PAYMENTS_WEBHOOK_SECRET non verificato all'avvio (webhooks.js:8)",
+        "Token di sessione in chiaro (auth.js:5)",
+        "Caratteri % e _ di q non neutralizzati nell'ILIKE (products.js:15)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B6 mancato: il PATCH prodotti compare solo fra le parti positive (T1) e per lo stock, mai per il prezzo modificabile da warehouse. B3 in P2 n. 8 (quantity 1.5 in colonna integer, 500 al posto di 400). D5 trattato come rilievo proprio (n. 7) ma è di AISA-07, non contato. Trappole T1, T2, T5 riconosciute come corrette. Il rapporto dichiara 'Sono Sonnet': fuga d'identità del modello."
+    },
+    "aisa-04-R4": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "GET /:id/supplier-price senza requireRole: shop legge il prezzo d'acquisto (products.js:21-27)",
+        "Transizioni di stato libere, cancelled senza ripristino giacenza, id inesistente con ok:true (orders.js:46-56)",
+        "PATCH stock con valore assoluto in concorrenza con gli ordini (products.js:42)",
+        "PAYMENTS_WEBHOOK_SECRET mancante: createHmac lancia (webhooks.js:8)",
+        "Token di sessione in chiaro (auth.js:6)",
+        "Caratteri % e _ di q non neutralizzati nell'ILIKE (products.js:15)",
+        "PATCH prodotto su id inesistente risponde ok (products.js:42-43)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B1 e B2 in rilievi separati (ANTARES-02, ANTARES-03), B3 in ANTARES-01 e ANTARES-13. B4 classificato P0. Healthcheck su pagina statica (O5) e migrazioni (D5, D6, D7, O4) fra le note per altri ruoli, non contati. Comportamenti di Express/Node dichiarati a memoria, da verificare. Rapporto senza errori di fatto rilevati."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili (o come difetto B7) GET /:id/supplier-price senza requireRole: shop legge il prezzo d'acquisto; lo trovano tutti e quattro i rapporti e il README non lo vieta in modo esplicito, quindi conviene decidere.",
+    "Aggiungere fra gli accettabili PATCH /:id/status senza regole di transizione (paid a mano, cancelled senza ripristino della giacenza, id inesistente con ok:true): presente in tutti e quattro i rapporti.",
+    "Aggiungere fra gli accettabili: token di sessione in chiaro in sessions.token (4/4), PAYMENTS_WEBHOOK_SECRET non verificato all'avvio (4/4), % e _ non neutralizzati nell'ILIKE (3/4), pool.on('error') assente in db.js (2/4), PATCH stock con valore assoluto (2/4), id inesistente con ok:true/204 su PATCH e DELETE, nessun arresto ordinato su SIGTERM, report che include ordini cancellati.",
+    "Ambiguità B3: due rapporti nominano la quantità decimale solo come input che manda in errore il server (B4), senza dire che il rifiuto arriva a metà ordine; ho contato B3 quando il rilievo nomina il controllo che accetta decimali e la colonna intera. La scheda potrebbe dire se basta questo o se serve anche l'effetto a metà ordine.",
+    "Trappola possibile: 004_stock.down.sql contiene RENAME stock TO qty e un rapporto l'ha attribuito alla 003; si può aggiungere una trappola 'i file .down.sql non sono applicati da migrate.js'.",
+    "Copie dei progetti: il percorso della copia contiene modello e sforzo (es. 'aisa-04-opus-medio-2') e due rapporti dichiarano 'Sonnet' nel testo: per l'anonimato conviene rinominare le copie e togliere dalle istruzioni dell'agente il riferimento al modello."
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "ruolo": "aica-03",
+  "rapporti": {
+    "aica-03-R1": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Crash del processo per promise rifiutate non gestite (Express 4, nessun error handler), innescabile senza autenticazione da POST /login senza password (R4)",
+        "Login senza MFA per admin, contro roles.yaml e la regola 2 di iam/README.md (R12)",
+        "Enumerazione degli utenti per tempo di risposta: bcrypt solo se l'utente esiste (R15)",
+        "JWT di 8 ore non revocabili: requireUser non ricontrolla active e ruolo (R16)",
+        "CSV injection e campi non quotati nell'export dei clienti (R17)",
+        "COPY . . senza .dockerignore nel Dockerfile (R21)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A3 e A4 uniti in R8 con tutte e due le cause (filename in path.join; contentType dichiarato, estensione originale, servito da nginx sullo stesso dominio). A2 completo (scadenza non confrontata, token non cancellato). Dipendenze (V2, V5, V7, V1, V3, V6) e note SOC (S2, S3, S5) e rete (N1-N5) di altri ruoli: non contano. /files/ senza autenticazione, rate limit, qty negative: accettabili. Header mancanti/X-Powered-By: accettabile (AICA-05), non contato. Fatti controllati e veri: LIMIT -1 fa fallire la query, app senza restart in compose, fetch segue i redirect. Firma nella forma «a firma di BETELGEUSE (AICA-03)»."
+    },
+    "aica-03-R2": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Crash del processo per promise rifiutate non gestite, anche senza autenticazione (rilievo 2)",
+        "JWT non revocabili: ruolo e active non riletti dal database (rilievo 11)",
+        "Enumerazione degli utenti per tempo di risposta del login (rilievo 13)",
+        "CSV injection e campi non quotati nell'export (rilievo 14)",
+        "JWT_SECRET non verificato all'avvio (rilievo 15, marginale)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A4 dato con sendFile (/api/files) invece che con nginx /files/: la causa (contentType dichiarato, estensione dal nome, stessa origine) è nominata, trovato. Non ha letto infra/. Dipendenze (V2, V5, V3) e log (S2, S3, S5) di altri ruoli; rate limit e qty: accettabili. Nota finale sul modello (Sonnet) e richiesta di riesame: non incide sul conteggio."
+    },
+    "aica-03-R3": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Crash del processo per promise rifiutate non gestite, innescabile da POST /login anonimo (rilievo 7)",
+        "JWT non revocabili dopo cambio di ruolo o disattivazione (rilievo 10)",
+        "CSV injection e campi non quotati nell'export (rilievo 11)",
+        "Enumerazione degli account per tempo di risposta (rilievo 12)",
+        "COPY . . senza .dockerignore (rilievo 16)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A4 come aggravante del rilievo 3 (contentType dichiarato, estensione dell'attaccante, nginx che deduce il tipo dall'estensione, da verificare): cause nominate, trovato. Errore marginale: rilievo 14 dice che remoteAddress è l'IP del bilanciatore, in realtà è nginx (S5, altro ruolo). Dipendenze (V2, V5, V7, V3, V6) di AICA-09; log (S2, S3) di AICA-07; rate limit, qty, email nel log: accettabili."
+    },
+    "aica-03-R4": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Crash del processo per promise rifiutate non gestite, anche senza autenticazione (rilievo 5)",
+        "Token di reset nella query string, registrato da nginx ($request) e inoltrato al SIEM (rilievo 7)",
+        "Enumerazione degli account per tempo di risposta di login e forgotPassword (rilievo 8)",
+        "JWT non revocabili (rilievo 10)",
+        "Nessun controllo dei ruoli sulle azioni: auditor (sola lettura) crea ordini, importa, carica file e usa il webhook (rilievo 11)",
+        "CSV injection e campi non quotati nell'export (rilievo 15)",
+        "COPY . . dopo npm ci senza .dockerignore: un node_modules locale con le devDependencies vanifica --omit=dev (rilievo 17)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A3 (rilievo 13) e A4 (rilievo 4, unito a /files/ senza autenticazione, accettabile) trovati. Ipotesi marginale non corretta ma dichiarata da confermare: estrazione via stack dell'errore Express con NODE_ENV non impostato; con gestori async l'errore non arriva al gestore di Express (diventa una unhandled rejection, come dice lo stesso rilievo 5). Non contato come falso. Sezione fuori perimetro con N1-N5 (altro ruolo); dipendenze (V2, V5, V7, V3, V1, V6) di AICA-09; libssl3 con OpenSSL di Node: accettabile AICA-09."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili (o come difetto atteso) il crash del processo per promise rifiutate non gestite in Express 4 senza error handler (POST /login senza password, new URL su URL malformato, importXml senza order): l'hanno trovato tutti e quattro i rapporti ed è vero.",
+    "Aggiungere fra gli accettabili: JWT di 8 ore non revocabili (ruolo e active non riletti), enumerazione per tempo di risposta di login, CSV injection nell'export, COPY . . senza .dockerignore: ricorrenti in 3-4 rapporti.",
+    "Chiarire che le dipendenze vulnerabili raggiungibili dal codice (multipart-lite, xml-mapper) sono difetti AICA-09 anche quando le riporta AICA-03: tutti i rapporti le mettono fra i P1.",
+    "Ambiguità A4: alcuni rapporti collegano l'XSS a sendFile di /api/files invece che a nginx /files/; precisare che basta nominare contentType dichiarato + estensione del client + stessa origine.",
+    "Valutare se aggiungere fra gli accettabili il token di reset nella query string registrato nei log di nginx (un solo rapporto, vero) e la mancanza di un controllo dei ruoli sulle azioni non admin (auditor che crea ordini)."
+  ]
+}

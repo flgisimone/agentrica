@@ -59,6 +59,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 | Sito in due lingue | Da F33 ogni pagina è in `/it` e in `/en`, con i segmenti tradotti in inglese (`/en/agents`, `/en/departments`, `/en/legal`…) e le cartelle italiane riscritte da `next.config.ts`; la radice e i vecchi URL vanno alla lingua del cookie `lang` (scritto solo dal selettore) o a quella preferita del browser. Testi in `src/i18n/` (un file per lingua, stesso tipo), le pagine di prosa con un componente per lingua; note legali in due testi equivalenti; `CHANGELOG.en.md` nel pacchetto. Dalla 0.9.0 il server punta le note legali della sua lingua e manda l'autore vuoto se manca il nome | Scelta dell'utente (2026-11-22, apertura di F33) |
 | Progetti già avviati e sessioni | Da F35 (0.11.0) `init --existing` scrive solo i file che mancano, senza commit, F0, CI, `.nvmrc` ed `.env.example`, con un piano senza fasi; il pannello mostra un'informazione, non un errore, se il piano manca o non ha fasi. Istruzioni del server e starter: formato di `plan/`, la pianificazione è una sessione a sé che scrive solo `plan/` e propone `/clear`, una fase per sessione. Istruzioni del server entro 4096 caratteri, il limite di Claude Code per un server stdio | Scelta dell'utente (2026-11-22, F35) |
 | Privacy dei trasporti | Un MCP remoto o qualsiasi telemetria richiedono una revisione privacy prima del design: Agentrica diventerebbe almeno responsabile del trattamento. Applicata in F20: le valutazioni hanno voce di registro, bilanciamento e screening DPIA in `20-valutazioni.md` | Revisione privacy di F5 (PRIV-MCP-02), confermata dall'utente |
+| Promemoria degli agenti (F39) | Hook `UserPromptSubmit` scritto da `init` (attivo di predefinito, `--no-reminder`), avviso nel pannello per `plan/` cambiato senza agenti, tabella di cosa esce dal computer | Le istruzioni del server arrivano solo all'avvio; chi ha la regola «non esce niente» deve sapere cosa esce |
 
 ## Glossario
 
@@ -116,5 +117,7 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F35 | [35-progetti-esistenti.md](35-progetti-esistenti.md) | Progetti già avviati: `init --existing`, piano creato dal codice esistente, pannello senza errore; sessioni per fase (la pianificazione si ferma al backlog, `/clear` fra le fasi) | completata (0.11.0) |
 | F36 | [36-hero-coerenza.md](36-hero-coerenza.md) | Hero animata nella home con i dati del catalogo e la palette del sito; sito allineato al server MCP (biblioteca, `report`); README e Markdown senza «società di consulenza fittizia» | completata (0.11.1) |
 | F37 | [37-misura-modelli.md](37-misura-modelli.md) | Misura dei modelli, prima ondata: 14 specialisti di cybersecurity, privacy e software su Opus medio e Sonnet (Haiku per AICA-09), un progetto di prova per reparto | completata (0.12.0) |
+| F38 | [38-reputazione-consumo.md](38-reputazione-consumo.md) | Scheda dell'agente con il cerchio della media e i commenti in fondo, 5 per pagina; grafici SVG nella pagina del consumo; Installa in stile documentazione | completata |
+| F39 | [39-promemoria-agenti.md](39-promemoria-agenti.md) | Promemoria per caricare un agente a ogni richiesta, avviso nel pannello quando si scrive in `plan/` senza agenti, elenco dei tool che restano in locale | completata |
 
-Ordine: F0 → F37 in sequenza.
+Ordine: F0 → F39 in sequenza.

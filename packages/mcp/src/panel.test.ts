@@ -1,7 +1,7 @@
 // Difese del pannello locale e giro completo con un client MCP vero: ask_user, risposta dalla pagina, risultato al client.
 // Il browser non si apre: il server gira con un PATH vuoto, quindi open/xdg-open non si trovano (errore ignorato).
 import assert from "node:assert/strict";
-import { mkdtempSync, realpathSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { createServer, request } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -10,7 +10,7 @@ import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { VERSION } from "./prompt.ts";
-import { keepActivity, parseAnswer, parseRate, startPanel, type RateInput } from "./panel.ts";
+import { keepActivity, parseAnswer, parseRate, planTouchedAfter, startPanel, type RateInput } from "./panel.ts";
 
 const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-")));
 const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
@@ -171,6 +171,28 @@ test("subagent di Claude Code nello stato, separati dagli agenti del server (F34
     assert.deepEqual(state.activity, []);
   } finally {
     await panel.close();
+  }
+});
+
+test("avviso plan/ senza agenti (F39-02): plan/ modificato dopo l'avvio e nessun agente; sparisce al primo agente", async () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-noagent-")));
+  mkdirSync(join(dir, "plan"));
+  writeFileSync(join(dir, "plan", "README.md"), "# Piano\n");
+  utimesSync(join(dir, "plan", "README.md"), new Date(0), new Date(0));
+  assert.equal(planTouchedAfter(join(dir, "manca"), 0), false, "senza plan/");
+  const panel = await startPanel(dir);
+  try {
+    const cookie = await login(panel.url);
+    const state = async () => JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    assert.equal((await state()).noAgent, false, "plan/ fermo da prima dell'avvio");
+    writeFileSync(join(dir, "plan", "01-fase.md"), "# F1\n");
+    utimesSync(join(dir, "plan", "01-fase.md"), new Date(), new Date(Date.now() + 1000));
+    assert.equal((await state()).noAgent, true);
+    panel.record({ id: "AISA-01", codeName: "AISA-01 · SIRIUS", role: "CTO", department: "AISA · Software", director: true, task: "Fase" });
+    assert.equal((await state()).noAgent, false, "con un agente caricato");
+  } finally {
+    await panel.close();
+    rmSync(dir, { recursive: true, force: true });
   }
 });
 

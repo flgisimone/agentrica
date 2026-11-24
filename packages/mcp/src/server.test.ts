@@ -63,6 +63,8 @@ test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli un
   }
   assert.match(client.getInstructions() ?? "", /rate_agent/);
   assert.match(client.getInstructions() ?? "", /share_usage/);
+  // F39-04: cosa esce dal computer.
+  assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad Agentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
   // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
   assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
   assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);

@@ -92,6 +92,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F43 | Rilievi di F40–F42 e rilascio: prova a mano del flusso con il contesto compatto, descrizione npm senza numero di agenti, testi del sito per `check` e `full_rules`, README legati alla versione con un test | completata (0.15.1) |
 | F44 | Rilievi piccoli e medi di F37–F42: comando `reminder` per i progetti già avviati, contraddizioni in una casella a sé nel pannello, riga del JSON in `check`, `/consumo` senza JavaScript e su telefono, schede per le prove | completata (0.16.0) |
 | F45 | Misura prima di Code Mode: `npm run tool-chains` conta catene di chiamate e byte intermedi nelle sessioni di Claude Code; soglia non superata, Code Mode rinviato e pacchetto OpenAI escluso | completata |
+| F46 | Pannello locale, UI e UX: avvisi in una zona sola con l'azione, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, filtro per priorità, consumo a schede, accessibilità; fase in corso giusta con «completata (…)» | completata (esce con 0.17.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

@@ -7,7 +7,7 @@ import { readdirSync, realpathSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { z } from "zod";
-import { CELL, HEADINGS, isClosedFinding, linkTarget, PRIORITY, readInside, section } from "./project.ts";
+import { CELL, HEADINGS, isClosedFinding, linkTarget, phaseState, PRIORITY, readInside, section } from "./project.ts";
 import { T } from "./texts/index.ts";
 
 export interface Issue {
@@ -71,7 +71,7 @@ function checkPhaseFile(root: string, file: string, phase: { id: string; status:
     seen.set(id, line);
     if (priorityColumn !== -1 && !PRIORITY.test(priority)) error(T.check.taskPriority(id), line);
     // Contraddizione: la fase si dice completata e un'attività P0 non ha esito in «Fatto».
-    if (COMPLETED.has(phase.status.toLowerCase()) && /\bP0\b/.test(priority) && !done.includes(`**${id}**`)) {
+    if (COMPLETED.has(phaseState(phase.status)) && /\bP0\b/.test(priority) && !done.includes(`**${id}**`)) {
       issues.push({ file: path, line, message: T.check.openP0(id, phase.id, phase.line), kind: "contradiction" });
     }
   }

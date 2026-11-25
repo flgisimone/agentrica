@@ -67,6 +67,8 @@ const MAX_FILE_BYTES = 1_000_000;
 const DEPARTMENT = /\b(AIBPD|AICA|AIPCA|AISA|AIWDA)\b/;
 export const PRIORITY = /\bP[0-3]\b/;
 const CLOSED = new Set(["completata", "sospesa", "completed", "suspended"]);
+/** La prima parola dello stato di una fase, in minuscolo: «completata (0.10.0)» è «completata» (F46-UX-01). */
+export const phaseState = (status: string) => /^\p{L}+/u.exec(status.trim().toLowerCase())?.[0] ?? "";
 // Un rilievo è chiuso quando il testo (fasi) o lo stato (audit) dice «risolto» o «chiuso», in qualsiasi genere e
 // numero, e non «non risolto» (in inglese «resolved» o «closed», non «not resolved»): la voce resta nel piano come
 // storia ma il pannello non la mostra fra gli aperti.
@@ -247,7 +249,7 @@ export function readPlan(root: string): Omit<Project, "git"> {
   let notice: string | null = null;
   const plan = join(root, "plan");
   const phases = readPhases(root, plan, (text) => (notice = text));
-  const open = phases.find((phase) => !CLOSED.has(phase.status.toLowerCase()));
+  const open = phases.find((phase) => !CLOSED.has(phaseState(phase.status)));
   return {
     name: basename(root),
     phases,

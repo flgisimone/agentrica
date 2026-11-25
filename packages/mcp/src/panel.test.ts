@@ -156,6 +156,7 @@ test("avviso di versione nuova nello stato, per il banner (F23)", async () => {
     const cookie = await login(panel.url);
     const state = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
     assert.equal(state.update, "È uscita la versione 9.9.9 di Agentrica.");
+    assert.equal(state.version, VERSION, "la versione del server per la testata (F46-04)");
   } finally {
     await panel.close();
   }

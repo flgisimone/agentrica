@@ -104,7 +104,7 @@ export function parseLine(line: string, session: string, agent: string): [string
 }
 
 /** File regolare non troppo grande; un link simbolico non si segue (potrebbe uscire dalla cartella). */
-async function readable(path: string): Promise<boolean> {
+export async function readable(path: string): Promise<boolean> {
   const s = await lstat(path).catch(() => undefined);
   return s !== undefined && s.isFile() && s.size <= MAX_FILE_BYTES;
 }
@@ -127,27 +127,41 @@ export interface UsageRead {
   skipped: number; // file saltati: link simbolici, troppo grandi, illeggibili
 }
 
-/** Legge tutte le sessioni del progetto e i loro subagent (`<sessione>/subagents/agent-*.jsonl` con il tipo nel .meta.json). */
-export async function readUsage(dir: string): Promise<UsageRead> {
-  const byKey = new Map<string, Usage>();
-  let skipped = 0;
-  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
-  for (const entry of entries) {
-    // Anche i link simbolici entrano qui: readable() li scarta e li conta fra gli esclusi.
+/** Un file di sessione: la conversazione principale (agent = MAIN) o un subagent, con il tipo letto dal .meta.json. */
+export interface SessionFile {
+  path: string;
+  session: string;
+  agent: string;
+}
+
+/**
+ * Le sessioni del progetto e i loro subagent (`<sessione>/subagents/agent-*.jsonl`). Anche i link simbolici entrano
+ * nell'elenco: chi legge li scarta con readable() e li conta fra gli esclusi.
+ */
+export async function sessionFiles(dir: string): Promise<SessionFile[]> {
+  const files: SessionFile[] = [];
+  for (const entry of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
     if (!entry.isDirectory() && entry.name.endsWith(".jsonl")) {
-      const session = entry.name.slice(0, -".jsonl".length);
-      if (!(await readFileUsage(join(dir, entry.name), session, MAIN, byKey))) skipped++;
+      files.push({ path: join(dir, entry.name), session: entry.name.slice(0, -".jsonl".length), agent: MAIN });
     } else if (entry.isDirectory()) {
       const sub = join(dir, entry.name, "subagents");
-      const files = await readdir(sub, { withFileTypes: true }).catch(() => []);
-      for (const file of files) {
+      for (const file of await readdir(sub, { withFileTypes: true }).catch(() => [])) {
         if (file.isDirectory() || !/^agent-[\w-]+\.jsonl$/.test(file.name)) continue;
         const metaPath = join(sub, file.name.replace(/\.jsonl$/, ".meta.json"));
         const meta = (await readable(metaPath)) ? await readFile(metaPath, "utf8").then(JSON.parse).catch(() => ({})) : {};
-        const agent = label((meta as Record<string, unknown>).agentType, "subagent");
-        if (!(await readFileUsage(join(sub, file.name), entry.name, agent, byKey))) skipped++;
+        files.push({ path: join(sub, file.name), session: entry.name, agent: label((meta as Record<string, unknown>).agentType, "subagent") });
       }
     }
+  }
+  return files;
+}
+
+/** Legge tutte le sessioni del progetto e i loro subagent. */
+export async function readUsage(dir: string): Promise<UsageRead> {
+  const byKey = new Map<string, Usage>();
+  let skipped = 0;
+  for (const file of await sessionFiles(dir)) {
+    if (!(await readFileUsage(file.path, file.session, file.agent, byKey))) skipped++;
   }
   return { dir, records: [...byKey.values()], skipped };
 }

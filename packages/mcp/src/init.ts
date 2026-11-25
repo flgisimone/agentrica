@@ -136,7 +136,8 @@ function summarize(files: string[]): string {
 /**
  * Aggiunge il promemoria a `.claude/settings.json` di un progetto che c'è già (F44-08, comando `reminder`): crea il file
  * se manca, altrimenti aggiunge l'hook a `hooks.UserPromptSubmit` lasciando il resto com'è. Se il promemoria c'è già,
- * in una delle due lingue, non lo ripete. Un file che non è un oggetto JSON non si tocca.
+ * in una delle due lingue, non lo ripete. Un file che non è un oggetto JSON non si tocca. Il file riscritto tiene il
+ * rientro (il primo della prima riga rientrata, 2 spazi se non ce n'è), il fine riga e l'a capo finale che aveva.
  */
 export function addReminder(dir: string, lang: Lang): "added" | "present" {
   const file = join(dir, ".claude", "settings.json");
@@ -147,8 +148,10 @@ export function addReminder(dir: string, lang: Lang): "added" | "present" {
     return "added";
   }
   let settings: unknown;
+  let text: string;
   try {
-    settings = JSON.parse(readFileSync(file, "utf8"));
+    text = readFileSync(file, "utf8");
+    settings = JSON.parse(text);
   } catch {
     throw new Error(T.init.reminderBadSettings);
   }
@@ -162,7 +165,10 @@ export function addReminder(dir: string, lang: Lang): "added" | "present" {
   const present = groups.some((group) => isObject(group) && Array.isArray(group.hooks) && group.hooks.some((h) => isObject(h) && ours.has(String(h.command))));
   if (present) return "present";
   settings.hooks = { ...hooks, UserPromptSubmit: [...groups, { hooks: [hook] }] };
-  writeFileSync(file, `${JSON.stringify(settings, null, 2)}\n`);
+  const indent = /^([ \t]+)\S/m.exec(text)?.[1] ?? 2;
+  const eol = text.includes("\r\n") ? "\r\n" : "\n";
+  const json = JSON.stringify(settings, null, indent).replace(/\n/g, eol);
+  writeFileSync(file, /\r?\n$/.test(text) ? `${json}${eol}` : json);
   return "added";
 }
 

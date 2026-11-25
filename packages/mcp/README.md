@@ -349,7 +349,7 @@ The server instructions reach the model once, when the session starts. So that i
 npx -y @agentrica/mcp@0.16.0 reminder [project folder]
 ```
 
-  It creates `.claude/settings.json` if missing; if it exists, it adds the hook to `hooks.UserPromptSubmit` and leaves everything else as it is. If the reminder is already there (in Italian or English) it does not repeat it; if the file is not JSON in the shape Claude Code uses, it leaves it untouched and says so. The language is the server's (`--lang`). By hand, the `hooks` part is this (the Italian line is in the Italian README):
+  It creates `.claude/settings.json` if missing; if it exists, it adds the hook to `hooks.UserPromptSubmit` and leaves everything else as it is, indentation and line endings included. If the reminder is already there (in Italian or English) it does not repeat it; if the file is not JSON in the shape Claude Code uses, it leaves it untouched and says so. The language is the server's (`--lang`). By hand, the `hooks` part is this (the Italian line is in the Italian README):
 
 ```json
 {

@@ -5,7 +5,7 @@ Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, 
 ## 0.16.0 — 2026-11-25
 
 ### Nuovo
-- Comando `npx @agentrica/mcp reminder [cartella]`: aggiunge il promemoria a `.claude/settings.json` di un progetto già avviato (installato con `add`, o con un `settings.json` che `init --existing` non tocca). Lascia com'è il resto del file, non ripete il promemoria se c'è già e non tocca un file che non è nella forma di Claude Code.
+- Comando `npx @agentrica/mcp reminder [cartella]`: aggiunge il promemoria a `.claude/settings.json` di un progetto già avviato (installato con `add`, o con un `settings.json` che `init --existing` non tocca). Lascia com'è il resto del file, con il suo rientro e i suoi fine riga, non ripete il promemoria se c'è già e non tocca un file che non è nella forma di Claude Code.
 
 ### Cambiato
 - Pannello: le contraddizioni stanno in una casella a sé, separata dagli errori di formato, ciascuna con il suo titolo.

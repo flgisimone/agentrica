@@ -36,3 +36,6 @@ packages/mcp/agents/
 packages/mcp/LICENSE
 packages/mcp/starter/
 packages/mcp/.claude/
+
+# roadmap consolidata: documento di lavoro locale, non nel repository pubblico (scelta dell'utente, 2026-11-25)
+docs/Agentrica-Roadmap-Consolidata.md

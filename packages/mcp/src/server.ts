@@ -16,13 +16,14 @@
 // --lang, con «lang» del file di configurazione o con quella del sistema (texts/): istruzioni, risposte, agenti, pannello.
 import { realpathSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { checkProject, checkText, missingHandoff } from "./check.ts";
 import { AGENTS_DIR, loadCatalog, subagentIds, type Department, type DepartmentCode } from "./catalog.ts";
 import { canUseConfig, configForm, configMessage, configPath, DEFAULTS, KEYS, parseConfigForm, readConfig, shownPath, writeConfig, type Config, type ConfigKey } from "./config.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, cardText, codeName, directorOf, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentList, agentSummary, agentText, cardText, codeName, findAgent, introLine, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, ratingForm, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { createShare, SHARE_URL, sharePreviewText, type Share } from "./share.ts";
 import { createShowcase, parseProjectFields, projectForm, PROJECTS_URL, projectFormMessage, projectPreviewText, sentText, type Showcase } from "./showcase.ts";
@@ -55,6 +56,11 @@ const reason = (error: unknown) => (error instanceof Error ? error.message : Str
 if (process.argv[2] === "init") {
   const { runInit } = await import("./init.ts");
   process.exit(runInit(process.argv.slice(3)));
+}
+// `check` (F42) controlla il formato di plan/ e audit/ e termina: 1 se trova problemi, per la CI (check.ts).
+if (process.argv[2] === "check") {
+  const { runCheck } = await import("./check.ts");
+  process.exit(runCheck(process.argv.slice(3)));
 }
 if (process.argv[2] === "add" || process.argv[2] === "install") {
   const { runSetup } = await import("./setup.ts");
@@ -361,6 +367,17 @@ function remind<T extends ToolResult>(result: T, ...extra: (string | undefined)[
 /** La proposta di valutazione nel testo dell'agente serve solo ai client senza moduli. */
 const textOptions = () => ({ ratings: Boolean(ratings) && !canAsk(), report: Boolean(panel) });
 
+// F41-01: i reparti di cui questa sessione ha già ricevuto regole comuni e indice della biblioteca interi. Un server
+// stdio vive quanto la sessione; i subagent e i contesti dopo /compact li richiedono con full_rules.
+const rulesSent = new Set<string>();
+
+/** Le opzioni del testo di un agente; `full` forza regole e indice interi. Il reparto resta segnato come inviato. */
+function agentOptions({ department }: Found, full: boolean) {
+  const known = !full && rulesSent.has(department.code);
+  rulesSent.add(department.code);
+  return { ...textOptions(), known };
+}
+
 for (const found of all) {
   const title = `${codeName(found.agent)} — ${found.agent.role}`;
   server.registerPrompt(
@@ -371,7 +388,8 @@ for (const found of all) {
       for (const note of [await firstCall(), await used(found, task)]) if (note) notes.push(note);
       return {
         description: title,
-        messages: [{ role: "user", content: { type: "text", text: agentText(found, task, textOptions()) } }],
+        // Un prompt si invoca a mano, uno alla volta: testo sempre intero (F41).
+        messages: [{ role: "user", content: { type: "text", text: agentText(found, task, agentOptions(found, true)) } }],
       };
     },
   );
@@ -500,16 +518,7 @@ server.registerTool(
   },
   async ({ department }) => {
     const setup = await firstCall();
-    const lines = catalog
-      .filter((d) => !department || d.code === department)
-      .flatMap((d) => [
-        `## ${d.code} — ${d.name}`,
-        d.summary,
-        ...[directorOf(d)].filter((a) => a !== undefined).map((a) => T.server.listAgents.lead(codeName(a))),
-        ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
-        "",
-      ]);
-    return remind({ content: [{ type: "text", text: lines.join("\n") }] }, setup);
+    return remind({ content: [{ type: "text", text: agentList(catalog, department) }] }, setup);
   },
 );
 
@@ -521,15 +530,16 @@ server.registerTool(
     inputSchema: {
       id: AGENT_ID,
       task: TASK,
+      full_rules: z.boolean().optional().describe(T.server.agent.fullRules),
     },
     annotations: READ_ONLY,
   },
-  async ({ id, task }) => {
+  async ({ id, task, full_rules }) => {
     const found = findAgent(catalog, id);
     if (!found) return { isError: true, content: [{ type: "text", text: T.server.agent.notFound }] };
     const setup = await firstCall();
     const note = await used(found, task);
-    return remind({ content: [{ type: "text", text: agentText(found, task, textOptions()) }] }, setup, note);
+    return remind({ content: [{ type: "text", text: agentText(found, task, agentOptions(found, full_rules ?? false)) }] }, setup, note);
   },
 );
 
@@ -557,6 +567,21 @@ server.registerTool(
     const date = today();
     const cards = [...new Set(wanted)].map((card) => cardText(library.find((c) => c.id === card)!, date));
     return remind({ content: [{ type: "text", text: cards.join("\n\n---\n\n") }] });
+  },
+);
+
+// F42: il formato di plan/ e audit/ della cartella del progetto, senza modelli; legge e basta.
+server.registerTool(
+  "check",
+  { title: T.server.check.title, description: T.server.check.description, annotations: READ_ONLY },
+  () => {
+    let root: string;
+    try {
+      root = realpathSync(process.cwd());
+    } catch (error) {
+      return { isError: true, content: [{ type: "text", text: T.server.check.unreadable(reason(error)) }] };
+    }
+    return remind({ content: [{ type: "text", text: checkText(checkProject(root)) }] });
   },
 );
 
@@ -653,7 +678,9 @@ function registerPanelTools(panel: Panel) {
     ({ id, summary }) => {
       const found = findAgent(catalog, id);
       if (!found || !panel.report(found.agent.id, summary.trim())) return { isError: true, content: [{ type: "text", text: r.notLoaded }] };
-      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] });
+      // F42: un passaggio di consegne senza una delle tre parti si salva lo stesso, con un avviso per il modello.
+      const missing = missingHandoff(summary).map((part) => r.parts[part]);
+      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] }, missing.length ? r.missing(missing.join(", ")) : undefined);
     },
   );
 

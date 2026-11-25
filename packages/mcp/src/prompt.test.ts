@@ -3,7 +3,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, cardText, directorOf, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
+import { loadCatalog as loadPackaged } from "./catalog.ts";
+import { setLang } from "./texts/index.ts";
+import { agentList, agentSizes, agentText, cardText, directorOf, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -228,4 +230,76 @@ test("cardText: fonte con livello e date, niente URL, avviso se scaduta", () => 
   }
   const card = catalog[0]!.library[0]!;
   assert.match(cardText(card, "2099-01-01"), /Scaduta: verificala sulla fonte/);
+});
+
+// F40-07: i componenti di --sizes vengono da agentParts; la loro somma è il testo intero, per ogni agente e lingua.
+test("agentSizes: la somma dei componenti è la lunghezza del testo, in italiano e in inglese", () => {
+  const variants = [
+    [undefined, {}],
+    ["Compito «è»", { ratings: true, report: true }],
+    [undefined, { report: true }],
+    ["Compito", { report: true, known: true }],
+  ] as const;
+  try {
+    for (const lang of ["it", "en"] as const) {
+      setLang(lang);
+      for (const department of selectSquad(loadPackaged(lang))) {
+        for (const agent of department.agents) {
+          for (const [task, options] of variants) {
+            const sizes = agentSizes({ department, agent }, task, { ...options, date: "2026-11-25" });
+            const text = agentText({ department, agent }, task, { ...options, date: "2026-11-25" });
+            assert.equal(Object.values(sizes).reduce((a, b) => a + b, 0), Buffer.byteLength(text), `${lang} ${agent.id}`);
+            assert.equal(sizes.task > 0, task !== undefined, `${lang} ${agent.id}`);
+            assert.ok(sizes.rules > 0 && sizes.role > 0 && sizes.frame > 0, `${lang} ${agent.id}`);
+          }
+        }
+      }
+    }
+  } finally {
+    setLang("it");
+  }
+});
+
+// F41-01, 04 e 06: con le regole già inviate, al loro posto e al posto dell'indice un riferimento; il resto non cambia.
+test("known: regole e indice come riferimento, cornice, ruolo, compito e chiusura identici, nelle due lingue", () => {
+  try {
+    for (const lang of ["it", "en"] as const) {
+      setLang(lang);
+      for (const department of selectSquad(loadPackaged(lang))) {
+        for (const agent of department.agents) {
+          const found = { department, agent };
+          const options = { report: true, ratings: true, date: "2026-11-25" };
+          const full = agentText(found, "Compito", options);
+          const known = agentText(found, "Compito", { ...options, known: true });
+          const [fullSizes, knownSizes] = [agentSizes(found, "Compito", options), agentSizes(found, "Compito", { ...options, known: true })];
+          for (const c of ["frame", "role", "task", "closing"] as const) assert.equal(knownSizes[c], fullSizes[c], `${lang} ${agent.id} ${c}`);
+          assert.ok(knownSizes.rules < fullSizes.rules / 5, `${lang} ${agent.id}`);
+          assert.ok(knownSizes.library <= fullSizes.library, `${lang} ${agent.id}`);
+          // Le regole intere non ci sono più; il file di ruolo, con i suoi limiti e le regole di sicurezza, sì.
+          for (const section of department.rules.sections) assert.ok(!known.includes(section.body), `${lang} ${agent.id} ${section.heading}`);
+          for (const section of agent.sections) assert.ok(known.includes(`### ${section.heading}\n\n${section.body}`), `${lang} ${agent.id} ${section.heading}`);
+          assert.ok(known.includes(`${agent.id}`) && /full_rules true/.test(known), `${lang} ${agent.id}`);
+          assert.ok(known.includes(department.code), `${lang} ${agent.id}`);
+          // Le schede del ruolo restano nominate.
+          for (const card of department.library.filter((c) => c.roles.includes(agent.id))) assert.ok(known.includes(card.id), `${lang} ${agent.id} ${card.id}`);
+          assert.equal(agentText(found, "Compito", { ...options, known: false }), full);
+        }
+      }
+    }
+  } finally {
+    setLang("it");
+  }
+});
+
+// Rilievo di F40 (P2), decisione dell'utente del 2026-11-25: oltre 12 KB con tutto il catalogo si riapre la selezione
+// con metadati e ricerca (decisione «Roadmap consolidata» in plan/README.md). Chi la supera apre quella fase.
+test("list_agents: tutto il catalogo entro 12 KB, nelle due lingue", () => {
+  try {
+    for (const lang of ["it", "en"] as const) {
+      setLang(lang);
+      assert.ok(Buffer.byteLength(agentList(selectSquad(loadPackaged(lang)))) <= 12_288, lang);
+    }
+  } finally {
+    setLang("it");
+  }
 });

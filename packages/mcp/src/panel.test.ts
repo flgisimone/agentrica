@@ -298,12 +298,20 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
   );
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "ask_user", "library", "list_agents", "open_panel", "rate_agent", "report", "share_usage", "submit_project"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "ask_user", "check", "library", "list_agents", "open_panel", "rate_agent", "report", "share_usage", "submit_project"]);
     const opened = await client.callTool({ name: "open_panel" });
     const url = /(http:\/\/127\.0\.0\.1:\d+\/\?t=[0-9a-f]{64})/.exec((opened.content as { text: string }[])[0]!.text)![1]!;
     const base = new URL(url).origin;
     const cookie = await login(url);
     await client.getPrompt({ name: "aisa-02-software", arguments: { task: "Rivedi   i confini\ndel modulo." } });
+    // F42: il tool check sul piano di questo repository; report salva sempre e avvisa delle parti mancanti.
+    const texts = (result: Record<string, unknown>) => (result.content as { text: string }[]).map((c) => c.text);
+    assert.deepEqual(texts(await client.callTool({ name: "check" })), ["plan/ e audit/: nessun problema di formato."]);
+    const partial = texts(await client.callTool({ name: "report", arguments: { id: "aisa-02", summary: "Rilievi: due, in check.ts." } }));
+    assert.equal(partial[0], "Resoconto di AISA-02 · ALTAIR salvato nel pannello.");
+    assert.match(partial[1]!, /^Nel resoconto non trovo l'esito, le domande aperte: /);
+    const full = await client.callTool({ name: "report", arguments: { id: "aisa-02", summary: "Esito: fatto. Rilievi: nessuno. Domande aperte: nessuna." } });
+    assert.deepEqual(texts(full), ["Resoconto di AISA-02 · ALTAIR salvato nel pannello."]);
 
     const result = client.callTool({ name: "ask_user", arguments: question });
     let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string; director: boolean }[]; subagents: unknown[]; project: { problems: string[] } };

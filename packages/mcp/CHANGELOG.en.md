@@ -2,6 +2,30 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.15.0 — 2026-11-25
+
+### Added
+- Format check of `plan/` and `audit/`, without models: tables and sections, required fields, unique ids, phase files that exist, priorities, evidence of closed findings; with file and line. It also reports contradictions (same finding with different values in two files, closed finding without evidence, completed phase with P0 tasks without an outcome) with both locations, without choosing. Use it with the `check` tool, with the command `npx @agentrica/mcp check [folder]` (exits with 1 if it finds something, for CI) and in the panel.
+- The `report` tool always saves the report and, if the handover lacks an outcome, findings or open questions, tells the model.
+
+### Changed
+- Panel: format errors come from the check, so a malformed file shows up even outside the open phase. Findings in the design department's format (`observations`) are read.
+- Server instructions: after writing in `plan/` or `audit/`, check their format with `check`.
+
+### Fixed
+- A backslash-escaped `|` (`it\|en`) stays in the table cell instead of splitting it.
+
+## 0.14.0 — 2026-11-25
+
+### Added
+- Common rules once per department: the server remembers, for the session, the departments whose common rules and library index it has already sent. The first agent of the department receives them in full, the next ones a reference that says how to get them back, with the cards of their role; role file and task stay in full. One more specialist of a department already loaded weighs 54 to 59% less (3.6 to 5.1 KB).
+- `full_rules` parameter of the `agent` tool: rules and index in full even if already sent, after `/compact` or in a new context. The server's instructions and the reference mention it.
+
+### Changed
+- The subagents of `init --subagents` call `agent` with `full_rules` true as their first step, because they have their own context. In projects already created the reference says to call `agent` again with `full_rules` if the rules are missing.
+- Handovers between agents: the server's instructions, the director's and the specialist's text and the `AGENTS.md` of new projects ask for a short handover (outcome, findings with their evidence, open questions) instead of the previous agent's whole answer.
+- The agents' prompts keep the full text.
+
 ## 0.13.0 — 2026-11-24
 
 ### Added

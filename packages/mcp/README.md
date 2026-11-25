@@ -23,6 +23,12 @@ The agent files, the server's texts and the panel exist in English and in Italia
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
 
+### What the server does and what the model does
+
+The server calls no models, uses no API keys and pays for no inference. It composes the agents' texts from the catalog, keeps the session state (agents in use, reports, panel questions) and runs the checks that need no model. The reasoning, that is reading the project, deciding and writing, stays with your client and the model you use, on your subscription or your key. An optional integration comes in only if it costs nothing and does not become a mandatory dependency.
+
+How much text the server returns, per agent and per component (common rules, role, library…): `npm run -s agent-text -- --sizes` in a clone of the repository. Bytes are measured, tokens estimated (bytes / 4).
+
 ### What stays on your computer
 
 For each tool, command and page: whether it stays on your computer or what leaves it, to whom and when. The text the model reads and writes still goes to the model provider through your client (see above).
@@ -30,6 +36,7 @@ For each tool, command and page: whether it stays on your computer or what leave
 | Tool, command or page | What leaves your computer, and when |
 |---|---|
 | `list_agents`, `agent`, `library` and the agent prompts | nothing: they read the package's `agents/` |
+| `check`, tool and command | nothing: they read `plan/` and `audit/` of the project folder |
 | `report`, `ask_user`, `open_panel` and the [panel](#local-panel) | nothing: server memory and a page on `127.0.0.1`, which reads `plan/`, `audit/`, `git status` and Claude Code's token counts |
 | `/mcp__agentrica__configure` | nothing: it writes only `~/.agentrica/config.json` |
 | `rate_agent`, `/mcp__agentrica__rate`, «Rate the agents» in the panel | score, comment and version, to Agentrica, after the preview and your yes |
@@ -151,15 +158,26 @@ The command menu shows only the squad's prompts, and `list_agents` and `agent` s
 | Tool | Input | Returns |
 |---|---|---|
 | `list_agents` | optional `department` (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent, with the recommended model where it was measured |
-| `agent` | `id` (e.g. `AISA-02`), optional `task` | the agent's full instructions, with the index of the department's library |
+| `agent` | `id` (e.g. `AISA-02`), optional `task` and `full_rules` | the agent's instructions, with the department's common rules and library index (see [Common rules](#common-rules-once-per-department)) |
 | `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
+| `check` | none | the format errors and contradictions of `plan/` and `audit/` in the project folder, with file and line (see [Format check](#format-check)) |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
 | `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
 | `submit_project` | `name`, `url`, `description`, `departments`, optional `agents` and `author`, `consent`, `license`; then `code` | a preview of a project proposal and a code; with the code, the sending (see [Show your project](#show-your-project)) |
 
 For example: "Use list_agents, pick the right Agentrica agent and check the accessibility of the login form".
 
-**Orchestration.** Number 01 in each department is the director, and `list_agents` marks it: for a task of the department the model loads it first, then loads with `agent` the specialists the director chooses, one at a time, each from the previous one's result; at the end the director consolidates the results and presents them to you. Across departments the order is business → design → privacy → your confirmation → software → design and privacy reviews → Code Reviewer → your confirmation. The server's instructions ask the model to use `agent` and not local subagents, unless you ask for them; the [panel](#local-panel) shows the chain of agents.
+**Orchestration.** Number 01 in each department is the director, and `list_agents` marks it: for a task of the department the model loads it first, then loads with `agent` the specialists the director chooses, one at a time, each from the previous one's handover (outcome, findings with the reference to the evidence, open questions) instead of their whole answer; at the end the director consolidates the results and presents them to you. Across departments the order is business → design → privacy → your confirmation → software → design and privacy reviews → Code Reviewer → your confirmation. The server's instructions ask the model to use `agent` and not local subagents, unless you ask for them; the [panel](#local-panel) shows the chain of agents.
+
+#### Common rules once per department
+
+A department's common rules are more than half of the text of each of its agents and are the same for all of them. From 0.14.0 the server remembers, for the length of the session, the departments whose rules and library index it has already sent: the first agent of the department receives them in full, the next ones a two-line reference that says which rules apply and how to get them back, plus the cards marked for their role. The role file and the task always come in full.
+
+- With `full_rules` true, `agent` returns everything in full: after `/compact` or `/clear` (in Claude Code `/clear` starts a new conversation but the server stays the same), or when the model no longer has the rules in its context. The server's instructions and the reference itself say so.
+- The subagents of `init --subagents` have their own context: their first step calls `agent` with `full_rules` true. In projects created with an earlier version the reference tells the subagent to call `agent` again with `full_rules` if it lacks the rules; to get the new first step, delete `.claude/agents/` and run `init --existing --subagents`, which writes only the missing files.
+- The agents' prompts (`/mcp__agentrica__aisa-04-software`…) stay in full: they are invoked by hand, one at a time.
+
+The measurement is in `examples/risultati/`: the saving is the repeated part, that is 4 to 5.7 KB of rules and index for each specialist of a department already loaded.
 
 **Commands.** Besides the agents' prompts there are `/mcp__agentrica__rate`, which opens the [rating](#ratings) form for the last agent used (or the one you name, e.g. `/mcp__agentrica__rate AISA-02`), `/mcp__agentrica__project`, which proposes a project of yours for the site without a GitHub account (see [Show your project](#show-your-project)), and `/mcp__agentrica__configure`, which opens the [configuration](#configuration) form.
 
@@ -270,7 +288,7 @@ Then ask the agent to open the panel (`open_panel` tool): the page opens in your
 - **Plan**: the open phase with backlog and acceptance criteria, and all project phases;
 - **Findings**: open findings from phases and audits, by priority and department;
 - **Ratings**: a form for each agent used and not yet rated (see [Ratings](#ratings)); absent with `--no-ratings`;
-- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table.
+- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table. With a client other than Claude Code usage is not available: the server does not estimate it.
 
 When a new agent starts working or there is one more agent to rate, the page says so with a notice at the bottom. With «Turn on notifications» it also shows a system notification when the panel tab is not in view; it needs the browser's permission, and the browser shows it, without external services.
 
@@ -280,7 +298,7 @@ With the panel the model has three more tools:
 |---|---|---|
 | `open_panel` | none | opens the page in the browser and returns its URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), optional `header` and `multiple` | shows the choice in the page and returns the answer |
-| `report` | agent `id`, `summary` (at most 4000 characters) | saves in the panel the report of what the agent did; each agent's text asks to send it at the end of the task |
+| `report` | agent `id`, `summary` (at most 4000 characters) | saves in the panel the report of what the agent did; each agent's text asks to send it at the end of the task. From 0.15.0, if the handover lacks an outcome, findings or open questions, it saves it anyway and tells the model |
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
@@ -290,7 +308,15 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 
 - `plan/README.md` with a `## Phases` (`## Fasi`) section and a `| Phase | File | Content | Status |` table, the file as a link (`[00-base.md](00-base.md)`). The open phase is the first one whose status is not `completed` or `suspended` (`completata`, `sospesa`).
 - In the phase file: `# Title`, a `**Goal**: …` (`**Obiettivo**`) line, `## Backlog` with the `| # | Task | Priority |` table, `## Acceptance criteria` (`## Criteri di accettazione`) and `## Done` (`## Fatto`) as lists; a task is done when its id appears in bold under «Done» (`- **F0-01** …`). `## Open findings` (`## Rilievi aperti`) is a list, with the priority (`P0`–`P3`) in the text; an item that says «resolved» or «closed» («risolto», «chiuso») stays in the plan but the panel does not show it.
-- `audit/<folder>/<file>.json` with `agent` (`agente`, e.g. `"AICA-02 · …"`, which gives the department) and a `findings` (`rilievi`) list of objects with `id`, `title`, `priority` and optional `status` (`titolo`, `priorita`, `stato`); a finding whose status says «resolved» or «closed» is not shown.
+- `audit/<folder>/<file>.json` with `agent` (`agente`, e.g. `"AICA-02 · …"`, which gives the department) and a `findings` (`rilievi`, or `observations` in the design department's format) list of objects with `id`, `title`, `priority` and optional `status` (`titolo`, `priorita`, `stato`); a finding whose status says «resolved» or «closed» is not shown.
+
+#### Format check
+
+From 0.15.0 the server checks, without models, the shape of the `plan/` and `audit/` files: tables and sections of the format above, required fields, unique ids, phase files that exist, `P0`–`P3` priorities where the backlog has the «Priority» column and, for a closed finding, the evidence (`evidence`, `evidenza`). It also reports three contradictions, with both locations and without choosing which one holds: the same finding id in two files with a different title, priority or status; a closed finding without evidence; a `completed` phase with `P0` tasks that do not appear in «Done». It checks the structure, not the content, and changes nothing. The same check works in three ways: the `check` tool, which the server instructions ask to use after writing in `plan/` or `audit/`; the panel, which shows the errors at the top of the page; the command, for CI, which prints `file:line: cause` and exits with 1 if it finds something:
+
+```sh
+npx -y @agentrica/mcp@0.15.0 check [project folder]
+```
 
 ## New project
 

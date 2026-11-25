@@ -21,6 +21,12 @@ Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA
 - **Dove vanno i dati.** Il testo dell'agente, il compito e i file che il modello legge nel tuo progetto vanno al fornitore del modello attraverso il tuo client, secondo le condizioni di quel fornitore. Agentrica non li riceve. Nel compito non inserire dati personali, segreti o dati di clienti che non servono.
 - Gli agenti sono IA: le loro conclusioni sono proposte da verificare. Gli agenti di privacy e sicurezza non sostituiscono un DPO, un avvocato o un responsabile della sicurezza, e i loro rilievi non sono una certificazione di conformità.
 
+### Cosa fa il server e cosa fa il modello
+
+Il server non chiama modelli, non usa chiavi API e non paga inferenza. Compone i testi degli agenti dal catalogo, tiene lo stato della sessione (agenti in uso, resoconti, domande del pannello) e fa i controlli che non hanno bisogno di un modello. Il ragionamento, cioè leggere il progetto, decidere e scrivere, resta al tuo client e al modello che usi, con il tuo abbonamento o la tua chiave. Un'integrazione facoltativa entra solo se non costa niente e non diventa una dipendenza obbligatoria.
+
+Quanto testo restituisce il server, per agente e per componente (regole comuni, ruolo, biblioteca…): `npm run -s agent-text -- --sizes` in un clone del repository. I byte sono misurati, i token stimati (byte / 4).
+
 ### Cosa resta sul computer
 
 Per ogni tool, comando e pagina, se resta sul tuo computer o cosa esce, verso chi e quando. Il testo che il modello legge e scrive va comunque al fornitore del modello attraverso il tuo client (vedi sopra).
@@ -28,6 +34,7 @@ Per ogni tool, comando e pagina, se resta sul tuo computer o cosa esce, verso ch
 | Tool, comando o pagina | Cosa esce dal computer, e quando |
 |---|---|
 | `list_agents`, `agent`, `library` e i prompt degli agenti | niente: leggono `agents/` del pacchetto |
+| `check`, tool e comando | niente: leggono `plan/` e `audit/` della cartella del progetto |
 | `report`, `ask_user`, `open_panel` e il [pannello](#pannello-locale) | niente: memoria del server e pagina su `127.0.0.1`, che legge `plan/`, `audit/`, `git status` e i conteggi di token di Claude Code |
 | `/mcp__agentrica__configure` | niente: scrive solo `~/.agentrica/config.json` |
 | `rate_agent`, `/mcp__agentrica__rate`, «Valuta gli agenti» nel pannello | voto, commento e versione, ad Agentrica, dopo l'anteprima e il tuo sì |
@@ -149,15 +156,26 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `list_agents` 
 | Tool | Parametri | Cosa restituisce |
 |---|---|---|
 | `list_agents` | `department` (il reparto) facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
-| `agent` | `id` (es. `AISA-02`), `task` (il compito) facoltativo | le istruzioni complete dell'agente, con l'indice della biblioteca del reparto |
+| `agent` | `id` (es. `AISA-02`), `task` (il compito) e `full_rules` facoltativi | le istruzioni dell'agente, con le regole comuni e l'indice della biblioteca del reparto (vedi [Regole comuni](#regole-comuni-una-volta-per-reparto)) |
 | `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
+| `check` | nessuno | gli errori di formato e le contraddizioni di `plan/` e `audit/` della cartella del progetto, con file e riga (vedi [Controllo del formato](#controllo-del-formato)) |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 | `share_usage` | nessuno; poi `code` | l'anteprima dei totali di token del progetto e un codice; con il codice, l'invio (vedi [Totali di token](#totali-di-token)) |
 | `submit_project` | `name`, `url`, `description`, `departments`, `agents` e `author` (gli ultimi due facoltativi), `consent`, `license`; poi `code` | l'anteprima della proposta di un progetto e un codice; con il codice, l'invio (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)) |
 
 Per esempio: «Usa list_agents, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
 
-**Orchestrazione.** Il numero 01 di ogni reparto è il direttore, e `list_agents` lo segna: per un compito del reparto il modello lo carica per primo, poi carica con `agent` gli specialisti che il direttore sceglie, uno alla volta, ognuno dal risultato del precedente; alla fine il direttore consolida i risultati e te li presenta. Fra reparti l'ordine è business → design → privacy → tua conferma → software → revisioni di design e privacy → Code Reviewer → tua conferma. Le istruzioni del server chiedono al modello di usare `agent` e non i subagent locali, salvo che li chieda tu; il [pannello](#pannello-locale) mostra la catena degli agenti.
+**Orchestrazione.** Il numero 01 di ogni reparto è il direttore, e `list_agents` lo segna: per un compito del reparto il modello lo carica per primo, poi carica con `agent` gli specialisti che il direttore sceglie, uno alla volta, ognuno dal passaggio di consegne del precedente (esito, rilievi con il riferimento all'evidenza, domande aperte) invece che dalla sua risposta intera; alla fine il direttore consolida i risultati e te li presenta. Fra reparti l'ordine è business → design → privacy → tua conferma → software → revisioni di design e privacy → Code Reviewer → tua conferma. Le istruzioni del server chiedono al modello di usare `agent` e non i subagent locali, salvo che li chieda tu; il [pannello](#pannello-locale) mostra la catena degli agenti.
+
+#### Regole comuni una volta per reparto
+
+Le regole comuni di un reparto sono più di metà del testo di ogni suo agente e sono uguali per tutti. Dalla 0.14.0 il server ricorda, per la durata della sessione, i reparti di cui ha già inviato regole e indice della biblioteca: il primo agente del reparto li riceve interi, i successivi un riferimento di due righe che dice quali regole valgono e come riaverle, più le schede segnate per il loro ruolo. Il file di ruolo e il compito arrivano sempre interi.
+
+- Con `full_rules` true `agent` restituisce tutto intero: dopo `/compact` o `/clear` (in Claude Code `/clear` apre una conversazione nuova ma il server resta lo stesso), o quando il modello non ha più le regole nel contesto. Lo dicono le istruzioni del server e il riferimento stesso.
+- I subagent di `init --subagents` hanno un contesto loro: il loro primo passo chiama `agent` con `full_rules` true. Nei progetti creati con una versione precedente il riferimento dice al subagent di richiamare `agent` con `full_rules` se le regole gli mancano; per avere il primo passo nuovo, cancella `.claude/agents/` e lancia `init --existing --subagents`, che riscrive solo i file mancanti.
+- I prompt degli agenti (`/mcp__agentrica__aisa-04-software`…) restano interi: si invocano a mano, uno alla volta.
+
+La misura è in `examples/risultati/`: il risparmio è la parte ripetuta, cioè regole e indice da 4 a 5,7 KB per ogni specialista di un reparto già caricato.
 
 **Comandi.** Oltre ai prompt degli agenti ci sono `/mcp__agentrica__rate`, che apre il modulo di [valutazione](#valutazioni) per l'ultimo agente usato (o per quello che indichi, es. `/mcp__agentrica__rate AISA-02`), `/mcp__agentrica__project`, che propone un tuo progetto per il sito senza account GitHub (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)), e `/mcp__agentrica__configure`, che apre il modulo della [configurazione](#configurazione).
 
@@ -268,7 +286,7 @@ Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si ap
 - **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
 - **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
 - **Valutazioni**: un modulo per ogni agente usato e non ancora valutato (vedi [Valutazioni](#valutazioni)); non c'è con `--no-ratings`;
-- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella.
+- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella. Con un client diverso da Claude Code il consumo non è disponibile: il server non lo stima.
 
 Quando un agente nuovo si mette al lavoro o c'è un agente in più da valutare, la pagina lo dice con un avviso in basso. Con «Attiva le notifiche» lo dice anche con una notifica di sistema quando la scheda del pannello non è in vista; serve il permesso del browser, e la notifica la mostra il browser, senza servizi esterni.
 
@@ -278,7 +296,7 @@ Con il pannello il modello ha tre tool in più:
 |---|---|---|
 | `open_panel` | nessuno | apre la pagina nel browser e ne restituisce l'URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), `header` e `multiple` facoltativi | mostra la scelta nella pagina e restituisce la risposta |
-| `report` | `id` dell'agente, `summary` (al più 4000 caratteri) | salva nel pannello il resoconto di ciò che l'agente ha fatto; il testo di ogni agente chiede di mandarlo a fine compito |
+| `report` | `id` dell'agente, `summary` (al più 4000 caratteri) | salva nel pannello il resoconto di ciò che l'agente ha fatto; il testo di ogni agente chiede di mandarlo a fine compito. Dalla 0.15.0, se nel passaggio di consegne non trova esito, rilievi o domande aperte, lo salva lo stesso e lo dice al modello |
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
@@ -288,7 +306,15 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 
 - `plan/README.md` con una sezione `## Fasi` (`## Phases`) e una tabella `| Fase | File | Contenuto | Stato |`, il file come link (`[14-pannello.md](14-pannello.md)`). La fase aperta è la prima con uno stato diverso da `completata` e `sospesa` (`completed`, `suspended`).
 - Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …` (`**Goal**`), `## Backlog` con la tabella `| # | Attività | Priorità |`, `## Criteri di accettazione` e `## Fatto` (`## Acceptance criteria`, `## Done`) come elenchi; un'attività è fatta quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` (`## Open findings`) è un elenco, con la priorità (`P0`–`P3`) nel testo; una voce che dice «risolto» o «chiuso» («resolved», «closed»; es. «Risolto in F6.») resta nel piano ma il pannello non la mostra.
-- `audit/<cartella>/<file>.json` con `agente` (`agent`, es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` (`findings`) di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo (`title`, `priority`, `status`); un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
+- `audit/<cartella>/<file>.json` con `agente` (`agent`, es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` (`findings`, o `observations` nel formato del reparto design) di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo (`title`, `priority`, `status`); un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
+
+#### Controllo del formato
+
+Dalla 0.15.0 il server controlla, senza modelli, la forma dei file di `plan/` e `audit/`: tabelle e sezioni del formato qui sopra, campi obbligatori, id univoci, file delle fasi che esistono, priorità `P0`–`P3` dove il backlog ha la colonna «Priorità» e, per un rilievo chiuso, l'evidenza (`evidenza`, `evidence`). Segnala anche tre contraddizioni, con entrambe le posizioni e senza scegliere quale vale: lo stesso id di rilievo in due file con titolo, priorità o stato diversi; un rilievo chiuso senza evidenza; una fase `completata` con attività `P0` che non compaiono in «Fatto». Controlla la struttura, non il contenuto, e non modifica nulla. Lo stesso controllo si usa in tre modi: il tool `check`, che le istruzioni del server chiedono di usare dopo aver scritto in `plan/` o `audit/`; il pannello, che mostra gli errori in cima alla pagina; il comando, per la CI, che stampa `file:riga: causa` ed esce con 1 se trova qualcosa:
+
+```sh
+npx -y @agentrica/mcp@0.15.0 check [cartella del progetto]
+```
 
 ## Nuovo progetto
 

@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 import { AGENTS_DIR } from "./catalog.ts";
 import { existingFiles, projectFiles, reminderCommand, subagentProject } from "./init.ts";
+import { checkProject } from "./check.ts";
 import { readPlan } from "./project.ts";
 import { VERSION } from "./prompt.ts";
 import { TEXTS } from "./texts/index.ts";
@@ -54,6 +55,8 @@ test("subagent solo con --subagents (F34-05): con il flag caricano il loro agent
     for (const [file, text] of files) {
       assert.match(text, /^tools: .+, mcp__agentrica__agent, mcp__agentrica__library$/m, file);
       assert.match(text, /^---\n[\s\S]+?\n---\n\n(Primo passo|First step): .+`mcp__agentrica__agent`.+`A[A-Z]+-\d{2}`.+\n\n\S/, file);
+      // F41-03: un subagent ha un contesto suo, quindi chiede sempre le regole intere.
+      assert.match(text, /^(Primo passo|First step): .+`A[A-Z]+-\d{2}`, `full_rules` true /m, file);
     }
     const cto = new Map(files).get(".claude/agents/software/sw-cto.md")!;
     assert.match(cto, /id `AISA-01`/);
@@ -73,7 +76,7 @@ test("init crea il progetto con git su main e develop, e il pannello ne legge il
   assert.equal(git("log", "--format=%s", "main"), "Progetto creato con @agentrica/mcp init");
   assert.equal(git("status", "--porcelain"), "");
   const plan = readPlan(realpathSync(dir));
-  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(checkProject(realpathSync(dir)), []);
   assert.equal(plan.phases[0]?.id, "F0");
 });
 
@@ -125,7 +128,7 @@ test("init --lang en: il pannello legge il piano inglese senza problemi", () => 
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Project «English» created/);
   const plan = readPlan(realpathSync(join(tmp, "english")));
-  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(checkProject(realpathSync(join(tmp, "english"))), []);
   assert.equal(plan.phases[0]?.id, "F0");
   assert.equal(plan.openPhase?.tasks.length, 7);
   assert.equal(plan.openPhase?.goal.startsWith("a project that starts"), true);
@@ -151,7 +154,7 @@ test("init --existing (F35): scrive solo i file mancanti, salta gli altri e li e
   for (const file of [".github", ".nvmrc", ".env.example", join("plan", "00-base.md")]) assert.throws(() => readFileSync(join(dir, file)), file);
   assert.equal(spawnSync("git", ["log"], { cwd: dir, encoding: "utf8" }).status, 128, "nessun commit");
   const plan = readPlan(realpathSync(dir));
-  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(checkProject(realpathSync(dir)), []);
   assert.deepEqual(plan.phases, []);
   assert.match(plan.notice!, /non ha ancora fasi/);
   assert.match(readFileSync(join(dir, "plan", "README.md"), "utf8"), /`npx @agentrica\/mcp init --existing`[\s\S]+Nessuna fase ancora/);

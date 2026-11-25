@@ -51,9 +51,9 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
   assert.match(content.text, /## Compito\n\nRivedi i confini\.\n\n## Valutazione\n\n.*rate_agent, id AISA-02.*\n$/);
 });
 
-test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
+test("quattro tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents", "rate_agent", "share_usage", "submit_project"]);
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "check", "library", "list_agents", "rate_agent", "share_usage", "submit_project"]);
   const sending = ["rate_agent", "share_usage", "submit_project"];
   for (const t of tools.filter((t) => !sending.includes(t.name))) assert.equal(t.annotations?.readOnlyHint, true, t.name);
   for (const name of sending) {
@@ -67,6 +67,7 @@ test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli un
   assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad Agentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
   // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
   assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
+  assert.match(client.getInstructions() ?? "", /Dopo aver scritto file in plan\/ o audit\/, controllane il formato con check\./);
   assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);
 });
 
@@ -77,6 +78,14 @@ test("istruzioni del server entro 4096 caratteri in tutte e due le lingue, con p
   const { en } = await import("./texts/en.ts");
   const o = { agents: 56, departments: 5, codes: "AIBPD, AICA, AIPCA, AISA, AIWDA", example: "aibpd-01-business", exampleId: "AIBPD-01", panel: true, ratings: true };
   for (const texts of [it, en]) assert.ok(texts.server.instructions(o).length <= 4096, texts.locale);
+});
+
+test("check: una cartella del progetto che il server non può leggere dà un errore chiaro, senza fermarlo", async () => {
+  // Il permission model della prova legge solo il clone: la cartella del progetto è fuori.
+  const result = await client.callTool({ name: "check" });
+  assert.equal(result.isError, true);
+  assert.match(text(result), /^Non riesco a leggere la cartella del progetto: /);
+  assert.notEqual((await client.callTool({ name: "list_agents", arguments: {} })).isError, true);
 });
 
 test("share_usage: senza file di Claude Code nulla da inviare; un codice sconosciuto è un errore", async () => {
@@ -127,7 +136,7 @@ test("--no-ratings: niente rate_agent, share_usage né submit_project, niente pr
   );
   try {
     const { tools } = await quiet.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "check", "library", "list_agents"]);
     assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
     assert.ok(!(quiet.getInstructions() ?? "").includes("share_usage"));
     assert.deepEqual((await quiet.listPrompts()).prompts.slice(-1).map((p) => p.name), ["configure"], "senza valutazioni niente valuta né progetto");
@@ -165,7 +174,8 @@ test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", as
 });
 
 test("library: le schede del reparto con fonte e data, mai URL; errori chiari per id sconosciuti", async () => {
-  const agent = text(await client.callTool({ name: "agent", arguments: { id: "AICA-03" } }));
+  // AICA è già stato inviato con AICA-01 nella prova precedente: full_rules dà l'indice intero.
+  const agent = text(await client.callTool({ name: "agent", arguments: { id: "AICA-03", full_rules: true } }));
   assert.match(agent, /## Biblioteca del reparto\n\n.*tool library \(id AICA-03/);
   assert.match(agent, /^- owasp-top-10-2025 \*: OWASP Top 10:2025 \(2025, \d{4}-\d{2}-\d{2}/m);
   const ok = await client.callTool({ name: "library", arguments: { id: "aica-03", cards: ["owasp-top-10-2025", "cvss-4"] } });
@@ -185,6 +195,32 @@ test("library: le schede del reparto con fonte e data, mai URL; errori chiari pe
   }
 });
 
+test("regole comuni una volta per reparto (F41): intere al primo agente, poi un riferimento; full_rules e i prompt le danno intere", async () => {
+  // Una sezione «###» prima del file di ruolo: le regole intere.
+  const rules = /## Regole comuni del reparto\n\n(?:(?!## Ruolo)[\s\S])*### /;
+  const reference = /## Regole comuni del reparto\n\nValgono le regole comuni del reparto AIWDA, ricevute intere.+richiama agent con id AIWDA-08 e full_rules true/;
+  const first = text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-01" } }));
+  assert.match(first, rules);
+  assert.match(first, /^- .+: .+\(.+\)$/m);
+  const second = text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-08", task: "Rivedi il form." } }));
+  assert.match(second, reference);
+  assert.doesNotMatch(second, rules);
+  assert.match(second, /## Biblioteca del reparto\n\nVale l'indice della biblioteca ricevuto con le regole comuni\. .*tool library \(id AIWDA-08\)/);
+  assert.doesNotMatch(second, /^- .+: .+\(.+\)$/m);
+  // Il file di ruolo e il compito restano interi.
+  assert.match(second, /## Ruolo: .+\n\n### .+[\s\S]+## Compito\n\nRivedi il form\./);
+  assert.ok(second.length < first.length);
+  assert.match(text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-08", full_rules: true } })), rules);
+  // Un altro reparto parte intero.
+  assert.match(text(await client.callTool({ name: "agent", arguments: { id: "AIBPD-05" } })), rules);
+  // I prompt si invocano a mano: sempre interi.
+  const { messages } = await client.getPrompt({ name: "aiwda-02-design", arguments: {} });
+  assert.match((messages[0]!.content as { text: string }).text, rules);
+  const { tools } = await client.listTools();
+  assert.ok(tools.find((t) => t.name === "agent")?.inputSchema.properties?.full_rules);
+  assert.match(client.getInstructions() ?? "", /dopo \/compact o \/clear, o se non li hai nel contesto, richiama agent con full_rules true/);
+});
+
 test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
   const ok = await client.callTool({ name: "agent", arguments: { id: "AISA-02", task: "x".repeat(20_000) } });
   assert.notEqual(ok.isError, true);
@@ -199,7 +235,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "check.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     mkdirSync(join(src, "texts"));
     for (const file of ["index.ts", "it.ts", "en.ts"]) copyFileSync(join(import.meta.dirname, "texts", file), join(src, "texts", file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");

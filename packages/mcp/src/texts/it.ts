@@ -41,11 +41,14 @@ export const it = {
       "Ogni lavoro sul progetto dell'utente (funzioni, modifiche, scelte di stack, fasi, audit) passa dagli agenti di Agentrica, anche se l'utente non li nomina; senza agenti solo se l'utente lo chiede. " +
       "Per scegliere un agente usa list_agents; per lavorare come quell'agente carica le sue istruzioni con agent. " +
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
-      "poi carica gli specialisti con agent uno alla volta, ognuno dal risultato del precedente, mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
+      "poi carica gli specialisti con agent uno alla volta, ognuno dal passaggio di consegne del precedente (esito, rilievi con l'evidenza, domande aperte), mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
       "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → Code Reviewer → conferma dell'utente. " +
       "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
+      // F41-02: regole e indice una volta per reparto; come riaverli dopo /compact.
+      "Regole comuni e indice arrivano interi al primo agente di ogni reparto, poi come riferimento: dopo /compact o /clear, o se non li hai nel contesto, richiama agent con full_rules true. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
+      "Dopo aver scritto file in plan/ o audit/, controllane il formato con check. " +
       "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
       "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
       // F39-04: cosa esce dal computer, per chi lavora con la regola «non esce niente».
@@ -137,7 +140,10 @@ export const it = {
 
     agent: {
       title: "Istruzioni di un agente",
-      description: "Restituisce le istruzioni complete di un agente (regole comuni del reparto e file di ruolo), da seguire per lavorare come quell'agente.",
+      description:
+        "Restituisce le istruzioni di un agente (regole comuni del reparto e file di ruolo), da seguire per lavorare come quell'agente. " +
+        "Regole comuni e indice della biblioteca arrivano interi al primo agente del reparto nella sessione, ai successivi come riferimento, salvo full_rules.",
+      fullRules: "true: regole comuni e indice della biblioteca interi anche se già inviati in questa sessione (dopo /compact o /clear, in un subagent o in un contesto nuovo).",
       notFound: AGENT_NOT_FOUND,
     },
 
@@ -180,13 +186,23 @@ export const it = {
       needRating: "Serve il voto da 1 a 5 per preparare l'anteprima.",
     },
 
+    check: {
+      title: "Controllo del formato di plan/ e audit/",
+      description:
+        "Controlla senza modelli la forma dei file di plan/ e audit/ della cartella del progetto: tabelle, campi obbligatori, id univoci, file collegati che esistono. " +
+        "Segnala anche le contraddizioni (stesso rilievo con valori diversi, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito), con entrambe le posizioni. Non modifica nulla.",
+      unreadable: (why: string) => `Non riesco a leggere la cartella del progetto: ${why}`,
+    },
+
     report: {
       title: "Resoconto di un agente per il pannello",
       description:
         "Salva nel pannello locale il resoconto di ciò che un agente ha fatto, mostrato sotto l'agente fra gli agenti in uso. " +
         "Chiamalo quando l'agente finisce il suo compito, prima di passare a un altro. Resta sul computer dell'utente.",
-      summary: "Cosa ha fatto l'agente, in breve: risultato, file toccati, decisioni prese o da prendere, rilievi aperti. Al più 4000 caratteri.",
+      summary: "Il passaggio di consegne dell'agente, in breve: esito, rilievi con l'evidenza (file e riga, comando), domande aperte. Al più 4000 caratteri.",
       saved: (name: string) => `Resoconto di ${name} salvato nel pannello.`,
+      missing: (parts: string) => `Nel resoconto non trovo ${parts}: il passaggio di consegne ha esito, rilievi con l'evidenza e domande aperte (anche «nessuno»). Il resoconto è salvato com'è; se manca qualcosa, rimandalo.`,
+      parts: { outcome: "l'esito", findings: "i rilievi", questions: "le domande aperte" },
       notLoaded: "Resoconto non salvato: l'agente non è stato caricato in questa sessione (tool agent).",
     },
 
@@ -230,6 +246,10 @@ export const it = {
       "Schede con nozioni recenti verificate su fonti ammesse alla data indicata: per questi temi valgono più delle tue conoscenze. " +
       `Se il compito tocca una scheda (con * quelle del tuo ruolo), leggila con il tool library (id ${id}, cards con gli id) e cita fonte, versione e data. ` +
       "Una scheda da ricontrollare va verificata sulla fonte se hai il web, altrimenti avverti l'utente.",
+    libraryKnown: (id: string, mine: string) =>
+      "Vale l'indice della biblioteca ricevuto con le regole comuni. " +
+      (mine ? `Schede del tuo ruolo: ${mine}. ` : "Nessuna scheda è segnata per il tuo ruolo. ") +
+      `Le schede si leggono con il tool library (id ${id}); cita fonte, versione e data.`,
     cardExpired: " Scaduta: verificala sulla fonte prima di usarla, o dillo all'utente.",
     cardSource: (o: { name: string; level: number; version: string; verified: string; review: string; expired: string; roles: string }) =>
       `Fonte: ${o.name} (livello ${o.level}), versione ${o.version}. Verificata il ${o.verified}, da ricontrollare entro il ${o.review}.${o.expired} Ruoli: ${o.roles}.`,
@@ -244,15 +264,18 @@ export const it = {
       `${advice} Se il progetto ha i subagent di Agentrica (init --subagents) e l'utente chiede di usarli, quello di questo ruolo ha già questo modello; altrimenti continua con il modello della sessione.`,
     lead: (code: string) =>
       `Sei il direttore del reparto: per il compito scegli gli specialisti che servono e l'ordine (list_agents con department ${code} li elenca). ` +
-      "La sessione li carica con agent uno alla volta, ognuno dal risultato del precedente; alla fine consolidi i risultati e li presenti all'utente, che li conferma.",
+      "La sessione li carica con agent uno alla volta, ognuno dal passaggio di consegne del precedente, non dalla sua risposta intera; alla fine consolidi i risultati e li presenti all'utente, che li conferma.",
     reportsTo: (director: string, id: string) =>
       `Riporti a ${director}, il direttore del reparto: se in questa sessione non è ancora stato caricato, caricalo prima con agent (id ${id}). ` +
-      "Lavori sulla parte che ti assegna, dal risultato dello specialista precedente, e consegni a lui.",
+      "Lavori sulla parte che ti assegna e gli consegni in breve: esito, rilievi con l'evidenza (file e riga, comando), domande aperte.",
     noLead: "Il direttore del reparto non è nella squadra di questo server: lavori direttamente sul compito e consegni all'utente.",
     present: (intro: string) =>
       `L'utente deve sempre sapere chi sta lavorando. Presentati all'inizio con questa riga: «${intro}». ` +
       "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale.",
     rules: "Regole comuni del reparto",
+    rulesKnown: (code: string, id: string) =>
+      `Valgono le regole comuni del reparto ${code}, ricevute intere in questa sessione con un altro agente del reparto: applicale anche qui. ` +
+      `Se non le hai nel contesto (dopo /compact o /clear, in un subagent o in una conversazione nuova), richiama agent con id ${id} e full_rules true prima di lavorare.`,
     role: (role: string) => `Ruolo: ${role}`,
     task: "Compito",
     report: "Resoconto",
@@ -444,8 +467,8 @@ export const it = {
     /** I subagent di Agentrica nominano il progetto solo in questa frase (lo controlla init.test.ts). */
     subagentProject: (name: string) => `del progetto ${name}.`,
     subagentFirst: (id: string) =>
-      `Primo passo: chiama il tool \`mcp__agentrica__agent\` del server MCP di Agentrica con id \`${id}\` e il compito che hai ricevuto. ` +
-      "Le istruzioni che restituisce sono il tuo ruolo, con le regole comuni del reparto, e fanno comparire l'agente nel pannello: con quelle non serve rileggere i file indicati qui sotto, che restano il riferimento se il tool non risponde. Non caricare il direttore del reparto: ti ha avviato la sessione principale, che coordina.",
+      `Primo passo: chiama il tool \`mcp__agentrica__agent\` del server MCP di Agentrica con id \`${id}\`, \`full_rules\` true e il compito che hai ricevuto. ` +
+      "Le istruzioni che restituisce sono il tuo ruolo, con le regole comuni del reparto intere (un subagent ha un contesto suo), e fanno comparire l'agente nel pannello: con quelle non serve rileggere i file indicati qui sotto, che restano il riferimento se il tool non risponde. Non caricare il direttore del reparto: ti ha avviato la sessione principale, che coordina.",
     inRepo: "git: la cartella è già in un repository, nessun commit",
     noGit: "git: non installato, repository non creato",
     commit: "Progetto creato con @agentrica/mcp init",
@@ -490,11 +513,31 @@ export const it = {
     noPlan:
       "Questo progetto non ha ancora un piano (plan/README.md). Per crearlo esegui `npx @agentrica/mcp init --existing`, che aggiunge le regole di Agentrica senza toccare i tuoi file, oppure chiedi a Claude «Crea il piano del progetto dal codice esistente».",
     emptyPlan: "Il piano non ha ancora fasi. Chiedi a Claude «Crea le fasi del progetto dal codice esistente»: scrive solo plan/ e si ferma al backlog.",
-    noPhases: "In plan/README.md manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).",
-    noPhaseFile: (file: string, id: string) => `Non trovo plan/${file}, il file della fase ${id}.`,
-    noBacklog: (file: string) => `In plan/${file} manca la sezione «## Backlog».`,
-    badJson: (source: string) => `audit/${source} non è un JSON leggibile: saltato.`,
-    noFindings: (source: string) => `audit/${source} non ha l'elenco «rilievi»: saltato.`,
+  },
+
+  check: {
+    ok: "plan/ e audit/: nessun problema di formato.",
+    errors: (n: number) => (n === 1 ? "1 errore di formato:" : `${n} errori di formato:`),
+    contradictions: (n: number) => (n === 1 ? "1 contraddizione (entrambe le posizioni, senza scegliere quale vale):" : `${n} contraddizioni (entrambe le posizioni, senza scegliere quale vale):`),
+    noPhases: "manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).",
+    phaseNoId: "riga della tabella «Fasi» senza id della fase.",
+    phaseNoStatus: (id: string) => `la fase ${id} non ha lo stato.`,
+    badLink: (target: string, id: string) => `il file della fase ${id} (${target}) deve essere un nome di file .md dentro plan/.`,
+    missingPhaseFile: (file: string, id: string) => `non trovo plan/${file}, il file della fase ${id}.`,
+    noTitle: "manca il titolo «# …».",
+    noGoal: "manca la riga «**Obiettivo**: …».",
+    noBacklog: "manca la sezione «## Backlog» con la tabella (# | Attività | Priorità).",
+    taskNoId: "riga del backlog senza id dell'attività.",
+    taskPriority: (id: string) => `l'attività ${id} non ha una priorità P0–P3.`,
+    duplicate: (id: string, first: number) => `l'id ${id} compare già alla riga ${first}.`,
+    openP0: (id: string, phase: string, line: number) => `la fase ${phase} è completata (plan/README.md:${line}), ma l'attività P0 ${id} non è in «Fatto».`,
+    badJson: "non è un JSON leggibile.",
+    badField: (id: string, field: string) => (id ? `il rilievo ${id}: campo ${field} mancante o non valido.` : `campo ${field} mancante o non valido.`),
+    duplicateFinding: (id: string) => `il rilievo ${id} compare due volte nel file.`,
+    closedNoEvidence: (id: string) => `il rilievo ${id} è chiuso ma non ha l'evidenza (evidenza/evidence).`,
+    sameIdDiffers: (id: string, where: string, fields: string) => `il rilievo ${id} c'è anche in ${where}, con valori diversi in ${fields}.`,
+    usage: "Uso: agentrica-mcp check [cartella del progetto]",
+    noDir: (dir: string) => `Non trovo la cartella ${dir}.`,
   },
 };
 

@@ -2,6 +2,30 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.15.0 — 2026-11-25
+
+### Nuovo
+- Controllo del formato di `plan/` e `audit/`, senza modelli: tabelle e sezioni, campi obbligatori, id univoci, file delle fasi che esistono, priorità, evidenza dei rilievi chiusi; con file e riga. Segnala anche le contraddizioni (stesso rilievo con valori diversi in due file, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito) con entrambe le posizioni, senza scegliere. Si usa con il tool `check`, con il comando `npx @agentrica/mcp check [cartella]` (esce con 1 se trova qualcosa, per la CI) e nel pannello.
+- Il tool `report` salva sempre il resoconto e, se nel passaggio di consegne mancano esito, rilievi o domande aperte, lo dice al modello.
+
+### Cambiato
+- Pannello: gli errori di formato vengono dal controllo, quindi un file malformato si vede anche se non è della fase aperta. I rilievi nel formato del reparto design (`observations`) si leggono.
+- Istruzioni del server: dopo aver scritto in `plan/` o `audit/`, controllarne il formato con `check`.
+
+### Corretto
+- Una `|` con la barra inversa (`it\|en`) resta nella cella della tabella invece di dividerla.
+
+## 0.14.0 — 2026-11-25
+
+### Nuovo
+- Regole comuni una volta per reparto: il server ricorda, per la sessione, i reparti di cui ha già inviato regole comuni e indice della biblioteca. Il primo agente del reparto li riceve interi, i successivi un riferimento che dice come riaverli, con le schede del proprio ruolo; file di ruolo e compito restano interi. Uno specialista in più di un reparto già caricato pesa dal 54 al 59% in meno (da 3,6 a 5,1 KB).
+- Parametro `full_rules` del tool `agent`: regole e indice interi anche se già inviati, dopo `/compact` o in un contesto nuovo. Lo citano le istruzioni del server e il riferimento.
+
+### Cambiato
+- I subagent di `init --subagents` chiamano `agent` con `full_rules` true come primo passo, perché hanno un contesto loro. Nei progetti già creati il riferimento dice di richiamare `agent` con `full_rules` se le regole mancano.
+- Passaggi di consegne fra agenti: istruzioni del server, testo del direttore e dello specialista e `AGENTS.md` dei progetti nuovi chiedono un passaggio breve (esito, rilievi con l'evidenza, domande aperte) invece della risposta intera del precedente.
+- I prompt degli agenti restano con il testo intero.
+
 ## 0.13.0 — 2026-11-24
 
 ### Nuovo

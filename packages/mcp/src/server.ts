@@ -16,6 +16,7 @@
 // --lang, con «lang» del file di configurazione o con quella del sistema (texts/): istruzioni, risposte, agenti, pannello.
 import { realpathSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { checkProject, checkText, missingHandoff } from "./check.ts";
 import { AGENTS_DIR, loadCatalog, subagentIds, type Department, type DepartmentCode } from "./catalog.ts";
 import { canUseConfig, configForm, configMessage, configPath, DEFAULTS, KEYS, parseConfigForm, readConfig, shownPath, writeConfig, type Config, type ConfigKey } from "./config.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -55,6 +56,11 @@ const reason = (error: unknown) => (error instanceof Error ? error.message : Str
 if (process.argv[2] === "init") {
   const { runInit } = await import("./init.ts");
   process.exit(runInit(process.argv.slice(3)));
+}
+// `check` (F42) controlla il formato di plan/ e audit/ e termina: 1 se trova problemi, per la CI (check.ts).
+if (process.argv[2] === "check") {
+  const { runCheck } = await import("./check.ts");
+  process.exit(runCheck(process.argv.slice(3)));
 }
 if (process.argv[2] === "add" || process.argv[2] === "install") {
   const { runSetup } = await import("./setup.ts");
@@ -564,6 +570,21 @@ server.registerTool(
   },
 );
 
+// F42: il formato di plan/ e audit/ della cartella del progetto, senza modelli; legge e basta.
+server.registerTool(
+  "check",
+  { title: T.server.check.title, description: T.server.check.description, annotations: READ_ONLY },
+  () => {
+    let root: string;
+    try {
+      root = realpathSync(process.cwd());
+    } catch (error) {
+      return { isError: true, content: [{ type: "text", text: T.server.check.unreadable(reason(error)) }] };
+    }
+    return remind({ content: [{ type: "text", text: checkText(checkProject(root)) }] });
+  },
+);
+
 if (ratings) registerRatingTool(ratings);
 if (share) registerShareTool(share);
 
@@ -657,7 +678,9 @@ function registerPanelTools(panel: Panel) {
     ({ id, summary }) => {
       const found = findAgent(catalog, id);
       if (!found || !panel.report(found.agent.id, summary.trim())) return { isError: true, content: [{ type: "text", text: r.notLoaded }] };
-      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] });
+      // F42: un passaggio di consegne senza una delle tre parti si salva lo stesso, con un avviso per il modello.
+      const missing = missingHandoff(summary).map((part) => r.parts[part]);
+      return remind({ content: [{ type: "text", text: r.saved(codeName(found.agent)) }] }, missing.length ? r.missing(missing.join(", ")) : undefined);
     },
   );
 

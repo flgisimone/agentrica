@@ -48,6 +48,7 @@ export const it = {
       // F41-02: regole e indice una volta per reparto; come riaverli dopo /compact.
       "Regole comuni e indice arrivano interi al primo agente di ogni reparto, poi come riferimento: dopo /compact o /clear, o se non li hai nel contesto, richiama agent con full_rules true. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
+      "Dopo aver scritto file in plan/ o audit/, controllane il formato con check. " +
       "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
       "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
       // F39-04: cosa esce dal computer, per chi lavora con la regola «non esce niente».
@@ -185,13 +186,23 @@ export const it = {
       needRating: "Serve il voto da 1 a 5 per preparare l'anteprima.",
     },
 
+    check: {
+      title: "Controllo del formato di plan/ e audit/",
+      description:
+        "Controlla senza modelli la forma dei file di plan/ e audit/ della cartella del progetto: tabelle, campi obbligatori, id univoci, file collegati che esistono. " +
+        "Segnala anche le contraddizioni (stesso rilievo con valori diversi, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito), con entrambe le posizioni. Non modifica nulla.",
+      unreadable: (why: string) => `Non riesco a leggere la cartella del progetto: ${why}`,
+    },
+
     report: {
       title: "Resoconto di un agente per il pannello",
       description:
         "Salva nel pannello locale il resoconto di ciò che un agente ha fatto, mostrato sotto l'agente fra gli agenti in uso. " +
         "Chiamalo quando l'agente finisce il suo compito, prima di passare a un altro. Resta sul computer dell'utente.",
-      summary: "Cosa ha fatto l'agente, in breve: risultato, file toccati, decisioni prese o da prendere, rilievi aperti. Al più 4000 caratteri.",
+      summary: "Il passaggio di consegne dell'agente, in breve: esito, rilievi con l'evidenza (file e riga, comando), domande aperte. Al più 4000 caratteri.",
       saved: (name: string) => `Resoconto di ${name} salvato nel pannello.`,
+      missing: (parts: string) => `Nel resoconto non trovo ${parts}: il passaggio di consegne ha esito, rilievi con l'evidenza e domande aperte (anche «nessuno»). Il resoconto è salvato com'è; se manca qualcosa, rimandalo.`,
+      parts: { outcome: "l'esito", findings: "i rilievi", questions: "le domande aperte" },
       notLoaded: "Resoconto non salvato: l'agente non è stato caricato in questa sessione (tool agent).",
     },
 
@@ -502,11 +513,31 @@ export const it = {
     noPlan:
       "Questo progetto non ha ancora un piano (plan/README.md). Per crearlo esegui `npx @agentrica/mcp init --existing`, che aggiunge le regole di Agentrica senza toccare i tuoi file, oppure chiedi a Claude «Crea il piano del progetto dal codice esistente».",
     emptyPlan: "Il piano non ha ancora fasi. Chiedi a Claude «Crea le fasi del progetto dal codice esistente»: scrive solo plan/ e si ferma al backlog.",
-    noPhases: "In plan/README.md manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).",
-    noPhaseFile: (file: string, id: string) => `Non trovo plan/${file}, il file della fase ${id}.`,
-    noBacklog: (file: string) => `In plan/${file} manca la sezione «## Backlog».`,
-    badJson: (source: string) => `audit/${source} non è un JSON leggibile: saltato.`,
-    noFindings: (source: string) => `audit/${source} non ha l'elenco «rilievi»: saltato.`,
+  },
+
+  check: {
+    ok: "plan/ e audit/: nessun problema di formato.",
+    errors: (n: number) => (n === 1 ? "1 errore di formato:" : `${n} errori di formato:`),
+    contradictions: (n: number) => (n === 1 ? "1 contraddizione (entrambe le posizioni, senza scegliere quale vale):" : `${n} contraddizioni (entrambe le posizioni, senza scegliere quale vale):`),
+    noPhases: "manca la tabella «## Fasi» (Fase | File | Contenuto | Stato).",
+    phaseNoId: "riga della tabella «Fasi» senza id della fase.",
+    phaseNoStatus: (id: string) => `la fase ${id} non ha lo stato.`,
+    badLink: (target: string, id: string) => `il file della fase ${id} (${target}) deve essere un nome di file .md dentro plan/.`,
+    missingPhaseFile: (file: string, id: string) => `non trovo plan/${file}, il file della fase ${id}.`,
+    noTitle: "manca il titolo «# …».",
+    noGoal: "manca la riga «**Obiettivo**: …».",
+    noBacklog: "manca la sezione «## Backlog» con la tabella (# | Attività | Priorità).",
+    taskNoId: "riga del backlog senza id dell'attività.",
+    taskPriority: (id: string) => `l'attività ${id} non ha una priorità P0–P3.`,
+    duplicate: (id: string, first: number) => `l'id ${id} compare già alla riga ${first}.`,
+    openP0: (id: string, phase: string, line: number) => `la fase ${phase} è completata (plan/README.md:${line}), ma l'attività P0 ${id} non è in «Fatto».`,
+    badJson: "non è un JSON leggibile.",
+    badField: (id: string, field: string) => (id ? `il rilievo ${id}: campo ${field} mancante o non valido.` : `campo ${field} mancante o non valido.`),
+    duplicateFinding: (id: string) => `il rilievo ${id} compare due volte nel file.`,
+    closedNoEvidence: (id: string) => `il rilievo ${id} è chiuso ma non ha l'evidenza (evidenza/evidence).`,
+    sameIdDiffers: (id: string, where: string, fields: string) => `il rilievo ${id} c'è anche in ${where}, con valori diversi in ${fields}.`,
+    usage: "Uso: agentrica-mcp check [cartella del progetto]",
+    noDir: (dir: string) => `Non trovo la cartella ${dir}.`,
   },
 };
 

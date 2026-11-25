@@ -2,6 +2,19 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.15.0 — 2026-11-25
+
+### Added
+- Format check of `plan/` and `audit/`, without models: tables and sections, required fields, unique ids, phase files that exist, priorities, evidence of closed findings; with file and line. It also reports contradictions (same finding with different values in two files, closed finding without evidence, completed phase with P0 tasks without an outcome) with both locations, without choosing. Use it with the `check` tool, with the command `npx @agentrica/mcp check [folder]` (exits with 1 if it finds something, for CI) and in the panel.
+- The `report` tool always saves the report and, if the handover lacks an outcome, findings or open questions, tells the model.
+
+### Changed
+- Panel: format errors come from the check, so a malformed file shows up even outside the open phase. Findings in the design department's format (`observations`) are read.
+- Server instructions: after writing in `plan/` or `audit/`, check their format with `check`.
+
+### Fixed
+- A backslash-escaped `|` (`it\|en`) stays in the table cell instead of splitting it.
+
 ## 0.14.0 — 2026-11-25
 
 ### Added

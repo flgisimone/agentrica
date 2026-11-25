@@ -1,0 +1,17 @@
+{
+  "agente": "AIWDA-10 · UX Writer (ruolo nella sessione principale)",
+  "data": "2026-11-25",
+  "perimetro": "packages/mcp/src/page, 0.16.0, nel browser a 1280 e 390 px su un progetto di prova (copia di plan/ e audit/ con un errore di formato e una contraddizione, quattro agenti, una domanda, due subagent, consumo di otto sessioni); sola lettura",
+  "sintesi": "Testi chiari; i titoli degli avvisi descrivono il problema ma non dicono cosa fare.",
+  "rilievi": [
+    {
+      "id": "F46-W-01",
+      "titolo": "Titoli degli avvisi senza azione",
+      "evidenza": "texts.it.js formatErrors e contradictions: «1 contraddizione, con entrambe le posizioni (non dice quale vale):»",
+      "priorita": "P2",
+      "motivazione": "Chi legge non sa cosa fare dopo.",
+      "raccomandazione": "Titolo breve con il conteggio e una frase d'azione («Chiedi a Claude di correggerli, oppure esegui npx @agentrica/mcp check»), it e en insieme.",
+      "stato": "Risolto in F46 (2026-11-25): evidenze/dopo-1280-*.png e evidenze/dopo-390-*.png, verifica nel browser con Playwright sullo stesso progetto di prova."
+    }
+  ]
+}

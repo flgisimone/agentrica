@@ -130,7 +130,7 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F43 | [43-rilievi-rilascio.md](43-rilievi-rilascio.md) | Rilievi di F40–F42: prova a mano del flusso con il contesto compatto (C8 e C9 verdi anche dopo `/clear`), descrizione npm senza numero, testi del sito; rilascio di pacchetto e sito alla 0.15.1 | completata (0.15.1) |
 | F44 | [44-rilievi.md](44-rilievi.md) | Rilievi piccoli e medi di F37–F42: caso `portale-ordini`, schede per le prove, riga del JSON in `check`, contraddizioni a sé nel pannello, comando `reminder`, `/consumo` senza JavaScript e su telefono; rilascio 0.16.0 | completata (0.16.0) |
 | F45 | [45-misura-code-mode.md](45-misura-code-mode.md) | Misura prima di Code Mode: catene di chiamate ai tool di Agentrica e byte intermedi nelle sessioni di Claude Code, soglia per riaprire `run_workflow`; esito sulla proposta esterna (OpenAI, sandbox, registry): soglia non superata, Code Mode rinviato | completata |
-| F46 | [46-pannello-ux.md](46-pannello-ux.md) | Pannello locale, UI e UX: audit nel browser, avvisi in una zona sola, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, rilievi per priorità, consumo più compatto, accessibilità | da aprire |
+| F46 | [46-pannello-ux.md](46-pannello-ux.md) | Pannello locale, UI e UX: audit nel browser, avvisi in una zona sola, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, rilievi per priorità, consumo più compatto, accessibilità | completata |
 | F47 | [47-sito-allineato.md](47-sito-allineato.md) | Sito allineato al pacchetto: pannello locale, `check`, contesto compatto e passaggio di consegne, modelli consigliati nel catalogo; rilascio 0.17.0 di pacchetto e sito | da aprire |
 
 Ordine: F0 → F47 in sequenza.

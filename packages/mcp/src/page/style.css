@@ -25,6 +25,8 @@
 [data-dept="AIWDA"] { --dept: var(--aiwda); }
 
 * { box-sizing: border-box; }
+/* Un display messo da una classe non deve annullare hidden (la scheda Valutazioni con --no-ratings, F46). */
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -44,13 +46,19 @@ code { background: var(--secondary); border-radius: 4px; padding: 0 0.25em; }
 .top-row { display: flex; flex-wrap: wrap; gap: 4px 24px; align-items: baseline; padding-block: 12px 4px; }
 .top p { margin: 0; }
 .brand { font-size: 1rem; font-weight: 700; margin: 0; }
+.brand a { color: inherit; text-decoration: none; }
+.brand a:hover { text-decoration: underline; }
+.version { color: var(--muted-foreground); font-weight: 400; font-size: 0.85rem; }
 .meta, .link { color: var(--muted-foreground); }
-.link { margin-left: auto; }
+.status-line { margin-left: auto; }
 .link[data-state="ok"]::before { content: "● "; color: var(--aiwda); }
 .link[data-state="off"] { color: var(--destructive); }
+.link[data-state="off"]::before { content: "✕ "; }
 
-.tabs { display: flex; gap: 4px; overflow-x: auto; }
-.tabs a { color: var(--muted-foreground); text-decoration: none; padding: 10px 14px 8px; border-bottom: 2px solid transparent; white-space: nowrap; font-weight: 600; }
+/* F46-04: le schede vanno a capo invece di uscire dallo schermo; bersagli di 44 px (F46-08). */
+.tabs { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.tabs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted-foreground); text-decoration: none; padding: 8px 14px 6px; border-bottom: 2px solid transparent; white-space: nowrap; font-weight: 600; }
+@media (max-width: 599px) { .tabs a { padding-inline: 10px; } .status-line { margin-left: 0; } }
 .tabs a:hover { color: var(--foreground); }
 .tabs a[aria-current="page"] { color: var(--foreground); border-bottom-color: var(--aisa); }
 .count:not(:empty) { display: inline-block; min-width: 1.6em; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--secondary); color: var(--foreground); font-size: 0.8rem; text-align: center; }
@@ -67,10 +75,29 @@ h1:focus { outline: none; }
 h2 { font-size: 1.15rem; margin: 0 0 12px; }
 h3 { font-size: 1rem; margin: 16px 0 8px; }
 .empty, .hint { color: var(--muted-foreground); margin: 0; }
-.update { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--aisa); border-radius: var(--radius); }
-.notice { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--border); border-left: 3px solid var(--aisa); border-radius: var(--radius); background: var(--card); }
-.problems { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--destructive); border-radius: var(--radius); white-space: pre-line; }
-.problems.contradictions { border-color: var(--aibpd); }
+.problems { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--destructive); border-radius: var(--radius); }
+
+/* Avvisi (F46-02): una zona sola, una riga per tipo; il tipo si legge dal titolo, il colore del bordo lo ripete. */
+.alerts ul#alert-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.alert { padding: 10px 16px; border: 1px solid var(--border); border-left: 3px solid var(--aisa); border-radius: var(--radius); background: var(--card); }
+.alert[data-kind="error"] { border-left-color: var(--destructive); }
+.alert[data-kind="contradiction"], .alert[data-kind="agent"] { border-left-color: var(--aibpd); }
+.alert p { margin: 0; }
+.alert summary { min-height: 32px; display: flex; align-items: center; padding: 4px 0 0; font-weight: 600; color: var(--muted-foreground); }
+.alert summary::before { content: "▸"; margin-right: 6px; }
+.alert details[open] summary::before { content: "▾"; }
+.alert summary::-webkit-details-marker { display: none; }
+.alert summary { list-style: none; }
+ul.issues { margin: 4px 0 0; padding-left: 1.2em; user-select: text; overflow-wrap: anywhere; }
+ul.issues li + li { margin-top: 4px; }
+
+/* Sessione (F46-03): il riquadro di attenzione c'è solo quando serve; altrimenti una riga. */
+.attention { border-color: var(--aibpd); }
+.calm { padding: 0 4px; }
+.rate-hint { margin: 12px 0 0; }
+.rate-hint a { color: var(--foreground); font-weight: 600; }
+details.about summary { font-weight: 400; color: var(--muted-foreground); padding: 0 0 8px; }
+details.about .hint { margin: 0 0 12px; }
 
 .question { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; background: var(--secondary); }
 .question + .question { margin-top: 12px; }
@@ -86,7 +113,7 @@ h3 { font-size: 1rem; margin: 16px 0 8px; }
 label.note { display: block; margin-top: 8px; }
 textarea { display: block; width: 100%; margin-top: 4px; min-height: 3.5em; resize: vertical; background: var(--background); color: var(--foreground); border: 1px solid var(--border); border-radius: 8px; padding: 8px; font: inherit; }
 button { font: inherit; cursor: pointer; border-radius: 8px; }
-.send { margin-top: 12px; background: var(--foreground); color: var(--background); border: 0; padding: 8px 16px; font-weight: 600; }
+.send { margin-top: 12px; min-height: 44px; background: var(--foreground); color: var(--background); border: 0; padding: 8px 16px; font-weight: 600; }
 .error { color: var(--destructive); margin: 8px 0 0; }
 .sent { margin: 0; }
 
@@ -111,12 +138,25 @@ th, td { text-align: left; padding: 6px 10px 6px 0; border-top: 1px solid var(--
 thead th { border-top: 0; color: var(--muted-foreground); font-weight: 600; font-size: 0.9rem; }
 tr.current td { color: var(--foreground); font-weight: 600; }
 .status-done { color: var(--aiwda); }
-th.mono, td:last-child { white-space: nowrap; }
+th.mono, td.state { white-space: nowrap; }
+@media (max-width: 599px) { th, td { padding-right: 8px; } }
+td .finding-meta { margin-top: 2px; }
+
+/* Avanzamento (F46-05): il conteggio scritto, la barra lo ripete. */
+.progress { margin: 0 0 12px; }
+.progress p { margin: 0 0 6px; }
+progress { appearance: none; display: block; width: 100%; max-width: 480px; height: 8px; border: 0; border-radius: 999px; background: var(--secondary); overflow: hidden; }
+progress::-webkit-progress-bar { background: var(--secondary); border-radius: 999px; }
+progress::-webkit-progress-value { background: var(--aiwda); border-radius: 999px; }
+progress::-moz-progress-bar { background: var(--aiwda); border-radius: 999px; }
+details.list > summary { min-height: 44px; display: flex; align-items: center; }
 .goal { margin: 0 0 8px; }
 ul.criteria { margin: 0; padding-left: 1.2em; }
 
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.filters button { background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 4px 12px; }
+.filters button { min-height: 44px; background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 4px 14px; }
+.filters + .filters { margin-top: -2px; }
+.filter-label { align-self: center; min-width: 5.5em; color: var(--muted-foreground); font-size: 0.9rem; }
 .filters button[aria-pressed="true"] { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
 ul.findings { list-style: none; margin: 0; padding: 0; }
 ul.findings li { padding: 8px 0; border-top: 1px solid var(--border); }
@@ -132,8 +172,10 @@ details + details { border-top: 1px solid var(--border); }
 .tile { display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--secondary); }
 .tile-label, .tile-note { color: var(--muted-foreground); font-size: 0.85rem; }
 .tile-value { font-size: 1.4rem; }
-.refresh { margin-top: 12px; background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 4px 12px; }
+.refresh { margin-top: 12px; min-height: 44px; background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 4px 14px; }
 .bar-cell { position: relative; min-width: 160px; }
+/* F46-07: sul telefono chiave, token, cache e costo; i risparmi dalla larghezza media. */
+@media (max-width: 599px) { .extra { display: none; } .bar-cell { min-width: 96px; } }
 .bar { position: absolute; inset: 6px auto 6px 0; width: calc(var(--w) * 0.9); background: var(--aisa); opacity: 0.35; border-radius: 4px; }
 .bar-value { position: relative; font-variant-numeric: tabular-nums; padding-left: 6px; }
 td { font-variant-numeric: tabular-nums; }

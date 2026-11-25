@@ -12,10 +12,10 @@
   <body>
     <header class="top">
       <div class="wrap top-row">
-        <p class="brand">Agentrica <span aria-hidden="true">·</span> pannello</p>
+        <p class="brand"><a href="https://agentrica.vercel.app/it" target="_blank" rel="noopener noreferrer">Agentrica</a> <span aria-hidden="true">·</span> pannello <span class="version mono" id="version"></span></p>
         <p class="meta" id="project">Caricamento…</p>
         <button type="button" class="refresh" id="notify" hidden>Attiva le notifiche</button>
-        <p class="link" id="link" role="status">Collegamento in corso…</p>
+        <p class="status-line"><span class="link" id="link" role="status">Collegamento in corso…</span> <span class="meta" id="updated"></span></p>
       </div>
       <nav class="wrap tabs" aria-label="Sezioni del pannello">
         <a href="#session" data-view="session">Sessione <span class="count" id="count-session"></span></a>
@@ -29,19 +29,20 @@
     <div id="announce" class="sr-only" aria-live="polite"></div>
     <p id="toast" class="toast" role="status" hidden></p>
     <main class="wrap">
-      <p class="update" id="update" role="status" hidden></p>
-      <p class="notice" id="notice" role="status" hidden></p>
-      <p class="problems" id="problems" hidden></p>
-      <p class="problems contradictions" id="contradictions" hidden></p>
+      <section id="alerts" class="alerts" aria-labelledby="h-alerts" hidden>
+        <h2 id="h-alerts" class="sr-only">Avvisi</h2>
+        <ul id="alert-list"></ul>
+      </section>
 
       <div id="view-session" class="view" data-view="session">
         <h1 class="sr-only" tabindex="-1">Sessione</h1>
-        <p class="notice" id="no-agent" role="status" hidden><code>plan/</code> è cambiato e in questa sessione non è ancora stato caricato nessun agente di Agentrica. Prima di continuare chiedi a Claude di caricare quello adatto, di regola il direttore del reparto.</p>
+        <section aria-labelledby="h-attention" class="card attention" id="attention" hidden>
+          <h2 id="h-attention">Serve la tua attenzione</h2>
+          <div id="questions"></div>
+          <p class="rate-hint" id="rate-hint" hidden><a href="#ratings" id="rate-link"></a></p>
+        </section>
+        <p class="empty calm" id="calm">Niente da decidere: quando un agente ha bisogno di te, la domanda compare qui.</p>
         <div class="live">
-          <section aria-labelledby="h-decide" class="card">
-            <h2 id="h-decide">Da decidere</h2>
-            <div id="questions"></div>
-          </section>
           <section aria-labelledby="h-agents" class="card">
             <h2 id="h-agents">Agenti in uso</h2>
             <p class="hint">Gli ultimi tre, in ordine di chiamata.</p>
@@ -49,7 +50,10 @@
           </section>
           <section aria-labelledby="h-subagents" class="card">
             <h2 id="h-subagents">Subagent di Claude Code</h2>
-            <p class="hint">Avviati con il tool Agent di Claude Code, fuori dal server di Agentrica. Qui ne vedi tipo, descrizione e stato, letti dai file che Claude Code salva per il progetto; i testi delle conversazioni non si leggono. Un subagent creato con <code>init --subagents</code> che carica il suo agente compare anche fra gli agenti in uso.</p>
+            <details class="about">
+              <summary>Cosa sono</summary>
+              <p class="hint">Avviati con il tool Agent di Claude Code, fuori dal server di Agentrica. Qui ne vedi tipo, descrizione e stato, letti dai file che Claude Code salva per il progetto; i testi delle conversazioni non si leggono. Un subagent creato con <code>init --subagents</code> che carica il suo agente compare anche fra gli agenti in uso.</p>
+            </details>
             <div id="subagents"></div>
           </section>
         </div>
@@ -72,7 +76,11 @@
         </section>
         <section aria-labelledby="h-phases" class="card">
           <h2 id="h-phases">Tutte le fasi</h2>
-          <div id="phases"></div>
+          <div id="phases-progress"></div>
+          <details class="list" id="phases-list">
+            <summary>Elenco delle fasi</summary>
+            <div id="phases"></div>
+          </details>
         </section>
       </div>
 
@@ -81,6 +89,7 @@
         <section aria-labelledby="h-findings" class="card">
           <h2 id="h-findings">Rilievi aperti</h2>
           <div id="filters" class="filters" role="group" aria-label="Filtra per reparto"></div>
+          <div id="prio-filters" class="filters" role="group" aria-label="Filtra per priorità"></div>
           <div id="findings"></div>
         </section>
       </div>
@@ -101,27 +110,21 @@
           <div id="usage-summary"></div>
           <button type="button" class="refresh" id="usage-refresh">Aggiorna</button>
         </section>
+        <section aria-labelledby="h-usage-detail" class="card">
+          <h2 id="h-usage-detail">Dettaglio</h2>
+          <div class="filters" role="group" aria-label="Raggruppa il consumo" id="usage-groups">
+            <button type="button" data-group="byDay" aria-pressed="true">Per giorno</button>
+            <button type="button" data-group="byAgent" aria-pressed="false">Per agente</button>
+            <button type="button" data-group="byModel" aria-pressed="false">Per modello</button>
+            <button type="button" data-group="bySession" aria-pressed="false">Per sessione</button>
+          </div>
+          <div id="usage-detail"></div>
+        </section>
         <section aria-labelledby="h-share" class="card" id="share" hidden>
           <h2 id="h-share">Condividi i totali con Agentrica</h2>
           <p class="hint">Il sito di Agentrica mostra la somma dei token di chi li condivide. Prima vedi l'anteprima di ciò che parte; niente parte senza la tua conferma.</p>
           <button type="button" class="send" id="share-preview">Prepara l'anteprima</button>
           <div id="share-body"></div>
-        </section>
-        <section aria-labelledby="h-usage-day" class="card">
-          <h2 id="h-usage-day">Per giorno</h2>
-          <div id="usage-day"></div>
-        </section>
-        <section aria-labelledby="h-usage-agent" class="card">
-          <h2 id="h-usage-agent">Per agente</h2>
-          <div id="usage-agent"></div>
-        </section>
-        <section aria-labelledby="h-usage-model" class="card">
-          <h2 id="h-usage-model">Per modello</h2>
-          <div id="usage-model"></div>
-        </section>
-        <section aria-labelledby="h-usage-session" class="card">
-          <h2 id="h-usage-session">Per sessione</h2>
-          <div id="usage-session"></div>
         </section>
       </div>
     </main>

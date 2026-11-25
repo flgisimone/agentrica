@@ -12,10 +12,10 @@
   <body>
     <header class="top">
       <div class="wrap top-row">
-        <p class="brand">Agentrica <span aria-hidden="true">·</span> panel</p>
+        <p class="brand"><a href="https://agentrica.vercel.app/en" target="_blank" rel="noopener noreferrer">Agentrica</a> <span aria-hidden="true">·</span> panel <span class="version mono" id="version"></span></p>
         <p class="meta" id="project">Loading…</p>
         <button type="button" class="refresh" id="notify" hidden>Turn on notifications</button>
-        <p class="link" id="link" role="status">Connecting…</p>
+        <p class="status-line"><span class="link" id="link" role="status">Connecting…</span> <span class="meta" id="updated"></span></p>
       </div>
       <nav class="wrap tabs" aria-label="Panel sections">
         <a href="#session" data-view="session">Session <span class="count" id="count-session"></span></a>
@@ -29,19 +29,20 @@
     <div id="announce" class="sr-only" aria-live="polite"></div>
     <p id="toast" class="toast" role="status" hidden></p>
     <main class="wrap">
-      <p class="update" id="update" role="status" hidden></p>
-      <p class="notice" id="notice" role="status" hidden></p>
-      <p class="problems" id="problems" hidden></p>
-      <p class="problems contradictions" id="contradictions" hidden></p>
+      <section id="alerts" class="alerts" aria-labelledby="h-alerts" hidden>
+        <h2 id="h-alerts" class="sr-only">Notices</h2>
+        <ul id="alert-list"></ul>
+      </section>
 
       <div id="view-session" class="view" data-view="session">
         <h1 class="sr-only" tabindex="-1">Session</h1>
-        <p class="notice" id="no-agent" role="status" hidden><code>plan/</code> has changed and no Agentrica agent has been loaded in this session yet. Before going on, ask Claude to load the right one, usually the department's director.</p>
+        <section aria-labelledby="h-attention" class="card attention" id="attention" hidden>
+          <h2 id="h-attention">Needs your attention</h2>
+          <div id="questions"></div>
+          <p class="rate-hint" id="rate-hint" hidden><a href="#ratings" id="rate-link"></a></p>
+        </section>
+        <p class="empty calm" id="calm">Nothing to decide: when an agent needs you, the question shows up here.</p>
         <div class="live">
-          <section aria-labelledby="h-decide" class="card">
-            <h2 id="h-decide">To decide</h2>
-            <div id="questions"></div>
-          </section>
           <section aria-labelledby="h-agents" class="card">
             <h2 id="h-agents">Agents in use</h2>
             <p class="hint">The last three, in call order.</p>
@@ -49,7 +50,10 @@
           </section>
           <section aria-labelledby="h-subagents" class="card">
             <h2 id="h-subagents">Claude Code subagents</h2>
-            <p class="hint">Started with Claude Code's Agent tool, outside the Agentrica server. Here you see their type, description and state, read from the files Claude Code saves for the project; conversation texts are not read. A subagent created with <code>init --subagents</code> that loads its agent also appears among the agents in use.</p>
+            <details class="about">
+              <summary>What they are</summary>
+              <p class="hint">Started with Claude Code's Agent tool, outside the Agentrica server. Here you see their type, description and state, read from the files Claude Code saves for the project; conversation texts are not read. A subagent created with <code>init --subagents</code> that loads its agent also appears among the agents in use.</p>
+            </details>
             <div id="subagents"></div>
           </section>
         </div>
@@ -72,7 +76,11 @@
         </section>
         <section aria-labelledby="h-phases" class="card">
           <h2 id="h-phases">All phases</h2>
-          <div id="phases"></div>
+          <div id="phases-progress"></div>
+          <details class="list" id="phases-list">
+            <summary>List of phases</summary>
+            <div id="phases"></div>
+          </details>
         </section>
       </div>
 
@@ -81,6 +89,7 @@
         <section aria-labelledby="h-findings" class="card">
           <h2 id="h-findings">Open findings</h2>
           <div id="filters" class="filters" role="group" aria-label="Filter by department"></div>
+          <div id="prio-filters" class="filters" role="group" aria-label="Filter by priority"></div>
           <div id="findings"></div>
         </section>
       </div>
@@ -101,27 +110,21 @@
           <div id="usage-summary"></div>
           <button type="button" class="refresh" id="usage-refresh">Refresh</button>
         </section>
+        <section aria-labelledby="h-usage-detail" class="card">
+          <h2 id="h-usage-detail">Breakdown</h2>
+          <div class="filters" role="group" aria-label="Group the usage" id="usage-groups">
+            <button type="button" data-group="byDay" aria-pressed="true">By day</button>
+            <button type="button" data-group="byAgent" aria-pressed="false">By agent</button>
+            <button type="button" data-group="byModel" aria-pressed="false">By model</button>
+            <button type="button" data-group="bySession" aria-pressed="false">By session</button>
+          </div>
+          <div id="usage-detail"></div>
+        </section>
         <section aria-labelledby="h-share" class="card" id="share" hidden>
           <h2 id="h-share">Share the totals with Agentrica</h2>
           <p class="hint">The Agentrica site shows the sum of the tokens of those who share them. First you see a preview of what is sent; nothing is sent without your confirmation.</p>
           <button type="button" class="send" id="share-preview">Prepare the preview</button>
           <div id="share-body"></div>
-        </section>
-        <section aria-labelledby="h-usage-day" class="card">
-          <h2 id="h-usage-day">By day</h2>
-          <div id="usage-day"></div>
-        </section>
-        <section aria-labelledby="h-usage-agent" class="card">
-          <h2 id="h-usage-agent">By agent</h2>
-          <div id="usage-agent"></div>
-        </section>
-        <section aria-labelledby="h-usage-model" class="card">
-          <h2 id="h-usage-model">By model</h2>
-          <div id="usage-model"></div>
-        </section>
-        <section aria-labelledby="h-usage-session" class="card">
-          <h2 id="h-usage-session">By session</h2>
-          <div id="usage-session"></div>
         </section>
       </div>
     </main>

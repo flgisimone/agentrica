@@ -11,6 +11,7 @@ import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { checkProject, formatIssue } from "./check.ts";
 import { readProject } from "./project.ts";
+import { VERSION } from "./prompt.ts";
 import { MAX_COMMENT, notice, type SendResult } from "./ratings.ts";
 import { shareNotice, type SharePayload, type ShareResult } from "./share.ts";
 import { lang, T } from "./texts/index.ts";
@@ -268,7 +269,8 @@ export async function startPanel(
       const runs = await subagents();
       // activity tiene le ultime chiamate ad agent, mai svuotata: vuota vuol dire nessun agente da quando il server è partito.
       const noAgent = activity.length === 0 && planTouchedAfter(root, startedAt);
-      return send(res, 200, JSON.stringify({ project, questions, activity, subagents: runs, rating, update: update() ?? null, noAgent }), "application/json; charset=utf-8");
+      // F46-04: la versione del server, per la testata della pagina.
+      return send(res, 200, JSON.stringify({ project, questions, activity, subagents: runs, rating, update: update() ?? null, noAgent, version: VERSION }), "application/json; charset=utf-8");
     }
     // Consumo di token dai file di Claude Code del progetto (F24): si legge solo quando la pagina apre la vista.
     if (req.method === "GET" && url.pathname === "/api/usage") {

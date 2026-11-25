@@ -9,6 +9,7 @@ const TITLE = TEXTS.title;
 
 let state = null;
 let filter = "";
+let prioFilter = "";
 const $ = (id) => document.getElementById(id);
 
 /** Crea un elemento con attributi e figli (stringhe o nodi). */
@@ -51,31 +52,68 @@ function taskBlock(key, text) {
 const time = (iso) => new Date(iso).toLocaleTimeString(TEXTS.locale, { hour: "2-digit", minute: "2-digit" });
 const empty = (text) => el("p", { class: "empty" }, text);
 
-function renderHeader({ project, update, noAgent }) {
-  const banner = $("update");
-  banner.hidden = !update;
-  banner.textContent = update ?? "";
-  // F39-02: plan/ cambiato dopo l'avvio e nessun agente caricato; sparisce al primo agente.
-  $("no-agent").hidden = !noAgent;
+/** Cambia il testo solo se è diverso: una regione live non si rilegge a ogni aggiornamento (F46-08). */
+function setText(node, text) {
+  if (node.textContent !== text) node.textContent = text;
+}
+
+function renderHeader({ project, version }) {
   const files = project.git
     ? [project.git.changed > 0 && TEXTS.changed(project.git.changed), project.git.untracked > 0 && TEXTS.untracked(project.git.untracked)].filter(Boolean)
     : [];
   const git = project.git ? [TEXTS.branch(project.git.branch), ...files].join(" · ") : TEXTS.noGit;
-  $("project").textContent = project.name + git;
-  // F44-06: errori di formato e contraddizioni in due caselle, ciascuna con il suo titolo.
-  for (const [id, list, title] of [["problems", project.problems, TEXTS.formatErrors], ["contradictions", project.contradictions, TEXTS.contradictions]]) {
-    const box = $(id);
-    box.hidden = list.length === 0;
-    box.textContent = list.length ? [title(list.length), ...list].join("\n") : "";
-  }
-  // Piano mancante o senza fasi (F35): un'informazione con le strade per crearlo, non un errore.
-  const notice = $("notice");
-  notice.hidden = !project.notice;
-  notice.textContent = project.notice ?? "";
+  setText($("project"), project.name + git);
+  setText($("version"), version ? `v${version}` : "");
 }
 
+// Avvisi (F46-02): una zona sola sopra le viste, una riga per tipo con titolo, conteggio e azione suggerita; i punti
+// file:riga a scomparsa, come testo da copiare. Versione nuova (F23), plan/ senza agente (F39-02), piano da creare (F35),
+// errori di formato e contraddizioni (F42, F44-06). Si ridisegna solo quando cambia, e annuncia solo i tipi nuovi.
+const openAlerts = new Set();
+let alertsKey = null;
+
+function renderAlerts({ project, update, noAgent }) {
+  const { problems, contradictions } = project;
+  const alerts = [
+    update && { kind: "update", title: TEXTS.newVersion, text: update },
+    noAgent && { kind: "agent", title: TEXTS.noAgent, text: TEXTS.noAgentAction },
+    project.notice && { kind: "notice", title: TEXTS.noPlan, text: project.notice },
+    problems.length > 0 && { kind: "error", title: TEXTS.formatErrors(problems.length), text: TEXTS.formatAction, items: problems },
+    contradictions.length > 0 && { kind: "contradiction", title: TEXTS.contradictions(contradictions.length), text: TEXTS.contradictionsAction, items: contradictions },
+  ].filter(Boolean);
+  const key = JSON.stringify(alerts);
+  if (key === alertsKey) return;
+  // Al primo caricamento non si annuncia nulla: la zona è già la prima cosa della pagina.
+  const before = alertsKey === null ? null : new Set(JSON.parse(alertsKey).map((a) => a.kind));
+  const added = before ? alerts.filter((a) => !before.has(a.kind)) : [];
+  if (added.length > 0) $("announce").textContent = added.map((a) => TEXTS.newAlert(a.title)).join(". ");
+  alertsKey = key;
+  $("alerts").hidden = alerts.length === 0;
+  $("alert-list").replaceChildren(...alerts.map(alertItem));
+}
+
+function alertItem(a) {
+  return el(
+    "li",
+    { class: "alert", "data-kind": a.kind },
+    el("p", {}, el("strong", {}, a.title), ". ", a.text),
+    a.items &&
+      el(
+        "details",
+        { open: openAlerts.has(a.kind), ontoggle: (e) => (e.currentTarget.open ? openAlerts.add(a.kind) : openAlerts.delete(a.kind)) },
+        el("summary", {}, TEXTS.where(a.items.length)),
+        el("ul", { class: "issues mono" }, a.items.map((item) => el("li", {}, item))),
+      ),
+  );
+}
+
+/** Gli agenti usati e non ancora valutati: zero con le valutazioni spente. */
+const pendingRatings = ({ activity, rating }) => (rating ? new Set(activity.map((a) => a.id).filter((id) => !rating.rated.includes(id))).size : 0);
+
 // Le domande non si ridisegnano a ogni aggiornamento: una scelta a metà resterebbe persa.
-function renderQuestions({ questions }) {
+// In cima alla Sessione (F46-03) il riquadro di attenzione: domande aperte e agenti da valutare, solo quando ci sono.
+function renderQuestions(s) {
+  const { questions } = s;
   const box = $("questions");
   const ids = new Set(questions.map((q) => q.id));
   for (const node of [...box.querySelectorAll("[data-question]")]) {
@@ -85,10 +123,12 @@ function renderQuestions({ questions }) {
     if (!box.querySelector(`[data-question="${CSS.escape(question.id)}"]`)) box.append(questionCard(question));
   }
   const waiting = questions.length;
-  box.querySelector(".empty")?.remove();
-  if (!box.querySelector("[data-question]")) {
-    box.append(empty(TEXTS.noQuestions));
-  }
+  const toRate = pendingRatings(s);
+  const asking = Boolean(box.querySelector("[data-question]"));
+  $("rate-hint").hidden = toRate === 0;
+  setText($("rate-link"), toRate ? TEXTS.rateLink(toRate) : "");
+  $("attention").hidden = !asking && toRate === 0;
+  $("calm").hidden = asking;
   document.title = waiting ? `(${waiting}) ${TITLE}` : TITLE;
 }
 
@@ -326,35 +366,53 @@ async function sendRating(event, agent, form, error) {
   );
 }
 
-function table(head, rows) {
+/** `classes[i]` va sull'intestazione della colonna i (le celle lo ripetono da sé): «extra» la nasconde sul telefono. */
+function table(head, rows, classes = []) {
   return el(
     "div",
     { class: "scroll" },
-    el("table", {}, el("thead", {}, el("tr", {}, head.map((h) => el("th", { scope: "col" }, h)))), el("tbody", {}, rows)),
+    el("table", {}, el("thead", {}, el("tr", {}, head.map((h, i) => el("th", { scope: "col", class: classes[i] }, h)))), el("tbody", {}, rows)),
   );
+}
+
+// Lo stato di una fase vale per la prima parola: «completata (0.10.0)» è completata (F46-UX-01).
+const COMPLETED = /^(completata|completed)\b/i;
+
+/** Avanzamento (F46-05): il conteggio scritto e una barra che lo ripete, nascosta ai lettori di schermo. */
+function progress(done, total, label) {
+  return el("div", { class: "progress" }, el("p", {}, label), el("progress", { max: String(total), value: String(done), "aria-hidden": "true" }));
+}
+
+/** La priorità del backlog: il codice nella sua colonna, la motivazione («P1 — …») sotto l'attività. */
+function splitPriority(text) {
+  const match = /^(P[0-3])\s*[—–-]?\s*(.*)$/.exec(text);
+  return match ? [match[1], match[2]] : [text, ""];
 }
 
 function renderPhases({ project }) {
   const open = project.openPhase;
+  const doneTasks = open ? open.tasks.filter((t) => t.done).length : 0;
   $("open-phase").replaceChildren(
     ...(open
       ? [
           el("h3", {}, inline(open.title), ` — ${open.status}`),
           open.goal && el("p", { class: "goal" }, inline(open.goal)),
           el("h3", {}, TEXTS.backlog),
+          open.tasks.length > 0 && progress(doneTasks, open.tasks.length, TEXTS.tasksProgress(doneTasks, open.tasks.length)),
           open.tasks.length
             ? table(
                 TEXTS.taskHead,
-                open.tasks.map((t) =>
-                  el(
+                open.tasks.map((t) => {
+                  const [code, why] = splitPriority(t.priority);
+                  return el(
                     "tr",
                     {},
                     el("th", { scope: "row", class: "mono" }, t.id),
-                    el("td", {}, inline(t.task)),
-                    el("td", {}, t.priority),
-                    el("td", { class: t.done ? "status-done" : "" }, t.done ? TEXTS.done : TEXTS.todo),
-                  ),
-                ),
+                    el("td", {}, inline(t.task), why && el("span", { class: "finding-meta" }, inline(why))),
+                    el("td", {}, code),
+                    el("td", { class: t.done ? "state status-done" : "state" }, t.done ? `✓ ${TEXTS.done}` : TEXTS.todo),
+                  );
+                }),
               )
             : empty(TEXTS.noBacklog),
           open.criteria.length > 0 && el("h3", {}, TEXTS.criteria),
@@ -362,9 +420,14 @@ function renderPhases({ project }) {
         ]
       : [empty(TEXTS.noOpenPhase)]),
   );
+  const completed = project.phases.filter((p) => COMPLETED.test(p.status)).length;
+  $("phases-progress").replaceChildren(
+    project.phases.length === 0 ? empty(TEXTS.noPhases) : progress(completed, project.phases.length, TEXTS.phasesProgress(completed, project.phases.length)),
+  );
+  $("phases-list").hidden = project.phases.length === 0;
   $("phases").replaceChildren(
     project.phases.length === 0
-      ? empty(TEXTS.noPhases)
+      ? ""
       : table(
           TEXTS.phaseHead,
           project.phases.map((p) =>
@@ -381,16 +444,22 @@ function renderPhases({ project }) {
 }
 
 // I pulsanti si creano una volta sola: ricrearli a ogni aggiornamento toglierebbe il focus da tastiera.
+// Da F46-06 anche per priorità, accanto al reparto.
 function renderFilters() {
-  const box = $("filters");
-  if (!box.firstChild) {
-    box.append(
-      ...["", ...DEPARTMENTS].map((code) =>
-        el("button", { type: "button", "data-code": code, onclick: () => ((filter = code), render()) }, code || TEXTS.all),
-      ),
-    );
+  const groups = [
+    [$("filters"), TEXTS.byDepartment, ["", ...DEPARTMENTS], TEXTS.all, () => filter, (code) => (filter = code)],
+    [$("prio-filters"), TEXTS.byPriority, ["", "P0", "P1", "P2", "P3"], TEXTS.allPriorities, () => prioFilter, (code) => (prioFilter = code)],
+  ];
+  for (const [box, label, codes, all, current, pick] of groups) {
+    if (!box.firstChild) {
+      // L'etichetta visibile ripete quella del gruppo (aria-label): per i lettori di schermo basta una volta.
+      box.append(
+        el("span", { class: "filter-label", "aria-hidden": "true" }, label),
+        ...codes.map((code) => el("button", { type: "button", "data-code": code, onclick: () => (pick(code), render()) }, code || all)),
+      );
+    }
+    for (const button of box.querySelectorAll("button")) button.setAttribute("aria-pressed", String(button.dataset.code === current()));
   }
-  for (const button of box.children) button.setAttribute("aria-pressed", String(button.dataset.code === filter));
 }
 
 const LABELS = TEXTS.priorities;
@@ -409,21 +478,22 @@ function findingItem(f) {
 const opened = { P0: true, P1: true };
 
 function renderFindings({ project }) {
-  const shown = project.findings.filter((f) => !filter || f.department === filter);
+  const shown = project.findings.filter((f) => (!filter || f.department === filter) && (!prioFilter || f.priority === prioFilter));
   const fromPhases = (f) => !f.source.endsWith(".json");
   const groups = PRIORITIES.map((priority) => {
     const items = shown.filter((f) => f.priority === priority).sort((a, b) => fromPhases(b) - fromPhases(a));
     if (items.length === 0) return null;
     const details = el(
       "details",
-      { open: Boolean(opened[priority]), ontoggle: () => (opened[priority] = details.open) },
+      // Con il filtro per priorità il solo gruppo rimasto è aperto.
+      { open: Boolean(prioFilter || opened[priority]), ontoggle: () => prioFilter || (opened[priority] = details.open) },
       el("summary", {}, el("span", { class: `prio prio-${priority}` }, LABELS[priority]), ` (${items.length})`),
       el("ul", { class: "findings" }, items.map(findingItem)),
     );
     return details;
   });
   $("findings").replaceChildren(
-    ...(shown.length ? groups.filter(Boolean) : [empty(filter ? TEXTS.noFindingsOf(filter) : TEXTS.noFindings)]),
+    ...(shown.length ? groups.filter(Boolean) : [empty(filter || prioFilter ? TEXTS.noFindingsHere : TEXTS.noFindings)]),
     el("p", { class: "hint" }, TEXTS.findingsHint),
   );
 }
@@ -432,13 +502,13 @@ function renderCounts({ project, questions, activity, rating }) {
   const waiting = questions.length;
   const findings = project.findings.length;
   // Valutazioni (pagina propria): gli agenti usati non ancora valutati; la scheda c'è solo con le valutazioni accese.
-  const toRate = rating ? new Set(activity.map((a) => a.id).filter((id) => !rating.rated.includes(id))).size : 0;
+  const toRate = pendingRatings({ activity, rating });
   $("tab-ratings").hidden = !rating;
-  $("count-ratings").textContent = toRate ? String(toRate) : "";
+  setText($("count-ratings"), toRate ? String(toRate) : "");
   $("count-ratings").parentElement.setAttribute("aria-label", TEXTS.ratingsLabel(toRate));
-  $("count-agents").textContent = activity.length ? String(activity.length) : "";
-  $("count-session").textContent = waiting ? String(waiting) : "";
-  $("count-findings").textContent = String(findings);
+  setText($("count-agents"), activity.length ? String(activity.length) : "");
+  setText($("count-session"), waiting ? String(waiting) : "");
+  setText($("count-findings"), String(findings));
   // Il solo numero non dice cosa conta: il nome completo è per i lettori di schermo.
   $("count-session").parentElement.setAttribute("aria-label", TEXTS.sessionLabel(waiting));
   $("count-findings").parentElement.setAttribute("aria-label", TEXTS.findingsLabel(findings));
@@ -463,11 +533,15 @@ function bar(share) {
   return node;
 }
 
+// F46-07: la colonna del risparmio del modello c'è solo se qualche riga ha un valore; sul telefono si vedono chiave,
+// token, cache e costo, i due risparmi dalla larghezza media («extra»).
 function usageTable(rows, label, keyLabel) {
   if (rows.length === 0) return empty(TEXTS.noData);
   const max = Math.max(...rows.map((r) => spent(r.totals)), 1);
+  const model = rows.some((r) => r.totals.modelSavingUsd > 0);
+  const head = TEXTS.usageHead(keyLabel).slice(0, model ? 6 : 5);
   return table(
-    TEXTS.usageHead(keyLabel),
+    head,
     rows.map((r) =>
       el(
         "tr",
@@ -481,18 +555,40 @@ function usageTable(rows, label, keyLabel) {
         ),
         el("td", {}, pct(r.totals.cacheShare)),
         el("td", {}, usd(r.totals.costUsd)),
-        el("td", {}, usd(r.totals.cacheSavingUsd)),
-        el("td", {}, r.totals.modelSavingUsd > 0 ? usd(r.totals.modelSavingUsd) : "—"),
+        el("td", { class: "extra" }, usd(r.totals.cacheSavingUsd)),
+        model && el("td", { class: "extra" }, r.totals.modelSavingUsd > 0 ? usd(r.totals.modelSavingUsd) : "—"),
       ),
     ),
+    ["", "", "", "", "extra", "extra"],
   );
+}
+
+// Il dettaglio a schede (F46-07): una tabella per volta; il rapporto resta in memoria fino al prossimo «Aggiorna».
+let usage = null;
+let usageGroup = "byDay";
+const shortSession = (key) => (/^[0-9a-f-]{36}$/.test(key) ? key.slice(0, 8) : key);
+const USAGE_GROUPS = {
+  byDay: [(k) => k, TEXTS.day],
+  byAgent: [(k) => (k === "sessione" ? TEXTS.mainConversation : k), TEXTS.agent],
+  byModel: [(k) => k, TEXTS.model],
+  bySession: [shortSession, TEXTS.session],
+};
+
+function renderUsageDetail() {
+  for (const button of $("usage-groups").children) button.setAttribute("aria-pressed", String(button.dataset.group === usageGroup));
+  if (!usage) return;
+  const [label, keyLabel] = USAGE_GROUPS[usageGroup];
+  const rows = usageGroup === "bySession" ? usage.bySession.slice(0, 15) : usage[usageGroup];
+  $("usage-detail").replaceChildren(usageTable(rows, label, keyLabel));
 }
 
 async function renderUsage() {
   const response = await fetch("/api/usage").catch(() => null);
   const report = response && response.ok ? await response.json() : null;
+  usage = report;
   if (!report) {
     $("usage-summary").replaceChildren(empty(TEXTS.usageUnreadable));
+    $("usage-detail").replaceChildren();
     return;
   }
   const t = report.total;
@@ -505,16 +601,12 @@ async function renderUsage() {
           tile(TEXTS.tileSpent, tokens(spent(t)), TEXTS.tileSpentNote(nf.format(t.requests))),
           tile(TEXTS.tileCache, pct(t.cacheShare), TEXTS.tileCacheNote),
           tile(TEXTS.tileCacheSaving, usd(t.cacheSavingUsd), TEXTS.tileCacheSavingNote),
-          tile(TEXTS.tileModelSaving, t.modelSavingUsd > 0 ? usd(t.modelSavingUsd) : "—", TEXTS.tileModelSavingNote),
+          t.modelSavingUsd > 0 && tile(TEXTS.tileModelSaving, usd(t.modelSavingUsd), TEXTS.tileModelSavingNote),
         ),
     el("p", { class: "hint" }, TEXTS.pricesHint(report.prices.date)),
     ...(report.skipped > 0 ? [el("p", { class: "hint" }, TEXTS.skipped(report.skipped))] : []),
   );
-  const short = (key) => (/^[0-9a-f-]{36}$/.test(key) ? key.slice(0, 8) : key);
-  $("usage-day").replaceChildren(usageTable(report.byDay, (k) => k, TEXTS.day));
-  $("usage-agent").replaceChildren(usageTable(report.byAgent, (k) => (k === "sessione" ? TEXTS.mainConversation : k), TEXTS.agent));
-  $("usage-model").replaceChildren(usageTable(report.byModel, (k) => k, TEXTS.model));
-  $("usage-session").replaceChildren(usageTable(report.bySession.slice(0, 15), short, TEXTS.session));
+  renderUsageDetail();
 }
 
 // Totali di token (F27): l'anteprima mostra le righe esatte; «Conferma l'invio» manda solo il codice dell'anteprima.
@@ -577,7 +669,7 @@ function showView(moveFocus) {
 // Avvisi (F34): un agente nuovo in uso o un agente in più da valutare. Nella pagina sempre; con il permesso del browser
 // anche come notifica di sistema, quando la scheda del pannello non è in vista.
 let seen = null;
-let pendingRatings = null;
+let lastToRate = null;
 
 function notify(text) {
   const toast = $("toast");
@@ -592,14 +684,14 @@ function notify(text) {
 
 function watchChanges({ activity, rating }) {
   const keys = new Set(activity.map((a) => `${a.id} ${a.time}`));
-  const toRate = rating ? new Set(activity.map((a) => a.id).filter((id) => !rating.rated.includes(id))).size : 0;
+  const toRate = pendingRatings({ activity, rating });
   if (seen) {
     const added = activity.filter((a) => !seen.has(`${a.id} ${a.time}`));
     if (added.length > 0) notify(TEXTS.newAgent(added[0].codeName));
-    else if (toRate > pendingRatings) notify(TEXTS.toRate(toRate));
+    else if (toRate > lastToRate) notify(TEXTS.toRate(toRate));
   }
   seen = keys;
-  pendingRatings = toRate;
+  lastToRate = toRate;
 }
 
 function renderNotifyButton() {
@@ -612,6 +704,7 @@ function render() {
   watchChanges(state);
   renderNotifyButton();
   renderHeader(state);
+  renderAlerts(state);
   renderCounts(state);
   renderQuestions(state);
   renderActivity(state);
@@ -628,6 +721,8 @@ async function refresh() {
   const response = await fetch("/api/state").catch(() => null);
   if (!response || !response.ok) return;
   state = await response.json();
+  // L'ora dei dati, non dell'ultimo disegno: un clic su un filtro non la cambia.
+  setText($("updated"), TEXTS.updatedAt(time(new Date().toISOString())));
   render();
 }
 
@@ -636,13 +731,13 @@ function connect() {
   const events = new EventSource("/api/events");
   events.onopen = () => {
     link.dataset.state = "ok";
-    link.textContent = TEXTS.linked;
+    setText(link, TEXTS.linked);
     refresh();
   };
   events.addEventListener("change", refresh);
   events.onerror = () => {
     link.dataset.state = "off";
-    link.textContent = TEXTS.unlinked;
+    setText(link, TEXTS.unlinked);
   };
 }
 
@@ -650,6 +745,12 @@ window.addEventListener("hashchange", () => showView(true));
 $("notify").addEventListener("click", () => Notification.requestPermission().then(renderNotifyButton));
 $("usage-refresh").addEventListener("click", renderUsage);
 $("share-preview").addEventListener("click", previewShare);
+$("usage-groups").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-group]");
+  if (!button) return;
+  usageGroup = button.dataset.group;
+  renderUsageDetail();
+});
 showView(false);
 connect();
 refresh();

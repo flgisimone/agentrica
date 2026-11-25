@@ -95,7 +95,7 @@ test("audit malformato: JSON rotto con la riga quando Node la dà, campi mancant
 
 test("contraddizioni: si segnalano entrambe le posizioni, senza scegliere", () => {
   const root = project({
-    "plan/README.md": README("| F1 | [01-uno.md](01-uno.md) | Uno | completata |"),
+    "plan/README.md": README("| F1 | [01-uno.md](01-uno.md) | Uno | completata (0.1.0) |"),
     "plan/01-uno.md": PHASE("| F1-01 | A | P0 |\n| F1-02 | B | P0 — la più grande |\n| F1-03 | C | P1 |", "- **F1-01** fatto."),
     "audit/a/uno.json": json({ agente: "AICA-02", rilievi: [{ id: "S-1", titolo: "Uno", priorita: "P1", stato: "Nuova", evidenza: "x" }, { id: "S-2", titolo: "Due", priorita: "P2", stato: "Chiuso", evidenza: "" }] }),
     "audit/b/due.json": json({ agente: "AICA-03", rilievi: [{ id: "S-1", titolo: "Uno", priorita: "P0", stato: "Risolto", evidenza: ["y"] }, { id: "S-3", titolo: "Tre", priorita: "P2", stato: "non risolto" }] }),

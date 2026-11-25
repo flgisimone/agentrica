@@ -64,11 +64,11 @@
 
 - `npm run verify` (typecheck, lint, 176 test) verde.
 - `agentrica-site`: `npm run verify` verde; `npm run verify:e2e` 131 superati, 1 saltato. Il primo giro aveva 2 errori (indice di Installa a 13 voci), corretti nella spec. Per lanciarlo è stato fermato, con l'ok dell'utente, il `next dev` sulla porta 3000, che non è stato riavviato.
-- Il comando dell'hook è stato provato in `sh` sul Mac nelle due lingue; non in PowerShell né in cmd.
+- Il comando dell'hook è stato provato in `sh` sul Mac nelle due lingue e, nella CI su `windows-latest` (PR #39 del rilascio 0.13.0, 2026-11-24), in `cmd`: il test di `init.test.ts` lo lancia con `shell: true` e controlla il testo esatto. Non in PowerShell.
 - Non provato: l'hook in una sessione vera di Claude Code e il banner nel browser (provato con il test HTTP del pannello).
 
 ## Rilievi aperti
 
-- P2 — Hook non provato su Windows (PowerShell e cmd) né in una sessione vera di Claude Code: da fare con la prova su Windows di F23-10.
+- P2 — Hook non provato in PowerShell né in una sessione vera di Claude Code: da fare con la prova su Windows di F23-10. In `cmd` funziona: lo prova la CI su `windows-latest` dalla 0.13.0.
 - P3 — Con `add` o `install` senza `init` il promemoria non c'è; il README spiega come aggiungerlo a mano. Se serve, un comando che lo scrive in un progetto esistente.
 - P3 — Il sito parla di `--no-reminder` e del banner, che arrivano con la 0.13.0: vanno pubblicati insieme (rilascio in parallelo).

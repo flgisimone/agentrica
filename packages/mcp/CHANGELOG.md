@@ -2,6 +2,11 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.15.1 — 2026-11-25
+
+### Corretto
+- I README del pacchetto riportano i comandi di questa versione: la 0.15.0 li aveva della 0.13.0. Descrizione npm senza il numero di agenti.
+
 ## 0.15.0 — 2026-11-25
 
 ### Nuovo

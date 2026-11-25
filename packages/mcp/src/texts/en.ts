@@ -39,10 +39,12 @@ export const en: Texts = {
       "All work on the user's project (features, changes, stack choices, phases, audits) goes through Agentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
       "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
-      "then load the specialists with agent one at a time, each from the previous one's result, never two in the same response; the director consolidates and presents to the user. " +
+      "then load the specialists with agent one at a time, each from the previous one's handover (outcome, findings with their evidence, open questions), never two in the same response; the director consolidates and presents to the user. " +
       "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → Code Reviewer → user confirmation. " +
       "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
+      // F41-02: rules and index once per department; how to get them back after /compact.
+      "Common rules and index come in full with the first agent of each department, then as a reference: after /compact or /clear, or if they are not in your context, call agent again with full_rules true. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
       "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
@@ -135,7 +137,10 @@ export const en: Texts = {
 
     agent: {
       title: "Instructions of an agent",
-      description: "Returns the full instructions of an agent (the department's common rules and the role file), to follow in order to work as that agent.",
+      description:
+        "Returns the instructions of an agent (the department's common rules and the role file), to follow in order to work as that agent. " +
+        "Common rules and library index come in full with the first agent of the department in the session, as a reference with the next ones, unless full_rules.",
+      fullRules: "true: common rules and library index in full even if already sent in this session (after /compact or /clear, in a subagent or in a new context).",
       notFound: AGENT_NOT_FOUND,
     },
 
@@ -228,6 +233,10 @@ export const en: Texts = {
       "Cards with recent notions verified on approved sources at the date shown: on these topics they take precedence over what you know. " +
       `If the task touches a card (those of your role are marked *), read it with the library tool (id ${id}, cards with the ids) and cite source, version and date. ` +
       "A card to recheck must be verified on the source if you have web access; otherwise warn the user.",
+    libraryKnown: (id: string, mine: string) =>
+      "The library index received with the common rules applies. " +
+      (mine ? `Cards of your role: ${mine}. ` : "No card is marked for your role. ") +
+      `Read the cards with the library tool (id ${id}); cite source, version and date.`,
     cardExpired: " Expired: verify it on the source before using it, or tell the user.",
     cardSource: (o: { name: string; level: number; version: string; verified: string; review: string; expired: string; roles: string }) =>
       `Source: ${o.name} (level ${o.level}), version ${o.version}. Verified on ${o.verified}, to recheck by ${o.review}.${o.expired} Roles: ${o.roles}.`,
@@ -242,15 +251,18 @@ export const en: Texts = {
       `${advice} If the project has Agentrica's subagents (init --subagents) and the user asks to use them, the one for this role already has this model; otherwise continue with the session model.`,
     lead: (code: string) =>
       `You are the director of the department: for the task choose the specialists needed and the order (list_agents with department ${code} lists them). ` +
-      "The session loads them with agent one at a time, each from the previous one's result; at the end you consolidate the results and present them to the user, who confirms them.",
+      "The session loads them with agent one at a time, each from the previous one's handover, not their whole answer; at the end you consolidate the results and present them to the user, who confirms them.",
     reportsTo: (director: string, id: string) =>
       `You report to ${director}, the director of the department: if they have not been loaded yet in this session, load them first with agent (id ${id}). ` +
-      "You work on the part they assign you, from the previous specialist's result, and hand over to them.",
+      "You work on the part they assign you and hand over to them briefly: outcome, findings with their evidence (file and line, command), open questions.",
     noLead: "The director of the department is not in this server's squad: work directly on the task and hand over to the user.",
     present: (intro: string) =>
       `The user must always know who is working. Introduce yourself at the start with this line: «${intro}». ` +
       "Repeat it when you switch to another agent or leave the role, and sign findings and the final summary with your code name.",
     rules: "Department common rules",
+    rulesKnown: (code: string, id: string) =>
+      `The common rules of the ${code} department apply, received in full in this session with another agent of the department: apply them here too. ` +
+      `If they are not in your context (after /compact or /clear, in a subagent or in a new conversation), call agent again with id ${id} and full_rules true before working.`,
     role: (role: string) => `Role: ${role}`,
     task: "Task",
     report: "Report",
@@ -441,8 +453,8 @@ export const en: Texts = {
   init: {
     subagentProject: (name: string) => `of the ${name} project.`,
     subagentFirst: (id: string) =>
-      `First step: call the \`mcp__agentrica__agent\` tool of the Agentrica MCP server with id \`${id}\` and the task you received. ` +
-      "The instructions it returns are your role, with the department's common rules, and make the agent appear in the panel: with them there is no need to reread the files named below, which remain the reference if the tool does not answer. Do not load the director of the department: the main session started you and coordinates.",
+      `First step: call the \`mcp__agentrica__agent\` tool of the Agentrica MCP server with id \`${id}\`, \`full_rules\` true and the task you received. ` +
+      "The instructions it returns are your role, with the department's common rules in full (a subagent has its own context), and make the agent appear in the panel: with them there is no need to reread the files named below, which remain the reference if the tool does not answer. Do not load the director of the department: the main session started you and coordinates.",
     inRepo: "git: the folder is already in a repository, no commit",
     noGit: "git: not installed, repository not created",
     commit: "Project created with @agentrica/mcp init",

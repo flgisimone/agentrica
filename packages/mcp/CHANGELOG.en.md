@@ -2,6 +2,17 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.14.0 — 2026-11-25
+
+### Added
+- Common rules once per department: the server remembers, for the session, the departments whose common rules and library index it has already sent. The first agent of the department receives them in full, the next ones a reference that says how to get them back, with the cards of their role; role file and task stay in full. One more specialist of a department already loaded weighs 54 to 59% less (3.6 to 5.1 KB).
+- `full_rules` parameter of the `agent` tool: rules and index in full even if already sent, after `/compact` or in a new context. The server's instructions and the reference mention it.
+
+### Changed
+- The subagents of `init --subagents` call `agent` with `full_rules` true as their first step, because they have their own context. In projects already created the reference says to call `agent` again with `full_rules` if the rules are missing.
+- Handovers between agents: the server's instructions, the director's and the specialist's text and the `AGENTS.md` of new projects ask for a short handover (outcome, findings with their evidence, open questions) instead of the previous agent's whole answer.
+- The agents' prompts keep the full text.
+
 ## 0.13.0 — 2026-11-24
 
 ### Added

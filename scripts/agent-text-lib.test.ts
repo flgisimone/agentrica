@@ -10,6 +10,9 @@ test("flowSizes: ripetuti solo regole e biblioteca di un reparto già caricato (
   assert.deepEqual(flow.filter((f) => f.repeated > 0).map((f) => f.id), ["AISA-06"]);
   const last = flow.at(-1)!;
   assert.equal(last.repeated, last.sizes.rules + last.sizes.library);
+  // F41: AISA-06 riceve il riferimento, gli altri il testo intero di prima.
+  assert.ok(last.total < last.before - 3000);
+  for (const f of flow.slice(0, -1)) assert.equal(f.total, f.before, f.id);
 });
 
 test("sizesReport: stessa data, stessi numeri; token stimati come byte / 4", () => {

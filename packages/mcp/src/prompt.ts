@@ -4,7 +4,7 @@ import { isExpired, type Agent, type Card, type Department, type Section } from 
 import { T } from "./texts/index.ts";
 
 /** Versione del server, uguale a quella di package.json (lo controlla prompt.test.ts). */
-export const VERSION = "0.13.0";
+export const VERSION = "0.14.0";
 
 /**
  * Un reparto della squadra di --agents. Non ha `director`: con un reparto filtrato il direttore può essere fuori
@@ -105,6 +105,13 @@ export function libraryIndex({ department, agent }: Found, date: string): string
   return [`## ${T.prompt.libraryHeading}`, T.prompt.libraryHelp(agent.id), lines.join("\n")];
 }
 
+/** La biblioteca di un reparto già inviato (F41-04): solo le schede del ruolo, l'indice è quello ricevuto prima. */
+function libraryKnown({ department, agent }: Found): string[] {
+  if (department.library.length === 0) return [];
+  const mine = department.library.filter((card) => card.roles.includes(agent.id)).map((card) => card.id);
+  return [`## ${T.prompt.libraryHeading}`, T.prompt.libraryKnown(agent.id, mine.join(", "))];
+}
+
 /** Il testo di una scheda per il tool library: titolo, fonte senza URL, date, ruoli e le due sezioni. */
 export function cardText(card: Card, date: string): string {
   const expired = isExpired(card, date) ? T.prompt.cardExpired : "";
@@ -132,10 +139,14 @@ function hierarchy({ department, agent }: Found): string {
 /** I componenti del testo di un agente, nell'ordine (F40-01): la misura di --sizes viene da qui, non da una copia. */
 export const COMPONENTS = ["frame", "rules", "role", "library", "task", "closing"] as const;
 export type Component = (typeof COMPONENTS)[number];
-export type TextOptions = { ratings?: boolean; report?: boolean; date?: string };
+/**
+ * `known` (F41-01): le regole comuni e l'indice della biblioteca del reparto sono già stati inviati in questa sessione
+ * con un altro agente; al loro posto un riferimento che dice come riaverli interi (full_rules del tool agent).
+ */
+export type TextOptions = { ratings?: boolean; report?: boolean; date?: string; known?: boolean };
 
 /** Il testo di un agente diviso per componente: ogni voce ha i suoi paragrafi, uniti poi da agentText. */
-export function agentParts(found: Found, task?: string, { ratings = false, report = false, date = today() }: TextOptions = {}): [Component, string[]][] {
+export function agentParts(found: Found, task?: string, { ratings = false, report = false, date = today(), known = false }: TextOptions = {}): [Component, string[]][] {
   const { department, agent } = found;
   const advice = modelAdvice(agent);
   const trimmed = task?.trim();
@@ -150,9 +161,9 @@ export function agentParts(found: Found, task?: string, { ratings = false, repor
         T.prompt.present(introLine(found)),
       ],
     ],
-    ["rules", [`## ${T.prompt.rules}`, ...block(department.rules.intro, department.rules.sections)]],
+    ["rules", [`## ${T.prompt.rules}`, ...(known ? [T.prompt.rulesKnown(department.code, agent.id)] : block(department.rules.intro, department.rules.sections))]],
     ["role", [`## ${T.prompt.role(agent.role)}`, ...block(agent.intro, agent.sections)]],
-    ["library", libraryIndex(found, date)],
+    ["library", known ? libraryKnown(found) : libraryIndex(found, date)],
     ["task", trimmed ? [`## ${T.prompt.task}`, trimmed] : []],
     // In fondo (F23-03), dopo il compito: è l'ultima cosa che il modello legge. La valutazione solo se il client non ha
     // l'elicitation (con l'elicitation la chiede il server con un modulo); con il pannello, prima il resoconto (tool report).

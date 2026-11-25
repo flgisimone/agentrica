@@ -77,6 +77,31 @@ cd "$D" && claude
 
 Il risultato va aggiunto qui sotto con data, versione e modello.
 
+### Esito del 2026-11-25 (F43-01)
+
+Server di `develop` (0.15.0, da sorgente), Claude Code 2.1.330 da terminale, `claude-opus-5-5`, pannello aperto; alle domande la prima opzione, tranne la scelta multipla (tutte). Dopo il piano la richiesta a mano «fai rivedere lo stack di F0 all'architetto software», per avere un secondo agente AISA prima di `/compact`.
+
+```
+1. ToolSearch  2. Bash  3. list_agents  4. agent AISA-01  5–7. ask_user  8. report
+9. agent AIPCA-01  10–11. Bash  12. report  13. Write  14–15. Bash  16. check  17. ask_user
+18. report  19. agent AISA-02  20. library  21–22. Bash  23. report  24. ask_user  25. Bash
+26. check  [/compact]  27. ToolSearch  28. list_agents  29. agent AISA-12 (full_rules: true)
+
+OK  Nessun subagent senza richiesta: 0 chiamate ad Agent
+OK  list_agents prima di agent: list_agents alla chiamata 3, agent alla 4
+OK  Direttore prima degli specialisti: agenti: AISA-01 → AIPCA-01 → AISA-02 → AISA-12
+OK  Un agente alla volta: nessun messaggio con più di un agent
+NO  Ordine fra reparti: reparti nell'ordine: AISA → AIPCA
+OK  Conferma dell'utente prima del software: domanda all'utente prima del primo specialista software
+```
+
+- **C1–C4, C6**: verdi. **C7**: verde, il pannello ha mostrato gli agenti in ordine con il direttore in testa a ogni reparto, i resoconti e le domande.
+- **C5**: rosso. Il modello è partito dal direttore software e ha caricato la privacy dopo, senza business né design. La regola sull'ordine nelle istruzioni del server è la stessa della 0.13.0, e il 2026-11-22 il caso era verde: è la variabilità del modello su un'esecuzione, non un effetto del contesto compatto. Rilievo aperto in F43.
+- **C8**: verde. AISA-01 e AIPCA-01, primi del loro reparto, hanno ricevuto le regole intere (7.046 e 7.599 byte); AISA-02 il riferimento (3.376 byte). AISA-02 ha comunque citato una scheda della sua biblioteca con la data.
+- **C9**: verde. Dopo `/compact` il modello ha richiamato `list_agents` e poi `agent` per AISA-12 con `full_rules: true` (6.737 byte, regole intere).
+- In più: il modello ha usato `check` due volte, da solo, dopo aver scritto `plan/` (F42).
+- **Dopo `/clear`** (stesso server, transcript nuovo), con «Continua con la revisione del Code Reviewer»: `list_agents`, `agent` AISA-12 con `full_rules: true` (6.694 byte, regole intere), poi `agent` AISA-01 senza (2.920 byte, riferimento). Il riferimento è giusto: nella conversazione nuova le regole di AISA erano già arrivate con AISA-12. Il rilievo P2 di F41 si chiude con questa evidenza (F43-02).
+
 ## Misure in byte
 
 Misure del 2026-11-25 con `npm run -s agent-text -- --sizes --date 2026-11-25`. Byte misurati (UTF-8); «~token» è una stima, byte / 4.

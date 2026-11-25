@@ -71,5 +71,5 @@ Verifica del 2026-11-24 su `develop` del sito, in locale con dati finti (`REPUTA
 
 ## Rilievi aperti
 
-- **F38-R1 (P3)**: senza JavaScript `/consumo` mostra solo la prima scheda e nessuna tabella (Tab e Accordion di Base UI non mettono nell'HTML i pannelli chiusi); prima le tabelle erano sempre visibili. Da valutare `keepMounted` con un'alternativa senza script, se serve.
-- **F38-R2 (P3)**: su telefono i totali sopra le barre dei mesi sono nascosti (si sovrapponevano); i valori restano in «Vedi i numeri».
+- ~~**F38-R1 (P3)**~~ Chiuso in F44-07: senza JavaScript `/consumo` mostra solo la prima scheda e nessuna tabella (Tab e Accordion di Base UI non mettono nell'HTML i pannelli chiusi); prima le tabelle erano sempre visibili. Da valutare `keepMounted` con un'alternativa senza script, se serve.
+- ~~**F38-R2 (P3)**~~ Chiuso in F44-04: su telefono i totali sopra le barre dei mesi sono nascosti (si sovrapponevano); i valori restano in «Vedi i numeri».

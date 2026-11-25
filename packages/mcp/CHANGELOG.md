@@ -2,6 +2,17 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.16.0 — 2026-11-25
+
+### Nuovo
+- Comando `npx @agentrica/mcp reminder [cartella]`: aggiunge il promemoria a `.claude/settings.json` di un progetto già avviato (installato con `add`, o con un `settings.json` che `init --existing` non tocca). Lascia com'è il resto del file, con il suo rientro e i suoi fine riga, non ripete il promemoria se c'è già e non tocca un file che non è nella forma di Claude Code.
+
+### Cambiato
+- Pannello: le contraddizioni stanno in una casella a sé, separata dagli errori di formato, ciascuna con il suo titolo.
+
+### Corretto
+- `check` dà la riga di un JSON illeggibile quando Node la scrive nel messaggio dell'errore.
+
 ## 0.15.1 — 2026-11-25
 
 ### Corretto

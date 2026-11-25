@@ -62,9 +62,12 @@ function renderHeader({ project, update, noAgent }) {
     : [];
   const git = project.git ? [TEXTS.branch(project.git.branch), ...files].join(" · ") : TEXTS.noGit;
   $("project").textContent = project.name + git;
-  const problems = $("problems");
-  problems.hidden = project.problems.length === 0;
-  problems.textContent = project.problems.join("\n");
+  // F44-06: errori di formato e contraddizioni in due caselle, ciascuna con il suo titolo.
+  for (const [id, list, title] of [["problems", project.problems, TEXTS.formatErrors], ["contradictions", project.contradictions, TEXTS.contradictions]]) {
+    const box = $(id);
+    box.hidden = list.length === 0;
+    box.textContent = list.length ? [title(list.length), ...list].join("\n") : "";
+  }
   // Piano mancante o senza fasi (F35): un'informazione con le strade per crearlo, non un errore.
   const notice = $("notice");
   notice.hidden = !project.notice;

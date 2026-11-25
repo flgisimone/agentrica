@@ -181,9 +181,11 @@ function checkAudit(root: string, issues: Issue[]) {
       try {
         text = readInside(root, join(audit, folder, name));
         data = JSON.parse(text);
-      } catch {
-        // ponytail: senza riga, perché JSON.parse di Node 26 non dice più la posizione; un editor la mostra subito.
-        error(T.check.badJson);
+      } catch (e) {
+        // ponytail: la riga solo quando il messaggio di JSON.parse la scrive («line 3 column 2»); «Unexpected token» e
+        // «Unexpected end» di Node 26 non la hanno. Calcolarla da sé chiede un parser: solo se un progetto ne ha bisogno.
+        const line = /\(line (\d+) column \d+\)/.exec(e instanceof Error ? e.message : "")?.[1];
+        error(T.check.badJson, line === undefined ? undefined : Number(line));
         continue;
       }
       const parsed = AuditSchema.safeParse(normalize(data));

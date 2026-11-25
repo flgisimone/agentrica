@@ -10,6 +10,8 @@ const TEXTS = {
   untracked: (n) => `${n} new`,
   branch: (name) => ` · branch ${name}`,
   noGit: " · not a git repository",
+  formatErrors: (n) => (n === 1 ? "1 format error in plan/ or audit/:" : `${n} format errors in plan/ or audit/:`),
+  contradictions: (n) => (n === 1 ? "1 contradiction, with both locations (it doesn't say which one holds):" : `${n} contradictions, with both locations (it doesn't say which one holds):`),
   noQuestions: "No pending choices. When an agent needs you, the question appears here.",
   recommended: "Recommended",
   note: "Note (optional)",

@@ -483,7 +483,11 @@ export const en: Texts = {
     skipped: (files: string) => `Skipped because they already exist: ${files}`,
     /** Il promemoria dell'hook UserPromptSubmit (F39-01), a ogni richiesta: niente ' " $ ` % ! \ perché passa dalla shell. */
     reminder: "Agentrica: if this request is work on the project, first load the right agent with the Agentrica agent tool (choose it with list_agents); work without agents only if the user asks.",
-    reminderSkipped: "The reminder was not added because .claude/settings.json already existed: to add it by hand see «Reminder» in the @agentrica/mcp README.",
+    reminderSkipped: "The reminder was not added because .claude/settings.json already existed: to add it without touching the rest, run npx @agentrica/mcp reminder.",
+    reminderUsage: "usage: agentrica-mcp reminder [folder] [--lang it|en]",
+    reminderAdded: (file: string) => `Reminder added to ${file}: Claude Code reads it from the next session.`,
+    reminderPresent: "The reminder is already in .claude/settings.json: nothing changed.",
+    reminderBadSettings: ".claude/settings.json is not a JSON object with hooks and UserPromptSubmit in the shape Claude Code uses: I left it untouched. Fix it or add the hook by hand (see «Reminder» in the @agentrica/mcp README).",
     importAgents: "Your CLAUDE.md was not touched: add a line «@AGENTS.md» so that Claude Code reads Agentrica's rules.",
     noCommit: "git: no commit, review the new files and add them yourself",
     stepExisting: "  2. ask Claude «Create the project phases from the existing code»: it writes only plan/, stops at the backlog and suggests /clear",

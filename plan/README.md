@@ -127,5 +127,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F41 | [41-contesto-compatto.md](41-contesto-compatto.md) | Contesto compatto: regole comuni una volta per sessione (anche con i subagent e dopo `/compact`), indice della biblioteca, passaggi di consegne brevi, confronto prima e dopo | completata |
 | F42 | [42-validazione.md](42-validazione.md) | Validazione deterministica: controllo del formato di `plan/` e `audit/` (tool e comando `check`, pannello), tre contraddizioni con entrambe le posizioni, avviso sul passaggio di consegne in `report` | completata |
 | F43 | [43-rilievi-rilascio.md](43-rilievi-rilascio.md) | Rilievi di F40–F42: prova a mano del flusso con il contesto compatto (C8 e C9 verdi anche dopo `/clear`), descrizione npm senza numero, testi del sito; rilascio di pacchetto e sito alla 0.15.1 | completata (0.15.1) |
+| F44 | [44-rilievi.md](44-rilievi.md) | Rilievi piccoli e medi di F37–F42: caso `portale-ordini`, schede per le prove, riga del JSON in `check`, contraddizioni a sé nel pannello, comando `reminder`, `/consumo` senza JavaScript e su telefono; rilascio 0.16.0 | completata |
 
-Ordine: F0 → F43 in sequenza.
+Ordine: F0 → F44 in sequenza.

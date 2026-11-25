@@ -196,13 +196,57 @@ test("promemoria (F39-01): hook UserPromptSubmit in .claude/settings.json, che s
   assert.throws(() => readFileSync(join(tmp, "senza-promemoria", ".claude", "settings.json")));
 });
 
+test("reminder (F44-08): crea settings.json o aggiunge l'hook tenendo il resto, una volta sola; un file illeggibile resta com'è", () => {
+  const reminder = (dir: string, lang = "it") => spawnSync(process.execPath, [server, "reminder", dir, "--lang", lang], { cwd: tmp, encoding: "utf8" });
+  const read = (dir: string) => JSON.parse(readFileSync(join(tmp, dir, ".claude", "settings.json"), "utf8"));
+  const ours = (lang: "it" | "en") => reminderCommand(TEXTS[lang].init.reminder);
+
+  mkdirSync(join(tmp, "rem-nuovo"));
+  let result = reminder("rem-nuovo");
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Promemoria aggiunto/);
+  assert.deepEqual(read("rem-nuovo"), { hooks: { UserPromptSubmit: [{ hooks: [{ type: "command", command: ours("it") }] }] } });
+
+  const other = { type: "command", command: "echo altro" };
+  mkdirSync(join(tmp, "rem-pieno", ".claude"), { recursive: true });
+  writeFileSync(join(tmp, "rem-pieno", ".claude", "settings.json"), JSON.stringify({ permissions: { allow: ["Bash(ls)"] }, hooks: { Stop: [{ hooks: [other] }], UserPromptSubmit: [{ hooks: [other] }] } }));
+  assert.equal(reminder("rem-pieno").status, 0);
+  result = reminder("rem-pieno", "en");
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /already in/, "il promemoria italiano conta anche per l'inglese");
+  assert.deepEqual(read("rem-pieno"), {
+    permissions: { allow: ["Bash(ls)"] },
+    hooks: { Stop: [{ hooks: [other] }], UserPromptSubmit: [{ hooks: [other] }, { hooks: [{ type: "command", command: ours("it") }] }] },
+  });
+
+  // Rientro, fine riga e a capo finale del file restano quelli di prima: tab e CRLF senza a capo, 4 spazi con a capo.
+  mkdirSync(join(tmp, "rem-stile", ".claude"), { recursive: true });
+  const style = join(tmp, "rem-stile", ".claude", "settings.json");
+  for (const [indent, eol, end] of [["\t", "\r\n", ""], ["    ", "\n", "\n"]] as const) {
+    writeFileSync(style, JSON.stringify({ permissions: { allow: [] } }, null, indent).replace(/\n/g, eol) + end);
+    assert.equal(reminder("rem-stile").status, 0);
+    const after = readFileSync(style, "utf8");
+    const expected = { permissions: { allow: [] }, hooks: { UserPromptSubmit: [{ hooks: [{ type: "command", command: ours("it") }] }] } };
+    assert.equal(after, JSON.stringify(expected, null, indent).replace(/\n/g, eol) + end, JSON.stringify(indent));
+  }
+
+  mkdirSync(join(tmp, "rem-rotto", ".claude"), { recursive: true });
+  for (const text of ["{ rotto", "[]", '{"hooks": []}', '{"hooks": {"UserPromptSubmit": {}}}']) {
+    writeFileSync(join(tmp, "rem-rotto", ".claude", "settings.json"), text);
+    result = reminder("rem-rotto");
+    assert.equal(result.status, 1, text);
+    assert.match(result.stderr, /non l'ho toccato/, text);
+    assert.equal(readFileSync(join(tmp, "rem-rotto", ".claude", "settings.json"), "utf8"), text);
+  }
+});
+
 test("init --existing con .claude/settings.json già presente: non lo tocca e dice come aggiungere il promemoria", () => {
   const dir = join(tmp, "con-impostazioni");
   mkdirSync(join(dir, ".claude"), { recursive: true });
   writeFileSync(join(dir, ".claude", "settings.json"), "{}\n");
   const result = init("con-impostazioni", "--existing");
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Il promemoria non è stato aggiunto.+«Promemoria» nel README/);
+  assert.match(result.stdout, /Il promemoria non è stato aggiunto.+npx @agentrica\/mcp reminder/);
   assert.equal(readFileSync(join(dir, ".claude", "settings.json"), "utf8"), "{}\n");
   const fresh = init("con-hook", "--existing");
   assert.doesNotMatch(fresh.stdout, /promemoria non è stato aggiunto/);

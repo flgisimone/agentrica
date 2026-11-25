@@ -257,8 +257,11 @@ export async function startPanel(
       return send(res, 200, page.body.toString("utf8"), page.type);
     }
     if (req.method === "GET" && url.pathname === "/api/state") {
-      // F42-04: gli errori di formato e le contraddizioni dal validatore, lo stesso del comando e del tool check.
-      const project = { ...(await readProject(root)), problems: checkProject(root).map(formatIssue) };
+      // F42-04: gli errori di formato e le contraddizioni dal validatore, lo stesso del comando e del tool check;
+      // da F44-06 in due elenchi, che la pagina mostra in due caselle.
+      const issues = checkProject(root);
+      const list = (kind: string) => issues.filter((i) => i.kind === kind).map(formatIssue);
+      const project = { ...(await readProject(root)), problems: list("error"), contradictions: list("contradiction") };
       const questions = [...pending.values()].map((p) => p.question);
       const rated = ratings ? [...new Set(activity.map((a) => a.id))].filter((id) => ratings.isRated(id)) : [];
       const rating = ratings ? { notice: notice(), maxComment: MAX_COMMENT, rated } : null;

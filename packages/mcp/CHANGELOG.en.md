@@ -2,6 +2,17 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.16.0 — 2026-11-25
+
+### Added
+- `npx @agentrica/mcp reminder [folder]` command: adds the reminder to `.claude/settings.json` of a project already under way (set up with `add`, or with a `settings.json` that `init --existing` leaves alone). It keeps the rest of the file, does not repeat the reminder if it is already there, and leaves untouched a file that is not in the shape Claude Code uses.
+
+### Changed
+- Panel: contradictions are in a box of their own, separate from format errors, each with its title.
+
+### Fixed
+- `check` gives the line of an unreadable JSON file when Node writes it in the error message.
+
 ## 0.15.1 — 2026-11-25
 
 ### Fixed

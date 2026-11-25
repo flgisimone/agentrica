@@ -215,6 +215,26 @@ test("resoconto (tool report): sull'ultima chiamata dell'agente, solo per agenti
   }
 });
 
+test("errori di formato e contraddizioni arrivano alla pagina in due elenchi (F44-06)", async () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-check-")));
+  after(() => rmSync(dir, { recursive: true, force: true }));
+  mkdirSync(join(dir, "audit", "a"), { recursive: true });
+  writeFileSync(join(dir, "audit", "a", "rotto.json"), "");
+  const finding = (priorita: string) => JSON.stringify({ agente: "AICA-02", rilievi: [{ id: "S-1", titolo: "Uno", priorita, stato: "Nuova", evidenza: "x" }] });
+  writeFileSync(join(dir, "audit", "a", "uno.json"), finding("P1"));
+  writeFileSync(join(dir, "audit", "a", "due.json"), finding("P2"));
+  const panel = await startPanel(dir);
+  try {
+    const cookie = await login(panel.url);
+    const { project } = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
+    assert.deepEqual(project.problems, ["audit/a/rotto.json: non è un JSON leggibile."]);
+    assert.equal(project.contradictions.length, 1);
+    assert.match(project.contradictions[0], /S-1/);
+  } finally {
+    await panel.close();
+  }
+});
+
 test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async () => {
   const panel = await startPanel(root);
   const base = new URL(panel.url).origin;
@@ -314,11 +334,12 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
     assert.deepEqual(texts(full), ["Resoconto di AISA-02 · ALTAIR salvato nel pannello."]);
 
     const result = client.callTool({ name: "ask_user", arguments: question });
-    let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string; director: boolean }[]; subagents: unknown[]; project: { problems: string[] } };
+    let state: { questions: { id: string }[]; activity: { id: string; task: string; department: string; director: boolean }[]; subagents: unknown[]; project: { problems: string[]; contradictions: string[] } };
     do {
       state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     } while (state.questions.length === 0);
     assert.deepEqual(state.project.problems, [], "il piano di questo repository si legge");
+    assert.deepEqual(state.project.contradictions, []);
     assert.deepEqual(state.activity.map((a) => [a.id, a.department, a.director, a.task]), [["AISA-02", "AISA · Software", false, "Rivedi   i confini\ndel modulo."]]);
     assert.deepEqual(state.subagents, [], "nessun file di Claude Code in questa HOME");
 

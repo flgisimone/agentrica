@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere i rilievi che bloccano il rilascio di F41 e F42 (prova a mano del flusso con il contesto compatto) e portare pacchetto e sito insieme alla 0.15.0.
 
-> **Stato: in corso.** Aperta il 2026-11-25 su scelta dell'utente («F43 rilievi + rilascio»).
+> **Stato: completata il 2026-11-25** (0.15.1). Aperta il 2026-11-25 su scelta dell'utente («F43 rilievi + rilascio»).
 
 **Agenzie (proposta)**: software (Backend per eventuali correzioni del server, DevOps per il rilascio, QA, Code Reviewer); design (UX Writer) solo per i testi del sito che cambiano.
 
@@ -40,12 +40,13 @@
 - **F43-01** Prova a mano del 2026-11-25 (Opus 5.5, Claude Code 2.1.330, server di `develop`), esito in `examples/risultati/2026-11-25-contesto-compatto.md`: C1–C4, C6, C7, C8 e C9 verdi, C5 rosso (AISA → AIPCA). C8: regole intere ai primi agenti di AISA e AIPCA (7.046 e 7.599 byte), riferimento ad AISA-02 (3.376 byte). C9: dopo `/compact` AISA-12 con `full_rules: true` (6.737 byte). Il modello ha usato `check` da solo dopo aver scritto `plan/`.
 - **F43-02** Dopo `/clear` (transcript nuovo, stesso server) AISA-12 con `full_rules: true` (6.694 byte), poi AISA-01 con il riferimento, giusto perché le regole erano già arrivate nella conversazione. Rilievo P2 di F41 chiuso con questa evidenza.
 - **F43-03** `packages/mcp/package.json`: «Agentrica's AI agents, organized in departments, as a local MCP server…», senza numero (chiude F36-R5).
-- **F43-04** Sito, branch `fase/f43-rilievi-rilascio`: riga di `check` in «Cosa resta sul computer» di Installa (it, en); in Orchestrazione la frase sulle regole comuni intere al primo agente del reparto, il riferimento ai successivi e la richiesta intera dopo `/compact` o `/clear` (it, en). Dipendenza a 0.15.0 dopo la pubblicazione su npm.
+- **F43-04** Sito, branch `fase/f43-rilievi-rilascio`: riga di `check` in «Cosa resta sul computer» di Installa (it, en); in Orchestrazione la frase sulle regole comuni intere al primo agente del reparto, il riferimento ai successivi e la richiesta intera dopo `/compact` o `/clear` (it, en). Dipendenza a 0.15.1 (vedi F43-05).
+- **F43-05** Rilascio: PR #41 in `main`, tag `v0.15.0`, pubblicata su npm con provenance. Il README del pacchetto aveva ancora i comandi della 0.13.0 (la «Versioni» di CONVENTIONS §13.8 saltata in F41 e F42) e il test del sito che confronta i comandi si è fermato. Correzione su `fix/readme-versione` (scelta dell'utente): README del pacchetto e della radice alla 0.15.1, test in `prompt.test.ts` che lega ogni `@agentrica/mcp@x.y.z` dei quattro README a `VERSION` (fallisce senza la correzione), `CHANGELOG` (it, en); PR #42, tag `v0.15.1`, npm. Sito: dipendenza 0.15.1, PR #23 in `main`, deploy Vercel riuscito; `https://agentrica.vercel.app/it/installa` mostra `@agentrica/mcp@0.15.1` e la riga di `check`. `develop` e `main` allineati nei due repository.
 
 ## Verifiche
 
 - `npm run verify` in questo repository: verde (191 test nell'ultimo workspace).
-- `npm run verify` nel sito: verde. `verify:e2e` e la prova con `npm run dev` dopo l'aggiornamento della dipendenza, nel rilascio.
+- Sito alla 0.15.1: `npm run verify` verde, `npm run verify:e2e` 131 passate, 1 saltata. CI verde sulle tre PR. Pagine controllate in produzione con `curl`; nessuna prova visiva a mano con `npm run dev`.
 
 ## Rilievi aperti
 

@@ -34,6 +34,7 @@ Per ogni tool, comando e pagina, se resta sul tuo computer o cosa esce, verso ch
 | Tool, comando o pagina | Cosa esce dal computer, e quando |
 |---|---|
 | `list_agents`, `agent`, `library` e i prompt degli agenti | niente: leggono `agents/` del pacchetto |
+| `check`, tool e comando | niente: leggono `plan/` e `audit/` della cartella del progetto |
 | `report`, `ask_user`, `open_panel` e il [pannello](#pannello-locale) | niente: memoria del server e pagina su `127.0.0.1`, che legge `plan/`, `audit/`, `git status` e i conteggi di token di Claude Code |
 | `/mcp__agentrica__configure` | niente: scrive solo `~/.agentrica/config.json` |
 | `rate_agent`, `/mcp__agentrica__rate`, «Valuta gli agenti» nel pannello | voto, commento e versione, ad Agentrica, dopo l'anteprima e il tuo sì |
@@ -157,6 +158,7 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `list_agents` 
 | `list_agents` | `department` (il reparto) facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
 | `agent` | `id` (es. `AISA-02`), `task` (il compito) e `full_rules` facoltativi | le istruzioni dell'agente, con le regole comuni e l'indice della biblioteca del reparto (vedi [Regole comuni](#regole-comuni-una-volta-per-reparto)) |
 | `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
+| `check` | nessuno | gli errori di formato e le contraddizioni di `plan/` e `audit/` della cartella del progetto, con file e riga (vedi [Controllo del formato](#controllo-del-formato)) |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 | `share_usage` | nessuno; poi `code` | l'anteprima dei totali di token del progetto e un codice; con il codice, l'invio (vedi [Totali di token](#totali-di-token)) |
 | `submit_project` | `name`, `url`, `description`, `departments`, `agents` e `author` (gli ultimi due facoltativi), `consent`, `license`; poi `code` | l'anteprima della proposta di un progetto e un codice; con il codice, l'invio (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)) |
@@ -294,7 +296,7 @@ Con il pannello il modello ha tre tool in più:
 |---|---|---|
 | `open_panel` | nessuno | apre la pagina nel browser e ne restituisce l'URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), `header` e `multiple` facoltativi | mostra la scelta nella pagina e restituisce la risposta |
-| `report` | `id` dell'agente, `summary` (al più 4000 caratteri) | salva nel pannello il resoconto di ciò che l'agente ha fatto; il testo di ogni agente chiede di mandarlo a fine compito |
+| `report` | `id` dell'agente, `summary` (al più 4000 caratteri) | salva nel pannello il resoconto di ciò che l'agente ha fatto; il testo di ogni agente chiede di mandarlo a fine compito. Dalla 0.15.0, se nel passaggio di consegne non trova esito, rilievi o domande aperte, lo salva lo stesso e lo dice al modello |
 
 Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta finché il server manda notifiche di avanzamento (fino a 4 ore; 25 minuti con un client che non le chiede), poi l'agente chiede nel terminale. Le domande del client, come i permessi dei tool, restano nel client.
 
@@ -304,7 +306,15 @@ Se la pagina non è aperta, `ask_user` la apre. Il client aspetta la risposta fi
 
 - `plan/README.md` con una sezione `## Fasi` (`## Phases`) e una tabella `| Fase | File | Contenuto | Stato |`, il file come link (`[14-pannello.md](14-pannello.md)`). La fase aperta è la prima con uno stato diverso da `completata` e `sospesa` (`completed`, `suspended`).
 - Nel file della fase: `# Titolo`, una riga `**Obiettivo**: …` (`**Goal**`), `## Backlog` con la tabella `| # | Attività | Priorità |`, `## Criteri di accettazione` e `## Fatto` (`## Acceptance criteria`, `## Done`) come elenchi; un'attività è fatta quando il suo id compare in grassetto in «Fatto» (`- **F14-01** …`). `## Rilievi aperti` (`## Open findings`) è un elenco, con la priorità (`P0`–`P3`) nel testo; una voce che dice «risolto» o «chiuso» («resolved», «closed»; es. «Risolto in F6.») resta nel piano ma il pannello non la mostra.
-- `audit/<cartella>/<file>.json` con `agente` (`agent`, es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` (`findings`) di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo (`title`, `priority`, `status`); un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
+- `audit/<cartella>/<file>.json` con `agente` (`agent`, es. `"AICA-02 · …"`, da cui il reparto) e un elenco `rilievi` (`findings`, o `observations` nel formato del reparto design) di oggetti con `id`, `titolo`, `priorita` e `stato` facoltativo (`title`, `priority`, `status`); un rilievo con uno `stato` che dice «risolto» o «chiuso» non si mostra.
+
+#### Controllo del formato
+
+Dalla 0.15.0 il server controlla, senza modelli, la forma dei file di `plan/` e `audit/`: tabelle e sezioni del formato qui sopra, campi obbligatori, id univoci, file delle fasi che esistono, priorità `P0`–`P3` dove il backlog ha la colonna «Priorità» e, per un rilievo chiuso, l'evidenza (`evidenza`, `evidence`). Segnala anche tre contraddizioni, con entrambe le posizioni e senza scegliere quale vale: lo stesso id di rilievo in due file con titolo, priorità o stato diversi; un rilievo chiuso senza evidenza; una fase `completata` con attività `P0` che non compaiono in «Fatto». Controlla la struttura, non il contenuto, e non modifica nulla. Lo stesso controllo si usa in tre modi: il tool `check`, che le istruzioni del server chiedono di usare dopo aver scritto in `plan/` o `audit/`; il pannello, che mostra gli errori in cima alla pagina; il comando, per la CI, che stampa `file:riga: causa` ed esce con 1 se trova qualcosa:
+
+```sh
+npx -y @agentrica/mcp@0.15.0 check [cartella del progetto]
+```
 
 ## Nuovo progetto
 

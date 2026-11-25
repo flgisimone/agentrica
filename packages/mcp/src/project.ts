@@ -1,7 +1,7 @@
 // Lettura del progetto dell'utente per il pannello: fasi e backlog da plan/, rilievi da plan/ e audit/, stato di git.
 // Il formato è quello che crea `init` (init.ts), descritto nel README del pacchetto. Si legge solo dentro plan/ e audit/
 // della cartella del progetto: i link simbolici che escono sono rifiutati e ogni file ha un limite di dimensione.
-// Un file mancante o fuori formato diventa un problema in `problems`, mai un errore che ferma il pannello. Da F35 un piano
+// Un file mancante o fuori formato si salta, mai un errore che ferma il pannello: da F42 lo segnala il validatore (check.ts). Da F35 un piano
 // che manca o non ha ancora fasi (progetto già avviato, `init --existing`) è un'informazione in `notice`, non un problema.
 // Da F32 il formato esiste in italiano e in inglese (starter/ e starter/en/): titoli, stati e chiavi degli audit si
 // leggono in entrambe le lingue, qualunque sia quella del server.
@@ -59,14 +59,13 @@ export interface Project {
   phases: Phase[];
   openPhase: OpenPhase | null;
   findings: Finding[];
-  problems: string[];
   /** Un'informazione, non un errore (F35): il piano manca o non ha ancora fasi, con le strade per crearlo. */
   notice: string | null;
 }
 
 const MAX_FILE_BYTES = 1_000_000;
 const DEPARTMENT = /\b(AIBPD|AICA|AIPCA|AISA|AIWDA)\b/;
-const PRIORITY = /\bP[0-3]\b/;
+export const PRIORITY = /\bP[0-3]\b/;
 const CLOSED = new Set(["completata", "sospesa", "completed", "suspended"]);
 // Un rilievo è chiuso quando il testo (fasi) o lo stato (audit) dice «risolto» o «chiuso», in qualsiasi genere e
 // numero, e non «non risolto» (in inglese «resolved» o «closed», non «not resolved»): la voce resta nel piano come
@@ -77,7 +76,7 @@ const CLOSED_FINDING = [/(?<!\bnon )\b(risolt|chius)[oaie]\b/i, /(?<!\bnot )\b(r
 export const isClosedFinding = (text: string) => CLOSED_FINDING.some((pattern) => pattern.test(text));
 
 /** I titoli delle sezioni del piano, in italiano e in inglese. */
-const HEADINGS = {
+export const HEADINGS = {
   phases: ["Fasi", "Phases"],
   backlog: ["Backlog"],
   done: ["Fatto", "Done"],
@@ -86,7 +85,7 @@ const HEADINGS = {
 } as const;
 
 /** Legge un file di testo sotto `root`, rifiutando link simbolici che escono e file troppo grandi. */
-function readInside(root: string, path: string): string {
+export function readInside(root: string, path: string): string {
   const real = realpathSync(path);
   if (!real.startsWith(root + sep)) throw new Error("fuori dalla cartella del progetto");
   if (statSync(real).size > MAX_FILE_BYTES) throw new Error("file troppo grande");
@@ -103,10 +102,13 @@ export function section(markdown: string, heading: string | readonly string[]): 
   return lines.slice(start + 1, end === -1 ? undefined : end);
 }
 
+/** Il separatore delle celle: una «|» senza la barra inversa, che in GFM la tiene nella cella (`it\\|en`). */
+export const CELL = /(?<!\\)\|/;
+
 /** Le righe di dati della prima tabella Markdown fra `lines`, senza intestazione e separatore. */
 export function tableRows(lines: readonly string[]): string[][] {
   const rows = lines.filter((line) => line.trim().startsWith("|"));
-  return rows.slice(2).map((row) => row.trim().replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim()));
+  return rows.slice(2).map((row) => row.trim().replace(/^\||\|$/g, "").split(CELL).map((cell) => cell.replaceAll("\\|", "|").trim()));
 }
 
 /** Gli elementi di primo livello di un elenco puntato. */
@@ -114,10 +116,10 @@ export function bullets(lines: readonly string[]): string[] {
   return lines.filter((line) => line.startsWith("- ")).map((line) => line.slice(2).trim());
 }
 
-const linkTarget = (cell: string) => /\]\(([^)]+)\)/.exec(cell)?.[1] ?? null;
+export const linkTarget = (cell: string) => /\]\(([^)]+)\)/.exec(cell)?.[1] ?? null;
 const priorityOf = (text: string) => PRIORITY.exec(text)?.[0] ?? "";
 
-function readPhases(root: string, plan: string, problems: string[], notice: (text: string) => void): Phase[] {
+function readPhases(root: string, plan: string, notice: (text: string) => void): Phase[] {
   let readme: string;
   try {
     readme = readInside(root, join(plan, "README.md"));
@@ -129,7 +131,6 @@ function readPhases(root: string, plan: string, problems: string[], notice: (tex
   const rows = phasesSection ? tableRows(phasesSection) : [];
   if (rows.length === 0) {
     if (phasesSection) notice(T.project.emptyPlan);
-    else problems.push(T.project.noPhases);
     return [];
   }
   return rows.map(([id = "", file = "", summary = "", status = ""]) => {
@@ -140,21 +141,18 @@ function readPhases(root: string, plan: string, problems: string[], notice: (tex
   });
 }
 
-function readOpenPhase(root: string, plan: string, phase: Phase, problems: string[]): OpenPhase | null {
+function readOpenPhase(root: string, plan: string, phase: Phase): OpenPhase | null {
   if (!phase.file) return null;
   let text: string;
   try {
     text = readInside(root, join(plan, phase.file));
   } catch {
-    problems.push(T.project.noPhaseFile(phase.file, phase.id));
     return null;
   }
   const title = /^# (.+)$/m.exec(text)?.[1] ?? phase.id;
   const goal = /^\*\*(?:Obiettivo|Goal)\*\*:\s*(.+)$/m.exec(text)?.[1] ?? "";
   const done = (section(text, HEADINGS.done) ?? []).join("\n");
-  const backlog = section(text, HEADINGS.backlog);
-  if (!backlog) problems.push(T.project.noBacklog(phase.file));
-  const tasks = tableRows(backlog ?? []).map(([id = "", task = "", priority = ""]) => ({
+  const tasks = tableRows(section(text, HEADINGS.backlog) ?? []).map(([id = "", task = "", priority = ""]) => ({
     id,
     task,
     priority,
@@ -188,7 +186,7 @@ function readPhaseFindings(root: string, plan: string, phases: readonly Phase[])
 
 const asText = (value: unknown) => (typeof value === "string" ? value : "");
 
-function readAuditFindings(root: string, problems: string[]): Finding[] {
+function readAuditFindings(root: string): Finding[] {
   const audit = join(root, "audit");
   let folders: string[];
   try {
@@ -204,16 +202,13 @@ function readAuditFindings(root: string, problems: string[]): Finding[] {
       try {
         data = JSON.parse(readInside(root, join(audit, folder, file)));
       } catch {
-        problems.push(T.project.badJson(source));
         return [];
       }
-      // Chiavi italiane (rilievi, agente, titolo, priorita, stato) o inglesi (findings, agent, title, priority, status).
+      // Chiavi italiane (rilievi, agente, titolo, priorita, stato), inglesi (findings, agent, title, priority, status) o
+      // del formato del reparto design (observations, F42).
       const record = data as Record<string, unknown>;
-      const list = record.rilievi ?? record.findings;
-      if (!Array.isArray(list)) {
-        problems.push(T.project.noFindings(source));
-        return [];
-      }
+      const list = record.rilievi ?? record.findings ?? record.observations;
+      if (!Array.isArray(list)) return [];
       const department = DEPARTMENT.exec(asText(record.agente ?? record.agent))?.[1] ?? null;
       const items = list
         .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null)
@@ -249,17 +244,15 @@ export async function readGit(root: string): Promise<GitState | null> {
 
 /** Legge plan/ e audit/ di `root` (la cartella del progetto, già risolta con realpath). */
 export function readPlan(root: string): Omit<Project, "git"> {
-  const problems: string[] = [];
   let notice: string | null = null;
   const plan = join(root, "plan");
-  const phases = readPhases(root, plan, problems, (text) => (notice = text));
+  const phases = readPhases(root, plan, (text) => (notice = text));
   const open = phases.find((phase) => !CLOSED.has(phase.status.toLowerCase()));
   return {
     name: basename(root),
     phases,
-    openPhase: open ? readOpenPhase(root, plan, open, problems) : null,
-    findings: [...readPhaseFindings(root, plan, phases), ...readAuditFindings(root, problems)],
-    problems,
+    openPhase: open ? readOpenPhase(root, plan, open) : null,
+    findings: [...readPhaseFindings(root, plan, phases), ...readAuditFindings(root)],
     notice,
   };
 }

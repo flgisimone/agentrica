@@ -46,6 +46,7 @@ export const en: Texts = {
       // F41-02: rules and index once per department; how to get them back after /compact.
       "Common rules and index come in full with the first agent of each department, then as a reference: after /compact or /clear, or if they are not in your context, call agent again with full_rules true. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
+      "After writing files in plan/ or audit/, check their format with check. " +
       "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
       // F39-04: what leaves the computer, for those working under a «nothing leaves» rule.
@@ -183,13 +184,23 @@ export const en: Texts = {
       needRating: "A score from 1 to 5 is needed to prepare the preview.",
     },
 
+    check: {
+      title: "Format check of plan/ and audit/",
+      description:
+        "Checks without models the shape of the plan/ and audit/ files of the project folder: tables, required fields, unique ids, linked files that exist. " +
+        "It also reports contradictions (same finding with different values, finding closed without evidence, completed phase with P0 tasks without an outcome), with both locations. It changes nothing.",
+      unreadable: (why: string) => `Cannot read the project folder: ${why}`,
+    },
+
     report: {
       title: "Report of an agent for the panel",
       description:
         "Saves in the local panel the report of what an agent did, shown under the agent among the agents in use. " +
         "Call it when the agent finishes its task, before moving to another one. It stays on the user's computer.",
-      summary: "What the agent did, briefly: result, files touched, decisions taken or to take, open findings. At most 4000 characters.",
+      summary: "The agent's handover, briefly: outcome, findings with their evidence (file and line, command), open questions. At most 4000 characters.",
       saved: (name: string) => `Report of ${name} saved in the panel.`,
+      missing: (parts: string) => `The report lacks ${parts}: the handover has an outcome, findings with their evidence and open questions (even «none»). The report is saved as it is; if something is missing, send it again.`,
+      parts: { outcome: "the outcome", findings: "the findings", questions: "the open questions" },
       notLoaded: "Report not saved: the agent has not been loaded in this session (agent tool).",
     },
 
@@ -498,10 +509,30 @@ export const en: Texts = {
     noPlan:
       "This project has no plan yet (plan/README.md). To create one run `npx @agentrica/mcp init --existing`, which adds Agentrica's rules without touching your files, or ask Claude «Create the project plan from the existing code».",
     emptyPlan: "The plan has no phases yet. Ask Claude «Create the project phases from the existing code»: it writes only plan/ and stops at the backlog.",
-    noPhases: "plan/README.md lacks the «## Phases» table (Phase | File | Content | Status).",
-    noPhaseFile: (file: string, id: string) => `plan/${file} not found, the file of phase ${id}.`,
-    noBacklog: (file: string) => `plan/${file} lacks the «## Backlog» section.`,
-    badJson: (source: string) => `audit/${source} is not readable JSON: skipped.`,
-    noFindings: (source: string) => `audit/${source} has no findings list: skipped.`,
+  },
+
+  check: {
+    ok: "plan/ and audit/: no format problems.",
+    errors: (n: number) => (n === 1 ? "1 format error:" : `${n} format errors:`),
+    contradictions: (n: number) => (n === 1 ? "1 contradiction (both locations, without choosing which one holds):" : `${n} contradictions (both locations, without choosing which one holds):`),
+    noPhases: "the «## Phases» table is missing (Phase | File | Content | Status).",
+    phaseNoId: "row of the «Phases» table without a phase id.",
+    phaseNoStatus: (id: string) => `phase ${id} has no status.`,
+    badLink: (target: string, id: string) => `the file of phase ${id} (${target}) must be a .md file name inside plan/.`,
+    missingPhaseFile: (file: string, id: string) => `plan/${file} not found, the file of phase ${id}.`,
+    noTitle: "the «# …» title is missing.",
+    noGoal: "the «**Goal**: …» line is missing.",
+    noBacklog: "the «## Backlog» section with its table (# | Task | Priority) is missing.",
+    taskNoId: "backlog row without a task id.",
+    taskPriority: (id: string) => `task ${id} has no P0–P3 priority.`,
+    duplicate: (id: string, first: number) => `id ${id} already appears on line ${first}.`,
+    openP0: (id: string, phase: string, line: number) => `phase ${phase} is completed (plan/README.md:${line}), but P0 task ${id} is not in «Done».`,
+    badJson: "is not readable JSON.",
+    badField: (id: string, field: string) => (id ? `finding ${id}: field ${field} missing or invalid.` : `field ${field} missing or invalid.`),
+    duplicateFinding: (id: string) => `finding ${id} appears twice in the file.`,
+    closedNoEvidence: (id: string) => `finding ${id} is closed but has no evidence (evidenza/evidence).`,
+    sameIdDiffers: (id: string, where: string, fields: string) => `finding ${id} is also in ${where}, with different values in ${fields}.`,
+    usage: "Usage: agentrica-mcp check [project folder]",
+    noDir: (dir: string) => `Folder ${dir} not found.`,
   },
 };

@@ -36,6 +36,7 @@ For each tool, command and page: whether it stays on your computer or what leave
 | Tool, command or page | What leaves your computer, and when |
 |---|---|
 | `list_agents`, `agent`, `library` and the agent prompts | nothing: they read the package's `agents/` |
+| `check`, tool and command | nothing: they read `plan/` and `audit/` of the project folder |
 | `report`, `ask_user`, `open_panel` and the [panel](#local-panel) | nothing: server memory and a page on `127.0.0.1`, which reads `plan/`, `audit/`, `git status` and Claude Code's token counts |
 | `/mcp__agentrica__configure` | nothing: it writes only `~/.agentrica/config.json` |
 | `rate_agent`, `/mcp__agentrica__rate`, «Rate the agents» in the panel | score, comment and version, to Agentrica, after the preview and your yes |
@@ -159,6 +160,7 @@ The command menu shows only the squad's prompts, and `list_agents` and `agent` s
 | `list_agents` | optional `department` (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent, with the recommended model where it was measured |
 | `agent` | `id` (e.g. `AISA-02`), optional `task` and `full_rules` | the agent's instructions, with the department's common rules and library index (see [Common rules](#common-rules-once-per-department)) |
 | `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
+| `check` | none | the format errors and contradictions of `plan/` and `audit/` in the project folder, with file and line (see [Format check](#format-check)) |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
 | `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
 | `submit_project` | `name`, `url`, `description`, `departments`, optional `agents` and `author`, `consent`, `license`; then `code` | a preview of a project proposal and a code; with the code, the sending (see [Show your project](#show-your-project)) |
@@ -296,7 +298,7 @@ With the panel the model has three more tools:
 |---|---|---|
 | `open_panel` | none | opens the page in the browser and returns its URL |
 | `ask_user` | `question`, 2–4 `options` (`label`, `description`), optional `header` and `multiple` | shows the choice in the page and returns the answer |
-| `report` | agent `id`, `summary` (at most 4000 characters) | saves in the panel the report of what the agent did; each agent's text asks to send it at the end of the task |
+| `report` | agent `id`, `summary` (at most 4000 characters) | saves in the panel the report of what the agent did; each agent's text asks to send it at the end of the task. From 0.15.0, if the handover lacks an outcome, findings or open questions, it saves it anyway and tells the model |
 
 If the page is not open, `ask_user` opens it. The client waits for the answer as long as the server sends progress notifications (up to 4 hours; 25 minutes with a client that does not request them), then the agent asks in the terminal. The client's own questions, such as tool permissions, stay in the client.
 
@@ -306,7 +308,15 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 
 - `plan/README.md` with a `## Phases` (`## Fasi`) section and a `| Phase | File | Content | Status |` table, the file as a link (`[00-base.md](00-base.md)`). The open phase is the first one whose status is not `completed` or `suspended` (`completata`, `sospesa`).
 - In the phase file: `# Title`, a `**Goal**: …` (`**Obiettivo**`) line, `## Backlog` with the `| # | Task | Priority |` table, `## Acceptance criteria` (`## Criteri di accettazione`) and `## Done` (`## Fatto`) as lists; a task is done when its id appears in bold under «Done» (`- **F0-01** …`). `## Open findings` (`## Rilievi aperti`) is a list, with the priority (`P0`–`P3`) in the text; an item that says «resolved» or «closed» («risolto», «chiuso») stays in the plan but the panel does not show it.
-- `audit/<folder>/<file>.json` with `agent` (`agente`, e.g. `"AICA-02 · …"`, which gives the department) and a `findings` (`rilievi`) list of objects with `id`, `title`, `priority` and optional `status` (`titolo`, `priorita`, `stato`); a finding whose status says «resolved» or «closed» is not shown.
+- `audit/<folder>/<file>.json` with `agent` (`agente`, e.g. `"AICA-02 · …"`, which gives the department) and a `findings` (`rilievi`, or `observations` in the design department's format) list of objects with `id`, `title`, `priority` and optional `status` (`titolo`, `priorita`, `stato`); a finding whose status says «resolved» or «closed» is not shown.
+
+#### Format check
+
+From 0.15.0 the server checks, without models, the shape of the `plan/` and `audit/` files: tables and sections of the format above, required fields, unique ids, phase files that exist, `P0`–`P3` priorities where the backlog has the «Priority» column and, for a closed finding, the evidence (`evidence`, `evidenza`). It also reports three contradictions, with both locations and without choosing which one holds: the same finding id in two files with a different title, priority or status; a closed finding without evidence; a `completed` phase with `P0` tasks that do not appear in «Done». It checks the structure, not the content, and changes nothing. The same check works in three ways: the `check` tool, which the server instructions ask to use after writing in `plan/` or `audit/`; the panel, which shows the errors at the top of the page; the command, for CI, which prints `file:line: cause` and exits with 1 if it finds something:
+
+```sh
+npx -y @agentrica/mcp@0.15.0 check [project folder]
+```
 
 ## New project
 

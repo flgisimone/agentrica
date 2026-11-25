@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
+import { checkProject } from "./check.ts";
 import { readGit, readPlan } from "./project.ts";
 
 const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-project-")));
@@ -20,20 +21,23 @@ const write = (path: string, text: string) => {
 test("senza plan/ il pannello dà un'informazione con le due strade, non un problema (F35)", () => {
   const empty = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-empty-")));
   const plan = readPlan(empty);
+  const noPlanIssues = checkProject(empty);
   mkdirSync(join(empty, "plan"));
   writeFileSync(join(empty, "plan", "README.md"), "# Piano\n\n## Fasi\n\n| Fase | File | Contenuto | Stato |\n|---|---|---|---|\n");
   const noPhases = readPlan(empty);
+  const noPhasesIssues = checkProject(empty);
   writeFileSync(join(empty, "plan", "README.md"), "# Piano\n");
   const noTable = readPlan(empty);
+  const noTableIssues = checkProject(empty);
   rmSync(empty, { recursive: true });
   assert.deepEqual(plan.phases, []);
   assert.equal(plan.openPhase, null);
-  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(noPlanIssues, []);
+  assert.deepEqual(noPhasesIssues, []);
   assert.match(plan.notice!, /init --existing.*Crea il piano del progetto dal codice esistente/);
-  assert.deepEqual(noPhases.problems, []);
   assert.match(noPhases.notice!, /non ha ancora fasi/);
   assert.equal(noTable.notice, null, "un README senza la tabella «Fasi» resta un problema di formato");
-  assert.match(noTable.problems[0]!, /manca la tabella «## Fasi»/);
+  assert.match(noTableIssues[0]!.message, /manca la tabella «## Fasi»/);
 });
 
 test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
@@ -92,7 +96,6 @@ test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
     { id: "", title: "P3: non risolto, va ripreso.", priority: "P3", department: null, source: "F0", status: null },
     { id: "S-1", title: "Uno", priority: "P2", department: "AICA", source: "2026-01-01/sec.json", status: "Accettata" },
   ]);
-  assert.deepEqual(plan.problems, ["audit/2026-01-01/rotto.json non è un JSON leggibile: saltato."]);
 });
 
 test("un file di fase che è un link fuori dal progetto non si legge", () => {
@@ -102,13 +105,13 @@ test("un file di fase che è un link fuori dal progetto non si legge", () => {
   const plan = readPlan(root);
   assert.equal(plan.openPhase, null);
   assert.ok(!plan.findings.some((f) => f.title.includes("segreto")));
-  assert.match(plan.problems[0]!, /Non trovo plan\/09-link\.md/);
+  assert.match(checkProject(root)[0]!.message, /non trovo plan\/09-link\.md/);
 });
 
 test("il piano di questo repository si legge senza problemi", async () => {
   const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
   const plan = readPlan(repo);
-  assert.deepEqual(plan.problems, []);
+  assert.deepEqual(checkProject(repo), [], "plan/ e audit/ di questo repository passano il controllo (F42)");
   assert.ok(plan.phases.length >= 15);
   const git = await readGit(repo);
   assert.ok(git && git.branch.length > 0 && git.changed >= 0 && git.untracked >= 0);

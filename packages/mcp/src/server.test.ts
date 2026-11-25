@@ -51,9 +51,9 @@ test("un prompt con compito restituisce il testo dell'agente", async () => {
   assert.match(content.text, /## Compito\n\nRivedi i confini\.\n\n## Valutazione\n\n.*rate_agent, id AISA-02.*\n$/);
 });
 
-test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
+test("quattro tool in sola lettura; rate_agent, share_usage e submit_project, gli unici che aprono una connessione", async () => {
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents", "rate_agent", "share_usage", "submit_project"]);
+  assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "check", "library", "list_agents", "rate_agent", "share_usage", "submit_project"]);
   const sending = ["rate_agent", "share_usage", "submit_project"];
   for (const t of tools.filter((t) => !sending.includes(t.name))) assert.equal(t.annotations?.readOnlyHint, true, t.name);
   for (const name of sending) {
@@ -67,6 +67,7 @@ test("tre tool in sola lettura; rate_agent, share_usage e submit_project, gli un
   assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad Agentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
   // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
   assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
+  assert.match(client.getInstructions() ?? "", /Dopo aver scritto file in plan\/ o audit\/, controllane il formato con check\./);
   assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);
 });
 
@@ -77,6 +78,14 @@ test("istruzioni del server entro 4096 caratteri in tutte e due le lingue, con p
   const { en } = await import("./texts/en.ts");
   const o = { agents: 56, departments: 5, codes: "AIBPD, AICA, AIPCA, AISA, AIWDA", example: "aibpd-01-business", exampleId: "AIBPD-01", panel: true, ratings: true };
   for (const texts of [it, en]) assert.ok(texts.server.instructions(o).length <= 4096, texts.locale);
+});
+
+test("check: una cartella del progetto che il server non può leggere dà un errore chiaro, senza fermarlo", async () => {
+  // Il permission model della prova legge solo il clone: la cartella del progetto è fuori.
+  const result = await client.callTool({ name: "check" });
+  assert.equal(result.isError, true);
+  assert.match(text(result), /^Non riesco a leggere la cartella del progetto: /);
+  assert.notEqual((await client.callTool({ name: "list_agents", arguments: {} })).isError, true);
 });
 
 test("share_usage: senza file di Claude Code nulla da inviare; un codice sconosciuto è un errore", async () => {
@@ -127,7 +136,7 @@ test("--no-ratings: niente rate_agent, share_usage né submit_project, niente pr
   );
   try {
     const { tools } = await quiet.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "library", "list_agents"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["agent", "check", "library", "list_agents"]);
     assert.ok(!(quiet.getInstructions() ?? "").includes("rate_agent"));
     assert.ok(!(quiet.getInstructions() ?? "").includes("share_usage"));
     assert.deepEqual((await quiet.listPrompts()).prompts.slice(-1).map((p) => p.name), ["configure"], "senza valutazioni niente valuta né progetto");
@@ -226,7 +235,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
-    for (const file of ["server.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
+    for (const file of ["server.ts", "check.ts", "catalog.ts", "config.ts", "prompt.ts", "panel.ts", "project.ts", "ratings.ts", "share.ts", "showcase.ts", "update.ts", "usage.ts"]) copyFileSync(join(import.meta.dirname, file), join(src, file));
     mkdirSync(join(src, "texts"));
     for (const file of ["index.ts", "it.ts", "en.ts"]) copyFileSync(join(import.meta.dirname, "texts", file), join(src, "texts", file));
     const catalogSrc = join(import.meta.dirname, "..", "..", "catalog", "src");

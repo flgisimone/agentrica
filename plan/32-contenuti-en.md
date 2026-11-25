@@ -41,7 +41,7 @@ Verifica del 2026-11-22, dopo F31 (pacchetto 0.8.1):
 | F32-02 | Traduzione inglese di file di ruolo, regole comuni e README dei reparti (AIBPD, AICA, AIPCA, AISA, AIWDA), un reparto per volta, con il diff mostrato all'utente | P1 |
 | F32-03 | Traduzione inglese delle 16 schede di biblioteca, con fonte, versione e date invariate | P1 |
 | F32-04 | API MCP in inglese: `agente` → `agent`, `elenca_agenti` → `list_agents`, prompt `valuta` → `rate`, `progetto` → `project`, `configura` → `configure`, parametri `compito` → `task`, `reparto` → `department`, `rimuovi` → `remove`; i nomi dei prompt degli agenti (`aisa-02-software`) non cambiano | P1 |
-| F32-05 | Lingua del server: `--lang it|en`, voce `lang` nel file di configurazione e nel modulo `configure`, rilevamento dal sistema; istruzioni, risposte dei tool, testo degli agenti, CLI e pannello nella lingua scelta | P1 |
+| F32-05 | Lingua del server: `--lang it\|en`, voce `lang` nel file di configurazione e nel modulo `configure`, rilevamento dal sistema; istruzioni, risposte dei tool, testo degli agenti, CLI e pannello nella lingua scelta | P1 |
 | F32-06 | Testi del server in inglese e in italiano, un modulo di testi per lingua invece di stringhe sparse; i rimandi al README puntano a quello della lingua scelta | P1 |
 | F32-07 | Subagent e starter in inglese, copiati da `init` nella lingua scelta | P2 |
 | F32-08 | README del pacchetto (inglese e italiano) e `CHANGELOG.md`: tool rinominati con la tabella prima/dopo, `--lang`, contenuti in due lingue; versione 0.9.0 preparata, pubblicata con F33 | P1 |

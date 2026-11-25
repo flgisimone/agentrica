@@ -2,6 +2,19 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.15.0 — 2026-11-25
+
+### Nuovo
+- Controllo del formato di `plan/` e `audit/`, senza modelli: tabelle e sezioni, campi obbligatori, id univoci, file delle fasi che esistono, priorità, evidenza dei rilievi chiusi; con file e riga. Segnala anche le contraddizioni (stesso rilievo con valori diversi in due file, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito) con entrambe le posizioni, senza scegliere. Si usa con il tool `check`, con il comando `npx @agentrica/mcp check [cartella]` (esce con 1 se trova qualcosa, per la CI) e nel pannello.
+- Il tool `report` salva sempre il resoconto e, se nel passaggio di consegne mancano esito, rilievi o domande aperte, lo dice al modello.
+
+### Cambiato
+- Pannello: gli errori di formato vengono dal controllo, quindi un file malformato si vede anche se non è della fase aperta. I rilievi nel formato del reparto design (`observations`) si leggono.
+- Istruzioni del server: dopo aver scritto in `plan/` o `audit/`, controllarne il formato con `check`.
+
+### Corretto
+- Una `|` con la barra inversa (`it\|en`) resta nella cella della tabella invece di dividerla.
+
 ## 0.14.0 — 2026-11-25
 
 ### Nuovo

@@ -2,6 +2,23 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.17.0 — 2026-11-25
+
+### Nuovo
+- Pannello: avvisi in una zona sola, uguale in ogni pagina (versione nuova, `plan/` cambiato senza agenti, piano da creare, errori di formato e contraddizioni), ciascuno su una riga con il conteggio e cosa fare, e un «Dove» a scomparsa con i punti `file:riga` da copiare.
+- Pannello, Sessione: in cima «Serve la tua attenzione» con le scelte da prendere e gli agenti da valutare, solo quando c'è qualcosa.
+- Pannello, testata: versione del server, ora dell'ultimo aggiornamento, link al sito nella lingua del pannello.
+- Pannello, Rilievi: filtro per priorità accanto a quello per reparto.
+
+### Cambiato
+- Pannello, Piano: attività fatte sul totale con una barra, priorità con la motivazione sotto l'attività, esito con il segno ✓, fasi completate sul totale ed elenco delle fasi a scomparsa. Sul telefono la pagina è lunga circa un terzo.
+- Pannello, Consumo: sintesi in alto, dettaglio a schede (giorno, agente, modello, sessione) con una tabella per volta, condivisione in fondo; il risparmio del modello compare solo se c'è.
+- Pannello: bersagli di almeno 44 px, regioni live che parlano solo quando cambia qualcosa, schede che vanno a capo sul telefono.
+
+### Corretto
+- Lo stato di una fase vale per la sua prima parola: «completata (0.10.0)» è completata, nel pannello e in `check`. Prima la «Fase in corso» poteva essere una fase già chiusa.
+- Con `--no-ratings` la scheda «Valutazioni» non compare più.
+
 ## 0.16.0 — 2026-11-25
 
 ### Nuovo

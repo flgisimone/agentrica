@@ -126,5 +126,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F40 | [40-baseline-contesto.md](40-baseline-contesto.md) | Baseline del contesto: byte per componente del testo di ogni agente, flusso di orchestrazione, soglia di qualità; confini fra il Core senza modello e il client | completata |
 | F41 | [41-contesto-compatto.md](41-contesto-compatto.md) | Contesto compatto: regole comuni una volta per sessione (anche con i subagent e dopo `/compact`), indice della biblioteca, passaggi di consegne brevi, confronto prima e dopo | completata |
 | F42 | [42-validazione.md](42-validazione.md) | Validazione deterministica: controllo del formato di `plan/` e `audit/` (tool e comando `check`, pannello), tre contraddizioni con entrambe le posizioni, avviso sul passaggio di consegne in `report` | completata |
+| F43 | [43-rilievi-rilascio.md](43-rilievi-rilascio.md) | Rilievi di F40–F42: prova a mano del flusso con il contesto compatto (C8 e C9 verdi anche dopo `/clear`), descrizione npm senza numero, testi del sito; rilascio 0.15.0 di pacchetto e sito | in corso |
 
-Ordine: F0 → F42 in sequenza.
+Ordine: F0 → F43 in sequenza.

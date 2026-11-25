@@ -2,7 +2,7 @@
   "name": "@agentrica/mcp",
   "version": "0.15.0",
   "mcpName": "io.github.flgisimone/agentrica",
-  "description": "Agentrica's 56 AI agents as a local MCP server (stdio): one prompt per agent, four read-only tools (including the departments' library and the format check of plan/ and audit/) and two tools that send only after confirmation: agent ratings and token totals.",
+  "description": "Agentrica's AI agents, organized in departments, as a local MCP server (stdio): one prompt per agent, four read-only tools (including the departments' library and the format check of plan/ and audit/) and two tools that send only after confirmation: agent ratings and token totals.",
   "license": "MIT",
   "author": "Giulio Simone Floresta",
   "repository": {

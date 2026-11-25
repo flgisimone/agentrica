@@ -62,6 +62,11 @@ if (process.argv[2] === "check") {
   const { runCheck } = await import("./check.ts");
   process.exit(runCheck(process.argv.slice(3)));
 }
+// `reminder` (F44-08) aggiunge il promemoria a .claude/settings.json di un progetto già avviato e termina (init.ts).
+if (process.argv[2] === "reminder") {
+  const { runReminder } = await import("./init.ts");
+  process.exit(runReminder(process.argv.slice(3)));
+}
 if (process.argv[2] === "add" || process.argv[2] === "install") {
   const { runSetup } = await import("./setup.ts");
   process.exit(runSetup(process.argv[2], process.argv.slice(3)));

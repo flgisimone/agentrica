@@ -69,7 +69,8 @@ h3 { font-size: 1rem; margin: 16px 0 8px; }
 .empty, .hint { color: var(--muted-foreground); margin: 0; }
 .update { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--aisa); border-radius: var(--radius); }
 .notice { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--border); border-left: 3px solid var(--aisa); border-radius: var(--radius); background: var(--card); }
-.problems { margin: 0; padding: 12px 16px; border: 1px solid var(--destructive); border-radius: var(--radius); white-space: pre-line; }
+.problems { margin: 0 0 12px; padding: 12px 16px; border: 1px solid var(--destructive); border-radius: var(--radius); white-space: pre-line; }
+.problems.contradictions { border-color: var(--aibpd); }
 
 .question { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; background: var(--secondary); }
 .question + .question { margin-top: 12px; }

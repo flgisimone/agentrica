@@ -486,7 +486,11 @@ export const it = {
     skipped: (files: string) => `Saltati perché esistono già: ${files}`,
     /** Il promemoria dell'hook UserPromptSubmit (F39-01), a ogni richiesta: niente ' " $ ` % ! \ perché passa dalla shell. */
     reminder: "Agentrica: se questa richiesta è un lavoro sul progetto, carica prima l’agente adatto con il tool agent di Agentrica (sceglilo con list_agents); senza agenti solo se l’utente lo chiede.",
-    reminderSkipped: "Il promemoria non è stato aggiunto perché .claude/settings.json c'era già: per aggiungerlo a mano vedi «Promemoria» nel README di @agentrica/mcp.",
+    reminderSkipped: "Il promemoria non è stato aggiunto perché .claude/settings.json c'era già: per aggiungerlo senza toccare il resto lancia npx @agentrica/mcp reminder.",
+    reminderUsage: "uso: agentrica-mcp reminder [cartella] [--lang it|en]",
+    reminderAdded: (file: string) => `Promemoria aggiunto in ${file}: Claude Code lo legge dalla prossima sessione.`,
+    reminderPresent: "Il promemoria c'è già in .claude/settings.json: nessuna modifica.",
+    reminderBadSettings: ".claude/settings.json non è un oggetto JSON con hooks e UserPromptSubmit nella forma di Claude Code: non l'ho toccato. Correggilo o aggiungi l'hook a mano (vedi «Promemoria» nel README di @agentrica/mcp).",
     importAgents: "Il tuo CLAUDE.md non è stato toccato: aggiungi una riga «@AGENTS.md» perché Claude Code legga le regole di Agentrica.",
     noCommit: "git: nessun commit, i file nuovi sono da rivedere e da aggiungere tu",
     stepExisting: "  2. chiedi a Claude «Crea le fasi del progetto dal codice esistente»: scrive solo plan/, si ferma al backlog e propone /clear",

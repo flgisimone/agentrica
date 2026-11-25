@@ -65,8 +65,8 @@
 ## Rilievi aperti
 
 - P2 — Con il permission model di Node senza lettura della cartella del progetto, `check` dice che non può leggerla. Se invece la cartella si apre ma non si legge `plan/README.md`, il piano vale come assente e il risultato è «nessun problema». Si riapre se qualcuno usa il permission model con letture parziali.
-- P3 — Nel pannello le contraddizioni stanno nella stessa casella degli errori, distinte solo dal testo del messaggio. Si separano se un progetto reale ne mostra abbastanza da confondere.
-- P3 — Per un JSON illeggibile manca la riga: Node 26 non la dice più nel messaggio di `JSON.parse`.
+- ~~P3~~ Chiuso in F44-06. Nel pannello le contraddizioni stanno nella stessa casella degli errori, distinte solo dal testo del messaggio. Si separano se un progetto reale ne mostra abbastanza da confondere.
+- ~~P3~~ Chiuso in F44-03, dove Node la scrive. Per un JSON illeggibile manca la riga: Node 26 non la dice più nel messaggio di `JSON.parse`.
 
 ## Fuori perimetro
 

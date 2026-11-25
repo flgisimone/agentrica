@@ -74,9 +74,10 @@ test("backlog senza colonna Priorità (fasi vecchie): la priorità non si contro
   assert.deepEqual(checkProject(root), []);
 });
 
-test("audit malformato: JSON rotto, campi mancanti con l'id, id doppi", () => {
+test("audit malformato: JSON rotto con la riga quando Node la dà, campi mancanti con l'id, id doppi", () => {
   const root = project({
-    "audit/a/rotto.json": '{\n  "agente": "AICA-02",\n  "rilievi": [\n    oops\n  ]\n}',
+    "audit/a/rotto.json": '{\n  "agente": "AICA-02"\n  "rilievi": []\n}',
+    "audit/a/vuoto.json": "",
     "audit/a/campi.json": json({ agente: "AICA-02", rilievi: [{ id: "S-1", priorita: "alta" }, { titolo: "Senza id", priorita: "P1" }] }),
     "audit/a/lista.json": json({ agente: "AICA-02", elenco: [] }),
     "audit/a/doppio.json": json({ agente: "AICA-02", rilievi: [{ id: "S-9", titolo: "Uno", priorita: "P1" }, { id: "S-9", titolo: "Uno", priorita: "P1" }] }),
@@ -87,7 +88,8 @@ test("audit malformato: JSON rotto, campi mancanti con l'id, id doppi", () => {
     "audit/a/campi.json: il rilievo #2: campo id mancante o non valido.",
     "audit/a/doppio.json:10: il rilievo S-9 compare due volte nel file.",
     "audit/a/lista.json: campo rilievi/findings/observations mancante o non valido.",
-    "audit/a/rotto.json: non è un JSON leggibile.",
+    "audit/a/rotto.json:3: non è un JSON leggibile.",
+    "audit/a/vuoto.json: non è un JSON leggibile.",
   ]);
 });
 

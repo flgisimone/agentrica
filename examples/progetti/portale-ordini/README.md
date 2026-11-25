@@ -5,7 +5,7 @@ Portale B2B per gli ordini dei clienti di un grossista: i clienti ordinano e car
 ## Architettura
 
 - Una VM nel cloud con Docker Compose: `edge` (nginx, unico punto d'ingresso pubblico, porte 80 e 443), `app` (API Node, porta 3000), `admin` (pannello interno, porta 8081), `db` (Postgres), `cache` (Redis).
-- Davanti alla VM c'è il bilanciatore del provider, che termina nulla: passa il TCP a nginx e aggiunge `X-Forwarded-For` con l'IP del client.
+- Davanti alla VM c'è il bilanciatore del provider, che non termina TLS: passa le connessioni TCP a nginx così come arrivano, senza aggiungere intestazioni, e nginx vede l'IP del client come indirizzo della connessione.
 - Reti: `frontend` per `edge`, `app` e `admin`; `backend` per `app`, `admin`, `db` e `cache`. Il database e la cache stanno solo su `backend`.
 - `/admin` e SSH sono raggiungibili solo dalla VPN dell'ufficio (WireGuard, `10.8.0.0/24`).
 - I file caricati dai clienti stanno nel volume `uploads` e nginx li serve sotto `/files/`.

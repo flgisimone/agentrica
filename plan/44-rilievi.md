@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere i rilievi meno costosi rimasti aperti da F37 a F42 (piano, caso di prova, `check`, pannello, sito, promemoria) e portare pacchetto e sito insieme alla 0.16.0.
 
-> **Stato: completata il 2026-11-25** (rilascio 0.16.0 con l'ok a parte). Aperta il 2026-11-25 su scelta dell'utente («facciamo queste»: le voci a costo basso e medio dell'elenco dei rilievi aperti).
+> **Stato: completata il 2026-11-25** (0.16.0). Aperta il 2026-11-25 su scelta dell'utente («facciamo queste»: le voci a costo basso e medio dell'elenco dei rilievi aperti).
 
 **Agenzie**: software (Backend per `check`, `reminder` e lo script delle prove, Frontend per pannello e sito, QA, Code Reviewer); design (UX Writer e UI Designer) per i testi e la casella nuova del pannello e per i ritocchi del sito.
 
@@ -54,7 +54,7 @@
 - **F44-06** Pannello: `/api/state` manda `problems` (errori) e `contradictions`; la pagina li mostra in due caselle con titolo e numero (it, en), le contraddizioni con il bordo ambra. Test in `panel.test.ts`; README it/en.
 - **F44-07** Sito: pannelli delle schede e «Vedi i numeri» con `keepMounted`; dentro `[data-open-without-js]`, `@media (scripting: none)` in `@layer base` mostra tutti i pannelli e nasconde schede e pulsanti (il `[hidden]` del preflight è `!important`). E2e con JavaScript spento: niente `tablist` né pulsanti, le quattro tabelle visibili.
 - **F44-08** Comando `reminder [cartella]` (`addReminder` e `runReminder` in `init.ts`): crea `.claude/settings.json` o aggiunge l'hook a `hooks.UserPromptSubmit` tenendo il resto; non lo ripete se c'è già in una delle due lingue; un file che non è un oggetto JSON nella forma di Claude Code non si tocca (uscita 1). `init --existing` con `settings.json` presente ora indica il comando. README it/en (Promemoria, Cosa resta sul computer), pagina Installa del sito (it, en). Test in `init.test.ts`.
-- **F44-09** Versione 0.16.0 preparata: `package.json`, `server.json`, `VERSION`, README del pacchetto e della radice, `CHANGELOG` it/en. Rilascio (PR, tag, npm, dipendenza del sito) da fare con l'ok dell'utente (CONVENTIONS §13.8).
+- **F44-09** Versione 0.16.0 preparata: `package.json`, `server.json`, `VERSION`, README del pacchetto e della radice, `CHANGELOG` it/en. Rilascio con l'ok dell'utente: PR #44 in `main`, tag `v0.16.0`, npm con provenance; sito con la dipendenza a 0.16.0, PR #24 in `main`, deploy Vercel, `https://agentrica.vercel.app/it/installa` mostra `@agentrica/mcp@0.16.0` e `reminder`. `develop` e `main` allineati nei due repository.
 
 ## Verifiche
 
@@ -67,4 +67,3 @@
 
 - ~~P3 — `reminder` riscrive `.claude/settings.json` con rientro di 2 spazi: il contenuto resta, la formattazione di un file indentato in altro modo no.~~ Chiuso su `fix/reminder-rientro` (2026-11-25): il file riscritto tiene rientro (tab o spazi, dalla prima riga rientrata), fine riga (CRLF) e a capo finale; test in `init.test.ts` con tab e CRLF senza a capo, e con 4 spazi.
 - P3 — La casella delle contraddizioni del pannello non è stata guardata nel browser: da vedere alla prima sessione con il pannello aperto sulla 0.16.0.
-- Il rilascio 0.16.0 (F44-09) aspetta l'ok: dopo npm, dipendenza del sito a 0.16.0 e sito in `main` insieme.

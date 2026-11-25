@@ -1,0 +1,26 @@
+{
+  "agente": "AIWDA-08 · Accessibility Specialist (ruolo nella sessione principale)",
+  "data": "2026-11-25",
+  "perimetro": "packages/mcp/src/page, 0.16.0, nel browser a 1280 e 390 px su un progetto di prova (copia di plan/ e audit/ con un errore di formato e una contraddizione, quattro agenti, una domanda, due subagent, consumo di otto sessioni); sola lettura",
+  "sintesi": "Struttura semantica buona (h1 per vista, legend, aria-current, etichette dei conteggi). Restano le regioni live riscritte a ogni aggiornamento e i bersagli piccoli.",
+  "rilievi": [
+    {
+      "id": "F46-A11Y-01",
+      "titolo": "Regioni role=status riscritte a ogni aggiornamento",
+      "evidenza": "app.js renderHeader: textContent di #update e #notice riassegnato ogni 10 s e a ogni evento, anche se il testo non cambia",
+      "priorita": "P2",
+      "motivazione": "Alcuni lettori di schermo rileggono la regione a ogni sostituzione del nodo di testo.",
+      "raccomandazione": "Scrivere solo se il testo cambia; un annuncio per avviso nuovo.",
+      "stato": "Risolto in F46 (2026-11-25): evidenze/dopo-1280-*.png e evidenze/dopo-390-*.png, verifica nel browser con Playwright sullo stesso progetto di prova."
+    },
+    {
+      "id": "F46-A11Y-02",
+      "titolo": "Filtri, «Aggiorna» e schede sotto i 44 px",
+      "evidenza": "filtri e «Aggiorna» circa 30 px, schede circa 40 px (misura sugli screenshot)",
+      "priorita": "P3",
+      "motivazione": "Sopra i 24 px di WCAG 2.2 AA (2.5.8), sotto i 44 px che il piano chiede.",
+      "raccomandazione": "Altezza minima 44 px per pulsanti e schede.",
+      "stato": "Risolto in F46 (2026-11-25): evidenze/dopo-1280-*.png e evidenze/dopo-390-*.png, verifica nel browser con Playwright sullo stesso progetto di prova."
+    }
+  ]
+}

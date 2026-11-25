@@ -2,6 +2,23 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.17.0 — 2026-11-25
+
+### Added
+- Panel: alerts in a single area, the same on every page (new version, `plan/` changed without agents, plan to create, format errors and contradictions), each on one line with the count and what to do, and a collapsible «Where» with the `file:line` points to copy.
+- Panel, Session: at the top «Needs your attention» with the choices to make and the agents to rate, only when there is something.
+- Panel, header: server version, time of the last update, link to the site in the panel's language.
+- Panel, Findings: priority filter next to the department one.
+
+### Changed
+- Panel, Plan: tasks done out of the total with a bar, priority with its rationale under the task, outcome with the ✓ sign, completed phases out of the total and a collapsible list of the phases. On a phone the page is about a third as long.
+- Panel, Usage: summary at the top, breakdown in tabs (day, agent, model, session) with one table at a time, sharing at the bottom; the model saving appears only when there is one.
+- Panel: targets of at least 44 px, live regions that speak only when something changes, tabs that wrap on a phone.
+
+### Fixed
+- A phase's status is read from its first word: «completed (0.10.0)» is completed, in the panel and in `check`. Before, the «Current phase» could be a phase already closed.
+- With `--no-ratings` the «Ratings» tab no longer appears.
+
 ## 0.16.0 — 2026-11-25
 
 ### Added

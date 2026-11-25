@@ -49,7 +49,8 @@ test("fasi, fase aperta con backlog e criteri, rilievi di fasi e audit", () => {
       "",
       "| Fase | File | Contenuto | Stato |",
       "|---|---|---|---|",
-      "| F0 | [00-base.md](00-base.md) | Base | completata |",
+      // Lo stato vale per la prima parola: «completata (0.1.0)» è chiusa (F46-UX-01).
+      "| F0 | [00-base.md](00-base.md) | Base | completata (0.1.0) |",
       "| F1 | [01-uno.md](01-uno.md) | Prima | aperta |",
       "| F2 | [../fuori.md](../fuori.md) | Fuori | da aprire |",
       "",

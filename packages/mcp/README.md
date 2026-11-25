@@ -55,7 +55,7 @@ You need Node 22 or later, with npm. The commands are the same on Mac, Windows (
 **On the whole computer (recommended)**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 install
+npx -y @agentrica/mcp@0.17.0 install
 ```
 
 It installs the package with `npm install -g` and registers it in Claude Code with `user` scope: every project you open already has Agentrica. The server starts with `node` from npm's global folder: it starts fast and also works offline. Restart Claude Code and check with `claude mcp list`.
@@ -63,13 +63,13 @@ It installs the package with `npm install -g` and registers it in Claude Code wi
 **Without installing anything**, for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 add
+npx -y @agentrica/mcp@0.17.0 add
 ```
 
 It registers the server started with npx (on Windows `cmd /c npx`), which downloads the package to its cache on first start. The scope is `user`, all your projects; with `--project` it writes `.mcp.json` in the current folder, to share with your team (it works on the system it was created on), with `--local` it applies to the current project and to you only. For your team, from the project folder:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 add --project
+npx -y @agentrica/mcp@0.17.0 add --project
 ```
 
 The server options (`--lang`, `--agents`, `--no-panel`, `--no-ratings`, `--no-update-check`) go at the end of `install` and `add`, which pass them to the server. Run again, they replace Agentrica's registration in the same scope. If Node 22, npm or the `claude` command are missing, they say so and print the commands to run by hand.
@@ -79,10 +79,10 @@ The version stays the one you set until you change it: role updates do not arriv
 **By hand in Claude Code**, without `install` or `add`:
 
 ```sh
-claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.16.0
+claude mcp add --scope user agentrica -- npx -y @agentrica/mcp@0.17.0
 ```
 
-On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.16.0`.
+On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/mcp@0.17.0`.
 
 **Other MCP clients**: add the server to the client configuration, usually a JSON file like this:
 
@@ -91,7 +91,7 @@ On Windows: `claude mcp add --scope user agentrica -- cmd /c npx -y @agentrica/m
   "mcpServers": {
     "agentrica": {
       "command": "npx",
-      "args": ["-y", "@agentrica/mcp@0.16.0"]
+      "args": ["-y", "@agentrica/mcp@0.17.0"]
     }
   }
 }
@@ -104,7 +104,7 @@ On Windows:
   "mcpServers": {
     "agentrica": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.16.0"]
+      "args": ["/c", "npx", "-y", "@agentrica/mcp@0.17.0"]
     }
   }
 }
@@ -113,7 +113,7 @@ On Windows:
 **Least privilege (recommended).** Install the package in its own folder and start it with Node's permission model: the server can only read that folder, and Node blocks file writes, network connections and child processes. The server needs none of them, so it works the same; the permissions limit the damage of any future defect. With these permissions, sending a [rating](#ratings) fails with a clear message and the version check does not run: to rate agents add `--allow-net`, otherwise add `--no-ratings --no-update-check` at the end of the command. The [panel](#local-panel) does not start with these permissions.
 
 ```sh
-npm install -g --ignore-scripts @agentrica/mcp@0.16.0
+npm install -g --ignore-scripts @agentrica/mcp@0.17.0
 npm root -g
 ```
 
@@ -148,7 +148,7 @@ Put the task in quotes: Claude Code splits arguments on spaces.
 **Squad.** With `--agents` the server loads only the agents you list: agent ids and department codes, comma-separated, case-insensitive. For example the whole software department plus the accessibility agent:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 install --agents aisa,aiwda-08
+npx -y @agentrica/mcp@0.17.0 install --agents aisa,aiwda-08
 ```
 
 The command menu shows only the squad's prompts, and `list_agents` and `agent` see only those agents too. Without `--agents` all the agents are available. An unknown id or code stops the server with a message naming it, in the client's logs. In Claude Code prompts do not enter the model's context (we checked with `/context`): a squad makes the menu shorter, it does not save tokens.
@@ -278,17 +278,17 @@ A model's knowledge stops at its training date. Each department has a library of
 The server also opens a page on your computer where you follow the project and make the choices the agent asks you for, instead of answering in the terminal. From 0.8.0 it is on by default: ask "open the Agentrica panel". At the first choice to make, if the page is not open, the server opens the browser. To turn it off, choose so in the [configuration](#configuration) form or add `--no-panel`:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 install --no-panel
+npx -y @agentrica/mcp@0.17.0 install --no-panel
 ```
 
-Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. It has six pages, with a menu at the top counting pending choices, agents called, findings and agents to rate:
+Then ask the agent to open the panel (`open_panel` tool): the page opens in your browser. At the top there are the project with its branch, the server version, the connection state with the time of the last update and the link to the site. Below, the notices sit in a single area, the same on every page: new version, `plan/` changed without agents, plan to create, format errors and contradictions, each on one line with the count and what to do, and the `file:line` locations to open and copy. It has six pages, with a menu at the top counting pending choices, agents called, findings and agents to rate:
 
-- **Session**: pending choices (*To decide*), with options and reasons, whose answer, with an optional note, goes back to the agent; next to them, the last three Agentrica agents called (*Agents in use*); below, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
+- **Session**: at the top, only when there is something, what needs your attention: pending choices, with options and reasons, whose answer, with an optional note, goes back to the agent, and the agents to rate; otherwise one line. Below, the last three Agentrica agents called (*Agents in use*) and, in a separate section, the Claude Code subagents started in the session (*Claude Code subagents*), with type, description and state;
 - **Agents**: all the agents called in the session, in a tree by department: one column per department in the order they came in (a department that comes back, like the review after software, opens a column marked «return»), the director at the top and the specialists below. Each card has the call order number, the director and the active agent marked, the whole task and the report of what it did, if the agent sent one with the `report` tool (for a director whose department is still working: «coordinating the department»);
-- **Plan**: the open phase with backlog and acceptance criteria, and all project phases;
-- **Findings**: open findings from phases and audits, by priority and department;
+- **Plan**: the open phase with the tasks done out of the total, the backlog with the outcome of each task and the acceptance criteria; the phases completed out of the total and, on request, the list of all phases;
+- **Findings**: open findings from phases and audits, grouped by priority with the count, with a filter by department and one by priority;
 - **Ratings**: a form for each agent used and not yet rated (see [Ratings](#ratings)); absent with `--no-ratings`;
-- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table. With a client other than Claude Code usage is not available: the server does not estimate it.
+- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). At the top the summary; below the breakdown, one table at a time (day, agent, model or session); at the bottom the sharing of totals. Every chart is also a table; on a phone you see tokens, cache and cost. With a client other than Claude Code usage is not available: the server does not estimate it.
 
 When a new agent starts working or there is one more agent to rate, the page says so with a notice at the bottom. With «Turn on notifications» it also shows a system notification when the panel tab is not in view; it needs the browser's permission, and the browser shows it, without external services.
 
@@ -306,16 +306,16 @@ If the page is not open, `ask_user` opens it. The client waits for the answer as
 
 **Format of `plan/` and `audit/`.** The panel reads the plan format created by `init`, in English or in Italian (shown here in English, with the Italian names in brackets), the same as Agentrica's own [`plan/`](https://github.com/flgisimone/agentrica/tree/main/plan) and [`audit/`](https://github.com/flgisimone/agentrica/tree/main/audit); if something is missing, the page says what. If the plan is missing or has no phases yet, the page says so as information, with the ways to create it ([existing project](#existing-project)).
 
-- `plan/README.md` with a `## Phases` (`## Fasi`) section and a `| Phase | File | Content | Status |` table, the file as a link (`[00-base.md](00-base.md)`). The open phase is the first one whose status is not `completed` or `suspended` (`completata`, `sospesa`).
+- `plan/README.md` with a `## Phases` (`## Fasi`) section and a `| Phase | File | Content | Status |` table, the file as a link (`[00-base.md](00-base.md)`). The open phase is the first one whose status is not `completed` or `suspended` (`completata`, `sospesa`); the first word counts, so `completed (0.10.0)` is completed.
 - In the phase file: `# Title`, a `**Goal**: …` (`**Obiettivo**`) line, `## Backlog` with the `| # | Task | Priority |` table, `## Acceptance criteria` (`## Criteri di accettazione`) and `## Done` (`## Fatto`) as lists; a task is done when its id appears in bold under «Done» (`- **F0-01** …`). `## Open findings` (`## Rilievi aperti`) is a list, with the priority (`P0`–`P3`) in the text; an item that says «resolved» or «closed» («risolto», «chiuso») stays in the plan but the panel does not show it.
 - `audit/<folder>/<file>.json` with `agent` (`agente`, e.g. `"AICA-02 · …"`, which gives the department) and a `findings` (`rilievi`, or `observations` in the design department's format) list of objects with `id`, `title`, `priority` and optional `status` (`titolo`, `priorita`, `stato`); a finding whose status says «resolved» or «closed» is not shown.
 
 #### Format check
 
-From 0.15.0 the server checks, without models, the shape of the `plan/` and `audit/` files: tables and sections of the format above, required fields, unique ids, phase files that exist, `P0`–`P3` priorities where the backlog has the «Priority» column and, for a closed finding, the evidence (`evidence`, `evidenza`). It also reports three contradictions, with both locations and without choosing which one holds: the same finding id in two files with a different title, priority or status; a closed finding without evidence; a `completed` phase with `P0` tasks that do not appear in «Done». It checks the structure, not the content, and changes nothing. The same check works in three ways: the `check` tool, which the server instructions ask to use after writing in `plan/` or `audit/`; the panel, which shows the errors at the top of the page and the contradictions in a box of their own; the command, for CI, which prints `file:line: cause` and exits with 1 if it finds something:
+From 0.15.0 the server checks, without models, the shape of the `plan/` and `audit/` files: tables and sections of the format above, required fields, unique ids, phase files that exist, `P0`–`P3` priorities where the backlog has the «Priority» column and, for a closed finding, the evidence (`evidence`, `evidenza`). It also reports three contradictions, with both locations and without choosing which one holds: the same finding id in two files with a different title, priority or status; a closed finding without evidence; a `completed` phase with `P0` tasks that do not appear in «Done». It checks the structure, not the content, and changes nothing. The same check works in three ways: the `check` tool, which the server instructions ask to use after writing in `plan/` or `audit/`; the panel, which shows errors and contradictions in the notices area, with the count, what to do and the `file:line` locations; the command, for CI, which prints `file:line: cause` and exits with 1 if it finds something:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 check [project folder]
+npx -y @agentrica/mcp@0.17.0 check [project folder]
 ```
 
 ## New project
@@ -323,7 +323,7 @@ npx -y @agentrica/mcp@0.16.0 check [project folder]
 `init` creates a project with Agentrica's way of working, ready for Claude Code:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 init my-project --name "My project"
+npx -y @agentrica/mcp@0.17.0 init my-project --name "My project"
 ```
 
 Without a folder it uses the current one; without `--name` the name is the folder's. It writes, in the server's language (`--lang en` or `--lang it` to choose):
@@ -346,7 +346,7 @@ The server instructions reach the model once, when the session starts. So that i
 - If `.claude/settings.json` already exists, `init --existing` leaves it alone and says so. With [`add`](#installation) or `install`, without `init`, there is no reminder. In both cases `reminder` adds it, from the project folder:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 reminder [project folder]
+npx -y @agentrica/mcp@0.17.0 reminder [project folder]
 ```
 
   It creates `.claude/settings.json` if missing; if it exists, it adds the hook to `hooks.UserPromptSubmit` and leaves everything else as it is, indentation and line endings included. If the reminder is already there (in Italian or English) it does not repeat it; if the file is not JSON in the shape Claude Code uses, it leaves it untouched and says so. The language is the server's (`--lang`). By hand, the `hooks` part is this (the Italian line is in the Italian README):
@@ -375,7 +375,7 @@ With the [panel](#local-panel) open, if a file in `plan/` changes after the serv
 In a project that already exists (for example one installed with [`add`](#installation)) `init --existing` adds Agentrica's rules without touching your files:
 
 ```sh
-npx -y @agentrica/mcp@0.16.0 init --existing
+npx -y @agentrica/mcp@0.17.0 init --existing
 ```
 
 It writes only the missing files and skips those already there, listing them in the output: your own `AGENTS.md` or `CLAUDE.md` stays as it is (if you already have `CLAUDE.md`, add a line `@AGENTS.md`). It does not commit and does not copy the technical base of a new project: no F0 «technical base», CI, `.nvmrc` or `.env.example`. The `plan/README.md` starts without phases: ask Claude «Create the project phases from the existing code». Even without `init --existing` the server instructions describe the `plan/` format and, if the plan is missing, Claude offers to create it.

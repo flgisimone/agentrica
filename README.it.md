@@ -8,7 +8,7 @@
 
 Questo repository contiene:
 
-1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.16.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.17.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
 2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
@@ -91,6 +91,9 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F42 | Validazione deterministica: `check` (tool, comando per la CI e pannello) controlla il formato di `plan/` e `audit/` e segnala tre contraddizioni con entrambe le posizioni, senza modelli; `report` avvisa se il passaggio di consegne è incompleto | completata (0.15.0) |
 | F43 | Rilievi di F40–F42 e rilascio: prova a mano del flusso con il contesto compatto, descrizione npm senza numero di agenti, testi del sito per `check` e `full_rules`, README legati alla versione con un test | completata (0.15.1) |
 | F44 | Rilievi piccoli e medi di F37–F42: comando `reminder` per i progetti già avviati, contraddizioni in una casella a sé nel pannello, riga del JSON in `check`, `/consumo` senza JavaScript e su telefono, schede per le prove | completata (0.16.0) |
+| F45 | Misura prima di Code Mode: `npm run tool-chains` conta catene di chiamate e byte intermedi nelle sessioni di Claude Code; soglia non superata, Code Mode rinviato e pacchetto OpenAI escluso | completata |
+| F46 | Pannello locale, UI e UX: avvisi in una zona sola con l'azione, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, filtro per priorità, consumo a schede, accessibilità; fase in corso giusta con «completata (…)» | completata (esce con 0.17.0) |
+| F47 | Sito allineato al pacchetto: pagina `/pannello` con le schermate del pannello vero, «Controlla il piano» in Installa, contesto compatto e passaggio di consegne in Orchestrazione, filtro per modello consigliato nel catalogo; rilascio 0.17.0 | completata (0.17.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

@@ -22,7 +22,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { openBrowser, startPanel, type Panel } from "./panel.ts";
-import { agentSummary, agentText, cardText, codeName, directorOf, findAgent, introLine, modelAdvice, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
+import { agentList, agentSummary, agentText, cardText, codeName, findAgent, introLine, promptName, selectSquad, today, VERSION, type Found, type SquadDepartment } from "./prompt.ts";
 import { createRatings, formMessage, MAX_COMMENT, parseForm, previewText, ratingForm, RATINGS_URL, REMINDER_AFTER_MS, type RatingInput, type Ratings } from "./ratings.ts";
 import { createShare, SHARE_URL, sharePreviewText, type Share } from "./share.ts";
 import { createShowcase, parseProjectFields, projectForm, PROJECTS_URL, projectFormMessage, projectPreviewText, sentText, type Showcase } from "./showcase.ts";
@@ -500,16 +500,7 @@ server.registerTool(
   },
   async ({ department }) => {
     const setup = await firstCall();
-    const lines = catalog
-      .filter((d) => !department || d.code === department)
-      .flatMap((d) => [
-        `## ${d.code} — ${d.name}`,
-        d.summary,
-        ...[directorOf(d)].filter((a) => a !== undefined).map((a) => T.server.listAgents.lead(codeName(a))),
-        ...d.agents.map((agent) => [`- ${codeName(agent)}: ${agentSummary({ department: d, agent })}`, modelAdvice(agent)].filter(Boolean).join(" ")),
-        "",
-      ]);
-    return remind({ content: [{ type: "text", text: lines.join("\n") }] }, setup);
+    return remind({ content: [{ type: "text", text: agentList(catalog, department) }] }, setup);
   },
 );
 

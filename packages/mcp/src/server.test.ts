@@ -165,7 +165,8 @@ test("agente: id in minuscolo funziona, id sconosciuto dà un errore chiaro", as
 });
 
 test("library: le schede del reparto con fonte e data, mai URL; errori chiari per id sconosciuti", async () => {
-  const agent = text(await client.callTool({ name: "agent", arguments: { id: "AICA-03" } }));
+  // AICA è già stato inviato con AICA-01 nella prova precedente: full_rules dà l'indice intero.
+  const agent = text(await client.callTool({ name: "agent", arguments: { id: "AICA-03", full_rules: true } }));
   assert.match(agent, /## Biblioteca del reparto\n\n.*tool library \(id AICA-03/);
   assert.match(agent, /^- owasp-top-10-2025 \*: OWASP Top 10:2025 \(2025, \d{4}-\d{2}-\d{2}/m);
   const ok = await client.callTool({ name: "library", arguments: { id: "aica-03", cards: ["owasp-top-10-2025", "cvss-4"] } });
@@ -183,6 +184,32 @@ test("library: le schede del reparto con fonte e data, mai URL; errori chiari pe
     const bad = await client.callTool({ name: "library", arguments: { id: "AICA-03", cards } });
     assert.equal(bad.isError, true, JSON.stringify(cards));
   }
+});
+
+test("regole comuni una volta per reparto (F41): intere al primo agente, poi un riferimento; full_rules e i prompt le danno intere", async () => {
+  // Una sezione «###» prima del file di ruolo: le regole intere.
+  const rules = /## Regole comuni del reparto\n\n(?:(?!## Ruolo)[\s\S])*### /;
+  const reference = /## Regole comuni del reparto\n\nValgono le regole comuni del reparto AIWDA, ricevute intere.+richiama agent con id AIWDA-08 e full_rules true/;
+  const first = text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-01" } }));
+  assert.match(first, rules);
+  assert.match(first, /^- .+: .+\(.+\)$/m);
+  const second = text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-08", task: "Rivedi il form." } }));
+  assert.match(second, reference);
+  assert.doesNotMatch(second, rules);
+  assert.match(second, /## Biblioteca del reparto\n\nVale l'indice della biblioteca ricevuto con le regole comuni\. .*tool library \(id AIWDA-08\)/);
+  assert.doesNotMatch(second, /^- .+: .+\(.+\)$/m);
+  // Il file di ruolo e il compito restano interi.
+  assert.match(second, /## Ruolo: .+\n\n### .+[\s\S]+## Compito\n\nRivedi il form\./);
+  assert.ok(second.length < first.length);
+  assert.match(text(await client.callTool({ name: "agent", arguments: { id: "AIWDA-08", full_rules: true } })), rules);
+  // Un altro reparto parte intero.
+  assert.match(text(await client.callTool({ name: "agent", arguments: { id: "AIBPD-05" } })), rules);
+  // I prompt si invocano a mano: sempre interi.
+  const { messages } = await client.getPrompt({ name: "aiwda-02-design", arguments: {} });
+  assert.match((messages[0]!.content as { text: string }).text, rules);
+  const { tools } = await client.listTools();
+  assert.ok(tools.find((t) => t.name === "agent")?.inputSchema.properties?.full_rules);
+  assert.match(client.getInstructions() ?? "", /dopo \/compact o \/clear, o se non li hai nel contesto, richiama agent con full_rules true/);
 });
 
 test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {

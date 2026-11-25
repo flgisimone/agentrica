@@ -29,16 +29,22 @@ const table = (head: readonly string[], rows: readonly (readonly (string | numbe
 
 const total = (sizes: Record<Component, number>) => sum(Object.values(sizes));
 
-/** Byte del testo di ogni agente del flusso e quota ripetuta: regole e biblioteca di un reparto già caricato. */
+/**
+ * Byte del testo di ogni agente del flusso, come lo compone il server da F41 (regole e indice di un reparto già caricato
+ * come riferimento, `known`), e la quota ripetuta: regole e biblioteca di un reparto già caricato. `before` è lo stesso
+ * agente con il testo intero, senza la memoria delle regole.
+ */
 export function flowSizes(catalog: readonly SquadDepartment[], date: string) {
   const seen = new Set<string>();
   return FLOW.map((id) => {
     const found = findAgent(catalog, id)!;
     // Le opzioni predefinite del server con un client che ha i moduli (Claude Code): pannello sì, valutazione nel modulo.
-    const sizes = agentSizes(found, undefined, { report: true, date });
-    const repeated = seen.has(found.department.code) ? sizes.rules + sizes.library : 0;
+    const known = seen.has(found.department.code);
+    const sizes = agentSizes(found, undefined, { report: true, date, known });
+    const before = total(agentSizes(found, undefined, { report: true, date }));
+    const repeated = known ? sizes.rules + sizes.library : 0;
     seen.add(found.department.code);
-    return { id, sizes, total: total(sizes), repeated };
+    return { id, sizes, total: total(sizes), before, repeated };
   });
 }
 
@@ -88,6 +94,9 @@ function section(lang: Lang, date: string): string {
   const flow = flowSizes(catalog, date);
   const flowTotal = sum(flow.map((f) => f.total));
   const repeated = sum(flow.map((f) => f.repeated));
+  const before = sum(flow.map((f) => f.before));
+  // Le istruzioni della 0.13.0 non sono più nel codice: il numero viene dalla baseline di F40 (it 2658, en 2590 byte).
+  const instr0 = lang === "it" ? 2658 : 2590;
   const list = Buffer.byteLength(agentList(catalog));
   const instr = Buffer.byteLength(instructions(catalog, true, true));
   out.push(
@@ -107,7 +116,21 @@ function section(lang: Lang, date: string): string {
         ],
       ],
     ),
-    `Testo degli agenti nel flusso: ${flowTotal} byte, di cui regole comuni ${sum(flow.map((f) => f.sizes.rules))} (${pct(sum(flow.map((f) => f.sizes.rules)), flowTotal)}) e ripetuti ${repeated} (${pct(repeated, flowTotal)}: regole e biblioteca di un reparto già caricato). Le schede lette con \`library\` dipendono dal modello e non sono contate.`,
+    `Testo degli agenti nel flusso: ${flowTotal} byte, di cui regole comuni ${sum(flow.map((f) => f.sizes.rules))} (${pct(sum(flow.map((f) => f.sizes.rules)), flowTotal)}) e ripetuti ${repeated} (${pct(repeated, flowTotal)}: il riferimento a regole e biblioteca di un reparto già caricato). Le schede lette con \`library\` dipendono dal modello e non sono contate.`,
+    `Senza la memoria delle regole (ogni agente con il testo intero, gli altri testi come oggi): agenti ${before} byte, flusso ${instr + list + before} byte (~${tokens(instr + list + before)} token). Differenza: ${before - flowTotal} byte (${pct(before - flowTotal, instr + list + before)} del flusso). Rispetto alla baseline di F40 (0.13.0) le istruzioni del server pesano ${instr - instr0} byte in più, per la frase su full_rules e i passaggi di consegne.`,
+  );
+
+  out.push(
+    "### Uno specialista in più di un reparto già caricato (media sugli specialisti)",
+    table(
+      ["Reparto", "Testo intero", "Con le regole già inviate", "Differenza", "~token risparmiati"],
+      catalog.map((d) => {
+        const specialists = d.agents.filter((a) => a.number !== 1).map((agent) => ({ department: d, agent }));
+        const avg = (known: boolean) => Math.round(sum(specialists.map((f) => total(agentSizes(f, undefined, { report: true, date, known })))) / specialists.length);
+        const [full, known] = [avg(false), avg(true)];
+        return [d.code, full, known, `${full - known} (${pct(full - known, full)})`, tokens(full - known)];
+      }),
+    ),
   );
 
   const chars = (panel: boolean, ratings: boolean) => instructions(catalog, panel, ratings).length;

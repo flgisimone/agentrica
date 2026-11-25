@@ -54,6 +54,8 @@ test("subagent solo con --subagents (F34-05): con il flag caricano il loro agent
     for (const [file, text] of files) {
       assert.match(text, /^tools: .+, mcp__agentrica__agent, mcp__agentrica__library$/m, file);
       assert.match(text, /^---\n[\s\S]+?\n---\n\n(Primo passo|First step): .+`mcp__agentrica__agent`.+`A[A-Z]+-\d{2}`.+\n\n\S/, file);
+      // F41-03: un subagent ha un contesto suo, quindi chiede sempre le regole intere.
+      assert.match(text, /^(Primo passo|First step): .+`A[A-Z]+-\d{2}`, `full_rules` true /m, file);
     }
     const cto = new Map(files).get(".claude/agents/software/sw-cto.md")!;
     assert.match(cto, /id `AISA-01`/);

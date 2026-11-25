@@ -157,7 +157,7 @@ The command menu shows only the squad's prompts, and `list_agents` and `agent` s
 | Tool | Input | Returns |
 |---|---|---|
 | `list_agents` | optional `department` (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, code name, role and department of each agent, with the recommended model where it was measured |
-| `agent` | `id` (e.g. `AISA-02`), optional `task` | the agent's full instructions, with the index of the department's library |
+| `agent` | `id` (e.g. `AISA-02`), optional `task` and `full_rules` | the agent's instructions, with the department's common rules and library index (see [Common rules](#common-rules-once-per-department)) |
 | `library` | the agent's `id`, `cards` (card ids, at most 10) | the cards of the agent's department [library](#library), with source, version and dates |
 | `rate_agent` | `id`, `rating` from 1 to 5, optional `comment` and `publish`; then `code` | a preview of the rating and a code; with the code, the sending (see [Ratings](#ratings)) |
 | `share_usage` | none; then `code` | a preview of the project's token totals and a code; with the code, the sending (see [Token totals](#token-totals)) |
@@ -165,7 +165,17 @@ The command menu shows only the squad's prompts, and `list_agents` and `agent` s
 
 For example: "Use list_agents, pick the right Agentrica agent and check the accessibility of the login form".
 
-**Orchestration.** Number 01 in each department is the director, and `list_agents` marks it: for a task of the department the model loads it first, then loads with `agent` the specialists the director chooses, one at a time, each from the previous one's result; at the end the director consolidates the results and presents them to you. Across departments the order is business → design → privacy → your confirmation → software → design and privacy reviews → Code Reviewer → your confirmation. The server's instructions ask the model to use `agent` and not local subagents, unless you ask for them; the [panel](#local-panel) shows the chain of agents.
+**Orchestration.** Number 01 in each department is the director, and `list_agents` marks it: for a task of the department the model loads it first, then loads with `agent` the specialists the director chooses, one at a time, each from the previous one's handover (outcome, findings with the reference to the evidence, open questions) instead of their whole answer; at the end the director consolidates the results and presents them to you. Across departments the order is business → design → privacy → your confirmation → software → design and privacy reviews → Code Reviewer → your confirmation. The server's instructions ask the model to use `agent` and not local subagents, unless you ask for them; the [panel](#local-panel) shows the chain of agents.
+
+#### Common rules once per department
+
+A department's common rules are more than half of the text of each of its agents and are the same for all of them. From 0.14.0 the server remembers, for the length of the session, the departments whose rules and library index it has already sent: the first agent of the department receives them in full, the next ones a two-line reference that says which rules apply and how to get them back, plus the cards marked for their role. The role file and the task always come in full.
+
+- With `full_rules` true, `agent` returns everything in full: after `/compact` or `/clear` (in Claude Code `/clear` starts a new conversation but the server stays the same), or when the model no longer has the rules in its context. The server's instructions and the reference itself say so.
+- The subagents of `init --subagents` have their own context: their first step calls `agent` with `full_rules` true. In projects created with an earlier version the reference tells the subagent to call `agent` again with `full_rules` if it lacks the rules; to get the new first step, delete `.claude/agents/` and run `init --existing --subagents`, which writes only the missing files.
+- The agents' prompts (`/mcp__agentrica__aisa-04-software`…) stay in full: they are invoked by hand, one at a time.
+
+The measurement is in `examples/risultati/`: the saving is the repeated part, that is 4 to 5.7 KB of rules and index for each specialist of a department already loaded.
 
 **Commands.** Besides the agents' prompts there are `/mcp__agentrica__rate`, which opens the [rating](#ratings) form for the last agent used (or the one you name, e.g. `/mcp__agentrica__rate AISA-02`), `/mcp__agentrica__project`, which proposes a project of yours for the site without a GitHub account (see [Show your project](#show-your-project)), and `/mcp__agentrica__configure`, which opens the [configuration](#configuration) form.
 

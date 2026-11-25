@@ -41,10 +41,12 @@ export const it = {
       "Ogni lavoro sul progetto dell'utente (funzioni, modifiche, scelte di stack, fasi, audit) passa dagli agenti di Agentrica, anche se l'utente non li nomina; senza agenti solo se l'utente lo chiede. " +
       "Per scegliere un agente usa list_agents; per lavorare come quell'agente carica le sue istruzioni con agent. " +
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
-      "poi carica gli specialisti con agent uno alla volta, ognuno dal risultato del precedente, mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
+      "poi carica gli specialisti con agent uno alla volta, ognuno dal passaggio di consegne del precedente (esito, rilievi con l'evidenza, domande aperte), mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
       "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → Code Reviewer → conferma dell'utente. " +
       "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
+      // F41-02: regole e indice una volta per reparto; come riaverli dopo /compact.
+      "Regole comuni e indice arrivano interi al primo agente di ogni reparto, poi come riferimento: dopo /compact o /clear, o se non li hai nel contesto, richiama agent con full_rules true. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
       "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
       "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
@@ -137,7 +139,10 @@ export const it = {
 
     agent: {
       title: "Istruzioni di un agente",
-      description: "Restituisce le istruzioni complete di un agente (regole comuni del reparto e file di ruolo), da seguire per lavorare come quell'agente.",
+      description:
+        "Restituisce le istruzioni di un agente (regole comuni del reparto e file di ruolo), da seguire per lavorare come quell'agente. " +
+        "Regole comuni e indice della biblioteca arrivano interi al primo agente del reparto nella sessione, ai successivi come riferimento, salvo full_rules.",
+      fullRules: "true: regole comuni e indice della biblioteca interi anche se già inviati in questa sessione (dopo /compact o /clear, in un subagent o in un contesto nuovo).",
       notFound: AGENT_NOT_FOUND,
     },
 
@@ -230,6 +235,10 @@ export const it = {
       "Schede con nozioni recenti verificate su fonti ammesse alla data indicata: per questi temi valgono più delle tue conoscenze. " +
       `Se il compito tocca una scheda (con * quelle del tuo ruolo), leggila con il tool library (id ${id}, cards con gli id) e cita fonte, versione e data. ` +
       "Una scheda da ricontrollare va verificata sulla fonte se hai il web, altrimenti avverti l'utente.",
+    libraryKnown: (id: string, mine: string) =>
+      "Vale l'indice della biblioteca ricevuto con le regole comuni. " +
+      (mine ? `Schede del tuo ruolo: ${mine}. ` : "Nessuna scheda è segnata per il tuo ruolo. ") +
+      `Le schede si leggono con il tool library (id ${id}); cita fonte, versione e data.`,
     cardExpired: " Scaduta: verificala sulla fonte prima di usarla, o dillo all'utente.",
     cardSource: (o: { name: string; level: number; version: string; verified: string; review: string; expired: string; roles: string }) =>
       `Fonte: ${o.name} (livello ${o.level}), versione ${o.version}. Verificata il ${o.verified}, da ricontrollare entro il ${o.review}.${o.expired} Ruoli: ${o.roles}.`,
@@ -244,15 +253,18 @@ export const it = {
       `${advice} Se il progetto ha i subagent di Agentrica (init --subagents) e l'utente chiede di usarli, quello di questo ruolo ha già questo modello; altrimenti continua con il modello della sessione.`,
     lead: (code: string) =>
       `Sei il direttore del reparto: per il compito scegli gli specialisti che servono e l'ordine (list_agents con department ${code} li elenca). ` +
-      "La sessione li carica con agent uno alla volta, ognuno dal risultato del precedente; alla fine consolidi i risultati e li presenti all'utente, che li conferma.",
+      "La sessione li carica con agent uno alla volta, ognuno dal passaggio di consegne del precedente, non dalla sua risposta intera; alla fine consolidi i risultati e li presenti all'utente, che li conferma.",
     reportsTo: (director: string, id: string) =>
       `Riporti a ${director}, il direttore del reparto: se in questa sessione non è ancora stato caricato, caricalo prima con agent (id ${id}). ` +
-      "Lavori sulla parte che ti assegna, dal risultato dello specialista precedente, e consegni a lui.",
+      "Lavori sulla parte che ti assegna e gli consegni in breve: esito, rilievi con l'evidenza (file e riga, comando), domande aperte.",
     noLead: "Il direttore del reparto non è nella squadra di questo server: lavori direttamente sul compito e consegni all'utente.",
     present: (intro: string) =>
       `L'utente deve sempre sapere chi sta lavorando. Presentati all'inizio con questa riga: «${intro}». ` +
       "Ripetila quando passi a un altro agente o lasci il ruolo, e firma con il tuo nome in codice i rilievi e il riepilogo finale.",
     rules: "Regole comuni del reparto",
+    rulesKnown: (code: string, id: string) =>
+      `Valgono le regole comuni del reparto ${code}, ricevute intere in questa sessione con un altro agente del reparto: applicale anche qui. ` +
+      `Se non le hai nel contesto (dopo /compact o /clear, in un subagent o in una conversazione nuova), richiama agent con id ${id} e full_rules true prima di lavorare.`,
     role: (role: string) => `Ruolo: ${role}`,
     task: "Compito",
     report: "Resoconto",
@@ -444,8 +456,8 @@ export const it = {
     /** I subagent di Agentrica nominano il progetto solo in questa frase (lo controlla init.test.ts). */
     subagentProject: (name: string) => `del progetto ${name}.`,
     subagentFirst: (id: string) =>
-      `Primo passo: chiama il tool \`mcp__agentrica__agent\` del server MCP di Agentrica con id \`${id}\` e il compito che hai ricevuto. ` +
-      "Le istruzioni che restituisce sono il tuo ruolo, con le regole comuni del reparto, e fanno comparire l'agente nel pannello: con quelle non serve rileggere i file indicati qui sotto, che restano il riferimento se il tool non risponde. Non caricare il direttore del reparto: ti ha avviato la sessione principale, che coordina.",
+      `Primo passo: chiama il tool \`mcp__agentrica__agent\` del server MCP di Agentrica con id \`${id}\`, \`full_rules\` true e il compito che hai ricevuto. ` +
+      "Le istruzioni che restituisce sono il tuo ruolo, con le regole comuni del reparto intere (un subagent ha un contesto suo), e fanno comparire l'agente nel pannello: con quelle non serve rileggere i file indicati qui sotto, che restano il riferimento se il tool non risponde. Non caricare il direttore del reparto: ti ha avviato la sessione principale, che coordina.",
     inRepo: "git: la cartella è già in un repository, nessun commit",
     noGit: "git: non installato, repository non creato",
     commit: "Progetto creato con @agentrica/mcp init",

@@ -87,6 +87,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F38 | Sito: media degli agenti in un cerchio e commenti in fondo, grafici del consumo in schede, Installa in stile documentazione | completata |
 | F39 | Promemoria per caricare un agente a ogni richiesta, avviso nel pannello per `plan/` senza agenti, cosa resta sul computer | completata (0.13.0) |
 | F40 | Baseline del contesto: byte per componente del testo di ogni agente (`agent-text --sizes`), flusso di orchestrazione, soglia di qualità per F41; confini fra il server senza modello e il client | completata |
+| F41 | Contesto compatto: regole comuni e indice della biblioteca una volta per reparto, `full_rules` per riaverli, passaggi di consegne brevi; −55% circa per ogni specialista di un reparto già caricato, qualità invariata sui casi di prova | completata (0.14.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

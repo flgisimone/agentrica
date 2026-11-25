@@ -155,7 +155,7 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `list_agents` 
 | Tool | Parametri | Cosa restituisce |
 |---|---|---|
 | `list_agents` | `department` (il reparto) facoltativo (`AIBPD`, `AICA`, `AIPCA`, `AISA`, `AIWDA`) | id, nome in codice, ruolo e reparto di ogni agente, con il modello consigliato dove è stato misurato |
-| `agent` | `id` (es. `AISA-02`), `task` (il compito) facoltativo | le istruzioni complete dell'agente, con l'indice della biblioteca del reparto |
+| `agent` | `id` (es. `AISA-02`), `task` (il compito) e `full_rules` facoltativi | le istruzioni dell'agente, con le regole comuni e l'indice della biblioteca del reparto (vedi [Regole comuni](#regole-comuni-una-volta-per-reparto)) |
 | `library` | `id` dell'agente, `cards` (gli id delle schede, al più 10) | le schede della [biblioteca](#biblioteca) del reparto dell'agente, con fonte, versione e date |
 | `rate_agent` | `id`, `rating` da 1 a 5, `comment` e `publish` facoltativi; poi `code` | l'anteprima della valutazione e un codice; con il codice, l'invio (vedi [Valutazioni](#valutazioni)) |
 | `share_usage` | nessuno; poi `code` | l'anteprima dei totali di token del progetto e un codice; con il codice, l'invio (vedi [Totali di token](#totali-di-token)) |
@@ -163,7 +163,17 @@ Nel menu dei comandi restano solo i prompt della squadra, e anche `list_agents` 
 
 Per esempio: «Usa list_agents, scegli l'agente di Agentrica adatto e verifica l'accessibilità del form di login».
 
-**Orchestrazione.** Il numero 01 di ogni reparto è il direttore, e `list_agents` lo segna: per un compito del reparto il modello lo carica per primo, poi carica con `agent` gli specialisti che il direttore sceglie, uno alla volta, ognuno dal risultato del precedente; alla fine il direttore consolida i risultati e te li presenta. Fra reparti l'ordine è business → design → privacy → tua conferma → software → revisioni di design e privacy → Code Reviewer → tua conferma. Le istruzioni del server chiedono al modello di usare `agent` e non i subagent locali, salvo che li chieda tu; il [pannello](#pannello-locale) mostra la catena degli agenti.
+**Orchestrazione.** Il numero 01 di ogni reparto è il direttore, e `list_agents` lo segna: per un compito del reparto il modello lo carica per primo, poi carica con `agent` gli specialisti che il direttore sceglie, uno alla volta, ognuno dal passaggio di consegne del precedente (esito, rilievi con il riferimento all'evidenza, domande aperte) invece che dalla sua risposta intera; alla fine il direttore consolida i risultati e te li presenta. Fra reparti l'ordine è business → design → privacy → tua conferma → software → revisioni di design e privacy → Code Reviewer → tua conferma. Le istruzioni del server chiedono al modello di usare `agent` e non i subagent locali, salvo che li chieda tu; il [pannello](#pannello-locale) mostra la catena degli agenti.
+
+#### Regole comuni una volta per reparto
+
+Le regole comuni di un reparto sono più di metà del testo di ogni suo agente e sono uguali per tutti. Dalla 0.14.0 il server ricorda, per la durata della sessione, i reparti di cui ha già inviato regole e indice della biblioteca: il primo agente del reparto li riceve interi, i successivi un riferimento di due righe che dice quali regole valgono e come riaverle, più le schede segnate per il loro ruolo. Il file di ruolo e il compito arrivano sempre interi.
+
+- Con `full_rules` true `agent` restituisce tutto intero: dopo `/compact` o `/clear` (in Claude Code `/clear` apre una conversazione nuova ma il server resta lo stesso), o quando il modello non ha più le regole nel contesto. Lo dicono le istruzioni del server e il riferimento stesso.
+- I subagent di `init --subagents` hanno un contesto loro: il loro primo passo chiama `agent` con `full_rules` true. Nei progetti creati con una versione precedente il riferimento dice al subagent di richiamare `agent` con `full_rules` se le regole gli mancano; per avere il primo passo nuovo, cancella `.claude/agents/` e lancia `init --existing --subagents`, che riscrive solo i file mancanti.
+- I prompt degli agenti (`/mcp__agentrica__aisa-04-software`…) restano interi: si invocano a mano, uno alla volta.
+
+La misura è in `examples/risultati/`: il risparmio è la parte ripetuta, cioè regole e indice da 4 a 5,7 KB per ogni specialista di un reparto già caricato.
 
 **Comandi.** Oltre ai prompt degli agenti ci sono `/mcp__agentrica__rate`, che apre il modulo di [valutazione](#valutazioni) per l'ultimo agente usato (o per quello che indichi, es. `/mcp__agentrica__rate AISA-02`), `/mcp__agentrica__project`, che propone un tuo progetto per il sito senza account GitHub (vedi [Mostra il tuo progetto](#mostra-il-tuo-progetto)), e `/mcp__agentrica__configure`, che apre il modulo della [configurazione](#configurazione).
 

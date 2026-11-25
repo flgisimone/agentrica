@@ -84,6 +84,16 @@ test("agentText: il compito va in fondo, vuoto si omette", () => {
   assert.ok(!agentText(found, "   ").includes("## Compito"));
 });
 
+test("README del pacchetto e della radice (it, en): ogni comando @agentrica/mcp@x.y.z ha VERSION", () => {
+  // Il sito confronta i suoi comandi con il README pubblicato: la 0.15.0 è uscita con quelli della 0.13.0 (F43).
+  for (const file of ["README.md", "README.it.md", "../../README.md", "../../README.it.md"]) {
+    const text = readFileSync(join(import.meta.dirname, "..", file), "utf8");
+    const versions = [...text.matchAll(/@agentrica\/mcp@(\d+\.\d+\.\d+)/g)].map((m) => m[1]);
+    assert.ok(versions.length > 0, file);
+    assert.deepEqual([...new Set(versions)], [VERSION], file);
+  }
+});
+
 test("VERSION e nome nel registro MCP uguali in package.json e server.json", () => {
   const read = (file: string) => JSON.parse(readFileSync(join(import.meta.dirname, "..", file), "utf8"));
   const pkg = read("package.json") as { name: string; version: string; mcpName: string };

@@ -2,6 +2,11 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.15.1 — 2026-11-25
+
+### Fixed
+- The package READMEs show the commands of this version: 0.15.0 had those of 0.13.0. npm description without the number of agents.
+
 ## 0.15.0 — 2026-11-25
 
 ### Added

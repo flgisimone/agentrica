@@ -347,7 +347,7 @@ Le istruzioni del server arrivano al modello una volta, all'avvio della sessione
 npx -y @agentrica/mcp@0.16.0 reminder [cartella del progetto]
 ```
 
-  Crea `.claude/settings.json` se manca; se c'è, aggiunge l'hook a `hooks.UserPromptSubmit` e lascia com'è tutto il resto. Se il promemoria c'è già (in italiano o in inglese) non lo ripete; se il file non è un JSON nella forma di Claude Code non lo tocca e lo dice. La lingua è quella del server (`--lang`). A mano, la parte `hooks` è questa (la riga in inglese è nel README inglese):
+  Crea `.claude/settings.json` se manca; se c'è, aggiunge l'hook a `hooks.UserPromptSubmit` e lascia com'è tutto il resto, rientro e fine riga compresi. Se il promemoria c'è già (in italiano o in inglese) non lo ripete; se il file non è un JSON nella forma di Claude Code non lo tocca e lo dice. La lingua è quella del server (`--lang`). A mano, la parte `hooks` è questa (la riga in inglese è nel README inglese):
 
 ```json
 {

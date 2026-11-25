@@ -5,7 +5,7 @@ Each version with its npm publication date and its changes by type: Added, Chang
 ## 0.16.0 — 2026-11-25
 
 ### Added
-- `npx @agentrica/mcp reminder [folder]` command: adds the reminder to `.claude/settings.json` of a project already under way (set up with `add`, or with a `settings.json` that `init --existing` leaves alone). It keeps the rest of the file, does not repeat the reminder if it is already there, and leaves untouched a file that is not in the shape Claude Code uses.
+- `npx @agentrica/mcp reminder [folder]` command: adds the reminder to `.claude/settings.json` of a project already under way (set up with `add`, or with a `settings.json` that `init --existing` leaves alone). It keeps the rest of the file, with its indentation and line endings, does not repeat the reminder if it is already there, and leaves untouched a file that is not in the shape Claude Code uses.
 
 ### Changed
 - Panel: contradictions are in a box of their own, separate from format errors, each with its title.

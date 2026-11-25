@@ -219,6 +219,17 @@ test("reminder (F44-08): crea settings.json o aggiunge l'hook tenendo il resto, 
     hooks: { Stop: [{ hooks: [other] }], UserPromptSubmit: [{ hooks: [other] }, { hooks: [{ type: "command", command: ours("it") }] }] },
   });
 
+  // Rientro, fine riga e a capo finale del file restano quelli di prima: tab e CRLF senza a capo, 4 spazi con a capo.
+  mkdirSync(join(tmp, "rem-stile", ".claude"), { recursive: true });
+  const style = join(tmp, "rem-stile", ".claude", "settings.json");
+  for (const [indent, eol, end] of [["\t", "\r\n", ""], ["    ", "\n", "\n"]] as const) {
+    writeFileSync(style, JSON.stringify({ permissions: { allow: [] } }, null, indent).replace(/\n/g, eol) + end);
+    assert.equal(reminder("rem-stile").status, 0);
+    const after = readFileSync(style, "utf8");
+    const expected = { permissions: { allow: [] }, hooks: { UserPromptSubmit: [{ hooks: [{ type: "command", command: ours("it") }] }] } };
+    assert.equal(after, JSON.stringify(expected, null, indent).replace(/\n/g, eol) + end, JSON.stringify(indent));
+  }
+
   mkdirSync(join(tmp, "rem-rotto", ".claude"), { recursive: true });
   for (const text of ["{ rotto", "[]", '{"hooks": []}', '{"hooks": {"UserPromptSubmit": {}}}']) {
     writeFileSync(join(tmp, "rem-rotto", ".claude", "settings.json"), text);

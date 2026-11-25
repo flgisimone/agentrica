@@ -89,7 +89,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F40 | Baseline del contesto: byte per componente del testo di ogni agente (`agent-text --sizes`), flusso di orchestrazione, soglia di qualità per F41; confini fra il server senza modello e il client | completata |
 | F41 | Contesto compatto: regole comuni e indice della biblioteca una volta per reparto, `full_rules` per riaverli, passaggi di consegne brevi; −55% circa per ogni specialista di un reparto già caricato, qualità invariata sui casi di prova | completata (0.14.0) |
 | F42 | Validazione deterministica: `check` (tool, comando per la CI e pannello) controlla il formato di `plan/` e `audit/` e segnala tre contraddizioni con entrambe le posizioni, senza modelli; `report` avvisa se il passaggio di consegne è incompleto | completata (0.15.0) |
-| F43 | Rilievi di F40–F42 e rilascio: prova a mano del flusso con il contesto compatto, descrizione npm senza numero di agenti, testi del sito per `check` e `full_rules` | in corso |
+| F43 | Rilievi di F40–F42 e rilascio: prova a mano del flusso con il contesto compatto, descrizione npm senza numero di agenti, testi del sito per `check` e `full_rules`, README legati alla versione con un test | completata (0.15.1) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

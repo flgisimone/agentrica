@@ -23,6 +23,12 @@ The agent files, the server's texts and the panel exist in English and in Italia
 - **Where the data goes.** The agent's text, the task and the files the model reads in your project go to the model provider through your client, under that provider's terms. Agentrica does not receive them. Leave personal data, secrets and customer data out of the task unless they are needed.
 - The agents are AI: their conclusions are proposals to check. The privacy and security agents do not replace a DPO, a lawyer or a security officer, and their findings are not a compliance certification.
 
+### What the server does and what the model does
+
+The server calls no models, uses no API keys and pays for no inference. It composes the agents' texts from the catalog, keeps the session state (agents in use, reports, panel questions) and runs the checks that need no model. The reasoning, that is reading the project, deciding and writing, stays with your client and the model you use, on your subscription or your key. An optional integration comes in only if it costs nothing and does not become a mandatory dependency.
+
+How much text the server returns, per agent and per component (common rules, role, library…): `npm run -s agent-text -- --sizes` in a clone of the repository. Bytes are measured, tokens estimated (bytes / 4).
+
 ### What stays on your computer
 
 For each tool, command and page: whether it stays on your computer or what leaves it, to whom and when. The text the model reads and writes still goes to the model provider through your client (see above).
@@ -270,7 +276,7 @@ Then ask the agent to open the panel (`open_panel` tool): the page opens in your
 - **Plan**: the open phase with backlog and acceptance criteria, and all project phases;
 - **Findings**: open findings from phases and audits, by priority and department;
 - **Ratings**: a form for each agent used and not yet rated (see [Ratings](#ratings)); absent with `--no-ratings`;
-- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table.
+- **Usage**: the tokens spent in the project with Claude Code, by day, agent (subagent), model and session, with the share read from cache, the cost in dollars equivalent to API prices, the cache saving (measured) and the model saving (an estimate: the same tokens at Opus prices). Every chart is also a table. With a client other than Claude Code usage is not available: the server does not estimate it.
 
 When a new agent starts working or there is one more agent to rate, the page says so with a notice at the bottom. With «Turn on notifications» it also shows a system notification when the panel tab is not in view; it needs the browser's permission, and the browser shows it, without external services.
 

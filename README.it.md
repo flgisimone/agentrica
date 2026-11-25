@@ -86,6 +86,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F37 | Misura dei modelli, prima ondata: 14 specialisti cyber, privacy e software, modello consigliato più piccolo per 12 | completata (0.12.0) |
 | F38 | Sito: media degli agenti in un cerchio e commenti in fondo, grafici del consumo in schede, Installa in stile documentazione | completata |
 | F39 | Promemoria per caricare un agente a ogni richiesta, avviso nel pannello per `plan/` senza agenti, cosa resta sul computer | completata (0.13.0) |
+| F40 | Baseline del contesto: byte per componente del testo di ogni agente (`agent-text --sizes`), flusso di orchestrazione, soglia di qualità per F41; confini fra il server senza modello e il client | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

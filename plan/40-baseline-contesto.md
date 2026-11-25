@@ -2,7 +2,7 @@
 
 **Obiettivo**: sapere quanto testo restituisce Agentrica, componente per componente, prima di ridurlo. Mettere per scritto cosa fa il server senza un modello e cosa resta al client. La baseline è il «prima» con cui si confrontano F41 e F42.
 
-> **Stato: da aprire.** Fase nata dall'analisi della roadmap consolidata (documento locale, non versionato) il 2026-11-25. Nella roadmap era «F37 — Baseline», rinumerata perché F37–F39 esistevano già.
+> **Stato: completata il 2026-11-25.** Fase nata dall'analisi della roadmap consolidata (documento locale, non versionato) il 2026-11-25. Nella roadmap era «F37 — Baseline», rinumerata perché F37–F39 esistevano già.
 
 **Agenzie (proposta)**: software (QA per le misure e i test, Backend per lo script, Code Reviewer). Nessuna funzione visibile e nessun dato personale: design e privacy non sono coinvolte.
 
@@ -15,7 +15,14 @@
 - La distinzione fra dati «misurati» e «dichiarati» c'è già (F24 e F27). I token di sessione arrivano solo dai file di Claude Code (`usage.ts`).
 - Il server non chiama modelli: è una decisione del piano (stdio locale, nessuna telemetria), ma oggi non esiste un testo unico che dica dove passa il confine fra il Core e il client.
 
-## Proposte da confermare
+## Decisioni dell'utente (2026-11-25)
+
+- **Unità di misura**: byte misurati, token stimati come byte / 4, scritti accanto al numero.
+- **Soglia di qualità** per F41: quella di F24 sullo stesso modello e configurazione prima e dopo (difetti di prima meno uno, nessun falso in più, formato dei rilievi).
+- **Casi di confronto**: `orchestrazione-newsletter` più uno per reparto (`aibpd-05-requisiti-abbonamenti`, `aica-04-config-deploy`, `aipca-02-prenotazioni-palestra`, `aisa-09-api-fatture`, `aiwda-08-form-iscrizione`).
+- **Confini del Core**: nelle decisioni di `plan/README.md` e in una sezione dei README del pacchetto (it, en). Backlog confermato com'era.
+
+## Proposte (all'apertura)
 
 - **Unità di misura**: i byte sono il dato esatto, i token una stima dichiarata (byte / 4, scritto accanto al numero). Un tokenizer esatto richiederebbe l'API di un provider con una chiave, contro il vincolo «nessun costo LLM».
 - **Soglia di qualità** per le riduzioni di F41: riusare quella di F24 («difetti di Opus meno uno, nessun falso in più») sullo stesso modello, prima e dopo, oppure una tolleranza nuova.
@@ -40,6 +47,27 @@
 - Nessuna misura richiede una chiave API o una chiamata a un modello.
 - I confini fra Core e client sono scritti nel piano e nei README.
 - `npm run verify` verde.
+
+## Fatto
+
+- **F40-01** `npm run -s agent-text -- --sizes [--date AAAA-MM-GG]` (`scripts/agent-text.ts`, `sizesReport` in `scripts/agent-text-lib.ts`): byte e token stimati per agente e componente, per tutti i 56 agenti in italiano e in inglese. I componenti (cornice, regole comuni, ruolo, biblioteca, compito, resoconto e valutazione) vengono da `agentParts` in `packages/mcp/src/prompt.ts`, che ora compone anche `agentText`; `agentSizes` attribuisce a ogni paragrafo il suo separatore. Il testo restituito non cambia (test di `prompt.test.ts` e `server.test.ts` invariati e verdi).
+- **F40-02** Baseline in `examples/risultati/2026-11-25-baseline-contesto.md`: tabella per agente e per reparto, flusso di `orchestrazione-newsletter` (sequenza della prova di F34, `FLOW` in `agent-text-lib.ts`) con 47,7 KB in italiano, di cui 19,7 KB di regole comuni (54% del testo degli agenti) e 4,3 KB ripetuti (regole e biblioteca di AISA con AISA-06).
+- **F40-03** Nella stessa baseline: istruzioni del server (2.625 caratteri su 4096 in italiano, con pannello e valutazioni; 1.838 senza), `list_agents` con tutto il catalogo (8,5 KB) e per reparto o squadra di un reparto (1,2–1,9 KB), schede di `library` per reparto (0,9–2,3 KB). Il testo di `list_agents` è passato da `server.ts` ad `agentList` in `prompt.ts`, così lo script misura la stessa funzione.
+- **F40-04** Confini del Core: riga «Confini del Core (F40)» nelle Decisioni di `plan/README.md` e sezione «Cosa fa il server e cosa fa il modello» / «What the server does and what the model does» nei README del pacchetto.
+- **F40-05** Pannello: con zero risposte lette mostra «il consumo si vede solo con Claude Code» (`noClaudeFiles`), senza stime. README: nella voce Consumo/Usage del pannello, «con un client diverso da Claude Code il consumo non è disponibile: il server non lo stima».
+- **F40-06** Soglia e casi decisi con l'utente (sopra), riportati anche nella baseline.
+- **F40-07** `prompt.test.ts`: la somma dei componenti è la lunghezza in byte del testo per ogni agente, nelle due lingue, con e senza compito, resoconto e valutazione. `scripts/agent-text-lib.test.ts`: quota ripetuta solo per AISA-06, stessi numeri a parità di data, token come byte / 4.
+
+## Verifiche
+
+- `npm run verify` (typecheck, lint, 179 test) verde.
+- `npm run -s agent-text -- --sizes --date 2026-11-25` lanciato due volte con lo stesso risultato (anche nel test).
+- Nessuna misura chiede una chiave o un modello. Nessuna modifica al sito, quindi niente `verify:e2e`; nessun cambio di versione del pacchetto (cambiano solo README e codice interno).
+
+## Rilievi aperti
+
+- P2 — `list_agents` con tutto il catalogo pesa 8,5 KB, più di ogni agente. La decisione «Roadmap consolidata» rinvia la selezione con metadati finché `list_agents` non supera una soglia misurata in F40: la soglia non è stata fissata. Da decidere con l'utente (all'apertura di F41 o in una fase a sé).
+- P3 — La sequenza del flusso è quella della prova di F34 (solo direttori più AISA-06): con più specialisti dello stesso reparto la quota ripetuta cresce di 4–5,7 KB per agente. Il confronto di F41 usa la stessa sequenza, così prima e dopo restano confrontabili.
 
 ## Fuori perimetro
 

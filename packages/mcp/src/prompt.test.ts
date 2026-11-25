@@ -3,7 +3,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { loadCatalog } from "../../catalog/src/index.ts";
-import { agentText, cardText, directorOf, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
+import { loadCatalog as loadPackaged } from "./catalog.ts";
+import { setLang } from "./texts/index.ts";
+import { agentSizes, agentText, cardText, directorOf, findAgent, introLine, libraryIndex, modelAdvice, promptName, selectSquad, VERSION } from "./prompt.ts";
 
 const catalog = loadCatalog();
 
@@ -228,4 +230,31 @@ test("cardText: fonte con livello e date, niente URL, avviso se scaduta", () => 
   }
   const card = catalog[0]!.library[0]!;
   assert.match(cardText(card, "2099-01-01"), /Scaduta: verificala sulla fonte/);
+});
+
+// F40-07: i componenti di --sizes vengono da agentParts; la loro somma è il testo intero, per ogni agente e lingua.
+test("agentSizes: la somma dei componenti è la lunghezza del testo, in italiano e in inglese", () => {
+  const variants = [
+    [undefined, {}],
+    ["Compito «è»", { ratings: true, report: true }],
+    [undefined, { report: true }],
+  ] as const;
+  try {
+    for (const lang of ["it", "en"] as const) {
+      setLang(lang);
+      for (const department of selectSquad(loadPackaged(lang))) {
+        for (const agent of department.agents) {
+          for (const [task, options] of variants) {
+            const sizes = agentSizes({ department, agent }, task, { ...options, date: "2026-11-25" });
+            const text = agentText({ department, agent }, task, { ...options, date: "2026-11-25" });
+            assert.equal(Object.values(sizes).reduce((a, b) => a + b, 0), Buffer.byteLength(text), `${lang} ${agent.id}`);
+            assert.equal(sizes.task > 0, task !== undefined, `${lang} ${agent.id}`);
+            assert.ok(sizes.rules > 0 && sizes.role > 0 && sizes.frame > 0, `${lang} ${agent.id}`);
+          }
+        }
+      }
+    }
+  } finally {
+    setLang("it");
+  }
 });

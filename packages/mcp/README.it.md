@@ -21,6 +21,12 @@ Ogni agente è un ruolo con un metodo e dei limiti dichiarati, per esempio `AISA
 - **Dove vanno i dati.** Il testo dell'agente, il compito e i file che il modello legge nel tuo progetto vanno al fornitore del modello attraverso il tuo client, secondo le condizioni di quel fornitore. Agentrica non li riceve. Nel compito non inserire dati personali, segreti o dati di clienti che non servono.
 - Gli agenti sono IA: le loro conclusioni sono proposte da verificare. Gli agenti di privacy e sicurezza non sostituiscono un DPO, un avvocato o un responsabile della sicurezza, e i loro rilievi non sono una certificazione di conformità.
 
+### Cosa fa il server e cosa fa il modello
+
+Il server non chiama modelli, non usa chiavi API e non paga inferenza. Compone i testi degli agenti dal catalogo, tiene lo stato della sessione (agenti in uso, resoconti, domande del pannello) e fa i controlli che non hanno bisogno di un modello. Il ragionamento, cioè leggere il progetto, decidere e scrivere, resta al tuo client e al modello che usi, con il tuo abbonamento o la tua chiave. Un'integrazione facoltativa entra solo se non costa niente e non diventa una dipendenza obbligatoria.
+
+Quanto testo restituisce il server, per agente e per componente (regole comuni, ruolo, biblioteca…): `npm run -s agent-text -- --sizes` in un clone del repository. I byte sono misurati, i token stimati (byte / 4).
+
 ### Cosa resta sul computer
 
 Per ogni tool, comando e pagina, se resta sul tuo computer o cosa esce, verso chi e quando. Il testo che il modello legge e scrive va comunque al fornitore del modello attraverso il tuo client (vedi sopra).
@@ -268,7 +274,7 @@ Poi chiedi all'agente di aprire il pannello (tool `open_panel`): la pagina si ap
 - **Piano**: la fase in corso con backlog e criteri di accettazione, e tutte le fasi del progetto;
 - **Rilievi**: i rilievi aperti delle fasi e quelli degli audit, per priorità e reparto;
 - **Valutazioni**: un modulo per ogni agente usato e non ancora valutato (vedi [Valutazioni](#valutazioni)); non c'è con `--no-ratings`;
-- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella.
+- **Consumo**: i token spesi nel progetto con Claude Code, per giorno, agente (subagent), modello e sessione, con la quota letta dalla cache, il costo in dollari equivalenti ai prezzi API, il risparmio della cache (misurato) e quello del modello (una stima: gli stessi token al prezzo di Opus). Ogni grafico è anche una tabella. Con un client diverso da Claude Code il consumo non è disponibile: il server non lo stima.
 
 Quando un agente nuovo si mette al lavoro o c'è un agente in più da valutare, la pagina lo dice con un avviso in basso. Con «Attiva le notifiche» lo dice anche con una notifica di sistema quando la scheda del pannello non è in vista; serve il permesso del browser, e la notifica la mostra il browser, senza servizi esterni.
 

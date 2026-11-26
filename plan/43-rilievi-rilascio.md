@@ -51,4 +51,4 @@
 ## Rilievi aperti
 
 - P2 — C5 di `orchestrazione-newsletter` rosso in un'esecuzione su Opus 5.5: il modello parte dal direttore software per «aggiungi una pagina» e salta business e design. Prima di cambiare le istruzioni del server, rifare il caso con più esecuzioni; se si ripete, una frase nelle istruzioni (entro 4096 caratteri). Chiuso in F48-03 (2026-11-26): 5 esecuzioni rosse su 5 con la 0.17.0; con la frase nuova nelle istruzioni C1–C6 verdi 5 su 5 (`examples/risultati/2026-11-26-orchestrazione-c5.md`).
-- I tre rilievi di F42 restano aperti con le loro condizioni.
+- I tre rilievi di F42 restano aperti con le loro condizioni. Chiusi tutti e tre: due in F44, il P2 in F48-02.

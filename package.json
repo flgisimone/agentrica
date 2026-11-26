@@ -15,7 +15,8 @@
     "verify": "npm run typecheck && npm run lint && npm test",
     "agent-text": "node scripts/agent-text.ts",
     "orchestration": "node scripts/orchestration.ts",
-    "tool-chains": "node scripts/tool-chains.ts"
+    "tool-chains": "node scripts/tool-chains.ts",
+    "panel-screenshots": "node scripts/panel-screenshots.ts"
   },
   "devDependencies": {
     "@neondatabase/serverless": "1.2.0",

@@ -132,7 +132,9 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F45 | [45-misura-code-mode.md](45-misura-code-mode.md) | Misura prima di Code Mode: catene di chiamate ai tool di Agentrica e byte intermedi nelle sessioni di Claude Code, soglia per riaprire `run_workflow`; esito sulla proposta esterna (OpenAI, sandbox, registry): soglia non superata, Code Mode rinviato | completata |
 | F46 | [46-pannello-ux.md](46-pannello-ux.md) | Pannello locale, UI e UX: audit nel browser, avvisi in una zona sola, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, rilievi per priorità, consumo più compatto, accessibilità | completata |
 | F47 | [47-sito-allineato.md](47-sito-allineato.md) | Sito allineato al pacchetto: pannello locale, `check`, contesto compatto e passaggio di consegne, modelli consigliati nel catalogo; rilascio 0.17.0 di pacchetto e sito | completata |
-
 | F48 | [48-rilievi.md](48-rilievi.md) | Rilievi di F21–F45: chiusure con l'evidenza, C5 ripetuto, `check` con una lettura negata, `--server` nello script delle catene, «Come funziona» e flowchart sul sito; rilascio 0.17.1 | completata |
+| F49 | [49-misura-business.md](49-misura-business.md) | Misura dei modelli, seconda ondata: dieci specialisti di business su Opus medio e Sonnet, un progetto nuovo; le ondate successive (design, poi cyber, privacy e software) a parte | in corso |
+| F50 | [50-misura-design.md](50-misura-design.md) | Misura dei modelli, terza ondata: otto specialisti di design su Opus medio e Sonnet, un progetto nuovo | da fare |
+| F51 | [51-misura-cyber-privacy-software.md](51-misura-cyber-privacy-software.md) | Misura dei modelli, quarta ondata: otto specialisti di cyber, privacy e software sui progetti di F37 estesi; chiusura del rilievo dei ruoli non misurati | da fare |
 
-Ordine: F0 → F48 in sequenza.
+Ordine: F0 → F51 in sequenza.

@@ -1,0 +1,37 @@
+/* Token del design system di Turnio. */
+:root {
+  --blue-500: #1f6feb;
+  --color-primary: var(--blue-500);
+  --color-text: #1b1f24;
+  --color-muted: #9aa0a6;
+  --color-surface: #ffffff;
+  --color-background: #f6f7f9;
+  --color-border: #d8dce1;
+  --color-success: #1a7f37;
+  --color-warning: #e8a33d;
+  --color-danger: #cf222e;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+}
+
+/* Colori degli stati, aggiunti per i badge dei turni. */
+:root {
+  --color-danger: #e5534b;
+  --color-late: #e89b3a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

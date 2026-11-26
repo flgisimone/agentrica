@@ -25,6 +25,18 @@ export const formatIssue = (issue: Issue) => `${issue.file}${issue.line ? `:${is
 const COMPLETED = new Set(["completata", "completed"]);
 const SAFE_FILE = /^[\w.-]+\.md$/;
 
+// Un file che non c'è è un'informazione (piano assente, fase senza file); uno che c'è ma non si legge è un errore. Con
+// il permission model di Node (`--permission` senza `--allow-fs-read` per la cartella) anche un file assente dà
+// ERR_ACCESS_DENIED: non si sa se c'è, quindi si dice che non si legge (F48-02).
+const isAbsent = (e: unknown) => ["ENOENT", "ENOTDIR"].includes((e as NodeJS.ErrnoException | undefined)?.code ?? "");
+function why(e: unknown): string {
+  const code = (e as NodeJS.ErrnoException | undefined)?.code;
+  if (code === "ERR_ACCESS_DENIED") return T.check.accessDenied;
+  if (code === "OUTSIDE_PROJECT") return T.check.outsideProject;
+  if (code === "FILE_TOO_LARGE") return T.check.tooLarge;
+  return code ?? (e instanceof Error ? e.message : String(e));
+}
+
 const cellsOf = (line: string) => line.trim().replace(/^\||\|$/g, "").split(CELL).map((c) => c.replaceAll("\\|", "|").trim());
 
 /** La prima tabella sotto il titolo `## …`: l'intestazione e le righe di dati con il numero di riga (da 1). */
@@ -44,8 +56,9 @@ function checkPhaseFile(root: string, file: string, phase: { id: string; status:
   let text: string;
   try {
     text = readInside(root, join(root, "plan", file));
-  } catch {
-    issues.push({ file: "plan/README.md", line: phase.line, message: T.check.missingPhaseFile(file, phase.id), kind: "error" });
+  } catch (e) {
+    if (isAbsent(e)) issues.push({ file: "plan/README.md", line: phase.line, message: T.check.missingPhaseFile(file, phase.id), kind: "error" });
+    else issues.push({ file: path, message: T.check.unreadable(why(e)), kind: "error" });
     return;
   }
   const lines = text.split("\n");
@@ -81,8 +94,9 @@ function checkPlan(root: string, issues: Issue[]) {
   let readme: string;
   try {
     readme = readInside(root, join(root, "plan", "README.md"));
-  } catch {
+  } catch (e) {
     // Un piano che manca è un'informazione del pannello (F35), non un errore di formato.
+    if (!isAbsent(e)) issues.push({ file: "plan/README.md", message: T.check.unreadable(why(e)), kind: "error" });
     return;
   }
   const rows = tableAt(readme.split("\n"), HEADINGS.phases)?.rows;
@@ -167,19 +181,32 @@ function checkAudit(root: string, issues: Issue[]) {
   let folders: string[];
   try {
     folders = readdirSync(audit, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort();
-  } catch {
+  } catch (e) {
+    if (!isAbsent(e)) issues.push({ file: "audit", message: T.check.unreadable(why(e)), kind: "error" });
     return;
   }
   // Per le contraddizioni fra file: id → la prima volta che compare.
   const byId = new Map<string, { file: string; line?: number | undefined; finding: AuditFinding }>();
   for (const folder of folders) {
-    for (const name of readdirSync(join(audit, folder)).filter((n) => n.endsWith(".json")).sort()) {
+    let names: string[];
+    try {
+      names = readdirSync(join(audit, folder)).filter((n) => n.endsWith(".json")).sort();
+    } catch (e) {
+      issues.push({ file: `audit/${folder}`, message: T.check.unreadable(why(e)), kind: "error" });
+      continue;
+    }
+    for (const name of names) {
       const file = `audit/${folder}/${name}`;
       const error = (message: string, line?: number) => issues.push({ file, line, message, kind: "error" });
       let text: string;
       let data: unknown;
       try {
         text = readInside(root, join(audit, folder, name));
+      } catch (e) {
+        error(T.check.unreadable(why(e)));
+        continue;
+      }
+      try {
         data = JSON.parse(text);
       } catch (e) {
         // ponytail: la riga solo quando il messaggio di JSON.parse la scrive («line 3 column 2»); «Unexpected token» e
@@ -270,8 +297,8 @@ export function runCheck(args: string[]): number {
   let root: string;
   try {
     root = realpathSync(dir);
-  } catch {
-    process.stderr.write(`${T.check.noDir(dir)}\n`);
+  } catch (e) {
+    process.stderr.write(`${isAbsent(e) ? T.check.noDir(dir) : `${dir}: ${T.check.unreadable(why(e))}`}\n`);
     return 2;
   }
   const issues = checkProject(root);

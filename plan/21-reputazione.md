@@ -147,10 +147,10 @@ Ordine: F21-01/02 → conferma dell'utente → F21-03 → F21-04/05/06 → F21-0
 ## Rilievi aperti
 
 - (P2) Sul computer dell'utente mancano `DATABASE_URL_READONLY` e `DATABASE_URL_MODERATOR` (le password di `ratings_reader` e dei ruoli di F21 vanno reimpostate con `alter role` se perse): senza, `npm run ratings` e la moderazione non partono. Chiuso in F30 (F30-01): le due variabili sono nell'ambiente del titolare (2026-11-21).
-- (P3) La lettura delle statistiche in produzione non è verificabile finché i voti sono sotto le soglie; un errore di connessione compare nei log di Vercel come `reputation: errore del database`.
+- (P3) La lettura delle statistiche in produzione non è verificabile finché i voti sono sotto le soglie; un errore di connessione compare nei log di Vercel come `reputation: errore del database`. Chiuso in F48-01 (2026-11-26): accettato dall'utente, provato in sviluppo; si riapre se in produzione, sopra le soglie, le statistiche non compaiono.
 - (P2) Note legali: anche le parti di F21 vanno rilette da un legale (come PRIV-PUB-01 e `#valutazioni` di F20). Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale; riaprire con i casi scritti in PRIV-PUB-01.
 - (P3) Un errore del database resta in cache per un'ora: per quell'ora le statistiche spariscono dal sito (commento `ponytail:` in `reputation-data.ts`). Chiuso in F30 (F30-11): a runtime l'errore non entra in cache, Next serve l'ultima pagina generata e riprova.
-- (P3) Il passaggio da 404 a pagina della classifica è provato in locale con `next start`; in produzione su Vercel si vedrà solo quando i voti superano le soglie.
+- (P3) Il passaggio da 404 a pagina della classifica è provato in locale con `next start`; in produzione su Vercel si vedrà solo quando i voti superano le soglie. Chiuso in F48-01 (2026-11-26): accettato dall'utente, provato in locale; si riapre se in produzione, sopra le soglie, la pagina resta 404.
 
 ## Criteri di accettazione
 

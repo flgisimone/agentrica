@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
@@ -40,6 +40,26 @@ test("un piano e un audit validi passano, in italiano, in inglese e nel formato 
 
 test("senza plan/ né audit/ non c'è niente da segnalare", () => {
   assert.deepEqual(checkProject(project({})), []);
+});
+
+// chmod non toglie la lettura su Windows né a root: lì il caso lo copre il test del permission model.
+const noChmod = process.platform === "win32" || process.getuid?.() === 0;
+
+test("un file che c'è ma non si legge è un errore, non un piano assente", { skip: noChmod }, () => {
+  const root = project({
+    "plan/README.md": README("| F1 | [01-uno.md](01-uno.md) | Uno | da fare |"),
+    "plan/01-uno.md": PHASE("| F1-01 | A | P1 |"),
+    "audit/2026-01-01/sec.json": json({ agent: "AICA-02", findings: [] }),
+  });
+  const unreadable = ["plan/01-uno.md", "audit/2026-01-01/sec.json"].map((file) => join(root, file));
+  unreadable.forEach((file) => chmodSync(file, 0o000));
+  try {
+    assert.deepEqual(where(checkProject(root)), ["plan/01-uno.md: non si può leggere: EACCES.", "audit/2026-01-01/sec.json: non si può leggere: EACCES."]);
+    chmodSync(join(root, "plan", "README.md"), 0o000);
+    assert.deepEqual(where(checkProject(root)).slice(0, 1), ["plan/README.md: non si può leggere: EACCES."]);
+  } finally {
+    [...unreadable, join(root, "plan", "README.md")].forEach((file) => chmodSync(file, 0o644));
+  }
 });
 
 test("piano malformato: ogni errore con file, riga e causa", () => {
@@ -127,4 +147,8 @@ test("il comando check: 0 senza problemi, 1 con problemi, 2 con argomenti sbagli
   assert.match(bad.stdout, /^1 errore di formato:\n- plan\/README\.md: manca la tabella/);
   assert.equal(run("a", "b").status, 2);
   assert.equal(run(join(tmpdir(), "agentrica-non-esiste")).status, 2);
+  // Permission model di Node senza lettura del progetto: non è «non trovo la cartella» (F48-02).
+  const denied = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${join(import.meta.dirname, "..", "..", "..")}`, server, "check", project({}), "--lang", "it"], { encoding: "utf8" });
+  assert.equal(denied.status, 2);
+  assert.match(denied.stderr, /non si può leggere: accesso negato dal permission model di Node/);
 });

@@ -2,6 +2,14 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.17.1 — 2026-11-26
+
+### Cambiato
+- Istruzioni del server: una richiesta di una funzione nuova parte dal direttore business anche su un progetto nuovo, con lo stack non ancora scelto o F0 da fare. Prima il modello partiva spesso dal software per la base tecnica.
+
+### Corretto
+- `check` distingue un file che manca da uno che non si legge. Con i permessi minimi del README (permission model di Node) dice che l'accesso è negato e come darlo, invece di rispondere «nessun problema di formato». Un file di fase che è un link fuori dal progetto ora si dice «non si può leggere» e non «non trovo». Il comando con una cartella che non si legge non dice più «Non trovo la cartella».
+
 ## 0.17.0 — 2026-11-25
 
 ### Nuovo

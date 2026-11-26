@@ -60,5 +60,5 @@
 ## Rilievi aperti
 
 - P2 — `list_agents` è quasi tutta la quota intermedia (74,7 KB su 79,7 KB, 5,8 KB in media per chiamata). È il tema della «selezione con metadati» rinviata in «Roadmap consolidata» (si riapre oltre 12 KB con tutto il catalogo): la misura per chiamata resta sotto, ma conviene guardarla all'apertura di una fase sul catalogo.
-- P3 — Lo script riconosce Agentrica dal nome del server che contiene «agentrica» (`ponytail:` in `agentricaTool`); con un altro nome le chiamate non si contano. I dati vengono solo da Claude Code.
-- P3 — La misura copre 24 sessioni: va ripetuta quando l'uso cresce, con lo stesso comando, prima di riaprire Code Mode.
+- P3 — Lo script riconosce Agentrica dal nome del server che contiene «agentrica» (`ponytail:` in `agentricaTool`); con un altro nome le chiamate non si contano. I dati vengono solo da Claude Code. Chiuso in F48-04: opzione `--server <nome>` per un server registrato con un altro nome.
+- P3 — La misura copre 24 sessioni: va ripetuta quando l'uso cresce, con lo stesso comando, prima di riaprire Code Mode. Ripetuta in F48-04 il 2026-11-26: 29 sessioni, le 5 nuove sono le prove di C5 di F48, quindi nessun uso reale in più; soglia non superata (13,8% e 8,8%). Resta da ripetere quando l'uso cresce.

@@ -43,6 +43,8 @@ export const it = {
       "Per un compito di un reparto carica prima il direttore (l'agente -01, segnato in list_agents), che sceglie gli specialisti e l'ordine; " +
       "poi carica gli specialisti con agent uno alla volta, ognuno dal passaggio di consegne del precedente (esito, rilievi con l'evidenza, domande aperte), mai due nella stessa risposta; il direttore consolida e presenta all'utente. " +
       "Fra reparti l'ordine è business → design → privacy → conferma dell'utente → software → revisioni di design e privacy → Code Reviewer → conferma dell'utente. " +
+      // F48-03: su un progetto nuovo (F0 da fare) il modello partiva dal software per la base tecnica.
+      "Una richiesta di una funzione nuova parte da list_agents e poi dal direttore business, anche se il progetto non ha ancora lo stack o F0 è da fare: la base tecnica è lavoro del software, dopo la conferma. " +
       "Per gli agenti di Agentrica usa agent e non i subagent locali (tool Agent di Claude Code, .claude/agents/): avvia un subagent solo se l'utente lo chiede. " +
       "Le istruzioni contengono l'indice della biblioteca del reparto: le schede che servono al compito si leggono con library. " +
       // F41-02: regole e indice una volta per reparto; come riaverli dopo /compact.
@@ -527,6 +529,10 @@ export const it = {
     phaseNoId: "riga della tabella «Fasi» senza id della fase.",
     phaseNoStatus: (id: string) => `la fase ${id} non ha lo stato.`,
     badLink: (target: string, id: string) => `il file della fase ${id} (${target}) deve essere un nome di file .md dentro plan/.`,
+    unreadable: (why: string) => `non si può leggere: ${why}.`,
+    accessDenied: "accesso negato dal permission model di Node, serve --allow-fs-read per la cartella del progetto",
+    outsideProject: "è un link fuori dalla cartella del progetto",
+    tooLarge: "file troppo grande",
     missingPhaseFile: (file: string, id: string) => `non trovo plan/${file}, il file della fase ${id}.`,
     noTitle: "manca il titolo «# …».",
     noGoal: "manca la riga «**Obiettivo**: …».",

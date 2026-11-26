@@ -41,6 +41,8 @@ export const en: Texts = {
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
       "then load the specialists with agent one at a time, each from the previous one's handover (outcome, findings with their evidence, open questions), never two in the same response; the director consolidates and presents to the user. " +
       "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → Code Reviewer → user confirmation. " +
+      // F48-03: on a new project (F0 to do) the model started from software for the technical base.
+      "A request for a new feature starts from list_agents and then the business director, even if the project has no stack yet or F0 is to do: the technical base is software work, after the confirmation. " +
       "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
       // F41-02: rules and index once per department; how to get them back after /compact.
@@ -523,6 +525,10 @@ export const en: Texts = {
     phaseNoId: "row of the «Phases» table without a phase id.",
     phaseNoStatus: (id: string) => `phase ${id} has no status.`,
     badLink: (target: string, id: string) => `the file of phase ${id} (${target}) must be a .md file name inside plan/.`,
+    unreadable: (why: string) => `cannot be read: ${why}.`,
+    accessDenied: "access denied by the Node permission model, the project folder needs --allow-fs-read",
+    outsideProject: "it is a link outside the project folder",
+    tooLarge: "file too large",
     missingPhaseFile: (file: string, id: string) => `plan/${file} not found, the file of phase ${id}.`,
     noTitle: "the «# …» title is missing.",
     noGoal: "the «**Goal**: …» line is missing.",

@@ -66,8 +66,8 @@
 
 ## Rilievi aperti
 
-- P2 — `list_agents` con tutto il catalogo pesa 8,5 KB, più di ogni agente. La decisione «Roadmap consolidata» rinvia la selezione con metadati finché `list_agents` non supera una soglia misurata in F40: la soglia non è stata fissata. Da decidere con l'utente (all'apertura di F41 o in una fase a sé).
-- P3 — La sequenza del flusso è quella della prova di F34 (solo direttori più AISA-06): con più specialisti dello stesso reparto la quota ripetuta cresce di 4–5,7 KB per agente. Il confronto di F41 usa la stessa sequenza, così prima e dopo restano confrontabili.
+- P2 — `list_agents` con tutto il catalogo pesa 8,5 KB, più di ogni agente. La decisione «Roadmap consolidata» rinvia la selezione con metadati finché `list_agents` non supera una soglia misurata in F40: la soglia non è stata fissata. Da decidere con l'utente (all'apertura di F41 o in una fase a sé). Chiuso in F41: soglia fissata a 12 KB all'apertura di F41 e controllata da `prompt.test.ts` (decisione «Roadmap consolidata»); segnato in `fix/rilievi-prerilascio`.
+- P3 — La sequenza del flusso è quella della prova di F34 (solo direttori più AISA-06): con più specialisti dello stesso reparto la quota ripetuta cresce di 4–5,7 KB per agente. Il confronto di F41 usa la stessa sequenza, così prima e dopo restano confrontabili. Chiuso come accettato (2026-11-26, scelta dell'utente): la sequenza è voluta per confrontare prima e dopo; si riapre con una misura su più specialisti dello stesso reparto, se serve dichiarare il risparmio in quel caso.
 
 ## Fuori perimetro
 

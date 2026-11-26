@@ -133,4 +133,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F46 | [46-pannello-ux.md](46-pannello-ux.md) | Pannello locale, UI e UX: audit nel browser, avvisi in una zona sola, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, rilievi per priorità, consumo più compatto, accessibilità | completata |
 | F47 | [47-sito-allineato.md](47-sito-allineato.md) | Sito allineato al pacchetto: pannello locale, `check`, contesto compatto e passaggio di consegne, modelli consigliati nel catalogo; rilascio 0.17.0 di pacchetto e sito | completata |
 
-Ordine: F0 → F47 in sequenza.
+| F48 | [48-rilievi.md](48-rilievi.md) | Rilievi di F21–F45: chiusure con l'evidenza, C5 ripetuto, `check` con una lettura negata, `--server` nello script delle catene, «Come funziona» e flowchart sul sito; rilascio 0.17.1 | completata |
+
+Ordine: F0 → F48 in sequenza.

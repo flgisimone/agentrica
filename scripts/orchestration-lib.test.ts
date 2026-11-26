@@ -28,7 +28,7 @@ const list: Call = { message: "m0", name: "mcp__agentrica__list_agents" };
 const ask: Call = { message: "mq", name: "mcp__agentrica__ask_user" };
 
 test("una sessione in ordine passa tutti i criteri", () => {
-  const calls = [list, agent("a", "AIWDA-01"), agent("b", "AIWDA-03"), agent("c", "AIPCA-01"), ask, agent("d", "AISA-01"), agent("e", "AISA-05"), agent("f", "AIWDA-01")];
+  const calls = [list, agent("z", "AIBPD-01"), agent("a", "AIWDA-01"), agent("b", "AIWDA-03"), agent("c", "AIPCA-01"), ask, agent("d", "AISA-01"), agent("e", "AISA-05"), agent("f", "AIWDA-01")];
   assert.ok(Object.values(ok(calls)).every(Boolean));
 });
 
@@ -45,6 +45,9 @@ test("subagent, specialista prima del direttore, agenti insieme, ordine e confer
   assert.equal(result["Direttore prima degli specialisti"], false);
   assert.equal(result["Un agente alla volta"], false);
   assert.equal(result["Ordine fra reparti"], false);
+  // Un reparto solo che non è il business non è in ordine: il software da solo è il rosso di F43 e F48.
+  assert.equal(ok([list, agent("a", "AISA-01")])["Ordine fra reparti"], false);
+  assert.equal(ok([list, agent("a", "AIBPD-01")])["Ordine fra reparti"], true);
   assert.equal(ok([list, agent("a", "AIWDA-01"), agent("b", "AISA-01"), agent("c", "AISA-02")])["Conferma dell'utente prima del software"], false);
   // Il direttore software può chiedere la conferma prima degli specialisti (prova di VS Code del 2026-11-22).
   assert.equal(ok([list, agent("a", "AIWDA-01"), agent("b", "AISA-01"), ask, agent("c", "AISA-02")])["Conferma dell'utente prima del software"], true);

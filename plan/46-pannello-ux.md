@@ -79,7 +79,7 @@ Letta dal codice il 2026-11-25 (`index.*.html`, `style.css`, `app.js`, 0.16.0); 
 
 ## Rilievi aperti
 
-- P2: voce del CHANGELOG (it/en) con le novità del pannello da scrivere nella 0.17.0 di F47.
-- P3: pannello in inglese non guardato nel browser: verificati solo chiavi e id uguali fra le lingue.
+- P2: voce del CHANGELOG (it/en) con le novità del pannello da scrivere nella 0.17.0 di F47. Chiuso in F47-01: voce 0.17.0 scritta.
+- P3: pannello in inglese non guardato nel browser: verificati solo chiavi e id uguali fra le lingue. Chiuso in F47-02: il pannello inglese è stato guardato e fotografato nel browser (`src/assets/pannello/*-en.png` del sito).
 - P3: nessuna prova con un lettore di schermo vero (VoiceOver); verificati struttura, etichette e regioni live dal codice.
-- P3: l'avviso «plan/ senza agente» non è stato visto nel browser in questa fase (lo stato `noAgent` richiede una modifica a `plan/` dopo l'avvio del server).
+- P3: l'avviso «plan/ senza agente» non è stato visto nel browser in questa fase (lo stato `noAgent` richiede una modifica a `plan/` dopo l'avvio del server). Chiuso in `fix/rilievi-metodo` (2026-11-26): visto nel browser sulla 0.17.1, con un client MCP vero su un progetto di `init`: assente all'apertura, compare in cima dopo una modifica a `plan/` senza agenti, con l'azione da fare; schermata in `audit/2026-11-25-f46/evidenze/dopo-avviso-plan-senza-agente.png`.

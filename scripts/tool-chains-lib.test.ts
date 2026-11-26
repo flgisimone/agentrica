@@ -18,6 +18,15 @@ test("agentricaTool: solo i server con agentrica nel nome, nome del tool senza p
   assert.equal(agentricaTool(42), undefined);
 });
 
+test("agentricaTool e fileChains con --server: solo il server con quel nome esatto", () => {
+  assert.equal(agentricaTool("mcp__agenti__agent", "agenti"), "agent");
+  assert.equal(agentricaTool("mcp__agentrica__agent", "agenti"), undefined);
+  assert.equal(agentricaTool("mcp__agenti-dev__agent", "agenti"), undefined);
+  const lines = [user("compito"), use("a", "mcp__agenti__list_agents"), result("a", "x".repeat(10)), use("b", "mcp__agentrica__agent"), result("b", "y")];
+  assert.deepEqual(fileChains(lines, "agenti").map((c) => c.map((call) => call.tool)), [["list_agents"]]);
+  assert.deepEqual(fileChains(lines).map((c) => c.map((call) => call.tool)), [["agent"]]);
+});
+
 test("fileChains: un messaggio dell'utente chiude la catena; meta, riassunti e altri tool no", () => {
   const chains = fileChains([
     user("primo compito"),

@@ -106,7 +106,9 @@ test("un file di fase che è un link fuori dal progetto non si legge", () => {
   const plan = readPlan(root);
   assert.equal(plan.openPhase, null);
   assert.ok(!plan.findings.some((f) => f.title.includes("segreto")));
-  assert.match(checkProject(root)[0]!.message, /non trovo plan\/09-link\.md/);
+  const [issue] = checkProject(root);
+  assert.equal(issue!.file, "plan/09-link.md");
+  assert.match(issue!.message, /non si può leggere: è un link fuori dalla cartella del progetto/);
 });
 
 test("il piano di questo repository si legge senza problemi", async () => {

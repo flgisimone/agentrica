@@ -74,9 +74,9 @@
 
 ## Rilievi aperti
 
-- P1 — Prova a mano del flusso `orchestrazione-newsletter` (C1–C7 più C8 riferimento al secondo agente del reparto e C9 `full_rules` dopo `/compact`), passi in `examples/risultati/2026-11-25-contesto-compatto.md`. Va fatta prima del rilascio della 0.14.0.
-- P2 — Il risparmio dipende dal modello che richiama `agent` con `full_rules` dopo `/clear` o `/compact`: la memoria del server non vede la conversazione. Se la prova a mano mostra un agente senza regole, si valuta di azzerare la memoria dopo un periodo senza chiamate o di tornare alle regole intere di predefinito.
-- P3 — Il confronto di qualità usa come «prima» la misura di F24 (0.6.0, schede di allora): dice che il testo compatto non peggiora, non lo isola da tutti gli altri cambiamenti.
+- P1 — Prova a mano del flusso `orchestrazione-newsletter` (C1–C7 più C8 riferimento al secondo agente del reparto e C9 `full_rules` dopo `/compact`), passi in `examples/risultati/2026-11-25-contesto-compatto.md`. Va fatta prima del rilascio della 0.14.0. Chiuso in F43-01 (2026-11-25): prova fatta, esito in `examples/risultati/2026-11-25-contesto-compatto.md`; segnato in `fix/rilievi-prerilascio`.
+- P2 — Il risparmio dipende dal modello che richiama `agent` con `full_rules` dopo `/clear` o `/compact`: la memoria del server non vede la conversazione. Se la prova a mano mostra un agente senza regole, si valuta di azzerare la memoria dopo un periodo senza chiamate o di tornare alle regole intere di predefinito. Chiuso con l'evidenza di F43-02 (C9 e la prova dopo `/clear`: il modello richiama `full_rules`), segnato in F48-01.
+- P3 — Il confronto di qualità usa come «prima» la misura di F24 (0.6.0, schede di allora): dice che il testo compatto non peggiora, non lo isola da tutti gli altri cambiamenti. Chiuso come accettato (2026-11-26, scelta dell'utente): il limite è scritto nel resoconto di F41; si riapre se serve isolare l'effetto del testo compatto, con una misura a parità di schede e versione.
 
 ## Fuori perimetro
 

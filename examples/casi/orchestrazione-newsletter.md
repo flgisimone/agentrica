@@ -19,7 +19,7 @@ Si controllano sul file della sessione principale con `npm run -s orchestration 
 | C2 | Prima l'elenco, poi l'agente | `list_agents` prima della prima chiamata ad `agent` |
 | C3 | Direttore prima degli specialisti | in ogni reparto usato, il primo agente caricato è il direttore (`-01`) |
 | C4 | Un agente alla volta | nessun messaggio del modello con due chiamate ad `agent` insieme |
-| C5 | Ordine fra reparti | i reparti compaiono la prima volta nell'ordine di `AGENTS.md`: AIBPD → AIWDA → AIPCA → AICA → AISA. Dopo il software si può tornare a design e privacy per le revisioni |
+| C5 | Ordine fra reparti | il primo reparto è AIBPD (la richiesta è una funzione nuova, anche con F0 da fare) e i reparti compaiono la prima volta nell'ordine di `AGENTS.md`: AIBPD → AIWDA → AIPCA → AICA → AISA. Dopo il software si può tornare a design e privacy per le revisioni |
 | C6 | Conferma prima del software | una domanda all'utente (`ask_user` o `AskUserQuestion`) dopo l'ultimo agente degli altri reparti e prima del primo specialista software; il direttore AISA-01 può prepararla e chiederla |
 | C7 | Pannello aggiornato | a mano: la pagina del pannello (`open_panel`) mostra gli agenti in ordine, con il direttore in testa a ogni reparto; con `--subagents`, i subagent avviati in una sezione a parte |
 

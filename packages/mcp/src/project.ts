@@ -89,8 +89,9 @@ export const HEADINGS = {
 /** Legge un file di testo sotto `root`, rifiutando link simbolici che escono e file troppo grandi. */
 export function readInside(root: string, path: string): string {
   const real = realpathSync(path);
-  if (!real.startsWith(root + sep)) throw new Error("fuori dalla cartella del progetto");
-  if (statSync(real).size > MAX_FILE_BYTES) throw new Error("file troppo grande");
+  // I codici li traduce check.ts nella lingua del server.
+  if (!real.startsWith(root + sep)) throw Object.assign(new Error("fuori dalla cartella del progetto"), { code: "OUTSIDE_PROJECT" });
+  if (statSync(real).size > MAX_FILE_BYTES) throw Object.assign(new Error("file troppo grande"), { code: "FILE_TOO_LARGE" });
   return readFileSync(real, "utf8");
 }
 

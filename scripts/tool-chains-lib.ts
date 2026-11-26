@@ -12,14 +12,17 @@ export interface Call {
 /** Le chiamate ad Agentrica fra un messaggio dell'utente e il successivo, in ordine. */
 export type Chain = Call[];
 
-/** «mcp__agentrica-dev__agent» → «agent»; undefined se il server non è Agentrica. */
-export function agentricaTool(name: unknown): string | undefined {
+/**
+ * «mcp__agentrica-dev__agent» → «agent»; undefined se il server non è Agentrica. Senza `server` conta i server con
+ * «agentrica» nel nome, come nelle configurazioni dello starter e del README; con `server` (opzione --server, F48-04)
+ * solo quello con quel nome esatto, per chi l'ha registrato in un altro modo.
+ */
+export function agentricaTool(name: unknown, server?: string): string | undefined {
   if (typeof name !== "string") return undefined;
-  const [prefix, server, ...rest] = name.split("__");
-  // ponytail: riconosce il server dal nome che contiene «agentrica», come nelle configurazioni dello starter e del
-  // README; un utente che l'ha chiamato in un altro modo non viene contato. Un'opzione --server se serve.
+  const [prefix, named, ...rest] = name.split("__");
   const tool = rest.join("__");
-  return prefix === "mcp" && server !== undefined && /agentrica/i.test(server) && /^[\w-]{1,64}$/.test(tool) ? tool : undefined;
+  const ours = server === undefined ? /agentrica/i.test(named ?? "") : named === server;
+  return prefix === "mcp" && named !== undefined && ours && /^[\w-]{1,64}$/.test(tool) ? tool : undefined;
 }
 
 type Block = Record<string, unknown>;
@@ -39,7 +42,8 @@ function isUserTurn(r: Record<string, unknown>, content: unknown): boolean {
 }
 
 /** Le catene di un file di sessione (conversazione principale o subagent), dalle sue righe in ordine. */
-export function fileChains(lines: Iterable<string>): Chain[] {
+export function fileChains(lines: Iterable<string>, server?: string): Chain[] {
+  const mark = server === undefined ? "agentrica" : `mcp__${server}__`;
   const chains: Chain[] = [];
   let current: Chain = [];
   const pending = new Map<string, Call>();
@@ -49,7 +53,7 @@ export function fileChains(lines: Iterable<string>): Chain[] {
   };
   for (const line of lines) {
     // Le righe che non sono dell'utente e non nominano Agentrica non servono: non si analizzano nemmeno.
-    if (!line.includes('"user"') && !line.includes("agentrica")) continue;
+    if (!line.includes('"user"') && !line.includes(mark)) continue;
     let r: Record<string, unknown>;
     try {
       const o: unknown = JSON.parse(line);
@@ -65,7 +69,7 @@ export function fileChains(lines: Iterable<string>): Chain[] {
     }
     for (const b of blocks(content)) {
       if (r.type === "assistant" && b.type === "tool_use") {
-        const tool = agentricaTool(b.name);
+        const tool = agentricaTool(b.name, server);
         if (tool === undefined || typeof b.id !== "string") continue;
         const callerType = (b.caller as Record<string, unknown> | undefined)?.type;
         const call: Call = { tool, caller: typeof callerType === "string" && /^[\w-]{1,32}$/.test(callerType) ? callerType : "non indicato", bytes: 0, error: false };

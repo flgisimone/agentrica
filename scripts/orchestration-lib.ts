@@ -70,7 +70,8 @@ export function checkOrchestration(calls: readonly Call[], subagentsAsked = fals
 
   const firstSeen = [...new Set(ids.map(department))];
   const known = firstSeen.filter((code) => (ORDER as readonly string[]).includes(code));
-  const inOrder = known.every((code, i) => i === 0 || ORDER.indexOf(code as never) > ORDER.indexOf(known[i - 1] as never));
+  // La richiesta del caso è una funzione nuova: si parte dal business (F48-03; prima un reparto solo passava sempre).
+  const inOrder = firstSeen[0] === ORDER[0] && known.every((code, i) => i === 0 || ORDER.indexOf(code as never) > ORDER.indexOf(known[i - 1] as never));
 
   // La conferma serve prima che il software lavori: il direttore AISA-01 può prepararla e chiederla, lo specialista no.
   const firstSoftware = calls.findIndex((c) => isServerAgent(c.name) && c.target && department(c.target) === "AISA" && !c.target.endsWith("-01"));

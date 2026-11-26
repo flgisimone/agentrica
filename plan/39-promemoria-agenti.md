@@ -69,6 +69,6 @@
 
 ## Rilievi aperti
 
-- P2 — Hook non provato in PowerShell né in una sessione vera di Claude Code: da fare con la prova su Windows di F23-10. In `cmd` funziona: lo prova la CI su `windows-latest` dalla 0.13.0.
+- P2 — Hook non provato in PowerShell né in una sessione vera di Claude Code: da fare con la prova su Windows di F23-10. In `cmd` funziona: lo prova la CI su `windows-latest` dalla 0.13.0. Chiuso in F48-01 (2026-11-26): hook provato dall'utente in PowerShell e in una sessione vera di Claude Code, insieme a F23-10.
 - ~~P3~~ Chiuso in F44-08 (comando `reminder`). Con `add` o `install` senza `init` il promemoria non c'è; il README spiega come aggiungerlo a mano. Se serve, un comando che lo scrive in un progetto esistente.
 - ~~P3 — Il sito parla di `--no-reminder` e del banner, che arrivano con la 0.13.0: vanno pubblicati insieme (rilascio in parallelo).~~ Chiuso in F44-01: pacchetto e sito sono usciti insieme dalla 0.13.0 alla 0.15.1.

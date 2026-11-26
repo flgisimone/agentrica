@@ -150,7 +150,7 @@ Confermato dall'utente all'apertura (2026-11-18).
 
 ## Rilievi aperti
 
-- **F23-10** Prova reale di `npx -y @agentrica/mcp@0.6.0 install` e `add` su Windows (PowerShell e cmd) con Claude Code. Sul Mac sono provati entrambi. Su Windows è da provare il passaggio per `cmd.exe` quando `claude` o `npm` sono file `.cmd`. P1.
+- **F23-10** Prova reale di `npx -y @agentrica/mcp@0.6.0 install` e `add` su Windows (PowerShell e cmd) con Claude Code. Sul Mac sono provati entrambi. Su Windows è da provare il passaggio per `cmd.exe` quando `claude` o `npm` sono file `.cmd`. P1. Chiuso in F48-01 (2026-11-26): prova su Windows fatta dall'utente, che la conferma riuscita.
 - Con `add --local` dopo `install` Claude Code avvisa che «agentrica» è in due ambiti con comandi diversi. `add` e `install` potrebbero dirlo da soli. P3. Chiuso in F30 (F30-08): lo dicono dopo la registrazione, con il comando per togliere l'altra.
 - Le schede sono due («Mac e Linux», «Windows») e non tre, perché su Mac e Linux i comandi sono uguali. Da confermare con l'utente. P3. Chiuso in F30 (F30-12): due schede, confermate dall'utente il 2026-11-21.
 - Le note legali sul controllo della versione vanno rilette da un legale, come il resto (commento `ponytail:` nella pagina). P3. Chiuso in F30 (F30-04): rischio accettato dall'utente il 2026-11-21, senza revisione legale; riaprire con i casi scritti in PRIV-PUB-01.

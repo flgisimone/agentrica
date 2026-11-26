@@ -2,6 +2,14 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.17.1 — 2026-11-26
+
+### Changed
+- Server instructions: a request for a new feature starts from the business director even on a new project, with no stack chosen yet or F0 to do. Before, the model often started from software for the technical base.
+
+### Fixed
+- `check` tells a missing file from one it cannot read. With the README's least privilege permissions (Node's permission model) it says access is denied and how to grant it, instead of answering «no format problems». A phase file that is a link outside the project is now reported as «cannot be read», not «not found». The command with a folder it cannot read no longer says «Folder not found».
+
 ## 0.17.0 — 2026-11-25
 
 ### Added

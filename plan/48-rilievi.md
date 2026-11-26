@@ -76,3 +76,7 @@ Prima del rilascio, su richiesta dell'utente, nei due repository:
 - Testi alternativi di `/pannello` senza il numero di versione, con righe e conteggi delle schermate nuove.
 - Verifiche: `npm run verify` verde nei due repository; e2e di pannello, consumo e reputazione verdi (26).
 
+## Dopo la chiusura: `fix/rilievi-metodo` (2026-11-26)
+
+Su scelta dell'utente, prima del rilascio: l'avviso «plan/ senza agente» (P3 di F46) visto nel browser, con la schermata fra le evidenze dell'audit di F46; le tre note di metodo (P3 di F37, F40 e F41) chiuse come accettate, ciascuna con la condizione per riaprirla. Restano aperti sei rilievi: F37 P2 (seconda ondata di misure), F45 P2 (`list_agents`), F46 e F47 P3 (VoiceOver), F48 P3 (misura delle catene; C6 e C7 nel client).
+

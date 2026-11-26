@@ -18,6 +18,7 @@ Sono una prova interna: servono a confrontare modelli, livelli di ragionamento (
 | [aisa-gestionale-magazzino](casi/aisa-gestionale-magazzino.md) | AISA-04, 05, 07, 10, 11 (un compito ciascuno) | [gestionale-magazzino](progetti/gestionale-magazzino/) |
 | [aibpd-turnio](casi/aibpd-turnio.md) | AIBPD-02, 03, 04, 06–12 (un compito ciascuno) | [turnio](progetti/turnio/) |
 | [aiwda-turnio-pannello](casi/aiwda-turnio-pannello.md) | AIWDA-02–10 (un compito ciascuno) | [turnio-pannello](progetti/turnio-pannello/) |
+| [ondata-4-cyber-privacy-software](casi/ondata-4-cyber-privacy-software.md) | AICA-08, 12, AIPCA-03, 09, AISA-03, 06 (un compito ciascuno); AICA-06 e AISA-04 sulle schede di F37 | [portale-ordini](progetti/portale-ordini/), [scuola-lingue](progetti/scuola-lingue/), [gestionale-magazzino](progetti/gestionale-magazzino/) |
 | [orchestrazione-newsletter](casi/orchestrazione-newsletter.md) | tutti, scelti dal modello | progetto nuovo creato con `init` |
 
 I progetti sono difettosi di proposito: non usarli come modello e non metterli in rete.

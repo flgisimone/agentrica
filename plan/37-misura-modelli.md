@@ -76,7 +76,7 @@ Confermato all'apertura (2026-11-23).
 ## Rilievi aperti
 
 - P2 · Seconda ondata di misure: 26 ruoli non misurati (business e design, più AICA-08, 10, 12, AIPCA-03, 09, 10, AISA-03, 06) e le nuove misure di AICA-06 e AISA-04 dopo il chiarimento delle schede; AIWDA-08 resta in attesa di un secondo caso.
-- P3 · Anonimato parziale verso il valutatore: alcuni rapporti dicono il modello (percorso della copia, regola di riesame). Metodo corretto in `examples/README.md` per le prossime ondate.
+- P3 · Anonimato parziale verso il valutatore: alcuni rapporti dicono il modello (percorso della copia, regola di riesame). Metodo corretto in `examples/README.md` per le prossime ondate. Chiuso come accettato (2026-11-26, scelta dell'utente): il metodo è già corretto; si riapre se una prossima ondata trova di nuovo il modello nei rapporti.
 - ~~P3~~ Chiuso in F44-05 (`agent-text --cards`). Il subagent non ha il tool `library`: nessun rapporto ha letto le schede della biblioteca (come in F24 e F30). Da valutare se dare il tool ai subagent di prova.
 - P2 · Il job macOS della CI resta in coda per molti minuti e blocca le PR (due volte nella chiusura di F37). Chiuso in `fix/ci-macos` (2026-11-24, scelta dell'utente): il Mac gira solo su `main`, dopo il merge, ogni lunedì e a mano; PR e branch su Linux e Windows.
 - ~~P3~~ Chiuso in F44-02. `portale-ordini`: manca `app/mail.js` e il README descrive il bilanciatore in modo incoerente (TCP e `X-Forwarded-For`). Non toccano i difetti attesi; da correggere prima della seconda ondata, con le schede.

@@ -64,4 +64,15 @@
 
 - P3: la ripetizione della misura delle catene (F45) resta da fare quando l'uso reale cresce.
 - P3: C6 e C7 con la frase nuova non sono provati nel client con il pannello aperto (in `claude -p` le domande non hanno risposta).
-- P3: nel sito, un `next dev` lanciato a mano senza le variabili dei dati di prova lascia una cache che fa fallire gli e2e di consumo e reputazione per un'ora; da scrivere nel README del sito o da evitare con una chiave di cache che dipenda dai dati di prova.
+- P3: nel sito, un `next dev` lanciato a mano senza le variabili dei dati di prova lascia una cache che fa fallire gli e2e di consumo e reputazione per un'ora; da scrivere nel README del sito o da evitare con una chiave di cache che dipenda dai dati di prova. Chiuso in `fix/rilievi-prerilascio` (2026-11-26): il file dei dati finti è nella chiave di `unstable_cache` (`usage-data.ts`, `reputation-data.ts`); provato con un `next dev` senza dati finti prima degli e2e, che passano.
+
+## Dopo la chiusura: `fix/rilievi-prerilascio` (2026-11-26)
+
+Prima del rilascio, su richiesta dell'utente, nei due repository:
+
+- Descrizione npm in `packages/mcp/package.json`: diceva due tool che inviano, sono tre (`rate_agent`, `share_usage`, `submit_project`); ora li dice, con i tool del pannello.
+- Segnati chiusi otto rilievi già risolti ma rimasti aperti nel piano: F36-R5, F40 P2, F41 P1, F43 (rilievi di F42), F44 P3, F46 P2, F46 P3 (pannello inglese, guardato in F47), F45 P3 (doppione della voce di F48).
+- Script delle schermate del pannello (rilievo P3 di F47) e chiave della cache del sito con i dati finti (rilievo P3 di F48), sopra.
+- Testi alternativi di `/pannello` senza il numero di versione, con righe e conteggi delle schermate nuove.
+- Verifiche: `npm run verify` verde nei due repository; e2e di pannello, consumo e reputazione verdi (26).
+

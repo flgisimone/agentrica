@@ -66,4 +66,4 @@
 ## Rilievi aperti
 
 - ~~P3 — `reminder` riscrive `.claude/settings.json` con rientro di 2 spazi: il contenuto resta, la formattazione di un file indentato in altro modo no.~~ Chiuso su `fix/reminder-rientro` (2026-11-25): il file riscritto tiene rientro (tab o spazi, dalla prima riga rientrata), fine riga (CRLF) e a capo finale; test in `init.test.ts` con tab e CRLF senza a capo, e con 4 spazi.
-- P3 — La casella delle contraddizioni del pannello non è stata guardata nel browser: da vedere alla prima sessione con il pannello aperto sulla 0.16.0.
+- P3 — La casella delle contraddizioni del pannello non è stata guardata nel browser: da vedere alla prima sessione con il pannello aperto sulla 0.16.0. Chiuso in F46-02: casella vista nel browser.

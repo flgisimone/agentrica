@@ -1,0 +1,74 @@
+{
+  "ruolo": "aibpd-02",
+  "rapporti": {
+    "aibpd-02-R1": {
+      "trovati": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Fasce della domanda sul prezzo sovrapposte: «30–59 €» e «59 € o più» contengono entrambe 59 €",
+        "Ore prima e dopo Turnio ricordate a posteriori (errore di memoria), senza la taglia dei rispondenti",
+        "Prezzi dei concorrenti non confrontabili: manca il piano, il prezzo oltre soglia e le funzioni incluse",
+        "Mancano le alternative senza software (Excel, WhatsApp, carta) e i moduli turni delle casse; i quattro fornitori coprono una piccola parte del segmento",
+        "Incoerenza fra documenti: il sondaggio NPS di settembre (268 clienti) e quello di ottobre (412 clienti) hanno entrambi 74 risposte, posta come domanda aperta"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti, con il conto dell'ARPU reale (52,5 €) e il SAM ricalcolato. SOM del 5% e fonti non verificabili: accettabili. Note per altri ruoli (Orarix senza app in posizionamento, 58% nel business case) giuste. Dice di non aver usato il web."
+    },
+    "aibpd-02-R2": {
+      "trovati": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Fasce della domanda sul prezzo sovrapposte al valore 59 €",
+        "Ore prima e dopo Turnio autodichiarate e retrospettive, da presentare come percezione",
+        "Prezzi dei concorrenti senza piano di riferimento, da confrontare a parità di dipendenti e funzioni",
+        "Le quote di F2 (58% senza dipendenti + 31% con 3–40) lasciano un 11% non descritto; perimetro di «locale» di F1 e F2 non dichiarato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "R1 trovato senza il conto del mix reale: nomina il prezzo Plus non motivato («verso cui crescono» senza prova) e propone scenari a 59 e 99 €. Marginale: dice che 99 € l'ha ritrovato «solo nella pipeline», ma è anche in crescita/prezzi.md (non letto); non cambia il rilievo. Quote ricalcolate corrette. Nota privacy sul sondaggio: domanda aperta, non un falso. Non dice se ha usato il web; nessun dato esterno."
+    },
+    "aibpd-02-R3": {
+      "trovati": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Fasce della domanda sul prezzo sovrapposte al valore 59 €",
+        "Confronto dei prezzi dei concorrenti non omogeneo (piano, funzioni, a locale o a utente)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "R1 trovato senza il mix reale (usa 59 € come riferimento). Marginale: «oggi i clienti sono su Pro», mentre il piano più diffuso è Base (190 su 412); e la concentrazione fra i quattro detta «moderata» con un leader al 58% (HHI circa 4.000, alta): ma il rilievo principale (Turnio terzo, quote su unità diverse, penetrazione bassa) è giusto. Rilievo 8 (segmento 3–40 contro prezzi impostati su 10–25) debole, non contato. Firma presente ma seguita dall'elenco dei file esaminati, non in fondo. Dice di non avere accesso al web."
+    },
+    "aibpd-02-R4": {
+      "trovati": ["R1", "R2", "R3", "R4", "R5", "R6", "R7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Fasce della domanda sul prezzo sovrapposte al valore 59 €",
+        "Risparmio di tempo del sondaggio soggetto a errore di memoria",
+        "Mancano le alternative senza software (Excel, carta, WhatsApp) e i moduli turni di paghe e casse",
+        "Il dato 2026 di F3 viene da un rapporto di giugno 2026: probabilmente una stima, da dichiarare",
+        "17% di Instagram non ottenibile con 74 risposte (12 = 16,2%, 13 = 17,6%)",
+        "Perimetro di F1 (con le gelaterie) e di F2 non dichiarato rispetto al segmento del README"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti, con l'ARPU reale (52,50 €) e TAM/SAM ricalcolati; R6 e R7 uniti in un rilievo che nomina entrambe le cause. Marginale: dice che le altre percentuali del sondaggio sono coerenti con 74 risposte, ma anche il 21% (fornitore della cassa) non è ottenibile (15 = 20,3%, 16 = 21,6%). Dice di non aver usato il web."
+    }
+  },
+  "proposte_scheda": [
+    "Fasce sovrapposte della domanda sul prezzo («30–59 €» e «59 € o più»): trovate da tutti e quattro i rapporti, da aggiungere agli accettabili o come difetto minore",
+    "Ore prima e dopo Turnio ricordate a posteriori (tre rapporti su quattro): da aggiungere agli accettabili",
+    "Prezzi dei concorrenti non confrontabili per piano e funzioni (tre rapporti) e alternative senza software assenti (due rapporti): da aggiungere agli accettabili",
+    "Percentuali del sondaggio non ottenibili con 74 risposte (17% e 21% della domanda sui canali): se non è voluto, correggere il sondaggio (es. 16% o 18%, 20% o 22%); se è voluto, aggiungerlo alla tabella",
+    "Il sondaggio NPS di settembre (268 clienti) e quello di ottobre (412 clienti) hanno entrambi 74 risposte: coincidenza che un rapporto segnala come incoerenza; valutare se cambiare un numero",
+    "R1: chiarire se il difetto conta come trovato anche senza il conto del mix reale (52 €), quando il rapporto nomina il prezzo Plus non motivato e propone scenari a 59 €; qui è stato contato trovato"
+  ]
+}

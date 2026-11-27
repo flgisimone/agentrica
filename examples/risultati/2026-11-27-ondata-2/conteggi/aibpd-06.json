@@ -1,0 +1,78 @@
+{
+  "ruolo": "aibpd-06",
+  "rapporti": {
+    "aibpd-06-R1": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Costo del fornitore (4,50 € × 210 × 12 = 11.340 €) non sottratto nel conto economico, pur dichiarato nel margine del 70%",
+        "Adozione del 35% senza base: domanda del sondaggio senza prezzo, campione autoselezionato con buono, il 35% applicato a tutti i clienti mentre il modulo è per i locali fino a 15 dipendenti",
+        "6 mesi e mezzo di sviluppo della squadra A incompatibili con la roadmap (14 settimane di 'prima parte' in un Q1 già oltre capacità, Q2 e Q3 occupati): il lancio slitta",
+        "CAC di 180 € non riconciliato con i 40.000 € di marketing del lancio (190 € a locale su 210, 220 € su 182)",
+        "Effetto dello sconto annuale (10 mesi su 12) sul prezzo medio del modulo, se si applica: circa 14,45 €"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti, con i conti giusti (37.800 €, 160.000 €, −113.884 €, LTV 1.050 € all'1%, 17 mesi sul margine, 182 locali con 520). Abbandono ricalcolato sulla coorte iniziale (81/330 = 24,5%, circa 2,3% al mese): ipotesi diversa ma coerente. Rampa stimata con lancio ad agosto, dichiarata come stima. La dimostrazione che il pareggio 2028 non regge è un effetto sulla conclusione (accettabile), non extra. Rischi legali (L. 12/1979, corretta) e privacy di B e il totale di C sono difetti di AIBPD-03, non extra. Imprecisione marginale: i 471 dipendenti oltre soglia (942/2) sono su tutti i piani, non solo sul Pro. Dichiara di non aver usato il web."
+    },
+    "aibpd-06-R2": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Costo del venduto (4,50 € al mese per locale) assente dal conto economico: margine 26.460 €, risultato −133.540 €",
+        "Adozione del 35% senza base valida: domanda senza prezzo, risposte autoselezionate con buono, quota dei locali fino a 15 dipendenti non calcolata",
+        "Sviluppo di circa 28 settimane della squadra A senza spazio in roadmap (14 settimane in Q1 già oltre capacità, Q2 e Q3 occupati)",
+        "CAC di 180 € e marketing del lancio forse contati due volte o non collegati",
+        "Effetto dello sconto annuale sul ricavo del modulo (circa −3,7% con il 22% di annuali)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti con conti corretti; abbandono dato come intervallo 2,2–2,9% al mese (98/371 e 98/330), coorti ricalcolate correttamente (82% semplice, 79,6% pesata). Frase marginale imprecisa in R12: 37.800 € 'vicino al marketing più il supporto' (che fanno 64.000 €), non cambia il rilievo. Pareggio 2028 smentito: effetto sulla conclusione, accettabile. Rischi di B (canale dei consulenti, dati retributivi) sono di AIBPD-03. Firma breve '— DIPHDA'. Nessun cenno al web."
+    },
+    "aibpd-06-R3": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Costo dell'outsourcing (11.340 €) non sottratto nel conto economico",
+        "Adozione del 35% poco fondata: sondaggio senza prezzo, campione autoselezionato, 35% applicato anche ai clienti con 16–40 dipendenti",
+        "Sviluppo di 6,5 mesi della squadra A senza collocazione in roadmap (solo 14 settimane di 'prima parte', Q1 a 20 su 13)",
+        "CAC incoerente con i costi dello stesso documento (marketing e supporto: 305 € a locale; solo marketing 190 €)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti. F2 e l'incoerenza con la roadmap stanno nello stesso punto 8, con lancio a luglio e crescita fino a 182 locali dichiarati come ipotesi. Abbandono 2,2% composto dal 23,8% e 2,9% dal 29,7%: corretto. Conclusione marcata P0. Fuori perimetro cita NRR 87% (C2) e conversione 12% (G1): difetti di altri ruoli, non extra. Il rapporto dichiara di essere su Sonnet e chiede un riesame. Nessun cenno al web."
+    },
+    "aibpd-06-R4": {
+      "trovati": ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Costo del venduto (11.340 €) assente dal conto economico",
+        "Adozione del 35% su un sondaggio debole: 43 sì su 412 clienti (10,4%), domanda senza prezzo né limite di 15 dipendenti, quota dei clienti idonei non nei documenti",
+        "Capacità della squadra A incoerente con i 6,5 mesi di sviluppo (14 settimane in roadmap, Q1 a 20 su 13, anno a 56 su 52)",
+        "CAC di 180 € senza fonte e possibile doppio conteggio con supporto dedicato e marketing del lancio",
+        "Compenso del 25% di Cassa Facile sull'incassato IVA compresa per i clienti dell'Emilia-Romagna: se si applica al modulo il margine di quei locali scende a circa 39,5%",
+        "Effetto dello sconto annuale sul prezzo medio del modulo (circa 14,45 €)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti; somma, IVA e risultato marcati P0. Abbandono 81/330 = 24,5% sulla coorte iniziale, coerente. Il conto 2028 (+2.460 € con 210 locali stabili, senza rimpiazzo dei persi) è un'ipotesi dichiarata. Ampia sezione fuori perimetro con difetti di altri ruoli (I6, C2, G2, G6, G4, R1–R7, S1–S5), tutti verificati corretti (quote 58% e 10,4% su 3.962 locali tornano): non extra. Il PRD 'in sviluppo da gennaio' è vero (accettabile di AIBPD-04). Dichiara di essere su un modello più piccolo. Nessun cenno al web."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra i difetti attesi o gli accettabili di AIBPD-06 il costo del fornitore (4,50 € × locali × mesi) che non compare nel conto economico pur essendo nel margine del 70%: lo trovano tutti e quattro i rapporti",
+    "Aggiungere fra gli accettabili di AIBPD-06 l'adozione del 35% senza base (sondaggio senza prezzo, campione autoselezionato, idoneità fino a 15 dipendenti non stimata, validazione di B non fatta): lo trovano tutti",
+    "Aggiungere fra gli accettabili di AIBPD-06 l'incoerenza fra 6,5 mesi di sviluppo e le 14 settimane di Paghe Light nella roadmap (con Q1 già oltre capacità): lo trovano tutti",
+    "Aggiungere fra gli accettabili di AIBPD-06 il CAC di 180 € non riconciliato con marketing del lancio e supporto (possibile doppio conteggio)",
+    "Valutare fra gli accettabili l'effetto dello sconto annuale e del compenso di Cassa Facile sul prezzo netto del modulo (ipotesi condizionali)",
+    "Chiarire nella scheda che il conto dell'abbandono sulla coorte iniziale (81/330 = 24,5%) è un'alternativa valida al 29,7% per F3",
+    "Chiarire che dimostrare falso il pareggio 2028 rientra nell'accettabile 'pareggio senza conto' e nell'effetto sulla conclusione richiesto dal compito"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "ruolo": "aibpd-10",
+  "rapporti": {
+    "aibpd-10-R1": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Accordo 2: sconto e compenso senza termine, non è chiaro se sopravvivano al recesso o alla fine dell'accordo",
+        "Accordo 2: cumulo dello sconto con l'annuale (10 mesi per 12) e con altre promozioni non escluso",
+        "Accordo 2: soci già clienti in Lombardia e Veneto possono chiedere lo sconto (cannibalizzazione del diretto)",
+        "Accordo 2: sconto del 40% permanente in conflitto con l'obiettivo O3 (ARPU +10%)",
+        "Valutazione: 900 e 4.200 sono bacini di contatto, non clienti; manca un tasso di conversione; il segmento 3–40 dipendenti è circa il 31% dei soci",
+        "Accordo 1: integrazione installata dal partner senza SLA, primo supporto e responsabilità per i malfunzionamenti",
+        "Accordo 1: base del compenso senza esclusione di rimborsi e insoluti"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i fatti controllati sul progetto (imbuto, pipeline, roadmap, fonti, fidelizzazione) tornano. B2 con il 21% del sondaggio e i 26 clienti dell'imbuto. B6 con l'intervallo sui costi fissi o proporzionali (Base in perdita con costo fisso). Web non usato. Le schede del Codice del consumo dichiarate non applicabili perché i clienti sono imprese (corretto)."
+    },
+    "aibpd-10-R2": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Accordo 2: sconto e compenso «per tutta la durata dell'abbonamento» sopravvivono all'accordo",
+        "Accordo 2: soci già clienti non esclusi; perimetro del «listino» non definito (oltre soglia, Kiosk, Paghe Light: su Paghe Light il margine va a zero)",
+        "Accordo 2: cumulo con annuale, prova e referral non escluso",
+        "Accordo 2: sconto del 40% contro la regola dell'approvazione del CEO oltre il 20%",
+        "Accordo 2: conflitto con O3 (ARPU +10%)",
+        "Accordo 1: compenso senza storno per rimborsi, mancati pagamenti e disdette; perimetro sui moduli futuri non definito",
+        "Accordo 1: esclusiva a senso unico, Cassa Facile non è vincolata a non proporre concorrenti",
+        "Accordo 1: rischio di inquadramento come contratto di agenzia (indennità, preavvisi), da far valutare al legale",
+        "Previsione Q1: 4.150 € (P-07, P-11) dipendono da un accordo non ancora firmato",
+        "Valutazione: 900 e 4.200 sono platea, non clienti; nessuna stima di conversione; circa 280 e 1.300 nel segmento"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Nessun falso: Orarix integrato con due software paghe, prezzi 49 e 39 €, 26 clienti pari al 14% dei 180, sintesi «per gli investitori», previsione pesata 10.436 € (7.584 senza doppione) tornano. Marginale: rimanda la previsione ad «AIBPD-12» invece del Sales (AIBPD-09). Usa l'abbandono al 20% come ipotesi (obiettivo O1). Note fuori ruolo (S1, S5, K5) non contate. Firma in coda nella forma «AIBPD-10 · RASALHAGUE — …» seguita dalla cartella esaminata: presente. Web non usato; ha letto la scheda riduzioni-di-prezzo."
+    },
+    "aibpd-10-R3": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Accordo 2: sconto perpetuo oltre la durata dell'accordo, fine del compenso non definita",
+        "Accordo 2: con l'annuale lo sconto e il compenso sui 12 mesi lasciano il 20% del listino",
+        "Accordo 2: soci già paganti non esclusi, nessuna verifica dell'appartenenza; perimetro del listino non definito (Paghe Light a margine zero)",
+        "Accordo 2: sconto del 40% oltre la soglia del 20% della politica sconti",
+        "Accordo 2: effetto su O3 (ARPU), esempio con 100 soci: da 52,50 a 48,4 €",
+        "Accordo 1: compenso senza restituzione per rimborsi o mancati pagamenti",
+        "Valutazione: 900 e 4.200 sono potenziali, non clienti; nessuna stima di adesione"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Conti verificati (16,01 € al mese, 192 € l'anno, 441 € di costo annuo per socio, contributo 4,20 € con costo fisso). Usa l'abbandono del 23,8% del documento (che ha a sua volta il difetto C1 di un altro ruolo): non è un falso. Note fuori ruolo (S2, S5, K7, RM2, P4, K6) non contate. Web non usato."
+    },
+    "aibpd-10-R4": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Accordo 2: compenso e sconto durano più dell'accordo, cosa succede alla fine non è scritto",
+        "Accordo 2: con l'annuale resta il 20% del listino; cumulo con l'annuale e con gli oltre soglia non definito",
+        "Accordo 2: «socio abbonato» non definito, soci già clienti possono chiedere lo sconto",
+        "Accordo 2: conflitto con O3 (ARPU da 52,50 a 49,16 € con 100 soci Pro) e con la regola del CEO oltre il 20%",
+        "Accordo 1: compenso senza recupero su disdette, insoluti e rimborsi",
+        "Valutazione: 900 e 4.200 sono raggiungibili, non clienti; scenari di conversione e segmento al 31%"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B1 con priorità P2 (più bassa degli altri rapporti, ma motivata). B7 con il conto del compenso (192,15 € mensile, 160,13 € annuale) e il margine del primo anno (299 €). Marginale: P-07 indicato a pipeline.csv:13 invece di :12. IVA al 22% dichiarata come ipotesi. Web non usato; nota normativa sul Codice del consumo corretta."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili o come difetto atteso (B8): sconto e compenso dell'Accordo 2 senza termine, che sopravvivono alla fine dell'accordo di 2 anni (4 rapporti su 4)",
+    "Aggiungere fra gli accettabili: soci già clienti non esclusi dall'Accordo 2, cannibalizzazione del diretto (4 su 4)",
+    "Aggiungere fra gli accettabili: 900 e 4.200 sono bacini, non clienti; nessuna stima di conversione nella «Valutazione» (4 su 4); distinguerlo da «nessuna verifica dei 900 clienti»",
+    "Aggiungere fra gli accettabili: sconto del 40% in conflitto con O3 (ARPU +10%) e con la regola del CEO oltre il 20% di previsione.md (4 su 4 e 3 su 4)",
+    "Aggiungere fra gli accettabili: cumulo dello sconto con l'annuale e perimetro del «listino» (oltre soglia, moduli, Paghe Light) non definiti (4 su 4)",
+    "Aggiungere fra gli accettabili: compenso di Cassa Facile senza storno per rimborsi e insoluti (4 su 4)",
+    "B6: precisare che un costo di servizio fisso per locale (22% dell'ARPU, 11,55 €) porta il Base in perdita; più rapporti usano le due ipotesi di costo, entrambe da accettare"
+  ]
+}

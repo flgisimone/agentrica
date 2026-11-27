@@ -8,6 +8,7 @@ dist/
 # misc
 .DS_Store
 *.log
+!examples/progetti/**/*.log
 *.pem
 .idea
 .vscode/*

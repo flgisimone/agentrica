@@ -31,3 +31,4 @@ Progetto di prova: l'azienda, i locali, le persone, le interviste e i numeri son
 | [docs/componenti.md](docs/componenti.md) | Componenti del design system |
 | [docs/glossario.md](docs/glossario.md) | Termini da usare nei testi |
 | [ricerca/](ricerca/) | Protocollo, interviste e sintesi della ricerca di ottobre 2026 |
+| [schermate/](schermate/) | Schermate delle quattro pagine su computer (1280 px) e su telefono (390 px), a pagina intera |

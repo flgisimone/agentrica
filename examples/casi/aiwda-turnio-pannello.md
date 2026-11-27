@@ -4,7 +4,7 @@
 - **Progetto**: [`progetti/turnio-pannello`](../progetti/turnio-pannello/), pannello web di Turnio per i responsabili dei locali: quattro pagine HTML (`index.html`, `turni.html`, `dipendenti.html`, `impostazioni.html`), token e stili (`css/`), comportamenti (`js/app.js`), mappa, componenti e glossario (`docs/`), ricerca con le interviste (`ricerca/`)
 - **Perché**: ruoli di design che lavorano sui file, su difetti che si vedono solo confrontando la pagina con la ricerca, i token, il glossario o i compiti del README, e su parti corrette che sembrano sospette.
 - **Configurazioni**: Opus 5.5 effort medio e Sonnet 5.5, due esecuzioni ciascuna per ruolo; Haiku per AIWDA-10, due esecuzioni (decisione dell'apertura di F50). AIWDA-08 ha qui il secondo caso che aspettava da F30.
-- **Browser**: la proposta «nessuna prova nel browser» non è stata accettata; come si usa il browser nelle esecuzioni si decide prima di lanciarle. I difetti della scheda si vedono tutti anche dai file.
+- **Browser**: schermate fisse (decisione di F50-03, 2026-11-27): le quattro pagine a 1280 e a 390 px, a pagina intera, generate una volta con Playwright in `schermate/`, uguali per tutte le esecuzioni. I subagent non aprono il browser. I difetti della scheda si vedono tutti anche dai file.
 
 ## Compiti (argomento `task`, da copiare così come sono)
 

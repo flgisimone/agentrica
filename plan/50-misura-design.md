@@ -2,7 +2,7 @@
 
 **Obiettivo**: continuare le ondate per reparto decise in F49 con otto specialisti di design, con lo stesso metodo e la stessa soglia di F24, F37 e F49. Un ruolo passa a un modello più piccolo solo dove la qualità regge.
 
-> **Stato: in corso** (preparazione). Branch `fase/f50-misura-design`, aperto il 2026-11-26 dal branch di F49 (commit `79245d1`), per preparare progetto e scheda mentre F49 aspetta le esecuzioni. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte decise lo stesso giorno. Le esecuzioni partono dopo quelle di F49; il merge in `develop` dopo F49.
+> **Stato: in corso** (esecuzioni dal 2026-11-27). Branch `fase/f50-misura-design`, aperto il 2026-11-26 dal branch di F49 (commit `79245d1`), per preparare progetto e scheda mentre F49 aspetta le esecuzioni. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte decise lo stesso giorno. Le esecuzioni partono dopo quelle di F49; il merge in `develop` dopo F49.
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer). Design è l'**oggetto** della misura, non un revisore.
 
@@ -26,7 +26,7 @@
 | Interfaccia web piccola ma completa (pagine HTML e CSS, componenti, dashboard con grafici, testi, ricerca con interviste inventate e dichiarate tali) | Accettata |
 | AIWDA-08 nello stesso progetto, come secondo caso che aspetta da F30 (+4 esecuzioni) | Accettata: nove ruoli |
 | Haiku per AIWDA-10 (+2 esecuzioni) | Accettata |
-| Nessuna prova nel browser | Non accettata: come si usa il browser nelle esecuzioni si decide prima di lanciarle |
+| Nessuna prova nel browser | Non accettata: schermate fisse, decise il 2026-11-27 (F50-03) |
 
 In tutto 38 esecuzioni: 9 ruoli × 2 Opus medio, 9 × 2 Sonnet, 2 Haiku su AIWDA-10.
 
@@ -55,3 +55,4 @@ Come in F49: soglia di F24 per ogni modello diverso da `inherit`, token misurati
 
 - **F50-01** Progetto [turnio-pannello](../examples/progetti/turnio-pannello/): pannello web di Turnio per i responsabili, con quattro pagine HTML, token e stili, `js/app.js`, mappa, componenti, glossario e ricerca (protocollo, cinque interviste, sintesi). Da 6 a 9 difetti per ruolo, 61 in tutto; date e conti dei grafici controllati (giorni della settimana, scale degli assi, rapporto costo/incassi).
 - **F50-02** Scheda [aiwda-turnio-pannello](../examples/casi/aiwda-turnio-pannello.md): compiti, difetti attesi per ruolo (con il criterio WCAG per AIWDA-08), 12 trappole, accettabili, regole di conteggio; riga nella tabella dei casi.
+- **F50-03** Browser (2026-11-27): schermate fisse delle quattro pagine a 1280 e a 390 px, a pagina intera, generate una volta con Playwright in [`schermate/`](../examples/progetti/turnio-pannello/schermate/) e uguali per tutte le esecuzioni; i subagent non aprono il browser. Il ramo è allineato a `develop` dopo la chiusura di F49.

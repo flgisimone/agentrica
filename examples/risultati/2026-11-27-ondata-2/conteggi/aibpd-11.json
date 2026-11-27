@@ -1,0 +1,65 @@
+{
+  "ruolo": "aibpd-11",
+  "rapporti": {
+    "aibpd-11-R1": {
+      "trovati": ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Questionario di uscita con 98 risposte su 98 persi, mancati pagamenti compresi: poco plausibile, va verificato chi l'ha compilato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "C1: come conto principale propone 81/330 = 24,5% (abbandono della base iniziale), ma riporta anche 98/330 = 29,7% e 98/371. La causa, cioè il denominatore di fine periodo, è nominata. C7: non cita la definizione di imbuto.md (almeno un turno pubblicato, 60%), però propone proprio quella e smonta la conclusione «non richiede interventi». Altre critiche al punteggio di salute (i ticket premiano chi è silenzioso, il pagamento puntuale arriva tardi) e la media semplice del 22%: sono irrobustimenti, non contati. Soglia di 40 e tasso di risposta dell'NPS: accettabili. La nota normativa sull'art. 54-bis del Codice del consumo viene dalla scheda della biblioteca ed è dichiarata da confermare con la revisione legale: non contata. Web non usato."
+    },
+    "aibpd-11-R2": {
+      "trovati": ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Coorti incoerenti con il bilancio dei clienti: dal bilancio i nuovi persi sono 17 (98 − 81), il CSV ne mostra almeno 23; «attivi» non è definito",
+        "Questionario di uscita con 98 risposte su 98 persi: poco plausibile (lo pone come domanda aperta)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "C1: conto principale 81/330 = 24,5%, alternativa 98/371 = 26,4%. Non dà 98/330, ma nomina la causa (denominatore di fine periodo). C7 completo, con il confronto con imbuto.md. Kiosk (RM6), abbandono del business case (F3), App dipendenti P3 e dipendenza (RM2, RM3) e notifiche push del PRD (P4) sono difetti di altri ruoli: non contati. LTV ricalcolata intorno ai 450 € con il 2,3% al mese: coerente. Ha fatto i conti con python3, web non usato."
+    },
+    "aibpd-11-R3": {
+      "trovati": ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Coorti incoerenti con il bilancio dei clienti: 23 nuovi persi nel CSV contro i 17 impliciti, 249 + 157 = 406 e non 412; «attivi» non è definito",
+        "Questionario di uscita con 98 risposte su 98 persi, mancati pagamenti senza una voce propria: poco plausibile",
+        "Abbonamenti annuali (22%) che escono solo al rinnovo: l'abbandono va letto per scadenza e per tipo di piano, e la proposta di arrivare al 60% di annuali nasconderebbe le uscite"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "C1: conto principale 24,5% (81/330), con 98/330 = 29,7% riportato come limite superiore. C7: senza il confronto con imbuto.md, ma con la correzione giusta. I conti delle coorti sono verificati (anche 111/119 a 3 mesi). Dichiara di girare su un modello più piccolo e chiede una revisione su Opus: è una nota di metodo, non un difetto. La nota sulla scheda funzione-di-recesso è presentata come domanda per la revisione legale: non contata. Web non usato."
+    },
+    "aibpd-11-R4": {
+      "trovati": ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Coorti incoerenti con il bilancio dei clienti: almeno 23 nuovi persi nel CSV contro i 17 del bilancio, al massimo 406 locali e non 412; «attivi» non è definito",
+        "Questionario di uscita con 98 risposte su 98 persi, mancati pagamenti compresi: poco plausibile",
+        "Abbandono da separare fra piani mensili e annuali: il 22% annuale non può uscire a metà contratto"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "C1: 81/330 = 24,5% o 98/371 = 26,4%. Non dà 98/330, ma nomina la causa. C7: senza il confronto con imbuto.md. C4 si trova nel rilievo sull'NPS (sopravvissuti, nuovi e usciti esclusi). Il 12% del business case (F3) e O1 sono passati ad altri ruoli: non contati. Il ±13 dell'NPS è plausibile. Web non usato."
+    }
+  },
+  "proposte_scheda": [
+    "C1: tutti e quattro i rapporti usano come conto principale 81/330 = 24,5% (persi della base iniziale, dal dato dei 249 rimasti in «NRR»), non 98/330 = 29,7%. È un conto difendibile e più pulito. Conviene indicarlo nella scheda come correzione accettata, insieme a 98/371 sulla base media.",
+    "Aggiungere come difetto o come accettabile l'incoerenza fra coorti.csv e il bilancio dei clienti (almeno 23 nuovi persi nel CSV contro 17), trovata da 3 rapporti su 4. Se non è voluta, conviene correggere i dati del CSV.",
+    "Aggiungere fra gli accettabili il questionario di uscita con 98 risposte su 98 persi (poco plausibile per i mancati pagamenti), segnalato da tutti e 4 i rapporti.",
+    "Aggiungere fra gli accettabili le critiche secondarie al punteggio di salute (ticket «meno è meglio» che premia chi è silenzioso, pagamenti puntuali come segnale tardivo) e la separazione dell'abbandono fra piani mensili e annuali.",
+    "C7: la scheda chiede il confronto con imbuto.md, ma 3 rapporti su 4 propongono la definizione giusta senza citarlo. Va chiarito se basta la definizione orientata al valore (qui contata come trovato)."
+  ]
+}

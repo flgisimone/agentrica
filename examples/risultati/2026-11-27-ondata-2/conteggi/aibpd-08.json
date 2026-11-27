@@ -1,0 +1,70 @@
+{
+  "ruolo": "aibpd-08",
+  "rapporti": {
+    "aibpd-08-R1": {
+      "trovati": ["K1", "K2", "K3", "K4", "K5", "K6", "K7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "La sola prova di M2 è Trattoria Il Ponte, che in pipeline.csv (D-01) ha firmato il 12/11/2026: non può aver misurato un risparmio",
+        "«Fa tutto dal telefono» nella frase di posizionamento contraddice il PRD: il responsabile approva dal pannello web"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "K4 detto pubblicità comparativa ingannevole senza norma (trovato comunque). M4 (T16) rilievo 6 in P1 ma dichiarato coerente: irrobustimento, non falso, priorità sproporzionata. M6 (T16) rilievo 7: prova parziale (SMS, pagamenti), irrobustimento con verifica, non falso. Misure solo di attività e messaggio «si coprono da sole» sono accettabili. Rilievo 12 (pubblico del lancio troppo ampio) e 13 (prove mancanti) non contati. Note per altri ruoli corrette (R2, R3, R4, R6, C, G2, G4, G6, B1, B2, B5, B6 con «azzera il margine» un po' forte). Dichiara di essere Sonnet. Web non usato."
+    },
+    "aibpd-08-R2": {
+      "trovati": ["K1", "K2", "K3", "K4", "K5", "K6", "K7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "La sola prova di M2 è Trattoria Il Ponte, firmata in pipeline il 12/11/2026, 8 giorni prima",
+        "«Fa tutto dal telefono» contraddice il PRD (approvazione dal pannello web)",
+        "La frase di posizionamento parte dal tempo per fare i turni (27%) e non dal primo problema del sondaggio, le assenze dell'ultimo minuto (46%)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "K1 senza norma, con quota rifatta sui locali (circa 10%): corretta. Errori marginali: Product Manager indicato come «AIBPD-02/roadmap» (è AIBPD-04); «11 opportunità su 13 a locale singolo» (sono 10). Riprende «66 clienti a costo zero» per referral e cassa come da imbuto (difetto G5 di altro ruolo, non contato). M6 (T16): irrobustimento (SMS, pagamenti, WhatsApp), non falso; M4 dichiarato coerente. Misure del lancio, messaggio troppo forte e materiali per i dipendenti: accettabili. Note su RM1, RM2, P3, P4 di altri ruoli. Dichiara di non avere il web."
+    },
+    "aibpd-08-R3": {
+      "trovati": ["K1", "K2", "K3", "K4", "K5", "K6", "K7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "«Fa tutto dal telefono» contraddice il PRD (approvazione dal pannello web)",
+        "L'app per i dipendenti presentata come vantaggio è il punto debole: primo motivo di abbandono (41%) e uso settimanale al 22%",
+        "Incoerenza fra fonti: Google è al 7% nel sondaggio ma porta 100 dei 180 clienti nell'imbuto, da riconciliare prima di ripartire il budget"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Errore marginale: dice che Trattoria Il Ponte «non compare in nessun altro file», ma è D-01 in pipeline.csv (non letta); non cambia il rilievo K2. Propone NPS 61 come differenziatore (il valore è sbagliato e distorto: difetti C3 e C4 di altro ruolo, non contati). Product manager indicato come «AIBPD-07 o equivalente» (è AIBPD-04): marginale. M4 e M6 (T16): irrobustimenti, non falsi. Incoerenza del pubblico fra lancio e posizionamento contata dentro K5. Misure e messaggio del lancio: accettabili. K1 senza norma. Firma «Firmato: AIBPD-08 · MIRACH» seguita da una riga sui file. Web non dichiarato."
+    },
+    "aibpd-08-R4": {
+      "trovati": ["K1", "K2", "K3", "K4", "K5", "K6", "K7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "La sola prova di M2 è Trattoria Il Ponte, firmata in pipeline il 2026-11-12, 8 giorni prima",
+        "«Fa tutto dal telefono» contraddice il PRD (approvazione dal pannello web)",
+        "Il posizionamento parte dal tempo per i turni (27%) invece che dal primo problema, le assenze (46%)",
+        "Incoerenza fra fonti: Google al 7% nel sondaggio contro 100 dei 180 clienti nell'imbuto"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Cita il D.Lgs. 145/2007 «dalle mie conoscenze» per la pubblicità comparativa: corretto. Errori marginali: «11 opportunità su 14 con un solo locale» (sono 10 su 13); quote attribuite a sintesi-mercato «righe 25 e 14» (il calcolo è in concorrenti.md). M4 e M6 (T16): irrobustimenti, non falsi. Rilievo 9 (analisi della differenziazione, Orarix più economico e con scambio) contato dentro K4; usa NPS 61 (difetto di altro ruolo). Misure, messaggio troppo forte e materiali per i dipendenti: accettabili. Note su RM1, P3, P4 di altri ruoli. Dichiara di non aver usato fonti esterne per la norma; web non usato."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (4 su 4): «fa tutto dal telefono» nella frase di posizionamento contro l'approvazione dal pannello web del PRD; da aggiungere come difetto o accettabile.",
+    "Extra ricorrente (3 su 4): la prova di M2 è Trattoria Il Ponte, che in pipeline.csv ha firmato il 12/11/2026; incoerenza involontaria o da aggiungere alla tabella (K2).",
+    "Extra ricorrente (2 su 4): la frase di posizionamento parte dal tempo per i turni (27%) e non dalle assenze (46%).",
+    "Extra ricorrente (2 su 4): Google al 7% nel sondaggio contro 100 clienti su 180 nell'imbuto; incoerenza fra i dati inventati, da sistemare nel progetto o dichiarare accettabile.",
+    "Accettabile da aggiungere: M6 con prova solo sull'hosting (SMS, pagamenti, backup da verificare) e M4 con l'avviso di sospensione a fine prova. Tutti e quattro i rapporti lo segnalano come irrobustimento su T16; la scheda dovrebbe dire esplicitamente che non è falso.",
+    "Accettabile da aggiungere: budget dei canali senza importo assoluto; nessuna soglia nelle misure del lancio (già coperto in parte da «misure solo di attività»).",
+    "Ambiguità: per K1 e K4 la scheda cita il D.Lgs. 145/2007; chiarire che il rilievo conta come trovato anche senza la norma (3 rapporti su 4 non la citano)."
+  ]
+}

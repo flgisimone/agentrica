@@ -2,6 +2,12 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.18.0 — 2026-11-27
+
+### Changed
+- Recommended model for 10 more agents, measured on the test cases (F49, `examples/risultati/2026-11-27-ondata-2.md`): Sonnet for AIBPD-02 Market Research, AIBPD-03 Product Innovation, AIBPD-04 Product Manager, AIBPD-06 Business & Financial, AIBPD-07 Growth & Monetization, AIBPD-08 Product Marketing, AIBPD-09 Sales & Revenue, AIBPD-10 Business Development, AIBPD-11 Customer Success, AIBPD-12 Portfolio & Roadmap. It shows in `list_agents`, in the agent's text and in the subagents of `init --subagents`.
+- README: table of recommended models with the 27 measured agents; the other 29 stay on the session's model.
+
 ## 0.17.1 — 2026-11-26
 
 ### Changed

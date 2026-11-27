@@ -1,0 +1,82 @@
+{
+  "ruolo": "aibpd-04",
+  "rapporti": {
+    "aibpd-04-R1": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "H12 · P2 · Il concetto è «validato» con un'evidenza debole: un prototipo cliccabile non copre assenze reali, 8 locali per due settimane", "motivo": "Trappola T6: la validazione del concetto A con prototipo e misura delle assenze coperte prima e dopo è una prova di comportamento con soglia; il rilievo la presenta come difetto (P2), non come semplice irrobustimento"}
+      ],
+      "extra_validi": [
+        "Il rischio «pochi responsabili approvano in tempo» è dichiarato mitigato con R6, ma R6 chiude solo gli scambi non accettati: lo scambio accettato e non approvato resta senza regola (H7)",
+        "La finestra di R6 (2 ore) non è coerente con l'ipotesi validata (preavviso oltre 4 ore) né con il problema delle assenze dell'ultimo minuto (H8)",
+        "Metrica «60% dei locali» senza denominatore: con lo scambio solo su Pro e Plus (222 su 412, 53,9%) è irraggiungibile se calcolata su tutti i clienti (H5)",
+        "Ambiguità fra cessione e scambio del turno e casi limite non definiti (più colleghi che accettano, ritiro della proposta) (H9)",
+        "Nota facoltativa a testo libero che può contenere dati sulla salute, senza avviso né passaggio alla privacy (H11)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Web non usato. Riferimenti di diritto del lavoro dichiarati dalle proprie conoscenze, senza articolo (P5 contato: nomina riposo minimo e limiti di orario). Fuori compito trova I6 (AIBPD-03) e C1/C2 (AIBPD-11, H13), RM1/RM2/RM3 e RM6 legati (AIBPD-12): non contati. H3 (avvio a gennaio contro Q2) e H14 (piano Base) sono accettabili. Il rinvio agli SMS che Turnio usa già (README, margine lordo) è corretto."
+    },
+    "aibpd-04-R2": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Il rischio sui responsabili è «mitigato con R6», che però riguarda solo gli scambi non accettati: manca la scadenza dell'approvazione (H3)",
+        "Metrica «60% dei locali» senza base: sui 412 locali il tetto è il 54% perché i Base non possono usare lo scambio (H6)",
+        "Ambiguità fra scambio e cessione e casi limite non definiti: più colleghi che accettano, ritiro, dipendenti con più ruoli, quale responsabile approva nel Plus (H9)",
+        "Nota libera e motivi di rifiuto nello storico possono contenere dati sulla salute (H12)",
+        "Orarix ha già lo scambio dei turni (concorrenti.md): la funzione porta Turnio alla pari, non lo distingue, e il PRD non lo dice (H10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Web non usato. D.Lgs. 66/2003 e 11 ore di riposo citati come da verificare: corretti. In H5 la validazione del concetto A è detta «confidenza bassa» (T6), ma dentro un rilievo valido e con un pilota come correzione: trattato come irrobustimento, non falso. Errori marginali di attribuzione dei passaggi di consegne: il carico di Q1 «resta ad AIBPD-11» (è AIBPD-12), il messaggio del lancio «per AIBPD-10» (è AIBPD-08), il calcolo dell'abbandono «resta ad AIBPD-08» (è AIBPD-11). Fuori ruolo: K6, RM1/RM2, C1 non contati. H10 sul piano Base e H13 su Kiosk/timbratura: accettabile e altro ruolo."
+    },
+    "aibpd-04-R3": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5"],
+      "mancati": ["P6"],
+      "falsi": [
+        {"testo": "R12 · P2 · Evidenza di validazione debole: 8 locali per due settimane, campione piccolo, forse locali scelti fra i più attivi", "motivo": "Trappola T6 presentata come difetto con priorità propria"}
+      ],
+      "extra_validi": [
+        "R6 non mitiga il rischio dei responsabili che non approvano: resta indefinito lo scambio accettato e non approvato; le 2 ore di R6 non tornano con le 4 ore dell'ipotesi validata (R6)",
+        "Metrica del 60% senza base, con il 46% dei clienti (Base) che non può usare lo scambio (R4, R7)",
+        "Nota libera con possibili dati sulla salute e nessuna traccia delle modifiche al registro delle presenze (R8)",
+        "Casi limite e stati non definiti: più ruoli, annullamento della proposta, due proposte sullo stesso turno; chi approva con più responsabili nel Plus o quando l'approvatore è parte dello scambio (R9, R10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Web non usato. P6 mancato: cita il 41% di abbandoni per «i dipendenti non usano l'app» e il 22% di uso, ma solo come metrica mancante e legame con O1 (lo scambio dovrebbe aumentare l'adozione); non dice che lo scambio dipende dall'adozione dei dipendenti né lo mette fra i rischi. P5 contato senza norma (dichiara di non verificarla). R11 «sezioni obbligatorie mancanti rispetto al formato standard» si riferisce a un modello dell'agente, non ai documenti: né falso né extra. Fuori ruolo: RM1, RM2/RM3 (R1, R2), I1/I3/I5 accennati in R12, non contati. Criteri di accettazione mancanti e piano Base: accettabili. Usa P0 per R1 e R2 (date e dipendenza): forma corretta."
+    },
+    "aibpd-04-R4": {
+      "trovati": ["P1", "P2", "P3", "P4", "P5", "P6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Il rischio sui responsabili è «mitigato con R6», ma R6 riguarda un altro caso: manca un tempo massimo di approvazione (rilievo 13)",
+        "R6 a 2 ore contro le 4 ore dell'ipotesi validata; assenze improvvise senza percorso (rilievo 14)",
+        "Il 60% di 412 locali (247) supera i 222 locali Pro e Plus abilitati: metrica irraggiungibile senza denominatore (rilievo 7)",
+        "Ambiguità fra cessione e scambio bilaterale in R1–R3 (rilievo 4) e casi limite non definiti, comprese le qualifiche (rilievo 12)",
+        "Nota libera con possibili dati sulla salute (rilievo 15)",
+        "Con il rilascio nel Q2, la misura a sei mesi cade a fine 2027: lo scambio non può dimostrare il contributo a O1 nel 2027, serve un indicatore anticipatore (rilievo 9)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Web non usato. Vincoli di orario senza norma citata, dichiarati non verificati: P5 contato. «Dipendenza circolare» (rilievo 3) è impreciso: è una dipendenza fuori sequenza, non circolare; marginale. Nel rilievo 6 il campione piccolo della validazione è un irrobustimento dentro un rilievo valido, non falso (T6). Fuori ruolo: RM1/RM2 (rilievo 3), I6 e I5 accennato (sezione 5), RM6 (rilievo 16), messaggio del lancio (accettabile AIBPD-08) non contati. Rischio di abusi fra colleghi: plausibile ma speculativo, non contato. Firma nella forma «Firmato: AIBPD-04 · HAMAL»."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (4 su 4): il rischio «pochi responsabili approvano in tempo» è dichiarato mitigato con R6, ma R6 chiude solo gli scambi non accettati; lo scambio accettato e non approvato resta senza regola. Da aggiungere come difetto atteso o accettabile.",
+    "Extra ricorrente (4 su 4): metrica «60% dei locali» senza denominatore, irraggiungibile su 412 locali perché solo 222 (Pro e Plus) possono usare lo scambio.",
+    "Extra ricorrente (4 su 4): nota facoltativa a testo libero che può contenere dati sulla salute; da affiancare all'accettabile sulla conservazione di 24 mesi.",
+    "Extra ricorrente (4 su 4): ambiguità fra cessione e scambio del turno e casi limite (più colleghi che accettano, ritiro); vicino all'accettabile «nessun criterio di accettazione»: valutare se allargarlo.",
+    "Extra ricorrente (3 su 4): finestra di R6 a 2 ore contro le 4 ore dell'ipotesi validata.",
+    "Ambiguità T6: tre rapporti su quattro dicono che la validazione del concetto A è debole (8 locali, due settimane, prototipo). Contato falso solo dove è un rilievo autonomo con priorità (R1 H12, R3 R12); dove è una frase dentro P1 con un pilota come correzione è irrobustimento. Conviene scrivere nella scheda dove passa il confine, o aggiungere «campione piccolo della validazione» fra gli accettabili.",
+    "P6 andrebbe precisato: chiarire se basta citare il 22% di uso e il 41% di abbandoni come metrica mancante, o se serve dire che lo scambio dipende dall'adozione (rischio)."
+  ]
+}

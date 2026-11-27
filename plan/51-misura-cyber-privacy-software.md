@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere le ondate per reparto decise in F49 con gli otto specialisti che restano di cybersecurity, privacy e software, sui tre progetti di F37 estesi. Dopo F51 ogni ruolo è misurato o è `inherit` per una decisione scritta.
 
-> **Stato: in corso** (preparazione). Branch `fase/f51-misura-cyber-privacy-software`, aperto il 2026-11-26 dal branch di F50 (commit `f8d44dc`), per preparare materiali e scheda prima delle esecuzioni. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte decise lo stesso giorno. Le esecuzioni partono dopo quelle di F50; il merge in `develop` dopo F50.
+> **Stato: in corso**. Branch `fase/f51-misura-cyber-privacy-software`, aperto il 2026-11-26 dal branch di F50 (commit `f8d44dc`) per preparare materiali e scheda, allineato a `develop` il 2026-11-27 dopo la chiusura di F50. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte e backlog decisi lo stesso giorno e confermati all'apertura delle esecuzioni (2026-11-27).
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer). Cybersecurity, privacy e software sono l'**oggetto** della misura, non revisori.
 

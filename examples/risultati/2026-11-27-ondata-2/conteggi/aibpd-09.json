@@ -1,0 +1,60 @@
+{
+  "ruolo": "aibpd-09",
+  "rapporti": {
+    "aibpd-09-R1": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rischio di concentrazione: D-08 (Pizza&Co) regge circa il 55-60% della previsione Q1 pesata"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "S1 con tutte le fasi (10.965,9; 8.114 o 8.946 senza doppione), conclude 101-112% della quota: coerente con la scheda (circa 8.100 con tutte le fasi). S6 a 2,0-2,1x. Obiettivo 520 locali non collegato alla quota: accettabile. Consiglio di derivare la probabilità dalla fase: irrobustimento, non contato. Nessun uso del web dichiarato."
+    },
+    "aibpd-09-R2": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Concentrazione su D-08 (46% della pipeline aperta Q1) con chiusura l'ultimo giorno del trimestre: rischio di slittamento, scenario senza D-08"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Doppione Portico presentato come «possibile», ma con cliente, locali, piano e cause: contato. S1: 10.965,9 e 8.114 senza doppione. S6: 2,6x e 2,1x senza doppione. Salto dell'id D-11: osservazione minore, non contata. Obiettivo 520 locali: accettabile. Firma in corsivo a fine rapporto. Nessun uso del web dichiarato."
+    },
+    "aibpd-09-R3": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Concentrazione su D-08 con chiusura il 31/03, ultimo giorno del trimestre: senza D-08 il Q1 scende al 42-52% della quota",
+        "P-07 e P-11 dipendono dall'accordo con Cassa Facile non ancora firmato (firma a dicembre 2026)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Ha letto anche crescita/prezzi.md e partner/accordi.md: compenso IVA compresa e clausola Emilia-Romagna sono B1 e B3 di AIBPD-10, non contati. Obiettivo 520 senza legame con abbandono: accettabile. Tutti i conti verificati. Nessun uso del web dichiarato."
+    },
+    "aibpd-09-R4": {
+      "trovati": ["S1", "S2", "S3", "S4", "S5", "S6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Concentrazione su D-08 (circa il 59% della previsione Q1 corretta), scenario senza D-08",
+        "P-07 e P-11 dipendono dall'accordo con Cassa Facile non ancora firmato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "S1 a 8.114 (D-03 tenuta) e 8.946. Compenso IVA compresa (circa 30% dell'imponibile) e clausola Emilia-Romagna sono B1/B3 di AIBPD-10, API da gennaio è B4: non contati. Obiettivo 520 con base al 31/10 che non include D-01 e D-09: osservazione corretta, nell'accettabile. «14 righe» del CSV comprende l'intestazione: marginale. Firma «— ALPHERATZ (AIBPD-09)». Nessun uso del web dichiarato."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli accettabili di AIBPD-09 la concentrazione della previsione Q1 su D-08 (Pizza&Co, oltre metà del pesato, chiusura il 31/03): l'hanno segnalata tutti e quattro i rapporti",
+    "Aggiungere agli accettabili di AIBPD-09 la dipendenza di P-07 e P-11 dall'accordo con Cassa Facile non ancora firmato (2 rapporti su 4)",
+    "S1: la scheda dice «sotto la quota» solo per il pesato su Proposta e Negoziazione (circa 7.600); con tutte le fasi (circa 8.100, o 8.946 tenendo P-07) la quota è appena superata. Tutti e quattro i rapporti hanno usato tutte le fasi: precisare che entrambe le letture valgono"
+  ]
+}

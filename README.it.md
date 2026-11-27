@@ -8,7 +8,7 @@
 
 Questo repository contiene:
 
-1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.17.1 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.19.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
 2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
@@ -95,6 +95,8 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F46 | Pannello locale, UI e UX: avvisi in una zona sola con l'azione, Sessione con ciò che chiede attenzione in cima, avanzamento del piano, filtro per priorità, consumo a schede, accessibilità; fase in corso giusta con «completata (…)» | completata (esce con 0.17.0) |
 | F47 | Sito allineato al pacchetto: pagina `/pannello` con le schermate del pannello vero, «Controlla il piano» in Installa, contesto compatto e passaggio di consegne in Orchestrazione, filtro per modello consigliato nel catalogo; rilascio 0.17.0 | completata (0.17.0) |
 | F48 | Rilievi di F21–F45: `check` distingue un file che manca da uno che non si legge, istruzioni del server che per una funzione nuova partono dal business anche su un progetto nuovo (C5 verde 5 su 5), `--server` nello script delle catene; sul sito «Come funziona» nel menu e il flowchart dell'orchestrazione; rilascio 0.17.1 | completata |
+| F49 | Misura dei modelli, seconda ondata: dieci specialisti di business su Opus medio e Sonnet con il progetto turnio; Sonnet supera la soglia in tutti e dieci (−49% del costo sul compito) e diventa il modello consigliato; versione 0.18.0 | completata |
+| F50 | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10) con il pannello turnio e le schermate fisse; Sonnet supera la soglia in sei ruoli (−55% del costo sul compito) e diventa il modello consigliato per AIWDA-04–08 e 10 | completata (0.19.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

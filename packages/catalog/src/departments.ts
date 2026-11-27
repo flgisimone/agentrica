@@ -40,7 +40,7 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "Goals, requirements, priorities, roadmap, business case and market.",
     },
     stars: ["ALDERAMIN", "PROCYON", "ALPHARD", "HAMAL", "ALGIEBA", "DIPHDA", "MENKENT", "MIRACH", "ALPHERATZ", "RASALHAGUE", "KOCHAB", "DENEBOLA"],
-    models: { 5: "sonnet" },
+    models: { 2: "sonnet", 3: "sonnet", 4: "sonnet", 5: "sonnet", 6: "sonnet", 7: "sonnet", 8: "sonnet", 9: "sonnet", 10: "sonnet", 11: "sonnet", 12: "sonnet" },
   },
   {
     code: "AICA",
@@ -88,5 +88,6 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "UX research, interfaces, information architecture, design system, accessibility and copy.",
     },
     stars: ["CANOPUS", "ACHERNAR", "HADAR", "ACRUX", "MIMOSA", "ADHARA", "SHAULA", "GACRUX", "ALNAIR", "AVIOR"],
+    models: { 4: "sonnet", 5: "sonnet", 6: "sonnet", 7: "sonnet", 8: "sonnet", 10: "sonnet" },
   },
 ];

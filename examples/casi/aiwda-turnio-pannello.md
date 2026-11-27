@@ -4,7 +4,7 @@
 - **Progetto**: [`progetti/turnio-pannello`](../progetti/turnio-pannello/), pannello web di Turnio per i responsabili dei locali: quattro pagine HTML (`index.html`, `turni.html`, `dipendenti.html`, `impostazioni.html`), token e stili (`css/`), comportamenti (`js/app.js`), mappa, componenti e glossario (`docs/`), ricerca con le interviste (`ricerca/`)
 - **Perché**: ruoli di design che lavorano sui file, su difetti che si vedono solo confrontando la pagina con la ricerca, i token, il glossario o i compiti del README, e su parti corrette che sembrano sospette.
 - **Configurazioni**: Opus 5.5 effort medio e Sonnet 5.5, due esecuzioni ciascuna per ruolo; Haiku per AIWDA-10, due esecuzioni (decisione dell'apertura di F50). AIWDA-08 ha qui il secondo caso che aspettava da F30.
-- **Browser**: la proposta «nessuna prova nel browser» non è stata accettata; come si usa il browser nelle esecuzioni si decide prima di lanciarle. I difetti della scheda si vedono tutti anche dai file.
+- **Browser**: schermate fisse (decisione di F50-03, 2026-11-27): le quattro pagine a 1280 e a 390 px, a pagina intera, generate una volta con Playwright in `schermate/`, uguali per tutte le esecuzioni. I subagent non aprono il browser. I difetti della scheda si vedono tutti anche dai file.
 
 ## Compiti (argomento `task`, da copiare così come sono)
 
@@ -162,3 +162,36 @@ Non contano come falsi né come extra validi.
 ## Regole di conteggio
 
 Quelle del [README](../README.md#come-si-conta). Ogni esecuzione si conta solo sulla tabella del suo ruolo: un difetto di un altro ruolo trovato in più non è extra valido ma accettabile. Per AIWDA-08 un criterio WCAG sbagliato (inesistente o che dice altro) conta come falso, come in F30.
+
+## Chiarimenti dopo F50
+
+Dalle proposte dei valutatori di F50 ([`conteggi/`](../risultati/2026-11-27-ondata-3/conteggi/)). Valgono per le esecuzioni successive: i conteggi di F50 restano quelli fatti con le regole sopra, che hanno già letto questi casi nello stesso modo.
+
+**Quando un difetto è trovato**
+
+- **U3**: serve dire che la citazione non c'è nelle interviste e che I2 dice il contrario; riconoscere il rovesciamento non è richiesto.
+- **U8**: basta «solo titolari, nessun responsabile di sala»; il rimando al README non è richiesto.
+- **X4**: serve la causa, cioè la settimana che non resta dopo la ricarica. «Salva ricarica senza esito» da solo non basta.
+- **V6**: serve dire che i due arancioni non si distinguono, o che il token è doppio; il solo contrasto del badge non basta.
+- **D4**: basta «non documentati» insieme al token doppio, anche se la somiglianza con `warning` resta implicita. **D5**: basta il focus tolto insieme a uno stato documentato che manca.
+- **A2**: «tre `details` annidati sotto Impostazioni» e «quattro livelli» sono lo stesso difetto. **A3**: conta anche la lettura «la mappa dice cruscotto, la pagina no», se propone un solo posto.
+- **Y5**: serve l'incoerenza fra almeno due dei tre modi di salvare; il solo salvataggio automatico senza riscontro è accettabile.
+- **W2**: basta «Settings»; «Dashboard» resta fra gli accettabili. **W6** comprende anche «mercoledì 11 novembre» (`index.html`) e «Lun» con la maiuscola (`turni.html`).
+
+**Trappole**
+
+- **T8**: dire che l'SVG delle barre non ha un ruolo o che il paragrafo non è collegato al grafico è irrobustimento, non falso.
+- **T11**: chiedere se le interviste sono reali è una domanda aperta e non conta; un rilievo con priorità e correzione è falso.
+
+**Accettabili aggiunti** (extra ricorrenti in quasi tutti i rapporti di un ruolo)
+
+- **AIWDA-02**: note senza le risposte alle domande 2, 4 e 6; la sintesi tralascia le assenze dell'ultimo minuto.
+- **AIWDA-03, 09**: controlli senza gestore in `app.js` (◀ ▶, «OK»/«No», «Clicca qui», ✎ 🗑), griglia non modificabile, nessuno stato bozza o pubblicata: limiti del prototipo statico. Modulo che resta pieno dopo l'invio; azioni che non controllano `res.ok`; finestra dello scambio che non invia il collega; solo il telefono validato.
+- **AIWDA-04**: `title` uguale in tutte le pagine; i «ruoli» della mappa che la pagina non ha.
+- **AIWDA-05, 07**: SVG del cruscotto a larghezza fissa e tabella dei dipendenti oltre i 390 px; ricerca senza `.field`; cella con ⇄ più alta; legenda della torta con doppio marcatore; grafici senza tacche, unità o periodo; rosso e verde per due misure neutre.
+- **AIWDA-06**: `.banner` senza regola, componenti in uso non documentati, colori dei grafici fuori dai token, `.field .error` che non si applica, hover solo sul primario.
+- **AIWDA-08**: `.button` a 3,75:1, bordo dei campi a 1,38:1, pallino «in ritardo» a 2,29:1, select «Mese» senza etichetta; 3.3.4 discusso per «Elimina settimana»; 1.3.5 dichiarato non applicabile ai dati di altri.
+- **AIWDA-10**: ruoli diversi fra cruscotto e modulo; «Salva» accanto a «Pubblica» senza differenza; «Da», «A», «Collega» poco chiari; «CCNL» senza spiegazione.
+- **Tutti**: rimandi ad altri specialisti con il numero del ruolo sbagliato.
+
+**Da correggere nel progetto alla prossima ondata**: «settimana corrente» con i dati aggiornati a mercoledì e le ore di venerdì, sabato e domenica già presenti (`index.html`).

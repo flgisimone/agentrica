@@ -2,7 +2,7 @@
 
 **Obiettivo**: continuare il rilievo P2 di F37 sui ruoli non misurati, a ondate piccole, una per reparto. Questa ondata misura dieci specialisti di business con lo stesso metodo e la stessa soglia di F24 e F37. Un ruolo passa a un modello più piccolo solo dove la qualità regge.
 
-> **Stato: in corso** (2026-11-26). Perimetro, ondate, configurazioni, casi e auditor decisi con l'utente il 2026-11-26; backlog e proposte confermati lo stesso giorno.
+> **Stato: completata** (2026-11-27). Perimetro, ondate, configurazioni, casi e auditor decisi con l'utente il 2026-11-26; backlog e proposte confermati lo stesso giorno; tabella dei modelli, scheda e file di ruolo decisi il 2026-11-27.
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer). Business è l'**oggetto** della misura, non un revisore. Le altre agenzie non sono coinvolte.
 
@@ -58,3 +58,15 @@ Confermato all'apertura (2026-11-26).
 
 - **F49-01** Progetto [turnio](../examples/progetti/turnio/): documenti di business di un'app per i turni dei locali, in dieci cartelle (mercato, innovazione, prodotto, finanza, crescita, marketing, vendite, partner, clienti, roadmap), con numeri coerenti fra i file salvo i difetti piantati. Da 6 a 7 difetti per ruolo, 66 in tutto, molti visibili solo confrontando due file o rifacendo un conto.
 - **F49-02** Scheda [aibpd-turnio](../examples/casi/aibpd-turnio.md): compito per ruolo, difetti attesi con il punto del documento, 17 trappole con i ruoli a cui valgono, accettabili per ruolo, regole di conteggio del README senza aggiunte; riga nella tabella dei casi di `examples/README.md`. I conti della scheda (previsione pesata, copertura, ritenzione con la coorte di marzo, margini degli accordi, significatività del test A/B) sono rifatti a mano.
+- **F49-03**, **F49-04** 40 esecuzioni (20 Opus effort medio, 20 Sonnet), un subagent per esecuzione su una copia nuova con il nome senza il modello, al più 7 insieme; rapporti e token in [`2026-11-27-ondata-2/`](../examples/risultati/2026-11-27-ondata-2/), letti dai file dei subagent (il rapporto arriva con la consegna del subagent). Nessun rapporto ha usato il web.
+- **F49-05** Conteggio con un valutatore Opus per ruolo, istruzioni uguali (con le regole su conti rifatti, web e riferimenti normativi non verificati) e rapporti anonimi; falsi ricontrollati sulla scheda. Risultato in [`2026-11-27-ondata-2.md`](../examples/risultati/2026-11-27-ondata-2.md): Sonnet supera la soglia in 10 ruoli su 10; un solo mancato (P6, AIBPD-04 sonnet-2); sei falsi, tutti sulla trappola T6 e uguali fra i modelli; sul compito finito Sonnet −49% del costo equivalente e +1% di token. Il limite delle cinque ore ha fermato cinque valutatori, ripresi senza perdite.
+- **F49-06** Tabella dei modelli decisa con l'utente (2026-11-27): Sonnet per AIBPD-02, 03, 04, 06, 07, 08, 09, 10, 11, 12.
+- **F49-07** `models` di AIBPD in [`departments.ts`](../packages/catalog/src/departments.ts); `model: sonnet` nei 10 subagent di `.claude/agents/business-product/` e di `starter/en/.claude/agents/business-product/` (AIBPD-01 resta `inherit`); test del catalogo con i 27 ruoli misurati.
+- **F49-08** Nessuna proposta ai file di ruolo (scelta dell'utente): un solo mancato su 40 rapporti e i falsi vengono dalla scheda. Scheda chiarita (sezione «Chiarimenti dopo la seconda ondata»: T6, C1, accettabili per ogni ruolo dagli extra ricorrenti dei valutatori).
+- **F49-09** README del pacchetto (it, en) con i 27 agenti misurati e il link al risultato; versione 0.18.0 preparata (scelta dell'utente), voce nei due `CHANGELOG`; pubblicazione su npm insieme al sito, con la conferma dell'utente.
+- **F49-10** Riga «Modelli» di [README.md](README.md) con AIBPD-02–12, gli auditor e le ondate; rilievo P2 di [F37](37-misura-modelli.md) aggiornato con le ondate che restano (F50, F51).
+
+## Verifica
+
+- `npm run verify` verde: 204 test, compreso il confronto fra i subagent e il catalogo.
+- Nessuna modifica visibile al sito in questa fase: la tabella dei modelli del sito si allinea con il rilascio del pacchetto (stessa versione).

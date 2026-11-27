@@ -1,0 +1,67 @@
+{
+  "ruolo": "aiwda-07",
+  "rapporti": {
+    "aiwda-07-R1": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6", "G7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG a larghezza fissa (width=560): sul telefono la pagina si allarga a circa 584 px e scorre in orizzontale (SHAULA-09; verificato su schermate/index-telefono.png, 584 px)",
+        "Grafici a linee senza tacche intermedie, griglia né valori sui punti, e ritardi senza unità: i valori non si leggono (SHAULA-03, SHAULA-08)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G4: nomina l'incrocio senza significato e propone il rapporto costo/incassi, senza calcolarne i valori. Valori del costo «da circa 5.900 a 6.700 €» (dalle coordinate 5.733 e 6.533): stima marginale. Altri ruoli, non contati: gerarchia rovesciata dei numeri (V1), contrasto di .muted (Z8), colori a mano e --color-danger doppio (D1, D3), banner non link (X1, nelle domande). Accettabili: SVG senza alternativa testuale. SHAULA-10 (periodi diversi non dichiarati) vicino all'accettabile «nessuna data di aggiornamento», non contato. Legenda con doppio marcatore (ul senza list-style): non contato (vicino all'accettabile di AIWDA-05)."
+    },
+    "aiwda-07-R2": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6", "G7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG a larghezza fissa: scorrimento orizzontale sul telefono, pagina a circa 584 px (DV-10)",
+        "Incoerenza di periodo: «settimana corrente» con dati aggiornati a mercoledì 11 novembre, ma le ore di ven, sab e dom sono già presenti; lavorate o pianificate? (DV-08)",
+        "Grafici a linee senza tacche intermedie, griglia né valori: i valori non si leggono (DV-03, DV-05)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Conti esatti: costo 5.730→6.530 €, incassi 25.000→21.000 €, rapporto circa 23%→31%; spicchio di Cucina visibile circa 25% per la sovrapposizione (corretto: 8-34). DV-05 dice che le coordinate danno valori non interi (8,3; 7,2…): dipende dall'aver preso y=24 come 12 invece di circa 20; segnalato da verificare, marginale. Domanda 4 cita interviste.md righe 16 e 39 per «chi manca oggi»: la riga 39 dice un'altra cosa («Non mi serve, mi serve vedere la settimana»), marginale. Una riga del JSON troncata dove è stata tolta la frase sul modello: non contata. Altri ruoli: V1, Z8, D1/D3. Accettabili: alternativa testuale dei grafici."
+    },
+    "aiwda-07-R3": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6", "G7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG a larghezza fissa: scorrimento orizzontale sul telefono (rilievo 11)",
+        "Incoerenza di periodo: ore di sab e dom già presenti nella «settimana corrente» con dati aggiornati a mercoledì (rilievo 10, segnalato da verificare)",
+        "Assi con due o tre valori, senza griglia né valori sui punti; ritardi senza unità (rilievi 9 e 15)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rilievo 1: «nelle schermate la domenica sembra quasi doppia del lunedì» (dalle coordinate circa 4,5 volte): frase marginale, il rilievo resta corretto. G4: incrocio senza significato e proposta del rapporto costo/incassi (32% a ottobre stimato). Valori 5.900→6.700 € e 25.100→21.100 € leggermente diversi dalle coordinate (5.733→6.533, 25.000→21.000): marginale. Altri ruoli: V1 e Z8 (rilievi 7 e 8), D1/D3 (rilievo 13), X1 (rilievo 14). Accettabili: alternativa testuale (12). Legenda con doppio marcatore (5) e semantica rosso/verde non contati."
+    },
+    "aiwda-07-R4": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6", "G7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG a larghezza fissa: scorrimento orizzontale sul telefono, schermata larga 584 px (DV-10, criterio 1.4.10 corretto)",
+        "Grafici senza tacche, griglia, marcatori né valori sui punti; ritardi senza unità (DV-04, DV-06, DV-11)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "DV-05 cita tokens.css «righe 34-37» per la ridefinizione di --color-danger (sono 29-33, riga 31): marginale. DV-01 «la torta non chiude»: gli ultimi segmenti ricominciano il giro e si sovrappongono, quindi chiude; marginale, la causa (somma 108, offset oltre 100) è giusta. Rapporto costo/incassi 23%→32% (dalle coordinate 23%→31%): arrotondamento. Altri ruoli: V1 e Z8 (DV-08), D3 (DV-05), X1 (DV-12), lang/Settings/Dashboard nei limiti. Accettabili: alternativa testuale (DV-09). DV-12 sui periodi non uniformi vicino all'accettabile, non contato."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere come extra atteso o difetto del ruolo: SVG del cruscotto a larghezza fissa (560 px) che fanno scorrere la pagina in orizzontale a 390 px (lo trovano tutti e quattro; V2 riguarda solo la griglia dei turni)",
+    "Aggiungere fra gli accettabili di AIWDA-07: grafici senza tacche intermedie, griglia o valori sui punti; ritardi senza unità; periodi diversi fra i grafici non dichiarati; importi in € assenti nella torta",
+    "Rosso e verde usati come colori di stato per due metriche neutre: precisare se rientra in G5 o è accettabile (lo dicono tutti)",
+    "Legenda della torta con doppio marcatore (ul senza list-style: none): aggiungerla all'accettabile «legenda con puntini piccoli» anche per AIWDA-07",
+    "Incoerenza involontaria del progetto: «settimana corrente» con dati aggiornati a mercoledì ma ore di ven, sab e dom già presenti. Decidere se correggerla nel progetto o metterla fra gli accettabili",
+    "Asse dei ritardi: con l'etichetta 12 a y=24 qualcuno ricava valori non interi; se il 12 sta a y=20 conviene allineare la linea di base del testo o aggiungere una tacca"
+  ]
+}

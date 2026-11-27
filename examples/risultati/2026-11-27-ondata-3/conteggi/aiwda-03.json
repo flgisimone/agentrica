@@ -1,0 +1,85 @@
+{
+  "ruolo": "aiwda-03",
+  "rapporti": {
+    "aiwda-03-R1": {
+      "trovati": ["X1", "X2", "X3", "X4", "X5", "X6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Nessuno stato della settimana (bozza o pubblicata): dopo «Pubblica i turni» la pagina non cambia (T-01)",
+        "Turni apre una settimana già trascorsa (pallini delle presenze) invece della settimana da preparare; ◀ ▶ senza gestore, quindi la settimana successiva non si raggiunge (T-04)",
+        "Controlli senza alcun gestore in app.js: «OK»/«No» degli scambi, «Clicca qui» dell'esportazione, ✎ e 🗑 (S-02, E-01, D-04)",
+        "La finestra dello scambio ha contenuto fisso per ogni ⇄ e dopo la conferma la griglia non si aggiorna (T-06)",
+        "Dopo l'aggiunta riuscita il modulo resta compilato e la tabella non si aggiorna (D-03)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "X4 nominato esplicitamente (T-03: la settimana non è nell'URL, dopo la ricarica si torna alla settimana corrente). «Errore 400» per `Errore ${res.status}` e «modulo da 14 campi» (13 obbligatori più le note) sono imprecisioni marginali. WCAG 2.2.1 e 4.1.3 citati correttamente. Elimina settimana a P0 (Y1, altro ruolo). Molti difetti di altri ruoli (Y1-Y6, A1-A5, W1-W7, Z5, Z7, Z9, V2) riportati come note, non contati."
+    },
+    "aiwda-03-R2": {
+      "trovati": ["X1", "X2", "X3", "X5", "X6"],
+      "mancati": ["X4"],
+      "falsi": [],
+      "extra_validi": [
+        "Nessuno stato della settimana (bozza o pubblicata) dopo la pubblicazione (HADAR-05, HADAR-12)",
+        "Controlli senza gestore: «OK»/«No» degli scambi, «Clicca qui», ◀ ▶, ✎ e 🗑 (HADAR-03, 09, 12, 14)",
+        "La finestra dello scambio non invia il collega scelto e non dice che lo scambio resta in attesa di approvazione (HADAR-11)",
+        "Dopo l'aggiunta riuscita il modulo non si svuota: reinvio dello stesso dipendente (HADAR-06)",
+        "Il salvataggio automatico usa `#main input` e non copre il `select` (HADAR-10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "X4 mancato: HADAR-06 dice che «Salva» ricarica e può scartare il lavoro, ma non che si torna alla settimana corrente perdendo quella successiva. Imprecisioni marginali, su difetti di altri ruoli: ordine del menu detto «alfabetico» (docs/mappa.md dice ordine della cartella); «il README dice che la prima pagina è il cruscotto» (lo dice docs/mappa.md); «quattordici campi obbligatori» (13). D.lgs. 82/2022 corretto. Data di aggiornamento in fondo al cruscotto: vicina all'accettabile AIWDA-07, non contata."
+    },
+    "aiwda-03-R3": {
+      "trovati": ["X1", "X2", "X3", "X5", "X6"],
+      "mancati": ["X4"],
+      "falsi": [
+        {
+          "testo": "Rilievo 14: «tutti i controlli perdono il focus visibile (WCAG 2.4.7 AA e 2.4.11 in 2.2, da ricontrollare in scheda)»",
+          "motivo": "In WCAG 2.2 il 2.4.11 è Focus Not Obscured (Minimum): riguarda il focus coperto da altri contenuti, non l'indicatore tolto da `outline: none`. Il criterio dice altro (riferimento sbagliato, anche se dichiarato da ricontrollare). Il resto del rilievo (Z2, altro ruolo) è corretto."
+        }
+      ],
+      "extra_validi": [
+        "Nessuno stato della settimana (bozza o pubblicata) dopo la pubblicazione (rilievo 3)",
+        "Controlli senza gestore: «OK»/«No» degli scambi, ◀ ▶, «Clicca qui», ✎ e 🗑 (rilievi 1, 3b, 6, 9)",
+        "La finestra dello scambio ignora il collega scelto e mostra sempre lo stesso turno (`data-swap` non usato) (rilievo 4)",
+        "Dopo l'aggiunta riuscita il modulo non si svuota e l'elenco non si aggiorna (rilievo 5)",
+        "La pagina dei turni mescola le presenze (pallini) con la programmazione della settimana (rilievo 11)",
+        "Giulia R. chiude sabato alle 00:30 e riprende domenica alle 11:00 (10,5 ore) senza avviso sul riposo minimo, dichiarato come inferenza da confermare (rilievo 11)",
+        "La ricerca filtra su tutto il testo della riga, anche telefono e ore (rilievo 6)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "X4 mancato: per «Salva» dice solo che il ricaricamento «perde il contesto» con modifiche non salvate o con un errore; non nomina il ritorno alla settimana corrente. «Quattro livelli di details» è un'imprecisione marginale (i livelli sono quattro contando la pagina, come nella scheda). WCAG 2.2.1, 2.1.1, 1.4.1, 2.4.4, 2.4.2 e 3.1.1 corretti. Firma nella forma «— AIWDA-03 · HADAR, Senior UX Designer»: valida."
+    },
+    "aiwda-03-R4": {
+      "trovati": ["X1", "X2", "X3", "X5", "X6"],
+      "mancati": ["X4"],
+      "falsi": [],
+      "extra_validi": [
+        "Nessuno stato della settimana (bozza o pubblicata) dopo la pubblicazione (UX-03, UX-06)",
+        "Turni mostra una settimana già trascorsa e la settimana da preparare non si raggiunge: ◀ ▶ senza gestore (UX-06)",
+        "Controlli senza gestore: «OK»/«No» degli scambi, «Clicca qui» e «Scarica il report», ✎ e 🗑 (UX-09, UX-14, UX-15)",
+        "La finestra dello scambio non aggiorna la cella e non è chiaro se assegna o propone (UX-10)",
+        "Dopo l'invito riuscito il modulo resta compilato e la tabella non cambia: duplicati (UX-13)",
+        "`#form-error` non sta dentro `.field`, quindi lo stile `.field .error` non gli si applica (UX-12)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "X4 mancato: UX-05 dice che il ricaricamento «fa perdere la posizione nella pagina», non la settimana visualizzata. WCAG 2.2.1, 3.3.7, 3.3.1 e 3.3.3 corretti. «4 intervistati su 5 dal telefono» conta I5 «a volte»: coerente con le interviste."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente in 4 rapporti su 4: nessuno stato della settimana (bozza o pubblicata) dopo «Pubblica i turni». Valutare di aggiungerlo agli accettabili di AIWDA-03, accanto all'anteprima dei destinatari.",
+    "Extra ricorrente in 4 su 4: controlli senza alcun gestore in app.js («OK»/«No» degli scambi, ◀ ▶, «Clicca qui», ✎ e 🗑). Chiarire nella scheda se sono un limite voluto del prototipo statico (allora accettabili) o difetti.",
+    "Extra ricorrente in 4 su 4: dopo l'aggiunta riuscita del dipendente il modulo resta pieno e la tabella non si aggiorna (rischio di duplicati). Candidato a riga della tabella o agli accettabili.",
+    "Extra in 2 su 4: Turni apre una settimana già trascorsa (pallini delle presenze, dati aggiornati all'11 novembre) invece di quella da preparare. Si lega a X4: valutare di allargare X4 o di aggiungerlo come accettabile.",
+    "Ambiguità su X4: tre rapporti su quattro dicono che «Salva» ricarica la pagina senza esito, ma solo uno nomina il ritorno alla settimana corrente. Conviene scrivere nella scheda che serve la causa (settimana non conservata nella ricarica), per evitare valutazioni diverse.",
+    "Accettabile da considerare: la griglia dei turni non si può modificare (nessuna cella cliccabile), segnalata da 3 rapporti; è un limite del prototipo statico."
+  ]
+}

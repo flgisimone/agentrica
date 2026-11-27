@@ -1,0 +1,13 @@
+{"ts": "2026-11-21T08:31:04Z", "source": "app", "event": "login_ok", "user": "m.verdi", "role": "operator", "client_ip": "192.0.2.14"}
+{"ts": "2026-11-21T08:40:11Z", "source": "app", "event": "login_failed", "user": "m.verdi", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T08:40:39Z", "source": "app", "event": "login_failed", "user": "m.verdi", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T08:41:02Z", "source": "app", "event": "login_failed", "user": "m.verdi", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T08:47:15Z", "source": "app", "event": "login_ok", "user": "m.verdi", "role": "operator", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T08:49:50Z", "source": "app", "event": "orders_list", "user": "m.verdi", "client_ip": "203.0.113.77", "rows": 500}
+{"ts": "2026-11-21T08:58:32Z", "source": "app", "event": "customers_export", "user": "m.verdi", "client_ip": "203.0.113.77", "rows": 1840, "fields": ["ragione_sociale", "referente", "email_referente", "telefono_referente", "indirizzo", "fido"]}
+{"ts": "2026-11-21T09:12:08Z", "source": "app", "event": "login_ok", "user": "m.verdi", "role": "operator", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T09:20:44Z", "source": "app", "event": "login_ok", "user": "r.galli", "role": "auditor", "client_ip": "203.0.113.77"}
+{"ts": "2026-11-21T09:21:30Z", "source": "app", "event": "users_list", "user": "r.galli", "client_ip": "203.0.113.77", "rows": 212}
+{"ts": "2026-11-21T09:05:00Z", "source": "siem", "event": "alert", "rule": "export_volume", "user": "m.verdi"}
+{"ts": "2026-11-21T09:30:12Z", "source": "app", "event": "password_reset_admin", "user": "m.verdi", "by": "admin.ferri", "client_ip": "10.8.0.5"}
+{"ts": "2026-11-21T09:31:40Z", "source": "app", "event": "orders_list", "user": "m.verdi", "client_ip": "203.0.113.77", "rows": 500}

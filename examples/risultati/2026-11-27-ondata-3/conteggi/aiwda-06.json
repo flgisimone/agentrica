@@ -1,0 +1,79 @@
+{
+  "ruolo": "aiwda-06",
+  "rapporti": {
+    "aiwda-06-R1": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "`.banner` usata in index.html:22 senza nessuna regola CSS (componente non definito né documentato)",
+        "Componenti in uso non documentati in componenti.md: `.dot`, `.nav`, `.toast`, `.kpi-*`, `.muted`, tabella",
+        "Colori dei grafici SVG e della legenda scritti in linea in index.html, senza token per serie, assi e griglie",
+        "`.field .error` non si applica: il messaggio d'errore è fuori da `.field` (dipendenti.html:49), quindi non prende lo stile previsto"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D5: focus rimosso e senza :focus-visible (DS-01); lo stato :disabled di `.btn` non è nominato esplicitamente (citato solo per campi e icon-btn), contato comunque per la causa principale. «14 campi» contro i 13 obbligatori della scheda: corretto, il quattordicesimo è «Note». Rimandi ai ruoli con numeri sbagliati (AIWDA-08 per i grafici, AIWDA-09 per i testi, AIWDA-07 per l'interfaccia): non sono fatti sul progetto, annotati. Molti rilievi di altri ruoli (V3, V4, V5, V2, Z1, Z3, Z4, Z5, Z7, Z8, W2, A5), non contati."
+    },
+    "aiwda-06-R2": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "`.banner` (index.html:22) senza regola CSS: manca un componente avviso",
+        "Componenti in uso non documentati: `.icon-btn`, `.dot`, `.nav`, `.toast`, `.kpi-*`, tabella, `.muted`",
+        "Palette dei grafici scritta nell'HTML, e il rosso e il verde dei grafici coincidono con i colori di stato pericolo e successo pur avendo un altro significato",
+        "`.field .error` non colora l'errore perché il messaggio è fuori da `.field`",
+        "Hover presente solo su `.btn-primary` (e scritto a mano), assente su `.btn-secondary` e `.btn-danger`, mentre la documentazione lo dichiara per il pulsante",
+        "Link con aspetto di pulsante e href=\"#\" (impostazioni.html:32,36) senza una variante documentata"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D1 nell'esito («tutti i colori dai token») e in DS-11; D4 in DS-01 e DS-06. `--color-warning` indicato a tokens.css:11 invece di 12: marginale. 16 px di `.kpi-value` elencato fra i corpi fuori scala, ma è `--font-size-md` scritto a mano: marginale. Molti rilievi di altri ruoli (V1, V2, V3, Z3, Z4, Z5, Z7, Z8, Z9, Y1), non contati. Otto P1 su diciotto: priorità generose ma nel formato corretto."
+    },
+    "aiwda-06-R3": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Colori dei grafici SVG e della legenda scritti in linea, nessun token di serie, assi e griglie",
+        "`.banner` senza regola CSS; componenti non documentati (`.dot`, `.kpi-*`, `.toast`, `.nav`, `.week`, tabella, `.legend`)",
+        "`.field .error` non si applica mai perché l'errore è fuori da `.field`",
+        "Hover assente su `.btn-secondary` e `.btn-danger`",
+        "`--font-size-lg` definito nei token e mai usato",
+        "Nomi degli stati incoerenti fra documentazione e codice (`late`, `orange`, `absent` contro `warning`, `danger`): serve un vocabolario unico di token di stato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D4 in DS-17 (`.badge-orange` e `--color-late` non documentati) e DS-14 (vocabolario degli stati); la quasi uguaglianza con warning è solo implicita. Righe di tokens.css leggermente sbagliate (danger a :11, secondo blocco a :31-34): marginale. Frase ambigua su `.badge-orange` «usato una sola volta, impostazioni.html:42, in variante warning» (l'uso è di `.badge-warning`): marginale. Rimandi ai ruoli con numeri sbagliati (AIWDA-09 accessibilità, AIWDA-08 dati, AIWDA-02 architettura, AIWDA-11 testi, che non esiste, AIWDA-04 UX): annotati, non fatti sul progetto. DS-19 su `<details>` senza stile non presenta la trappola T6 come difetto semantico: non falso, non contato. Il rapporto dichiara di non aver letto js/app.js e le schermate da telefono."
+    },
+    "aiwda-06-R4": {
+      "trovati": ["D1", "D2", "D3", "D4", "D5", "D6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "`.banner` e `.legend` usate in index.html senza regole CSS; `.icon-btn`, tabella, `.toast`, `.nav`, `.kpi-*` non documentati",
+        "Colori dei grafici in linea in index.html, senza token `--chart-n`",
+        "`.field .error` non colora l'errore, che è fuori da `.field`",
+        "Hover assente su `.btn-secondary` e `.btn-danger`",
+        "`--color-border` #d8dce1 come bordo dei campi su bianco circa 1,4:1 (WCAG 1.4.11)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "D3 e D4 con priorità basse (P2 e P3) ma corretti. «16 campi» per lo schema `.field` (14 nel modulo più 2 nelle impostazioni): corretto. `--color-warning` a tokens.css:11 invece di 12: marginale. Propone regole per componenti.md e un controllo lint (stylelint): utile. Rilievi di altri ruoli (V1, V2, V3, Z3, Z4, Z5, Z7, Z8, X2), non contati."
+    }
+  },
+  "proposte_scheda": [
+    "Extra valido ricorrente (4/4): `.banner` usata in index.html senza regola CSS e componenti in uso non documentati in componenti.md (`.dot`, `.nav`, `.toast`, `.kpi-*`, tabella, `.legend`); da aggiungere alla tabella o agli accettabili di AIWDA-06.",
+    "Extra valido ricorrente (4/4): colori dei grafici SVG scritti in linea in index.html senza token di serie; da decidere se è AIWDA-06 o AIWDA-07 (G2 riguarda la leggibilità, non i token).",
+    "Extra valido ricorrente (4/4): `.field .error` non si applica perché il messaggio è fuori da `.field`; vicino a Z4 (errore non collegato) ma è una differenza fra componente e uso.",
+    "Extra valido ricorrente (3/4): hover solo su `.btn-primary`; si può unire a D5 come stato documentato mancante.",
+    "D5: chiarire se basta il focus rimosso o se serve nominare anche `:disabled` di `.btn` (R1 lo nomina solo per campi e icon-btn).",
+    "D4: chiarire se basta «non documentati» o se serve dire che `--color-late` è quasi uguale a `--color-warning` (R3 lo lascia implicito).",
+    "Tutti e quattro i rapporti riportano anche molti difetti di altri ruoli (V1-V5, Z1-Z8, Y1): nessun falso, ma sarebbe utile un accettabile esplicito «rimandi ad altri ruoli»; in due rapporti i numeri dei ruoli di destinazione sono sbagliati (anche un AIWDA-11 inesistente)."
+  ]
+}

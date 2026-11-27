@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Turnio</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <nav class="nav" aria-label="Menu principale">
+    <a href="impostazioni.html" aria-current="page">Settings</a>
+    <a href="index.html">Dashboard</a>
+    <a href="dipendenti.html">Squadra</a>
+    <a href="turni.html">Turni</a>
+  </nav>
+
+  <main id="main">
+    <h1>Impostazioni</h1>
+    <p class="muted">Le modifiche si salvano da sole.</p>
+
+    <details>
+      <summary>Locale</summary>
+      <div class="field"><label for="store-name">Nome del negozio</label><input id="store-name" value="Trattoria Il Ponte"></div>
+      <div class="field"><label for="opening">Orari di apertura</label><input id="opening" value="11:00–15:00, 18:00–23:30"></div>
+
+      <details>
+        <summary>Esporta</summary>
+        <details>
+          <summary>Presenze per il consulente</summary>
+          <p>Mese <select id="export-month"><option>ottobre 2026</option><option>settembre 2026</option></select></p>
+          <p><a class="btn btn-secondary" href="#" id="export">Clicca qui</a></p>
+        </details>
+        <details>
+          <summary>Report del costo del lavoro</summary>
+          <p><a class="btn btn-secondary" href="#">Scarica il report</a></p>
+        </details>
+      </details>
+    </details>
+
+    <details>
+      <summary>Scambi da approvare <span class="badge badge-warning">3</span></summary>
+      <table>
+        <thead><tr><th scope="col">Turno</th><th scope="col">Da</th><th scope="col">A</th><th scope="col"></th></tr></thead>
+        <tbody>
+          <tr><td>2026-11-07 18:00–00:30</td><td>Giulia R.</td><td>Marta F.</td><td><button class="btn btn-secondary">OK</button> <button class="btn btn-secondary">No</button></td></tr>
+          <tr><td>2026-11-08 11:00–15:00</td><td>Sara M.</td><td>Paolo D.</td><td><button class="btn btn-secondary">OK</button> <button class="btn btn-secondary">No</button></td></tr>
+          <tr><td>2026-11-10 17:00–23:00</td><td>Luca B.</td><td>Andrea C.</td><td><button class="btn btn-secondary">OK</button> <button class="btn btn-secondary">No</button></td></tr>
+        </tbody>
+      </table>
+    </details>
+
+    <h2>Zona pericolosa</h2>
+    <p><button class="btn btn-danger" id="delete-store">Elimina locale</button></p>
+  </main>
+  <div class="toast" id="toast" hidden></div>
+  <script src="js/app.js"></script>
+</body>
+</html>

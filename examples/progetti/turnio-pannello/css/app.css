@@ -1,0 +1,74 @@
+@import url("tokens.css");
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+.skip-link { position: absolute; left: -999px; }
+.skip-link:focus { left: var(--space-2); top: var(--space-2); background: var(--color-surface); padding: var(--space-2); }
+
+*:focus { outline: none; }
+
+/* Menu */
+.nav { display: flex; gap: 22px; padding: 13px 24px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.nav a { color: var(--color-text); text-decoration: none; font-size: 15px; }
+.nav a[aria-current="page"] { font-weight: 600; color: #1f6feb; }
+
+main { padding: 24px; }
+h1 { font-size: var(--font-size-xl); margin: 0 0 7px; }
+h2 { font-size: 17px; margin: 22px 0 13px; }
+
+/* Pulsanti */
+.btn { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--space-3); border-radius: var(--radius-md); border: 1px solid transparent; font: inherit; cursor: pointer; }
+.btn-primary { background: #1f6feb; color: #fff; }
+.btn-primary:hover { background: #1a5fd0; }
+.btn-secondary { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text); }
+.btn-danger { background: #cf222e; color: #fff; }
+
+/* Pulsante della finestra dello scambio */
+.button { display: inline-block; padding: 10px 18px; border-radius: 20px; background: #2f81f7; color: #fff; border: 0; font-size: 15px; }
+
+.icon-btn { background: none; border: 0; cursor: pointer; font-size: 18px; padding: 6px; }
+
+/* Schede e numeri del cruscotto */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 13px; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); }
+.kpi-label { font-size: 18px; font-weight: 700; color: var(--color-text); }
+.kpi-value { font-size: 16px; font-weight: 400; color: var(--color-muted); }
+.muted { color: var(--color-muted); font-size: 13px; }
+
+/* Badge */
+.badge { display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); color: #fff; }
+.badge-success { background: var(--color-success); }
+.badge-warning { background: var(--color-warning); }
+.badge-danger { background: var(--color-danger); }
+.badge-orange { background: var(--color-late); }
+
+/* Griglia dei turni */
+.week { display: grid; grid-template-columns: 160px repeat(7, 1fr); width: 1100px; background: var(--color-surface); border: 1px solid var(--color-border); }
+.week > div { padding: 7px; border-bottom: 1px solid var(--color-border); font-size: 14px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.dot-ok { background: var(--color-success); }
+.dot-late { background: var(--color-late); }
+.dot-absent { background: var(--color-danger); }
+
+/* Tabelle */
+table { border-collapse: collapse; width: 100%; background: var(--color-surface); }
+th, td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); }
+
+/* Campi */
+.field { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-3); }
+.field input, .field select { min-height: 40px; padding: 0 var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font: inherit; }
+.field .error { color: var(--color-danger); font-size: var(--font-size-sm); }
+
+/* Finestra */
+.modal { position: fixed; inset: 0; display: none; place-items: center; background: rgb(0 0 0 / 40%); }
+.modal.open { display: grid; }
+.modal-box { background: var(--color-surface); padding: var(--space-4); border-radius: var(--radius-md); width: 420px; }
+.modal-close { float: right; cursor: pointer; }
+
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--color-text); color: #fff; padding: 12px 16px; border-radius: var(--radius-md); }

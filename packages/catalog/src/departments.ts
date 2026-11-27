@@ -88,5 +88,6 @@ export const DEPARTMENTS: readonly DepartmentInfo[] = [
       en: "UX research, interfaces, information architecture, design system, accessibility and copy.",
     },
     stars: ["CANOPUS", "ACHERNAR", "HADAR", "ACRUX", "MIMOSA", "ADHARA", "SHAULA", "GACRUX", "ALNAIR", "AVIOR"],
+    models: { 4: "sonnet", 5: "sonnet", 6: "sonnet", 7: "sonnet", 8: "sonnet", 10: "sonnet" },
   },
 ];

@@ -1,0 +1,104 @@
+{
+  "ruolo": "aiwda-10",
+  "rapporti": {
+    "aiwda-10-R1": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "AVI-26: «Livello CCNL» senza spiegazione, «il glossario ne chiede la spiegazione per gli acronimi»", "motivo": "docs/glossario.md non ha nessuna regola sugli acronimi: il rilievo attribuisce al glossario una regola che non c'è (fatto sul progetto sbagliato). L'osservazione sulla sigla in sé sarebbe un extra minore"}
+      ],
+      "extra_validi": [
+        "Ruoli incoerenti: otto nella legenda del cruscotto con la maiuscola, tre nel modulo in minuscolo (AVI-23)",
+        "Intestazioni «Da» / «A» della tabella degli scambi non dicono chi cede e chi prende il turno (AVI-20)",
+        "«Salva» accanto a «Pubblica i turni» non dice cosa salva né la differenza (AVI-14)",
+        "Etichetta «Collega» della finestra dello scambio ambigua, proposta «Collega che prende il turno» (AVI-02)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo, tutti e sette i difetti con testo proposto. AVI-06 scrive «Errore 400» dove il codice ha ${res.status}: esempio, non falso. «Dashboard» trattato come difetto (W2) insieme a «Settings». Titolo uguale, lang, etichette, nomi dei pulsanti a icona, 108%, banner, uscita automatica, stati vuoti: difetti di altri ruoli o accettabili, non contati. Unità mancanti nei grafici (AVI-27) e «Scegli il ruolo» (AVI-28) troppo deboli per essere extra."
+    },
+    "aiwda-10-R2": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Ruoli diversi fra la legenda del cruscotto (otto, con la maiuscola) e il modulo (tre, in minuscolo) (AVIOR-19)",
+        "Etichetta «Collega» ambigua nella finestra dello scambio (AVIOR-23)",
+        "Differenza fra «Salva» e «Pubblica i turni» non chiara (AVIOR-24)",
+        "Sigla «CCNL» non spiegata nel modulo (AVIOR-28)",
+        "«settimana corrente» del cruscotto ambigua rispetto ai turni del 2–8 nov e ai dati aggiornati all'11 nov (domanda 8)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "W2 trovato su «Settings»; «Dashboard» lasciato come anglicismo da decidere (accettabile per la scheda). Il JSON ha il campo summary non chiuso (virgolette mancanti): difetto di forma, non di contenuto. Rilievi su etichette, nomi a icona, «Fatto!» senza res.ok, 108%, elimina settimana, banner, ricerca vuota: altri ruoli. «Ore settimanali» senza unità troppo debole per un extra."
+    },
+    "aiwda-10-R3": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Ruoli scritti in minuscolo nella tabella e con la maiuscola nella legenda del cruscotto (31)",
+        "Colonna delle azioni senza intestazione nella tabella degli scambi, proposta «Azioni» (12)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto compatto, tutti e sette i difetti. «Fatto!» classificato sotto «Termini fuori glossario» invece che fra i messaggi: solo collocazione. «Lun» maiuscolo e «mercoledì 11 novembre» contati dentro W6. Proposta «Riepilogo» per «Dashboard». lang in P3 (difetto di altro ruolo). Valori senza unità («461») troppo deboli per un extra."
+    },
+    "aiwda-10-R4": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Sigla «Livello CCNL» che merita un suggerimento (AVIOR-23)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "W2 trovato solo su «Settings» (AVIOR-04); «Dashboard» non segnalato, anzi mantenuto nel titolo proposto: coerente con l'accettabile della scheda. Frase troncata nell'esito (tolta la parte sul modello), non contata. «Zona pericolosa» (AVIOR-21) accettabile. AVIOR-18 conferma un formato corretto senza intervento: non è un rilievo."
+    },
+    "aiwda-10-R5": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Ruoli diversi fra legenda del cruscotto e modulo, con grafie diverse (10)",
+        "Colonna degli scambi senza intestazione, proposta «Azioni» (12)",
+        "«Salva» non dice come si rapporta a «Pubblica i turni» (15)",
+        "«Ore nel mese» non dice quale mese (21)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto più ampio (38 rilievi), tutti e sette i difetti. Al punto 38 la legenda «● presente ● in ritardo ● assente» è citata come index.html:45 mentre è turni.html:45: errore marginale di posizione. «Zona pericolosa» come calco: accettabile. Criteri WCAG citati (2.4.4, 4.1.2, 3.1.1, 2.4.2, 2.2.1, 1.4.1) corretti. Molti rilievi di altri ruoli (res.ok, timer, banner, lang, 31%) non contati."
+    },
+    "aiwda-10-R6": {
+      "trovati": ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Ruoli incoerenti fra legenda e modulo; mappa.md cita i ruoli nelle impostazioni ma la pagina non li mostra (AVIOR-06)",
+        "Colonne «Da», «A» e colonna senza intestazione nella tabella degli scambi (AVIOR-08)",
+        "Etichetta «Collega» ambigua, proposta «Cedi il turno a» (AVIOR-09)",
+        "«Salva» accanto a «Pubblica i turni» non dice se i dipendenti vedono le modifiche (AVIOR-13)",
+        "«settimana corrente» del cruscotto ambigua: turni del 2–8 nov, dati all'11 nov (AVIOR-29)",
+        "Termini in uso assenti dal glossario («Riposo», «presenze», «costo del lavoro», «report») da aggiungere (AVIOR-07)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo, tutti e sette i difetti, con proposte legate al README (Approva/Rifiuta, invito all'app). In AVIOR-17 propone come esempio «333 120 4455», formato che la regola attuale rifiuta: coerente con la proposta di accettare gli spazi, non falso. AVIOR-01 unisce W2 e il nome «Squadra/Personale» (A5, altro ruolo). Sezione JSON omessa per lunghezza, dichiarato."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (5 rapporti su 6): ruoli incoerenti fra la legenda del cruscotto (otto, con la maiuscola) e il modulo e la tabella (tre, in minuscolo). Da valutare come difetto W8 o come accettabile.",
+    "Extra ricorrente (4 su 6): «Salva» accanto a «Pubblica i turni» non dice la differenza. Aggiungere agli accettabili o come difetto, distinguendolo da Y5.",
+    "Extra ricorrente (4 su 6): intestazioni della tabella degli scambi («Da», «A», colonna vuota) poco chiare; e (3 su 6) etichetta «Collega» ambigua nella finestra dello scambio. Candidati agli accettabili.",
+    "Extra ricorrente (2 su 6): «settimana corrente» nel cruscotto ambigua rispetto ai turni del 2–8 nov e ai dati all'11 nov.",
+    "Accettabile da aggiungere: sigla «CCNL» senza spiegazione; «Zona pericolosa» già c'è.",
+    "Ambiguità: W2 elenca «Dashboard» come difetto, mentre gli accettabili di AIWDA-10 dicono «report» e «Dashboard» anglicismi d'uso. Conviene togliere «Dashboard» da W2 o dagli accettabili; qui W2 è stato contato trovato anche con il solo «Settings».",
+    "Ambiguità: W6 elenca tre formati; «mercoledì 11 novembre» (index.html:90) e «Lun» maiuscolo nella griglia sono altri scostamenti dalla regola, che quasi tutti i rapporti segnalano. Qui contati dentro W6: aggiungerli alla colonna «Dove»."
+  ]
+}

@@ -1,0 +1,14 @@
+id,cliente,locali,piano,fase,valore_annuo,probabilita,chiusura_prevista,fonte,sconto,note
+D-01,Trattoria Il Ponte,1,Plus,Firmato,1188,100,2026-11-12,diretta,0,
+D-02,Bar Centrale,1,Pro,Negoziazione,637,75,2026-12-15,diretta,10,
+D-03,Gruppo Portico,4,Plus,Proposta,4039,50,2027-01-31,diretta,15,
+D-04,Pasticceria Sole,1,Base,Demo,348,70,2027-01-20,diretta,0,
+D-05,Osteria del Borgo,1,Pro,Proposta,708,50,2026-09-30,diretta,0,in attesa di risposta
+D-06,Ristorante Mare Blu,1,Plus,Negoziazione,772,75,2027-01-15,diretta,35,
+D-07,Caffè Aurora,1,Base,Qualifica,348,10,2027-03-10,diretta,0,
+D-08,Pizza&Co,9,Plus,Proposta,9623,50,2027-03-31,diretta,10,
+D-09,Bistrot 21,1,Pro,Firmato,708,100,2026-11-05,diretta,0,
+D-10,Hotel Ristorante Vittoria,1,Plus,Demo,1188,30,2027-02-28,diretta,0,
+P-07,Gruppo Portico,4,Plus,Negoziazione,3802,75,2027-02-15,partner Cassa Facile,20,
+P-11,Bar Stazione,1,Base,Proposta,348,50,2027-01-10,partner Cassa Facile,0,
+D-12,Gelateria Polo,1,Base,Qualifica,348,10,2027-02-01,diretta,0,

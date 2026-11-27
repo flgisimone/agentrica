@@ -1,0 +1,76 @@
+{
+  "ruolo": "aibpd-12",
+  "rapporti": {
+    "aibpd-12-R1": {
+      "trovati": ["RM1", "RM2", "RM3", "RM4", "RM5", "RM6", "RM7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Paghe Light: il business case stima 6 mesi e mezzo della squadra A (circa 28 settimane), la roadmap pianifica solo la prima parte da 14 e la seconda non c'è in nessun trimestre (A occupata in Q2 e Q3)",
+        "Esportazione per il consulente e report del costo del lavoro già venduti nei piani Pro e Plus (prezzi.md) ma ancora da sviluppare in roadmap",
+        "Notifiche WhatsApp (Q1, C) e notifiche push dell'App 2.0 (Q3) coprono lo stesso bisogno con due canali",
+        "Le settimane liberate da Kiosk non trovano posto: la squadra C è già al 100% in Q1"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Il totale 47/39 non è scritto, ma le squadre A (20/13) e B (14/13) e l'assenza di riserva sì: RM1 trovato. «Fra 41 giorni» per il 31 dicembre è impreciso (dalla data dell'estratto CRM del 20 novembre sono 41, da oggi 34): marginale. Il conto del risultato 2027 corretto (circa −122.000 € con ricavi senza IVA e costi a 160.000) torna. Rilievi su business case, accordi, annuali, matrice, abbandono e posizionamento sono difetti di altri ruoli o accettabili (Paghe Light «Investire» prima dell'approvazione): non contati. P0 su Cassa Facile. Web non usato."
+    },
+    "aibpd-12-R2": {
+      "trovati": ["RM1", "RM2", "RM3", "RM4", "RM5", "RM6", "RM7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Paghe Light sotto-pianificata: la seconda parte della stima del business case non è in nessun trimestre",
+        "Esportazione per il consulente e report del costo del lavoro già nel listino Pro e Plus ma pianificati come nuovi",
+        "Notifiche WhatsApp e push dell'App 2.0 sono un doppione di canale",
+        "La campagna sugli annuali di gennaio non può appoggiarsi alla fatturazione annuale automatica, che arriva a fine Q1 (8 settimane di B)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Errori marginali: la stima di Paghe Light data come 26 settimane (6 mesi e mezzo sono circa 28); «20 settimane di roadmap (righe 20, 26) sull'esportazione per il consulente» confonde la riga 20 (report) con la 21: le due esportazioni sono 14 settimane. Capacità annua 117/117 e Q2 24/39 corretti. Q4 «da definire» citato come ammesso, non come difetto (T17 rispettata). Rilievo 12 su O2 e pipeline: difetti di AIBPD-09 e accettabile, non contati. Il rapporto dice di essere su Sonnet e chiede un riesame su Opus. Web non usato."
+    },
+    "aibpd-12-R3": {
+      "trovati": ["RM1", "RM2", "RM3", "RM4", "RM5", "RM6", "RM7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Paghe Light: mancano circa 12 settimane della stima del business case, la seconda parte non è pianificata",
+        "Esportazione per il consulente e report del costo del lavoro già inclusi nei piani Pro e Plus ma ancora in roadmap",
+        "Notifiche WhatsApp e push dell'App 2.0 sono due canali per lo stesso scopo",
+        "Analisi della gestione di più sedi assegnata alla squadra C (app mobile) mentre lo sviluppo va alla squadra A",
+        "MRR di Kiosk (549 €) fuori dai 21.630 €: può falsare la base ARPU di O3"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Riga del business case citata come 23 invece di 21 e stima a 26 settimane invece di circa 28: marginale. «Tra sei settimane» per la dismissione di Kiosk: circa cinque, marginale. Sul Q4 «da definire» suggerisce di dargli un contenuto provvisorio o usarlo come riserva: consiglio di irrobustimento su T17, non falso. Il rapporto dice di essere su un modello più piccolo. Le note fuori perimetro (business case, imbuto, posizionamento) sono difetti di altri ruoli. Piano Base escluso dallo scambio: accettabile di AIBPD-04. Web non usato."
+    },
+    "aibpd-12-R4": {
+      "trovati": ["RM1", "RM2", "RM3", "RM4", "RM5", "RM6", "RM7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Seconda parte di Paghe Light (circa 14 settimane) non pianificata: la squadra A arriva a circa 56 settimane su 39 in Q1–Q3",
+        "Esportazione per il consulente e report del costo del lavoro già venduti nel listino ma ancora da sviluppare",
+        "Notifiche WhatsApp e push dell'App 2.0 si sovrappongono",
+        "Analisi della gestione di più sedi alla squadra C e sviluppo alla squadra A",
+        "Capacità lorda: 13 settimane per trimestre non tolgono ferie, assenze e manutenzione",
+        "L'integrazione fra cassa e turni, oggetto dell'accordo con Cassa Facile, non è pianificata in roadmap"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Mappa della capacità corretta (A 20/13, B 14/13, C 13/13 in Q1; Q2 e Q3 per squadra). «Fra 41 giorni» per il 31 dicembre: corretto dalla data dell'estratto CRM (20 novembre), non da oggi; marginale. DEN-13 (uso di P0 secondo la scala del reparto) e la «seconda dipendenza» sul pannello web: non contati né come falsi né come extra. Riferimenti normativi (cedolini, agenzia per il lavoro) dati come ipotesi da verificare con un legale, senza citazioni sbagliate. Dice di essere su Opus. Web non usato."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (4 su 4): seconda parte di Paghe Light non pianificata, il business case stima 6 mesi e mezzo della squadra A (circa 28 settimane) e la roadmap ne mette 14. Candidato a difetto RM8 o ad accettabile",
+    "Extra ricorrente (4 su 4): esportazione per il consulente e report del costo del lavoro già nel listino Pro e Plus (prezzi.md) ma pianificati in roadmap come nuovi. Da decidere se è un difetto voluto o se il listino va riscritto",
+    "Extra ricorrente (4 su 4): notifiche WhatsApp (Q1) e notifiche push dell'App 2.0 (Q3) come doppione di canale. Si può aggiungere come accettabile",
+    "Extra ricorrente (2 su 4): analisi della gestione di più sedi sulla squadra C e sviluppo sulla squadra A. Si può aggiungere come accettabile, o spiegarlo nella roadmap",
+    "Ambiguità: la dismissione di Kiosk «fra N giorni» dipende dalla data di riferimento (estratto CRM al 20 novembre). Fissare una data di riferimento nel README del progetto",
+    "Ambiguità su T17: nella scheda si può dire che anche un suggerimento di usare il Q4 come riserva è irrobustimento, non falso"
+  ]
+}

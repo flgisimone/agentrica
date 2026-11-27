@@ -1,0 +1,55 @@
+{
+  "ruolo": "aiwda-04",
+  "rapporti": {
+    "aiwda-04-R1": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sei i difetti. A5 con i tre nomi (Squadra, Personale, dipendenti nel file e nel glossario). Altri rilievi sono di altri ruoli o accettabili: banner senza link (X1), termini fuori glossario (W1), pulsanti senza azione (W3), Elimina settimana primario (V3/Y1), modulo con troppi campi (X5), title uguale (accettabile per 05/08). «14 campi» invece di 13 obbligatori: marginale. Il rilievo 11 (ricerca solo nei dipendenti) conclude che non serve altro: non è un difetto né un falso."
+    },
+    "aiwda-04-R2": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": ["docs/mappa.md mette i «ruoli» nelle impostazioni del locale, ma impostazioni.html non ha una sezione ruoli (incoerenza vera fra mappa e pagina)"],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A3 letto come differenza fra mappa e pagine (la mappa mette il report nella Dashboard, che ha solo i grafici) con la proposta di un solo posto: contato, lettura difendibile. Larghezze delle schermate al telefono (1126 e 584 px) verificate e giuste, ma il rilievo è V2 di AIWDA-05. Sintesi della ricerca (U1, U2, U4, U6, U7), lang (Z1), azioni distruttive (V3/Y1), modulo (X5) sono di altri ruoli. WCAG 2.4.2 e 3.1.1 citati correttamente. «14 campi obbligatori»: marginale (13 più le note)."
+    },
+    "aiwda-04-R3": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A2 descritto come «3 livelli» di details annidati (la scheda conta 4 con Impostazioni): marginale, causa e posizione sotto Locale nominate. «Ordine alfabetico inverso» del menu è impreciso, ma subito corretto con la citazione della mappa («di cartella»): marginale. Numeri di riga leggermente spostati (dipendenti.html:21 invece di 20, legenda riga 48 invece di 45). /login e /addio inesistenti: nota sul progetto statico, non un difetto. Date fuori formato (W6), stato solo col colore (Z7), modulo (X5) e sintesi (U) sono di altri ruoli."
+    },
+    "aiwda-04-R4": {
+      "trovati": ["A1", "A2", "A3", "A4", "A5", "A6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "docs/mappa.md mette i «ruoli» nelle impostazioni, ma impostazioni.html non li ha",
+        "«Scambio» con due significati: in Turni il responsabile riassegna un turno a un collega (finestra ⇄, chiamata «scambio di un turno» in mappa.md), mentre il glossario e la tabella da approvare intendono la richiesta del dipendente"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "A3 come in R2: mappa contro pagina, con proposta di un'unica posizione. «Quattro su cinque usano il telefono» include I5 «a volte»: corretto. Title uguale (accettabile per 05/08), lang (Z1), sintesi della ricerca (U1, U2, U4, U6, U7, U8), termini vietati (W1) sono di altri ruoli. WCAG 2.4.2 citato correttamente."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili di AIWDA-04 il <title> uguale in tutte le pagine: lo segnalano tutti e quattro i rapporti come problema di orientamento.",
+    "Valutare come extra noto (o difetto A7) l'incoerenza di docs/mappa.md, che mette i «ruoli» nelle impostazioni mentre la pagina non li ha (R2, R4).",
+    "Chiarire A3: la mappa dice che il report sta nel cruscotto, ma index.html ha solo i grafici del costo; due rapporti lo leggono come differenza mappa/pagina invece che come duplicato. Precisare che anche questa lettura, con la proposta di un solo posto, conta come trovato.",
+    "A2: precisare se «4 livelli» include Impostazioni; un rapporto conta 3 details annidati.",
+    "La ricerca sbagliata come causa delle scelte di struttura (U1–U8) compare in tre rapporti su quattro: resta di AIWDA-02, ma si può citare nelle regole di conteggio come difetto di altro ruolo atteso."
+  ]
+}

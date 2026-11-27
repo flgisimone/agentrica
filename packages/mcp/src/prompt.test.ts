@@ -174,13 +174,14 @@ test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell
   assert.equal(modelAdvice(architect.agent), undefined);
   assert.doesNotMatch(agentText(architect), /Modello consigliato/);
   const measured = catalog.flatMap((d) => d.agents.filter((a) => a.model !== "inherit").map((a) => `${a.id}:${a.model}`));
-  // F24 (2026-11-19-modelli.md), F37 (2026-11-23-ondata-1.md) e F49 (2026-11-27-ondata-2.md): solo i ruoli che superano la soglia.
+  // F24 (2026-11-19-modelli.md), F37 (2026-11-23-ondata-1.md), F49 (2026-11-27-ondata-2.md) e F50 (2026-11-27-ondata-3.md): solo i ruoli che superano la soglia.
   assert.deepEqual(measured, [
     ...["AIBPD-02", "AIBPD-03", "AIBPD-04", "AIBPD-05", "AIBPD-06", "AIBPD-07"].map((id) => `${id}:sonnet`),
     ...["AIBPD-08", "AIBPD-09", "AIBPD-10", "AIBPD-11", "AIBPD-12"].map((id) => `${id}:sonnet`),
     ...["AICA-03:sonnet", "AICA-04:sonnet", "AICA-05:sonnet", "AICA-07:sonnet", "AICA-09:haiku"],
     ...["AIPCA-02:sonnet", "AIPCA-05:sonnet", "AIPCA-06:sonnet", "AIPCA-07:sonnet", "AIPCA-08:sonnet"],
     ...["AISA-05:sonnet", "AISA-07:sonnet", "AISA-08:haiku", "AISA-09:sonnet", "AISA-10:sonnet", "AISA-11:sonnet"],
+    ...["AIWDA-04", "AIWDA-05", "AIWDA-06", "AIWDA-07", "AIWDA-08", "AIWDA-10"].map((id) => `${id}:sonnet`),
   ]);
 });
 

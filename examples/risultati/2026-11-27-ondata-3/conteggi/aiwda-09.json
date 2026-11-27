@@ -1,0 +1,75 @@
+{
+  "ruolo": "aiwda-09",
+  "rapporti": {
+    "aiwda-09-R1": {
+      "trovati": ["Y1", "Y2", "Y3", "Y4", "Y6"],
+      "mancati": ["Y5"],
+      "falsi": [],
+      "extra_validi": [
+        "Eliminazione della settimana e del locale che procedono senza controllare l'esito (griglia svuotata e redirect a /addio anche se il server fallisce)",
+        "Con novalidate il client controlla solo il telefono: gli altri campi obbligatori arrivano vuoti al server",
+        "Dopo l'invio riuscito il modulo resta compilato e l'elenco non si aggiorna: rischio di inviti doppi",
+        "La finestra dello scambio non invia il collega scelto (#swap-to non letto)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Y5: U-10 segnala il salvataggio automatico senza riscontro, ma non l'incoerenza fra i tre modi di salvare (automatico, Salva, Procedi): contato mancato. «14 campi» svuotati e «dodici obbligatori» (sono 14 campi, 13 obbligatori): marginale. U-08 (V2), U-13 (X1, A1, A2), U-15 (X6, A5, W1, Z1, Z7), U-06 (X2, X3, Z9) sono difetti di altri ruoli, non extra. Pubblica senza conferma: accettabile AIWDA-03."
+    },
+    "aiwda-09-R2": {
+      "trovati": ["Y1", "Y2", "Y3", "Y4", "Y6"],
+      "mancati": ["Y5"],
+      "falsi": [],
+      "extra_validi": [
+        "Eliminazione della settimana e del locale che procedono senza controllare l'esito",
+        "Con novalidate il client controlla solo il telefono: gli altri obbligatori non sono verificati",
+        "Dopo il successo il modulo non si svuota: un secondo clic crea un duplicato",
+        "Il messaggio d'errore del telefono non viene mai cancellato dopo la correzione"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Y5: ALNAIR-10 è il salvataggio automatico senza feedback, ALNAIR-09 l'incoerenza dei flussi di scambio, non quella dei modi di salvare: mancato. Y1 a P1 invece di P0 (motivato). ALNAIR-08 dice «classe inesistente .button», ma .button è definita in css/app.css:33: fatto sbagliato ma marginale, non cambia il rilievo. «14 campi obbligatori» (sono 13): marginale. 3.3.7 Redundant Entry citato correttamente. Navigazione ◀ ▶ e ✎ 🗑 senza handler: osservazioni sul prototipo, non contate."
+    },
+    "aiwda-09-R3": {
+      "trovati": ["Y1", "Y2", "Y3", "Y4", "Y6"],
+      "mancati": ["Y5"],
+      "falsi": [
+        {"testo": "U-19: «Collega» (turni.html:53) indicato fra i termini contrari al glossario", "motivo": "docs/glossario.md non vieta «collega», anzi lo usa nella definizione di «scambio»"}
+      ],
+      "extra_validi": [
+        "Eliminazione della settimana e del locale che procedono senza controllare l'esito",
+        "U-14: validato solo il telefono, gli altri obbligatori passano vuoti",
+        "U-15: dopo il successo modulo pieno e tabella invariata, rischio di doppioni",
+        "U-17: il collega scelto nella finestra dello scambio non viene inviato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Y5: U-05 segnala solo il salvataggio automatico senza riscontro, la sezione «Comportamenti incoerenti» non confronta i modi di salvare: mancato. U-17 «tutti i ⇄ aprono la stessa modale»: nel file c'è un solo ⇄, marginale. Criteri WCAG dichiarati da verificare e corretti."
+    },
+    "aiwda-09-R4": {
+      "trovati": ["Y1", "Y2", "Y3", "Y4", "Y6"],
+      "mancati": ["Y5"],
+      "falsi": [],
+      "extra_validi": [
+        "Eliminazione della settimana e del locale che procedono senza controllare l'esito",
+        "Rilievo 6: con novalidate gli altri 12 obbligatori non sono mai validati dal client",
+        "Rilievo 4: dopo il successo il modulo resta compilato e la tabella non si aggiorna, rischio di duplicato",
+        "Rilievo 12: il collega selezionato nello scambio non viene inviato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Y5: il rilievo 11 (salvataggio automatico senza feedback, propone eventualmente un «Salva» esplicito) non nomina l'incoerenza fra i tre modi di salvare: mancato. Y3 a P2 e Y6 a P3, priorità basse ma nel formato. Nel testo proposto del rilievo 13 «visibili a 12 persone» (i dipendenti sono 3): esempio, marginale. Note sui grafici passate al dataviz: difetti di AIWDA-07, non contati."
+    }
+  },
+  "proposte_scheda": [
+    "Ambiguità Y5: tutti e quattro i rapporti segnalano il salvataggio automatico delle impostazioni senza riscontro, ma nessuno lo confronta con «Salva» e «Procedi». Decidere se «automatico e senza riscontro» basta da solo a contare Y5, o dividere Y5 in due (mancanza di riscontro; incoerenza fra i modi di salvare).",
+    "Extra ricorrente (4 su 4): «Elimina settimana» ed «Elimina locale» proseguono senza controllare res.ok (griglia svuotata e redirect anche su errore); da aggiungere alla tabella di AIWDA-09 o a X3.",
+    "Extra ricorrente (4 su 4): con novalidate il client controlla solo il telefono, gli altri obbligatori arrivano vuoti al server.",
+    "Extra ricorrente (4 su 4): dopo l'invio riuscito il modulo resta compilato e la tabella non si aggiorna, rischio di duplicati.",
+    "Extra ricorrente (4 su 4): la finestra dello scambio non invia il collega scelto (#swap-to non letto, POST senza corpo).",
+    "Accettabili da aggiungere per AIWDA-09: pulsanti senza gestore nel prototipo (◀ ▶, ✎ 🗑, OK/No degli scambi, «Clicca qui» con href=\"#\"); «Pubblica i turni» senza conferma (già accettabile per AIWDA-03)."
+  ]
+}

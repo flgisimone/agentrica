@@ -1,0 +1,76 @@
+{
+  "ruolo": "aiwda-05",
+  "rapporti": {
+    "aiwda-05-R1": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5"],
+      "mancati": ["V6"],
+      "falsi": [],
+      "extra_validi": [
+        "SVG del cruscotto con width fissa (560/260): a 390 px la pagina si allarga a 584 px (R3)",
+        "Tabella dei dipendenti più larga del telefono (426 px), nomi e telefoni a capo, icone impilate (R3, R15)",
+        "Campo di ricerca fuori da .field, senza stile e attaccato al titolo (R14)",
+        "Cella del sabato con ⇄ più alta e testo disallineato nella griglia (R20)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "V2 con .week e .modal-box (R3, R7). V5 in R12 («corpi 13/14/15/17/18 px»), senza il confronto h2/corpo. V6 mancato: R10 cita #e89b3a solo per il contrasto del badge, non dice che i due arancioni non si distinguono. In R18 attribuisce i grafici ad AIWDA-04 e in R13 i nomi ad AIWDA-08: ruoli sbagliati, marginale. Molti rilievi di altri ruoli (Z2, Z3, Z5, Z7, Z8, D1-D3, D6, W2, W3, A2, A4, A5, G1-G2, G4-G5, Z9, W5): non contati."
+    },
+    "aiwda-05-R2": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5"],
+      "mancati": ["V6"],
+      "falsi": [],
+      "extra_validi": [
+        "SVG del cruscotto con width fissa: overflow a 390 px (R05)",
+        "Tabella dei dipendenti più larga del viewport (426 px), testi a capo e icone impilate (R02)",
+        "Campo di ricerca senza stile, attaccato al titolo (R13)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "V2 solo con .week (manca .modal-box), basta la causa principale. V4 e V5 in R11 (h2 17, nav 15, muted 13, gap 22/13). V6 mancato: badge-orange citato solo per il contrasto. R05 dice che gli SVG «sono tagliati» mentre la pagina si allarga: marginale. Ultima riga dei Limiti troncata (frase tolta), non contata. Firma senza trattino ma con nome in codice."
+    },
+    "aiwda-05-R3": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG del cruscotto con width fissa: la pagina si allarga a 584 px (MIM-02)",
+        "Tabella dei dipendenti più larga del telefono, testi a capo, icone impilate (MIM-13)",
+        "Campo di ricerca senza classe né stile (MIM-13)",
+        "#form-error fuori da .field: la regola .field .error non si applica e l'errore resta nel colore del testo (MIM-14)",
+        "Legenda della torta con doppio marcatore (punto dell'elenco e pallino) (MIM-16b)",
+        "Cella del sabato con ⇄ disallineata (MIM-16d)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "V2 con .week (MIM-01) e .modal-box (MIM-15). V6 in MIM-07 («--color-late quasi uguale a --color-warning: basta un solo token»). MIM-01 e MIM-02 citano 1.4.10 Reflow: criterio esistente e pertinente, anche se una griglia bidimensionale può rientrare nell'eccezione; non falso. Piccola incoerenza interna: MIM-07 dà il testo d'errore a 3,7:1 mentre MIM-14 dice che il colore non si applica; marginale. JSON delle osservazioni incluso."
+    },
+    "aiwda-05-R4": {
+      "trovati": ["V1", "V2", "V3", "V4", "V5", "V6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "SVG del cruscotto con width fissa: la pagina si allarga a 584 px (MIM-02)",
+        "Tabella dei dipendenti più larga del telefono, testi a capo, icone impilate (MIM-03)",
+        "Campo di ricerca fuori da .field, senza stile (MIM-13)",
+        "Cella del sabato con ⇄ disallineata (MIM-15)",
+        "Legenda della torta con doppio marcatore (nelle segnalazioni per altri)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "V2 con .week (MIM-01) e .modal-box (MIM-04). V6 in MIM-08 («--color-late, quasi uguale a --color-warning»; «unire --color-late a --color-warning»). V5 in MIM-14 (h2 17, nav 15). Firma nella forma «— MIMOSA (AIWDA-05)»."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (4/4): SVG del cruscotto con width fissa in pixel, la pagina a 390 px si allarga a 584 px; valutare se aggiungerlo a V2 o come V7",
+    "Extra ricorrente (4/4): tabella dei dipendenti più larga del telefono (426 px) con nomi e telefoni a capo; valutare se aggiungerlo a V2 o come difetto",
+    "Extra ricorrente (4/4): campo di ricerca senza classe .field né stile; potrebbe andare fra gli accettabili di AIWDA-05 (l'etichetta mancante è Z4)",
+    "Extra ricorrente (3/4): cella con ⇄ più alta e disallineata; candidato accettabile",
+    "Extra ricorrente (2/4): legenda della torta con doppio marcatore (ul senza list-style); candidato accettabile accanto ai «puntini piccoli»",
+    "V6: tre rapporti su quattro citano --color-late solo per il contrasto del badge; chiarire nella scheda che conta solo se dice che i due arancioni non si distinguono (o che il token è doppio)",
+    "1.4.10 Reflow citato per la griglia dei turni: chiarire che non è falso nonostante l'eccezione per i contenuti bidimensionali"
+  ]
+}

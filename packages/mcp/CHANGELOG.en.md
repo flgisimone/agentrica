@@ -2,6 +2,12 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.19.0 — 2026-11-27
+
+### Changed
+- Recommended model for 6 more agents, measured on the test cases (F50, `examples/risultati/2026-11-27-ondata-3.md`): Sonnet for AIWDA-04 Information Architect, AIWDA-05 UI Designer, AIWDA-06 Design System, AIWDA-07 Dashboard & Data Visualization, AIWDA-08 Accessibility, AIWDA-10 UX Writer. It shows in `list_agents`, in the agent's text and in the subagents of `init --subagents`. AIWDA-02, 03 and 09 stay on the session's model: on Sonnet they had one more false finding.
+- README: table of recommended models with the 33 measured agents; the other 23 stay on the session's model.
+
 ## 0.18.0 — 2026-11-27
 
 ### Changed

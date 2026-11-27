@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Turnio</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <nav class="nav" aria-label="Menu principale">
+    <a href="impostazioni.html">Settings</a>
+    <a href="index.html">Dashboard</a>
+    <a href="dipendenti.html" aria-current="page">Squadra</a>
+    <a href="turni.html">Turni</a>
+  </nav>
+
+  <main id="main">
+    <h1>Personale</h1>
+    <input type="search" id="search" placeholder="Cerca un collaboratore">
+
+    <table>
+      <caption class="muted">Dipendenti del locale</caption>
+      <thead><tr><th scope="col">Nome</th><th scope="col">Ruolo</th><th scope="col">Telefono</th><th scope="col">Ore nel mese</th><th scope="col"><span class="muted">Azioni</span></th></tr></thead>
+      <tbody id="staff">
+        <tr><td>Giulia R.</td><td>sala</td><td>333 120 4455</td><td>126</td><td><button class="icon-btn">✎</button><button class="icon-btn">🗑</button></td></tr>
+        <tr><td>Luca B.</td><td>cucina</td><td>347 880 1290</td><td>132</td><td><button class="icon-btn">✎</button><button class="icon-btn">🗑</button></td></tr>
+        <tr><td>Sara M.</td><td>bar</td><td>320 441 7781</td><td>118</td><td><button class="icon-btn">✎</button><button class="icon-btn">🗑</button></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Aggiungi una risorsa</h2>
+    <p class="muted">I campi con * sono obbligatori.</p>
+    <form id="new-staff" novalidate>
+      <div class="field"><input name="nome" placeholder="Nome *" required></div>
+      <div class="field"><input name="cognome" placeholder="Cognome *" required></div>
+      <div class="field"><input name="telefono" placeholder="Telefono *" required></div>
+      <div class="field"><input name="email" placeholder="Email *" required></div>
+      <div class="field"><input name="codice_fiscale" placeholder="Codice fiscale *" required></div>
+      <div class="field"><input name="data_nascita" placeholder="Data di nascita (gg/mm/aaaa) *" required></div>
+      <div class="field"><input name="indirizzo" placeholder="Indirizzo *" required></div>
+      <div class="field"><input name="iban" placeholder="IBAN *" required></div>
+      <div class="field"><input name="contratto" placeholder="Tipo di contratto *" required></div>
+      <div class="field"><input name="livello" placeholder="Livello CCNL *" required></div>
+      <div class="field"><input name="ore_settimanali" placeholder="Ore settimanali *" required></div>
+      <div class="field"><input name="data_assunzione" placeholder="Data di assunzione (aaaa-mm-gg) *" required></div>
+      <div class="field"><select name="ruolo" required><option value="">Ruolo *</option><option>sala</option><option>cucina</option><option>bar</option></select></div>
+      <div class="field"><input name="note" placeholder="Note"></div>
+      <p class="error" id="form-error" role="alert"></p>
+      <button class="btn btn-primary" id="save-staff">Procedi</button>
+    </form>
+  </main>
+  <div class="toast" id="toast" hidden></div>
+  <script src="js/app.js"></script>
+</body>
+</html>

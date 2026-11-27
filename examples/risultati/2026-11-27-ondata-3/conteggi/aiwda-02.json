@@ -1,0 +1,68 @@
+{
+  "ruolo": "aiwda-02",
+  "rapporti": {
+    "aiwda-02-R1": {
+      "trovati": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "M5 · P2 · «Persone e locali inventati» (interviste r.3): se le interviste sono fittizie, la sintesi non può essere presentata come ricerca con utenti reali; chiarire quale dei due casi vale",
+          "motivo": "Trappola T11 (interviste dichiarate inventate, progetto di prova) presentata come problema di metodo con priorità e correzione"
+        }
+      ],
+      "extra_validi": [
+        "M4: note incomplete, mancano le risposte alle domande 3, 4 e 6 per gran parte degli intervistati e i rimandi a registrazioni o trascrizioni; proposta una matrice intervistato × domanda"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "U3 contato: dice che la citazione non ha fonte e che I2 dice il contrario, ma indica come frase più vicina quella di I3 e non riconosce esplicitamente la citazione rovesciata di I2. U8 con M1 (Plus, autoselezione, una città) e M3 (solo titolari, mancano i responsabili); non cita il README. Scambi nelle impostazioni e cruscotto come prima pagina (R7) sono A1 e A6 di AIWDA-04: non extra. Riga troncata «prima che diventino definitivi.» prima della firma, da non contare."
+    },
+    "aiwda-02-R2": {
+      "trovati": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "B4: protocollo e note senza consenso e registrazione, conduttore, prova pilota, metodo di codifica e tracciabilità fra citazione e fonte; le note non separano fatti, citazioni e interpretazioni"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "U3 come in R1: citazione senza fonte, più vicina a I3, I2 sostiene l'opposto; non nomina il rovesciamento della frase di I2. U8 in B1 (Plus, autoselezione, una città, solo titolari mentre l'obiettivo parla di responsabili); non cita il README. B3 (nessuna osservazione) è accettabile. B5 (protocollo che non copre assenze e notifiche) non contato. C3 è A1 di AIWDA-04. Le interviste inventate sono citate solo come limite, non come difetto. Il rapporto più breve."
+    },
+    "aiwda-02-R3": {
+      "trovati": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "ACH-07: la sintesi tralascia i temi ricorrenti delle note (assenze dell'ultimo minuto, chi manca oggi, uso dal telefono, semplicità)",
+        "ACH-14: note incomplete (D6 solo per I1, D4 per nessuno, D2 assente per I2, I3, I4), nessun rimando a trascrizioni",
+        "ACH-12: dimensioni dei locali intervistati da 6 a 28 dipendenti, mentre il target del README va da 3 a 40"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "U3 trovato in pieno: la frase più vicina è di I2 e dice il contrario. U8 completo con README r.9 (ACH-11) e selezione distorta (ACH-12). Riscontri su docs/mappa.md r.12 e sulla schermata delle impostazioni verificati: «Esporta» sta dentro «Locale», chiuso. ACH-10 è A1 e ACH-08 tocca A6 di AIWDA-04: non extra. Domanda 5 come frequenza ricordata: accettabile (nessuna osservazione sul campo)."
+    },
+    "aiwda-02-R4": {
+      "trovati": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "R12: note incomplete (D2 manca per I2, I3, I4; D4 per tutti; D6 per I2–I5) e vuoti trattati come consenso",
+        "R13: la sintesi omette le assenze dell'ultimo minuto (I1, I5) e il bisogno di sapere chi manca oggi (I2)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "U3 trovato: l'unica frase vicina, di I2, dice il contrario. U8 completo con README r.9. Conteggio di riepilogo marginalmente sbagliato («9 P1 e 4 P2/P3», sono 10 P1 e 3 P2): annotato, non falso. R9 è A1 di AIWDA-04, R8 tocca A6: non extra."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente da aggiungere come accettabile o come difetto: note incomplete, con risposte non registrate alle domande 2, 4 e 6 per più intervistati (trovato in tutti e quattro i rapporti); è la base del «non ha richiesto commenti» di U5 e del «tutti hanno confermato» di U4.",
+    "Extra ricorrente: la sintesi omette il tema delle assenze dell'ultimo minuto (I1, I5) e di «chi manca oggi» (I2) (R3, R4; accennato in R1 e R2).",
+    "Ambiguità su U3: due rapporti dicono che la citazione non ha fonte e che I2 dice il contrario, ma indicano I3 come frase più vicina senza riconoscere il rovesciamento; precisare se basta «citazione senza fonte e contraria a I2».",
+    "Ambiguità su U8: precisare se basta «solo titolari, mancano i responsabili» o se serve il rimando al README sull'utente principale.",
+    "T11: precisare che chiedere se le interviste siano reali o fittizie come domanda aperta non è falso, mentre un rilievo con priorità e correzione lo è (caso R1-M5)."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "ruolo": "aiwda-08",
+  "rapporti": {
+    "aiwda-08-R1": {
+      "trovati": ["Z1", "Z2", "Z3", "Z4", "Z5", "Z6", "Z7", "Z8", "Z9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Pulsante .button «OK» della finestra: bianco su #2f81f7 a 15 px, circa 3,75:1 (1.4.3)",
+        "Bordo dei campi #d8dce1 su bianco circa 1,4:1, sotto 3:1 (1.4.11)",
+        "Pallino «in ritardo» #e89b3a circa 2,3:1 su bianco (1.4.11)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Contrasti leggermente arrotondati (muted 2,5 invece di 2,64; #1f6feb 4,8 invece di 4,63): marginali. «Errore 400» è un esempio del template con res.status. Il titolo «I quattro grafici SVG non hanno alternativa testuale» include le barre, ma riconosce i valori sotto (T8) e chiede solo il collegamento: irrobustimento, non falso. Timeout 2.2.1 (Y6), 3.3.4 su Elimina settimana (Y1), «Clicca qui» e OK/No (W3), reflow (V2), nomi incoerenti (A5), titolo uguale ed emoji (accettabili), rosso/verde e torta (G5, G2): altri ruoli o accettabili, non contati. 1.3.5 correttamente non segnalato. Domanda aperta 4 vuota (troncamento)."
+    },
+    "aiwda-08-R2": {
+      "trovati": ["Z1", "Z2", "Z3", "Z4", "Z5", "Z6", "Z7", "Z8", "Z9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Pulsante .button «OK» della finestra: 3,75:1 a 15 px (1.4.3)",
+        "Bordo dei campi #d8dce1 1,38:1 su bianco (1.4.11)",
+        "Pallino «in ritardo» #e89b3a 2,29:1 (1.4.11)",
+        "Select «Mese» di impostazioni.html:31 senza etichetta associata (3.3.2, 1.3.1)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Contrasti calcolati correttamente. 2.2.1 per il toast citato «da confermare», corretto. «✕» sotto 24×24 (2.5.8): accettabile della scheda. Formati di data diversi (W6), grafici senza alternativa (accettabile), linee rosso/verde (G5), titolo uguale (accettabile): non contati. Conteggio «9 turni su 21 senza pallino» verificato corretto."
+    },
+    "aiwda-08-R3": {
+      "trovati": ["Z1", "Z2", "Z3", "Z4", "Z5", "Z6", "Z7", "Z8", "Z9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Pulsante .button «OK» della finestra: circa 3,7:1 a 15 px (1.4.3)",
+        "Bordo dei campi #d8dce1 circa 1,4:1 (1.4.11)",
+        "Pallino «in ritardo» #e89b3a circa 2,2:1 (1.4.11)",
+        "Select «Mese» di impostazioni.html:31 senza label (1.3.1, 3.3.2)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "3.1.1 messo in P2 (scelta discutibile, non falso). 3.3.4 «da confermare» con lettura restrittiva (il criterio copre anche la cancellazione di dati dell'utente), 3.2.2 per la ricarica dopo «Salva» «da confermare»: criteri esistenti, non contati come falsi. Rinvii sbagliati ai ruoli (usabilità ad «AIWDA-07», grafici ad «AIWDA-06»): errore marginale, non sul progetto. Placeholder «a basso contrasto» non verificabile dai CSS. Annuncio del cambio settimana (4.1.3) ipotetico, i pulsanti non hanno gestori: non contato. Grafici senza alternativa (barre incluse ma con valori riconosciuti): accettabile/irrobustimento."
+    },
+    "aiwda-08-R4": {
+      "trovati": ["Z1", "Z2", "Z3", "Z4", "Z5", "Z6", "Z7", "Z8", "Z9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Pulsante .button «OK» della finestra: 3,75:1 a 15 px (1.4.3)",
+        "Bordo dei campi #d8dce1 1,38:1 (1.4.11)",
+        "Pallino «in ritardo» #e89b3a 2,29:1 (1.4.11)",
+        "Select «Mese» di impostazioni.html:31 senza nome accessibile (3.3.2, 4.1.2)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": false,
+      "note": "Firma «— GACRUX (AIWDA-08)» presente ma sotto il titolo «Riepilogo», prima del testo finale: non alla fine. Z9 trovato con la causa (nessun role=status, visibile 1,5 s) ma senza citare 2.2.1. 3.1.1 in P2 (discutibile). «--color-danger … della riga 11»: è la riga 12, marginale. Contrasti corretti (script). 3.1.2 per «Settings» corretto (AA). Elimina settimana 3.3.4 (Y1), timeout 2.2.1 (Y6), linee rosso/verde (G5), grafici senza alternativa e titolo uguale (accettabili): non contati."
+    }
+  },
+  "proposte_scheda": [
+    "Extra valido ricorrente (4/4): pulsante .button della finestra, bianco su #2f81f7 a 15 px, 3,75:1 (1.4.3). Aggiungerlo a Z8 o come difetto atteso.",
+    "Extra valido ricorrente (4/4): bordo dei campi #d8dce1 a 1,38:1 su bianco (1.4.11). Da aggiungere come difetto o come accettabile.",
+    "Extra valido ricorrente (4/4): pallino «in ritardo» #e89b3a a 2,29:1 (1.4.11), legato a Z7. Valutare se unirlo a Z7 o metterlo fra gli accettabili.",
+    "Extra valido ricorrente (3/4): select «Mese» di impostazioni.html:31 senza label. Da aggiungere a Z4 (che oggi cita solo dipendenti.html).",
+    "Ambiguità T8: tre rapporti scrivono che l'SVG delle barre non ha ruolo e che il paragrafo dei valori non è collegato al grafico. Chiarire se questo è irrobustimento (come contato qui) o falso.",
+    "Ambiguità 3.3.4: per «Elimina settimana» tutti lo citano, uno lo dichiara applicabile solo a dati legali o finanziari. Il difetto è Y1 (AIWDA-09): valutare un accettabile esplicito per AIWDA-08.",
+    "Accettabile da aggiungere: 1.3.5 su autocomplete (tutti i rapporti lo discutono e lo dichiarano non applicabile ai dati di terzi)."
+  ]
+}

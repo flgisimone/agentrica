@@ -2,7 +2,7 @@
 
 **Obiettivo**: continuare le ondate per reparto decise in F49 con otto specialisti di design, con lo stesso metodo e la stessa soglia di F24, F37 e F49. Un ruolo passa a un modello più piccolo solo dove la qualità regge.
 
-> **Stato: completata** (2026-11-27). Branch `fase/f50-misura-design`, aperto il 2026-11-26 dal branch di F49 (commit `79245d1`), per preparare progetto e scheda mentre F49 aspetta le esecuzioni. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte decise lo stesso giorno. Le esecuzioni partono dopo quelle di F49; il merge in `develop` dopo F49.
+> **Stato: completata** (2026-11-27). Rilasciata con la 0.19.0 il 2026-11-27: pacchetto su npm con provenance (tag `v0.19.0`) e sito con la dipendenza alla 0.19.0 e la tabella delle prove di `/consumo` aggiornata a tutte le misure (F24, F37, F49, F50: −47% del costo, −3% di token). Branch `fase/f50-misura-design`, aperto il 2026-11-26 dal branch di F49 (commit `79245d1`), per preparare progetto e scheda mentre F49 aspetta le esecuzioni. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte decise lo stesso giorno. Le esecuzioni partono dopo quelle di F49; il merge in `develop` dopo F49.
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer). Design è l'**oggetto** della misura, non un revisore.
 

@@ -134,7 +134,7 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F47 | [47-sito-allineato.md](47-sito-allineato.md) | Sito allineato al pacchetto: pannello locale, `check`, contesto compatto e passaggio di consegne, modelli consigliati nel catalogo; rilascio 0.17.0 di pacchetto e sito | completata |
 | F48 | [48-rilievi.md](48-rilievi.md) | Rilievi di F21–F45: chiusure con l'evidenza, C5 ripetuto, `check` con una lettura negata, `--server` nello script delle catene, «Come funziona» e flowchart sul sito; rilascio 0.17.1 | completata |
 | F49 | [49-misura-business.md](49-misura-business.md) | Misura dei modelli, seconda ondata: dieci specialisti di business su Opus medio e Sonnet, un progetto nuovo; le ondate successive (design, poi cyber, privacy e software) a parte | completata |
-| F50 | [50-misura-design.md](50-misura-design.md) | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10), un progetto nuovo | completata |
+| F50 | [50-misura-design.md](50-misura-design.md) | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10), un progetto nuovo | completata (0.19.0) |
 | F51 | [51-misura-cyber-privacy-software.md](51-misura-cyber-privacy-software.md) | Misura dei modelli, quarta ondata: otto specialisti di cyber, privacy e software sui progetti di F37 estesi; chiusura del rilievo dei ruoli non misurati | da fare |
 
 Ordine: F0 → F51 in sequenza.

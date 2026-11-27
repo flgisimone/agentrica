@@ -96,7 +96,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F47 | Sito allineato al pacchetto: pagina `/pannello` con le schermate del pannello vero, «Controlla il piano» in Installa, contesto compatto e passaggio di consegne in Orchestrazione, filtro per modello consigliato nel catalogo; rilascio 0.17.0 | completata (0.17.0) |
 | F48 | Rilievi di F21–F45: `check` distingue un file che manca da uno che non si legge, istruzioni del server che per una funzione nuova partono dal business anche su un progetto nuovo (C5 verde 5 su 5), `--server` nello script delle catene; sul sito «Come funziona» nel menu e il flowchart dell'orchestrazione; rilascio 0.17.1 | completata |
 | F49 | Misura dei modelli, seconda ondata: dieci specialisti di business su Opus medio e Sonnet con il progetto turnio; Sonnet supera la soglia in tutti e dieci (−49% del costo sul compito) e diventa il modello consigliato; versione 0.18.0 | completata |
-| F50 | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10) con il pannello turnio e le schermate fisse; Sonnet supera la soglia in sei ruoli (−55% del costo sul compito) e diventa il modello consigliato per AIWDA-04–08 e 10; versione 0.19.0 | completata |
+| F50 | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10) con il pannello turnio e le schermate fisse; Sonnet supera la soglia in sei ruoli (−55% del costo sul compito) e diventa il modello consigliato per AIWDA-04–08 e 10 | completata (0.19.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

@@ -1,0 +1,102 @@
+{
+  "ruolo": "aica-12",
+  "rapporti": {
+    "aica-12-R1": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti sulla gestione dei dati esportati (export clienti con dati personali), sulle richieste MFA non avviate e sul vishing",
+        "Intestazione «dopo l'incidente» senza alcuna regola che ne recepisca le lezioni",
+        "Simulazioni di phishing nel piano senza autorizzazione scritta né regole di ingaggio",
+        "Piano senza percorso per amministratori/IT (revoca sessioni, conservazione evidenze), senza referente né revisione dopo gli incidenti"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i fatti verificati sul progetto (iam/README regole 1-3, roles.yaml, access-review righe 4-7, app/auth.js 19/35-41/55, 3 tentativi in 51 s, export 11 minuti dopo l'accesso). Rilievi sull'incidente (H1-H7) e su IAM/codice sono di altri ruoli: non contati. Regole 4, 8, 12 (trappola T4) trattate come irrobustimento, non falso. NIST SP 800-63B dichiarato da verificare, contenuto corretto."
+    },
+    "aica-12-R2": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti su esportazioni e copie dei dati clienti e sulle richieste MFA non avviate",
+        "Intestazione «dopo l'incidente» che non ne riprende le lezioni",
+        "Simulazioni di phishing senza autorizzazione scritta né regole di ingaggio",
+        "Il piano non usa l'incidente del 21 novembre come contenuto formativo",
+        "Piano senza proprietario, revisione dopo gli incidenti e legame con le politiche di accesso"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Riferimenti a iam/README misti fra numero di regola e riga (`iam/README.md:2` per la regola 2, che è alla riga 6; `:5` per la regola 1 corretto come riga): marginale. README.md:26 (90 giorni) e access-review:4 corretti. Categoria Awareness and Training nella funzione Protect del CSF 2.0 corretta (dichiarata da verificare). Regola 8 (T4) come P3 di irrobustimento."
+    },
+    "aica-12-R3": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti su esportazioni dei dati clienti e su accessi non riconosciuti",
+        "Intestazione/versione del 22 novembre che conserva le pratiche che hanno reso possibile l'incidente",
+        "Simulazioni di phishing senza autorizzazione scritta né regole di ingaggio",
+        "Firma a gennaio di regole ancora sbagliate: rifarle prima della firma"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rilievi indicati come «Riga N» ma con il numero della regola (es. «Riga 7 (lucchetto)» è la regola 7, riga 19): marginale, il rilievo è identificabile. Nella parte sull'incidente (altro ruolo, non contata) dice che il log a tre tentativi «è coerente» con la forza bruta, pur non verificata, e che il rapporto «cita la regola di preservare le evidenze» e il requisito di 90 giorni, cosa che il rapporto non fa: imprecisioni fuori tabella, annotate. Copertura dei clienti del portale (riga 3 e piano) proposta come lacuna «da decidere»: dubbia (i clienti sono aziende esterne), non contata. Regola 12 (T4): suggerimento per Mac, irrobustimento."
+    },
+    "aica-12-R4": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti su account compromesso/furto di sessione e su gestione delle esportazioni dei clienti",
+        "Simulazioni di phishing senza autorizzazione scritta, perimetro e informazione del personale",
+        "Piano senza responsabile e senza percorso per amministratori IT (log, risposta agli incidenti)",
+        "Ambito del documento: amministratori non nominati alla riga 3 ma citati dalla regola 5"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "E7 trovato in parte: nomina il ritardo («lento») e propone telefono o email, ma non dice che l'email può essere il canale compromesso. Regola 8 (T4) segnalata come P2 «insufficiente» e regola 13 con aggiunta già presente nel testo («senza collegarle»): irrobustimenti su trappola, non falsi. «Riga 30» per «Incidente chiuso» (è la 31): marginale. BYOD e gestore di password fra gli accettabili."
+    },
+    "aica-12-R5": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti su esportazioni dei dati clienti, su accessi o reset non riconosciuti e sulla chiusura della sessione a fine turno",
+        "Simulazioni di phishing senza autorizzazione scritta né regole di ingaggio",
+        "Piano senza responsabile, valutazione di partenza e modulo sull'incidente; nessuna formazione mirata per amministratori e chi esporta dati"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Fatti verificati (roles.yaml mfa:false per operator e auditor, customers:export). Regola 8 e 13 (T4) come P3 di irrobustimento. Regole 5 e 6 in un rilievo unico che nomina entrambe le cause (E3 ed E4)."
+    },
+    "aica-12-R6": {
+      "trovati": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Regole mancanti su esportazione dei dati clienti e su accessi non riconosciuti",
+        "Intestazione «dopo l'incidente» che non ne recepisce le lezioni",
+        "Simulazioni di phishing senza autorizzazione scritta né regole di ingaggio",
+        "Nessuna attività prima di gennaio 2027: serve una comunicazione immediata con le regole corrette"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "E7 trovato in parte: nomina solo il ritardo, non il canale unico via email. «La regola r. 3 del piano («tutti»)» al rilievo 25: il piano non ha regole numerate, è la riga 5; marginale. Riferimenti OWASP A07:2025 Authentication Failures e A09:2025 Logging and Alerting Failures corretti; 15 caratteri (8 con MFA) coerente con SP 800-63B-4, dichiarato da verificare. Regola 3 WhatsApp portata a P0: scelta di priorità, non errore. Contenuti mancanti del piano su MFA/gestore di password in parte accettabili."
+    }
+  },
+  "proposte_scheda": [
+    "Extra validi ricorrenti (6 rapporti su 6): regole mancanti sulla gestione delle esportazioni dei dati clienti; simulazioni di phishing nel piano senza autorizzazione scritta né regole di ingaggio (e il tema del controllo dei lavoratori). Valutare di aggiungerli alla tabella o agli accettabili.",
+    "Ricorrenti (4-5 rapporti): intestazione «dopo l'incidente» che non recepisce le lezioni; piano senza responsabile né revisione dopo gli incidenti; nessuna regola su cosa fare con un accesso o una richiesta MFA non riconosciuti. Candidati agli accettabili.",
+    "E7: chiarire se basta il ritardo («entro la fine della giornata») o serve anche il canale alternativo all'email; R4 e R6 nominano solo il ritardo (contati trovati con nota).",
+    "T4: quasi tutti propongono di estendere la regola 8 ai mittenti noti e la 4 al gestore di password; chiarire nella scheda che sono irrobustimenti, non falsi, anche se con priorità P2.",
+    "E3: la scheda parla dei «due account compromessi», ma rapporto.md cita solo M. Verdi; il secondo (r.galli) è solo nel log. Indicare il log come fonte accettata, visto che tutti i rapporti l'hanno letto."
+  ]
+}

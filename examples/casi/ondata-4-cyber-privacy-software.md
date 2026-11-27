@@ -129,3 +129,31 @@ Non contano come falsi né come extra validi.
 ## Regole di conteggio
 
 Quelle del [README](../README.md#come-si-conta). Ogni esecuzione si conta solo sulla tabella del suo ruolo: un difetto di un altro ruolo trovato in più non è extra valido ma accettabile. Un riferimento normativo sbagliato (articolo inesistente o che dice altro) conta come falso, come nelle schede di F37.
+
+## Chiarimenti dopo F51
+
+Dalle proposte dei valutatori di F51 ([`conteggi/`](../risultati/2026-11-27-ondata-4/conteggi/)). Valgono per le esecuzioni successive: i conteggi di F51 restano quelli fatti con le regole sopra, che hanno già letto questi casi nello stesso modo.
+
+**Quando un difetto è trovato**
+
+- **E3**: vale anche il log come fonte del secondo account (`r.galli`), che il rapporto d'incidente non cita.
+- **E7**: basta il ritardo («entro la fine della giornata»); il canale alternativo all'email è un di più.
+- **Q4**: basta il conflitto con «i prezzi li cambia solo `admin`»; chi apre il reso per conto del negozio è un di più. Il motivo del reso obbligatorio rientra in **Q5**.
+
+**Trappole**
+
+- **T1**: chiedere solo di ordinare l'estratto e annotare le fonti, anche con una priorità, non è falso.
+- **T4**: estendere la regola 8 ai mittenti noti e la 4 al gestore di password è irrobustimento.
+- **T6**: portare la soglia dei 14 anni al legale come questione di capacità contrattuale è irrobustimento; è falso dire che la soglia del consenso è sbagliata.
+
+**Accettabili in più**
+
+- **Letture oltre il compito**: i difetti di F37 che un rapporto trova leggendo file fuori dal compito (l'archivio del 19 novembre, `nginx.conf`, il registro dei fornitori, la procedura dei diritti, la chiave in `config/default.json`, i difetti di schema e delle migrazioni) sono difetti di altri ruoli: non contano, salvo un fatto riportato in modo sbagliato, che è falso.
+- **AICA-06**: reset che non verifica `active` e token di reset in chiaro; `/api/admin/*` raggiungibile da Internet; `setRole` senza blocco dell'auto-promozione.
+- **AICA-08**: la VM ricreata non risolve una compromissione applicativa; il formato dell'estratto diverso da quello che scrive il codice, e l'allarme `export_volume` che non è in `detection-rules.yml`.
+- **AICA-12**: nessuna regola sulle esportazioni dei dati dei clienti; simulazioni senza autorizzazione scritta; intestazione «dopo l'incidente» che non ne recepisce le lezioni; piano senza responsabile.
+- **AIPCA-03**: PagaFacile presentato come responsabile; ChatNow fuori dal registro e dall'informativa; cookie policy senza i contenuti minimi; legittimo interesse e natura del conferimento non indicati; consenso dei genitori per la trascrizione con IA sotto i 14 anni (L. 132/2025, art. 4, c. 4); «offerte» nella casella della newsletter.
+- **AIPCA-09**: lo script sincronizza tutto il contenitore, registrazioni comprese; «reso pubblico per errore» nel registro contro l'apertura intenzionale; decisioni senza titolare né DPO; data di conoscenza da registrare; la scheda dice «decifrati dallo script», lo script versionato non decifra.
+- **AISA-03**: correzione dell'importo senza motivo, limiti né storico; doppio invio; `shop` senza `customer_id`; colli o chili.
+- **AISA-04** (scheda di F37): webhook senza transazione; `{ok: true}` o 204 per id inesistenti; Node fissato alla 22.11.0.
+- **AISA-06**: rotte `async` senza gestione degli errori; `POST` senza `requireRole`; `PATCH` senza controllo dell'id, tetto né traccia; doppio invio senza idempotenza; id della riga d'ordine che il negozio non conosce; integrazione ancora da fare (dichiarata dal README della funzione); accettazione automatica e merce rovinata in giacenza (Q3 e Q5 di AISA-03, qui nel codice).

@@ -1,0 +1,73 @@
+{
+  "ruolo": "aipca-09",
+  "rapporti": {
+    "aipca-09-R1": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Perimetro incompleto: refresh-staging.sh riga 6 sincronizza l'intero bucket di produzione, quindi in staging c'erano anche le registrazioni delle lezioni (voce e immagine di minori), non contate nella scheda",
+        "Registro, voce 2: «reso pubblico per errore» contrasta con la scheda, dove l'apertura del contenitore è intenzionale",
+        "Decisioni prese da segreteria e sviluppatore senza titolare né DPO; manca una procedura scritta per le violazioni con ruoli e reperibilità"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli 8 difetti con causa, riferimento e azione. Trappole rispettate: T9 usata correttamente (notificare con la procedura telematica), T10 trattata come voce da completare (accettabile: decisione di non notificare la n. 1). Nota giustificata dal progetto: lo script versionato non decifra (rclone sync), in contrasto con la scheda; segnalata come discrepanza da accertare. Chiave di cifratura in chiaro in config/default.json:8 usata come argomento contro l'attenuante della cifratura: fatto vero, non contato come extra perché con ogni probabilità difetto di altri ruoli (F37). Backup a Singapore non cifrato (config/backup.yml) girato ad altri specialisti: difetto di altri ruoli, non contato. Riferimenti verificati: art. 4(12), 33(1)(3)(4)(5), 34(1)-(4), 83(4)(a), 28(3)(f), 29, 32(4), 38-39, considerando 38/75/85/86: corretti."
+    },
+    "aipca-09-R2": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"],
+      "mancati": [],
+      "falsi": [
+        {
+          "testo": "«considerando 75-76 (l'effetto cifratura vale solo se i dati sono davvero illeggibili ai terzi)»",
+          "motivo": "I considerando 75 e 76 riguardano i fattori di rischio e la valutazione di probabilità e gravità, non la cifratura come attenuante (che è nell'art. 34(3)(a) e nel considerando 83/88): il contenuto attribuito non c'è. Caso al limite: il rimando ai considerando per la valutazione del rischio in sé è pertinente, sbagliata è la glossa."
+        }
+      ],
+      "extra_validi": [
+        "Decisioni senza titolare né DPO; manca la catena di segnalazione e il presidio del canale privacy@",
+        "Registro: va indicata la data di conoscenza oltre a quella dell'evento (2026-11-17)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli 8 difetti. T10 trattata come rilievo P2 non_verificabile che chiede di documentare la valutazione dell'epoca, senza dire che andava notificata: accettabile. Rilievo 4 (contenuti dell'art. 33(3) della notifica) coerente con B1, non contato a parte. Fuori perimetro: Mailorbit con Privacy Shield e InsightAI senza accordo art. 28 (fatti veri, difetti di AIPCA-03/altri ruoli, non contati). Il falso sui considerando è al limite: se il valutatore aggregato preferisce, va declassato a nota."
+    },
+    "aipca-09-R3": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Perimetro incompleto: rclone sync dell'intero bucket, quindi anche le registrazioni delle lezioni con voce e immagine di minori",
+        "Registro, voce 2: «per errore» contrasta con l'apertura intenzionale della scheda",
+        "Nessuna procedura per le violazioni né ruoli decisionali (scheda compilata da segreteria e sviluppatore, in docs/ solo la procedura dei diritti)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli 8 difetti, con l'analisi delle tre eccezioni dell'art. 34(3). Discrepanza script/scheda sulla decifratura segnalata come da verificare (giustificata dal progetto). Chiave in config/default.json e backup a Singapore: fatti veri, difetti di altri ruoli, non contati. Riferimenti corretti (art. 12(1), 24, 37, 38(1), 83(4)(a); Linee guida EDPB 01/2021 sugli esempi di notifica esistono, v2.0 del 14/12/2021). Firma nella forma «— MEGREZ (AIPCA-09)»."
+    },
+    "aipca-09-R4": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Registro: la data della voce 2 è quella del fatto, non della conoscenza; vanno registrate entrambe",
+        "Rilevamento solo grazie a un segnalatore esterno dopo circa 16 ore: manca un controllo automatico sull'esposizione pubblica degli storage"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli 8 difetti; B5 con «consigli di protezione» generici ma con art. 34(1)(2), destinatari e minori tramite i genitori. T8 riconosciuta esplicitamente come corretta (contenimento in due ore «ragionevole»). L'ipotesi di una conoscenza già il 17/11 alle 16:40 è presentata come sostenibile, non come fatto: non falso. Nessun rilievo sul perimetro (registrazioni) né sulla discrepanza dello script. Rapporto più compatto, senza schema per campi."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (R1, R3): il perimetro della scheda conta solo documenti e note di salute, ma refresh-staging.sh sincronizza l'intero bucket di produzione, registrazioni comprese. Valutare di aggiungerlo agli accettabili o come difetto.",
+    "Extra ricorrente (R1, R3): registro, voce 2 «reso pubblico per errore» contro l'apertura intenzionale della scheda. Da aggiungere agli accettabili o a B7.",
+    "Extra ricorrente (R1, R2, R3): decisioni senza titolare né DPO e nessuna procedura per le violazioni. Da aggiungere agli accettabili.",
+    "Ricorrente (R2, R4): data di conoscenza da registrare oltre a quella dell'evento. Accettabile sotto B7.",
+    "Ambiguità: lo script versionato (rclone sync) non decifra, mentre la scheda dell'evento dice «decifrati dallo script di aggiornamento». Due rapporti lo segnalano come discrepanza: allineare il materiale o elencare la nota fra gli accettabili.",
+    "Chiave di cifratura in config/default.json:8 usata da R1 e R3 contro l'attenuante della cifratura: chiarire nella scheda che è un difetto di altri ruoli (F37) e non un extra.",
+    "Accettabili da aggiungere: richiesta di cancellazione e conferma al collega esterno che ha ricevuto il file; contenuti dell'art. 33(3) assenti dalla scheda."
+  ]
+}

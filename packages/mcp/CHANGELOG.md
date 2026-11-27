@@ -2,6 +2,12 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.20.0 — 2026-11-27
+
+### Cambiato
+- Modello consigliato per altri 6 agenti, misurato sui casi di prova (F51, `examples/risultati/2026-11-27-ondata-4.md`): Sonnet per AICA-06 Identity & Access Management, AICA-08 Incident Response, AIPCA-03 Privacy Legal, AISA-03 Functional Analyst, AISA-06 Full Stack; Haiku per AICA-12 Security Awareness. Si vede in `list_agents`, nel testo dell'agente e nei subagent di `init --subagents`. AIPCA-09 e AISA-04 restano sul modello della sessione: su Sonnet avevano falsi in più.
+- README: tabella dei modelli consigliati con i 39 agenti misurati; gli altri 17 restano sul modello della sessione, ciascuno con il motivo (direttori, ruoli di giudizio, auditor, soglia non superata).
+
 ## 0.19.0 — 2026-11-27
 
 ### Cambiato

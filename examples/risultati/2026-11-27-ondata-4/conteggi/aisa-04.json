@@ -1,0 +1,78 @@
+{
+  "ruolo": "aisa-04",
+  "rapporti": {
+    "aisa-04-R1": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5"],
+      "mancati": ["B6"],
+      "falsi": [
+        {"testo": "reports.js: pg restituisce i numeric come stringhe, in quel caso `+=` concatena stringhe e produce un risultato sbagliato", "motivo": "revenue += r.quantity * r.unit_price: la moltiplicazione dà sempre un numero, quindi la concatenazione non può avvenire; inoltre unit_price è real e pg lo restituisce come numero. Detto in forma condizionale ('non ho verificato il tipo'), ma la conseguenza è sbagliata in ogni caso"}
+      ],
+      "extra_validi": [
+        "Risposte {ok:true} o 204 per id inesistenti (PATCH /:id/status, PATCH /products/:id, DELETE /products/:id), senza controllo di rowCount",
+        "UPDATE dell'ordine e INSERT della fattura nel webhook senza transazione: ordine pagato senza fattura se la seconda fallisce",
+        "Node fissato a 22.11.0, patch vecchia della linea LTS (Dockerfile, fuori da server/)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "B1, B2 e B4 nello stesso rilievo P0-1 (e B4 anche in P1-4), con tutte le cause. B3 al rilievo 10 (decimali, giacenza intera, Number.isInteger). B6 assente: il PATCH dei prodotti è discusso senza notare che warehouse può cambiare il prezzo. Errori marginali non contati: 'Invalid Date fa scartare tutte le righe' (in realtà le include tutte, marginale per i chiarimenti); 'il controllo della riga 37 usa la giacenza letta prima dello scalo' con righe duplicate (ogni riga rilegge la giacenza); req.body undefined con Content-Type diverso (body-parser lo imposta a {}). Accettabili: customerId dal corpo (presentato come P0), supplier-price senza requireRole, transizioni di stato, annullamento senza ripristino, DELETE con ordini, token in chiaro, segreto non verificato all'avvio, pool.on('error'), escape di % e _, nessun test. Difetti di altri ruoli: N+1 (P1), Pool nel report e filtro in JS (P2, P3), readFileSync (P4). Il P0 per customerId è sovrastimato rispetto alla scheda. Non ha letto le migrazioni e lo dichiara."
+    },
+    "aisa-04-R2": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "UPDATE dell'ordine e INSERT della fattura nel webhook senza transazione",
+        "Risposte {ok:true} per id inesistenti (PATCH dei prodotti, PATCH /:id/status)",
+        "Controllo del ruolo dopo la validazione nel PATCH dello stato: un negozio riceve 400 invece di 403 (minimo)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sei, ognuno con la sua causa. 'Report con date non valide restituisce {} vuoto': errore marginale per i chiarimenti (in realtà include tutto lo storico), non falso. Accettabili: PATCH della giacenza con valore assoluto, importo del webhook non confrontato, supplier-price senza requireRole, transizioni di stato, customerId, pool.on('error'), token in chiaro, escape di % e _, nessun test. Difetti di altri ruoli: D1, D2 (cascade, P1), D7, O4, D5 (fuori perimetro), P1, P2, P3, P4. Nessuna trappola presentata come difetto (T2, T4, T5 citate correttamente)."
+    },
+    "aisa-04-R3": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "UPDATE dell'ordine e INSERT della fattura nel webhook senza transazione",
+        "Webhook con Content-Type diverso da application/json: req.body non è un Buffer e hmac.update lancia",
+        "Utente shop senza customer_id non bloccato in requireUser (lista vuota, creazione ordine in errore)",
+        "Risposte {ok:true} per id inesistenti (PATCH dei prodotti, PATCH /:id/status)",
+        "Node fissato a 22.11.0, patch vecchia (Dockerfile, fuori da server/)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sei. B3 nel rilievo 1 (quantity 1.5 passa > 0, la colonna intera rifiuta) e nel 12. Descrive correttamente il report con date non valide (include tutto lo storico) e l'idleTimeout di pg sul Pool del report. Il P0 in apertura è O2 (AISA-10), fuori perimetro e dichiarato tale. Altri ruoli: D1, D2, D6, O5, P1-P4. Accettabili: supplier-price senza requireRole, segreto del webhook non verificato, pool.on('error'), token in chiaro, transizioni, importo del webhook, PATCH assoluto della giacenza, escape di % e _, SIGTERM, nessun test."
+    },
+    "aisa-04-R4": {
+      "trovati": ["B1", "B2", "B3", "B4", "B5", "B6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "003_sku.sql rinomina la colonna stock in qty, ma 001_init.sql crea già qty: su un database nuovo la 003 fallisce con «column stock does not exist»", "motivo": "Trappola T16: il RENAME stock TO qty è in 004_stock.down.sql, che migrate.js esclude; 003_sku.sql contiene solo ADD COLUMN sku e l'indice univoco"},
+        {"testo": "db/migrate.js: main() non ha catch, il processo esce con codice 0 anche se la migrazione è fallita, quindi il server parte comunque", "motivo": "In Node 22 una promise rifiutata non gestita termina il processo con codice 1 (unhandled-rejections=throw dalla 15): `npm run migrate && node server/app.js` non avvia il server"}
+      ],
+      "extra_validi": [
+        "Il report delle vendite non filtra per stato: conta anche gli ordini cancelled e pending_payment",
+        "ORDER BY name senza id: con OFFSET la paginazione dei prodotti è instabile",
+        "UPDATE dell'ordine e INSERT della fattura nel webhook senza transazione",
+        "Risposte {ok:true} o 204 per id inesistenti (PATCH dei prodotti, PATCH /:id/status, DELETE)",
+        "Node fissato a 22.11.0, patch vecchia (Dockerfile)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sei. B1 e B2 nel rilievo 1 con entrambe le cause, B3 nel 12. I due falsi sono nei rilievi fuori da server/ (15 e 16); la parte corretta del 15 (nessun lock né transazione, D7 e O4) e del 16 (sku NOT NULL, D5) è di altri ruoli. Domanda aperta sulla 003 'già applicata in produzione?' non toglie il falso. Report con date non valide descritto correttamente. Accettabili: supplier-price senza requireRole, transizioni, annullamento senza ripristino, PATCH assoluto della giacenza, token in chiaro, pool.on('error'), escape di % e _, price come stringa da pg, customerId, importo del webhook."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente (4 rapporti su 4): UPDATE di orders e INSERT di invoices nel webhook senza transazione. Decidere se rientra in B5 o va negli accettabili di AISA-04",
+    "Extra ricorrente (4 su 4): {ok:true} o 204 per id inesistenti in PATCH /:id/status, PATCH /products/:id e DELETE /products/:id; aggiungere agli accettabili di AISA-04",
+    "Extra ricorrente (3 su 4): Node fissato a 22.11.0 (patch vecchia) e package.json senza engines; aggiungere agli accettabili (AISA-04 e AISA-10)",
+    "T16 colpisce ancora (R4 attribuisce il RENAME stock TO qty alla 003): la trappola funziona, valutare di estenderla anche ad AISA-04, che legge le migrazioni come contesto",
+    "Possibili accettabili per AISA-04: report che conta anche gli ordini cancelled e pending_payment; ORDER BY name non totale con OFFSET; utente shop senza customer_id; webhook con corpo non Buffer se il Content-Type non è application/json; SIGTERM e chiusura ordinata in app.js; console.error(err) nel gestore degli errori",
+    "B6 mancato da un rapporto che pure discute il PATCH dei prodotti: va bene così, il README è esplicito"
+  ]
+}

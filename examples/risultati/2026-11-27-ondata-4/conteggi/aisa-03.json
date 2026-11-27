@@ -1,0 +1,71 @@
+{
+  "ruolo": "aisa-03",
+  "rapporti": {
+    "aisa-03-R1": {
+      "trovati": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Utente shop con users.customer_id nullo (colonna facoltativa): caso non definito",
+        "«Colli sbagliati» (prodotto diverso o collo mancante) non coperti da R2, che parla solo di righe ordinate",
+        "Unità di misura della quantità resa (colli o kg) non definita",
+        "Correzione dell'importo senza motivo né storico (chi, quando, valore prima e dopo)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo. Q4: nomina il conflitto di R4 con «i prezzi li cambia solo admin»; non nomina l'apertura del reso per conto del negozio (parte secondaria). Q6 senza l'art. 26 DPR 633/1972 ma con la nota di credito e la causa: trovato. Q7 diviso fra i rilievi 7 (resi multipli, quantità) e 10 (stati dell'ordine). Ha guardato anche funzioni/resi/ e server/routes/webhooks.js «per contesto»; i fatti citati (status DEFAULT 'accepted', amount real, order_item_id senza FK, webhook che crea la fattura alla riga 21) sono corretti. Rilievi su ON DELETE CASCADE e unit_price real: probabili difetti di altri ruoli (F37), non contati. Notifiche e modalità di rimborso: accettabili."
+    },
+    "aisa-03-R2": {
+      "trovati": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Utente shop con customer_id nullo: caso non definito",
+        "Idempotenza e concorrenza: doppio clic, due operatori o due repliche sullo stesso reso senza una regola",
+        "Correzione dell'importo senza storico né visibilità per il negozio",
+        "Nessuna priorità (obbligatorio o desiderabile) né perimetro escluso nella bozza"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto completo. I conteggi dei rilievi dichiarati (4 P1, 7 P2, 2 P3) sono giusti. Q8 è in P3, una priorità bassa per criteri che sono il cuore del compito, ma il rilievo c'è. Q7: le quantità oltre l'ordinato e i resi multipli o parziali sono nel rilievo sulla quantità; gli ordini cancelled e pending_payment nel rilievo su R1. Rimborso reale e notifiche: accettabili. ON DELETE CASCADE e unit_price real: probabili difetti di altri ruoli, non contati."
+    },
+    "aisa-03-R3": {
+      "trovati": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Utente shop con customer_id nullo: caso non definito",
+        "Limiti della correzione di R4: dal testo l'importo si può anche alzare oltre il valore della riga, senza motivazione né storico",
+        "Idempotenza: doppio clic o due repliche non devono creare due resi o due storni",
+        "Unità di misura e reso parziale di un collo (kg su cassa)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Il rapporto più completo e meglio collegato allo schema: Q4 con entrambe le parti (conflitto con i prezzi solo admin e apertura per conto del negozio). Ha letto anche funzioni/resi/ e server/: i numeri di riga di returns.js (26, 38, 42-44, 25-35, 27-28, 50) e di webhooks.js (14, 21) sono corretti. Le note sulla bozza (nessun controllo di proprietà, importo dal client, quantità senza limiti, giacenza fuori transazione) sono difetti di AISA-06: non contati. Più fatture per ordine dai ritentativi del webhook: probabile difetto di F37, non contato."
+    },
+    "aisa-03-R4": {
+      "trovati": ["Q1", "Q2", "Q3", "Q5", "Q6", "Q7", "Q8"],
+      "mancati": ["Q4"],
+      "falsi": [],
+      "extra_validi": [
+        "Idempotenza: doppio clic, ritentativo o due operatori devono dare una sola nota di credito, un rimborso e un aumento di giacenza",
+        "Unità di misura: frutta venduta anche a peso, colli interi o frazionari",
+        "Correzione dell'importo senza limite (il magazzino deve solo ridurre) e senza traccia"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Rapporto compatto, in maiuscolo per sezioni. Q4 mancato: propone una matrice dei permessi in cui il magazzino rettifica l'importo, senza nominare il conflitto con la regola del README «i prezzi li cambia solo admin» né l'apertura del reso per conto del negozio. Nota fuori perimetro su 003_sku.sql (rinomina stock in qty, ma 001 crea già qty) corretta sul progetto; probabile difetto di altri ruoli, non contato. Dati personali nelle note libere: ipotesi dichiarata «da confermare», non falsa."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere fra gli accettabili di AISA-03 i difetti di schema di F37 che i rapporti citano spesso: order_items.unit_price in real, product_id con ON DELETE CASCADE, rinomina sbagliata della 003, più fatture per ordine dai ritentativi del webhook. Oggi il valutatore li esclude come difetti di altri ruoli senza poter vedere la scheda di F37.",
+    "Extra valido ricorrente (4 su 4 rapporti): correzione dell'importo senza motivo, limiti e storico. Valutare se aggiungerlo a Q4 o come difetto nuovo.",
+    "Extra valido ricorrente (3 su 4): idempotenza e doppio invio, e utente shop con customer_id nullo (3 su 4). Unità di misura colli/kg (3 su 4).",
+    "Motivo del reso obbligatorio (rovinata, collo sbagliato): compare in tutti i rapporti come conseguenza di Q5. Chiarire nella scheda che rientra in Q5 e non è un extra.",
+    "Q4 ha due parti (conflitto con i prezzi solo admin, chi apre per conto del negozio): chiarire che basta la prima per contarlo trovato."
+  ]
+}

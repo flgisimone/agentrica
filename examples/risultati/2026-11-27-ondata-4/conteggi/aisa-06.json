@@ -1,0 +1,78 @@
+{
+  "ruolo": "aisa-06",
+  "rapporti": {
+    "aisa-06-R1": {
+      "trovati": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rotte async senza try/catch: Express 4.21 non intercetta le promise rifiutate e in Node 22 un rifiuto non gestito termina il processo; basta un orderItemId non numerico o un amount assente (rilievo 4)",
+        "POST senza requireRole: anche warehouse e admin aprono resi (rilievo 2)",
+        "Il negozio non può conoscere l'id della riga d'ordine: GET /api/orders non restituisce l'id delle righe (orders.js:16) (rilievo 8)",
+        "PATCH: 204 anche per un id inesistente, nessun tetto al valore della riga, nessuna traccia di chi corregge (rilievo 11)",
+        "Pagina: loadReturns senza controllo di res.ok (con 401 rows.map lancia); doppio clic crea due resi e raddoppia la giacenza, nessuna idempotenza (rilievo 13)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli otto difetti, con file e riga corretti. Stato 'accepted' automatico e frutta rovinata in giacenza (Q3/Q5), R6 e fattura (Q6), «pochi giorni» (Q1) e criteri non verificabili (Q8) sono difetti di AISA-03: non contano. Test, paginazione e integrazione (router non montato, migrazione fuori da db/migrations, che il README della funzione dichiara già da fare) non contano. Errore marginale: l'importo `real` mostrato come 12.300000190734863 è improbabile, perché Postgres 12+ stampa i real nella forma più breve; non cambia il rilievo J7."
+    },
+    "aisa-06-R2": {
+      "trovati": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rotte async senza gestione degli errori (Express 4): richiesta appesa o processo che termina (rilievo 7)",
+        "POST senza controllo del ruolo; warehouse e admin hanno customer_id nullo (rilievo 1)",
+        "PATCH: 204 per un id inesistente, id non validato, nessuna traccia della correzione, nessun tetto (rilievi 2 e 8)",
+        "Pagina: nessun controllo di res.ok, doppio invio senza idempotenza (rilievo 14)",
+        "Il negozio deve digitare id di ordine e riga che non conosce (rilievo 12)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli otto difetti. J8 (XSS memorizzato) è sottovalutato a P2, mentre è fra i più gravi. Rilievi fuori perimetro su migrate.js senza transazione, migrazioni concorrenti e 003_sku NOT NULL: probabili difetti di F37 di altri ruoli, non contati. Errori marginali, non falsi: «product[0] può essere undefined se il prodotto è stato eliminato» non può accadere, perché order_items ha ON DELETE CASCADE sul prodotto; nella P3 dice che moment non è caricata in web/index.html, ma lo è (riga 8, da CDN). Lo dichiara però non verificato ed è fuori dalla funzione. Stato 'accepted' e frutta rovinata (Q3/Q5), R6 (Q6) e R1 (Q1) sono di AISA-03; paginazione e lunghezza di note sono accettabili."
+    },
+    "aisa-06-R3": {
+      "trovati": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rotte async senza try/catch: con Express 4 il gestore di errori di app.js non scatta e la richiesta resta appesa (rilievo 8)",
+        "POST senza controllo del ruolo: warehouse o admin senza customer_id aprono resi (rilievo 9)",
+        "PATCH: id non validato, 204 per un reso inesistente, nessuna storia delle correzioni, Number(\"\") vale 0 (rilievo 6)",
+        "Il negozio digita a mano id che GET /api/orders non restituisce (orders.js:16) (rilievo 10)",
+        "Pagina: nessun controllo dell'errore sulla GET, doppio invio crea due resi (rilievo 10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli otto difetti. J2 (contratto qty/quantity, che rende la funzione inutilizzabile) è messo in P2 dentro il rilievo 10, e J8 pure: priorità basse per due difetti gravi. Errori marginali: «le migrazioni 004 e successive hanno il down» (c'è solo quello della 004); «ogni rotta risponde con errore 500» se la tabella manca, mentre con Express 4 la richiesta resta appesa, come dice lo stesso rapporto al rilievo 8. Fattura (Q6), stato accepted (Q3) e frutta rovinata (Q5) sono di AISA-03."
+    },
+    "aisa-06-R4": {
+      "trovati": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Rotte async senza try/catch o next(err): con Express 4.21.2 un rifiuto non gestito può fermare il processo su Node 22 (rilievo 6)",
+        "POST senza requireRole (rilievo 2)",
+        "PATCH: Number(\"\") e Number(null) danno 0, nessun tetto, 204 per un id inesistente, nessuna traccia (rilievo 10)",
+        "Pagina: nessun controllo di res.ok, doppio clic apre due resi (rilievo 14)",
+        "Il negozio digita id di ordine e riga che la pagina non gli mostra (rilievo 15)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti gli otto difetti, ma il rapporto è scritto in inglese, contro il compito in italiano: solo la riga di presentazione è in italiano. Errore marginale: dice che il Dockerfile copia solo server, web e db, ma copia anche data; non cambia il rilievo. La sezione sulla richiesta (R2/R5, R3/R4, frutta rovinata, R6, R1, criteri) riguarda difetti di AISA-03, e il rimborso del pagamento è un accettabile di AISA-03: nessuno dei due conta."
+    }
+  },
+  "proposte_scheda": [
+    "Extra valido ricorrente (4 su 4): rotte async senza try/catch o next(err) in Express 4; un errore del database lascia la richiesta appesa o termina il processo (orders.js PATCH mostra già lo schema giusto). Da aggiungere alla tabella o agli accettabili.",
+    "Extra valido ricorrente (4 su 4): POST senza requireRole, così warehouse e admin (customer_id nullo) aprono resi. È vicino a J1: decidere se fa parte di J1 o è un extra.",
+    "Extra valido ricorrente (4 su 4): PATCH che risponde 204 per un id inesistente, senza tetto al valore della riga e senza traccia di chi corregge.",
+    "Extra valido ricorrente (4 su 4): doppio invio del modulo senza idempotenza, che apre due resi e raddoppia la giacenza; loadReturns senza controllo di res.ok.",
+    "Extra valido ricorrente (4 su 4): il negozio deve digitare l'id della riga d'ordine, che GET /api/orders non restituisce (orders.js:16), quindi R2 non è usabile.",
+    "Accettabili da aggiungere per AISA-06: la funzione non montata in app.js, la migrazione fuori da db/migrations e la mancanza di 005_returns.down.sql (il README della funzione dichiara già l'integrazione da fare); il titolo «I tuoi resi» uguale per il magazzino; l'importo non formattato in euro; nessuna UI del magazzino per la PATCH.",
+    "Ambiguità: tutti i rapporti segnalano anche lo stato 'accepted' automatico e la frutta rovinata rimessa in giacenza nel codice (005_returns.sql:8, returns.js:42-44). Sono Q3/Q5 di AISA-03, ma qui sono implementati nel codice: valutare se aggiungerli agli accettabili di AISA-06, per chiarezza."
+  ]
+}

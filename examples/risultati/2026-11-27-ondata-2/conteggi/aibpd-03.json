@@ -1,0 +1,94 @@
+{
+  "ruolo": "aibpd-03",
+  "rapporti": {
+    "aibpd-03-R1": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "Rilievo 6 (P2): «la validazione [di A] è più debole di “validato”»: prototipo cliccabile, 8 locali senza controllo, confronto con le due settimane precedenti; correzione «validato in modo preliminare».", "motivo": "Trappola T6: la validazione di A è una prova di comportamento con soglia, presentata qui come difetto. Il sotto-punto sulle assenze «dell'ultimo minuto» contro quelle con più di 4 ore è invece un'incoerenza vera, contata fra gli extra."}
+      ],
+      "extra_validi": [
+        "Fasce di prezzo del sondaggio sovrapposte: 59 € sta sia in «30–59 €» sia in «59 € o più»",
+        "C è un marketplace a due lati: l'offerta (lavoratori disposti a iscriversi) non è validata",
+        "Valore 5 di C senza alcuna evidenza: il sondaggio non chiede del personale extra",
+        "Orarix e Shiftella hanno già lo scambio dei turni: A porta alla parità, non differenzia (concorrenti.md)",
+        "Il problema di A sono le assenze «dell'ultimo minuto», l'ipotesi misura solo quelle annunciate con più di 4 ore",
+        "«Dati che Turnio ha già» per B regge solo per le ore"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Nessun web: le norme sono dichiarate «da verificare» e non sono citate per numero. I5 è indicato come somministrazione o intermediazione riservata ad agenzie autorizzate, I3 come «competenza regolamentata dei consulenti del lavoro». Il ricalcolo del TAM ha una frase confusa («Al 31% sono 4.200 locali»), un errore marginale. I rilievi su mercato, quote e crescita sono di AIBPD-02 e non contano. Pesi non motivati e nessuna stima economica di C sono accettabili."
+    },
+    "aibpd-03-R2": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "R8 (P2): «Validazione di A debole e incoerente»: prototipo cliccabile, nessun controllo, stato da riscrivere come «segnale positivo».", "motivo": "Trappola T6 presentata come difetto. Il sotto-punto sull'«ultimo minuto» contro le più di 4 ore è contato come extra. I punti del PRD e della roadmap dentro R8 sono di altri ruoli."}
+      ],
+      "extra_validi": [
+        "Valore 5 di C senza evidenze: il sondaggio non lo misura, al più rientra in «altro 8%»",
+        "Il cedolino di B richiede dati che Turnio non ha (contratto collettivo, livello, dati fiscali, IBAN)",
+        "C come mercato a due lati senza lavoratori iscritti",
+        "Orarix e Shiftella hanno già lo scambio: A è un recupero di parità",
+        "La matrice propone C prima di B, mentre portafoglio e roadmap mettono B nel Q1 2027 e C «da valutare»",
+        "Fasce di prezzo del sondaggio sovrapposte a 59 €",
+        "Assenze «dell'ultimo minuto» contro un'ipotesi sulle assenze con più di 4 ore di anticipo"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Nessun web. Cita la L. 12/1979 e il D.Lgs. 276/2003 «da verificare», entrambi corretti. Il margine «±10 punti» sul 46% con n=74 vale circa ±11: errore marginale. R2 (A già nel PRD) e i pesi non motivati sono accettabili. I rilievi su mercato, PRD, roadmap e posizionamento sono di altri ruoli."
+    },
+    "aibpd-03-R3": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "Rilievo 6 (P1): «“validato” sovrastima la prova»: 8 locali, nessun controllo, un prototipo cliccabile non può misurare le assenze coperte.", "motivo": "Trappola T6 presentata come difetto, per di più in P1."}
+      ],
+      "extra_validi": [
+        "Valore 5 di C senza dati (il sondaggio non lo chiede) e fattibilità di C che ignora i vincoli normativi",
+        "Il cedolino di B richiede dati che Turnio non ha (retribuzioni, contratti collettivi, trattenute, IBAN)",
+        "Le ipotesi critiche di C sono l'offerta di lavoratori (avvio a freddo del mercato a due lati), la stagionalità e gli insoluti",
+        "Orarix e Shiftella hanno già lo scambio: A non è un vantaggio",
+        "Fasce di prezzo del sondaggio sovrapposte a 59 €"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I3 è al limite: dice «l'elaborazione delle paghe è un'attività regolata» da verificare con un legale o un consulente del lavoro, senza dire che è riservata ai consulenti né citare la L. 12/1979. Lo conto come trovato perché nomina la causa. I5 è indicato come intermediazione o somministrazione «che di norma richiede un'autorizzazione specifica», senza riferimento normativo. Il web non è indicato. L'analisi di sensibilità con pesi uguali (A 4,33, B 3,67, C 3,33) è corretta. Quasi metà del rapporto è su mercato/ (AIBPD-02) e non conta."
+    },
+    "aibpd-03-R4": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6"],
+      "mancati": [],
+      "falsi": [
+        {"testo": "R8 (P2): «La validazione è debole e viene presentata come conclusiva»: il prototipo cliccabile non esegue scambi veri, 8 locali, nessun controllo; correzione «segnale positivo» invece di «validato».", "motivo": "Trappola T6 presentata come difetto. R7, l'ipotesi che non corrisponde al problema, è invece un'incoerenza vera ed è contata come extra."}
+      ],
+      "extra_validi": [
+        "La proposta della matrice contraddice portafoglio e roadmap (B «Investire nel 2027» e nel Q1, C «da valutare»)",
+        "Valore 5 di C senza evidenza, mentre la matrice non pesa la confidenza delle prove",
+        "Assenze «dell'ultimo minuto» contro un'ipotesi sulle assenze con più di 4 ore, e una terza soglia nel PRD (chiusura a 2 ore)",
+        "Orarix e Shiftella hanno già lo scambio: A è difensivo, non differenziante",
+        "B non risponde al problema rilevato (preparare le ore per il consulente): l'alternativa «integrazione con il consulente» è già nel Pro e in roadmap e non è nella matrice",
+        "Il cedolino di B richiede dati che Turnio non ha (contratto, livello, detrazioni, IBAN, malattia)",
+        "Il lato dell'offerta di C (lavoratori iscritti, turni coperti) non è nell'ipotesi né nella validazione",
+        "Il problema di C non ha fonte né dato"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Dichiara di non aver usato servizi esterni. Le norme sono «dalla mia conoscenza» e da verificare, senza numeri di legge. R5 (A in matrice) e i pesi sono accettabili. R4 (pubblico catene contro locali singoli) è K5 di AIBPD-08. R9 (PRD e roadmap) è di AIBPD-04 e AIBPD-12. R17–R19 sono di AIBPD-02. I conti verificati sono corretti (Q1 della squadra A a 20 su 13, margine ±11 punti)."
+    }
+  },
+  "proposte_scheda": [
+    "T6 ambigua: tutti e quattro i rapporti attaccano la validazione di A (prototipo cliccabile, nessun gruppo di controllo, 6 su 8 per locale). Vanno chiariti nella trappola i limiti accettati, oppure l'irrobustimento va messo fra gli accettabili; l'ho contato come falso quando è presentato come difetto con una priorità.",
+    "Extra ricorrente da aggiungere alla tabella o agli accettabili: il problema di A sono le assenze «dell'ultimo minuto», ma l'ipotesi misura solo quelle con più di 4 ore di anticipo (3 rapporti su 4).",
+    "Extra ricorrente (4 su 4): Orarix e Shiftella hanno già lo scambio dei turni, quindi A è un recupero di parità.",
+    "Extra ricorrente (4 su 4): il valore 5 di C non ha evidenze (il sondaggio non lo chiede). Si potrebbe mettere fra gli accettabili insieme ai pesi non motivati.",
+    "Extra ricorrente (4 su 4): il cedolino di B richiede dati che Turnio non ha, quindi «usa dati che Turnio ha già» è falso; oppure va aggiunto a I3.",
+    "Extra ricorrente (4 su 4): il lato dell'offerta del marketplace C non è validato.",
+    "Extra ricorrente (3 su 4): le fasce del sondaggio si sovrappongono a 59 €. Potrebbe andare nella tabella di AIBPD-02.",
+    "Extra (2 su 4): la proposta della matrice contraddice portafoglio e roadmap (B già nel Q1 con decisione «Investire»).",
+    "Per I3 e I5 conviene precisare se basta «attività regolata/autorizzazione» senza dire a chi è riservata: R3 è al limite su I3."
+  ]
+}

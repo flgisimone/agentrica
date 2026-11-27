@@ -1,0 +1,85 @@
+{
+  "ruolo": "aibpd-07",
+  "rapporti": {
+    "aibpd-07-R1": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Spostare metà di Google Ads su Instagram riduce il valore: LTV/CAC 5,5 contro 4,3, circa 50 clienti contro 32 con gli stessi 4.750 €",
+        "Base con 25 dipendenti costa quanto Pro (29 + 15 × 2 = 59 €): anche il confine Base/Pro non regge",
+        "Coorti dell'imbuto non allineate: prove di 30 giorni su un periodo di 12 mesi, i paganti comprendono prove avviate prima e le prove di ottobre non sono chiuse",
+        "Lo scambio dei turni «dal 2027» è elencato fra le funzioni incluse in Pro senza essere disponibile"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G5 parziale: il costo del referral è quantificato (circa 105 € per cliente), per i fornitori della cassa solo il dubbio su commissioni, senza citare il 25% dei primi 12 mesi dell'accordo con Cassa Facile; contato trovato. G4 con −6,6% sul ricavo medio per cliente al cambio di mix (il difetto della scheda dice −16,7% per cliente annuale): stesso rilievo, conto coerente. Passaggio di consegne del pricing ad AIBPD-03 invece che ad AIBPD-06: errore marginale. Il rapporto dice di girare su Sonnet. Web non dichiarato. Riferimenti normativi (artt. 17-bis e 54-bis Codice del consumo) dalle schede della biblioteca, presentati come non applicabili a imprese: non falsi."
+    },
+    "aibpd-07-R2": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Spostare metà di Google Ads su Instagram riduce il valore: margine/CAC 4,3 contro 3,3, circa 18 clienti e 4.500 € in meno",
+        "LTV a 12 mesi di Instagram (640 €) superiore al ricavo massimo a 12 mesi con l'ARPA medio (12 × 52,5 = 630 €): presuppone abbandono nullo",
+        "CAC per canale solo sulla spesa pubblicitaria, senza 3 commerciali e 1 persona di marketing",
+        "MRR del mix a listino anche per il 22% di annuali, mentre il README dice che gli annuali contano per l'equivalente mensile (10/12): circa 760 € al mese in meno",
+        "Il test misura le prove avviate, ma le prove sono già tutte su Pro: «Pro in evidenza» dovrebbe spostare il piano scelto a fine prova, che non è misurato",
+        "Base con 25 dipendenti costa quanto Pro (59 €)",
+        "Coorti dell'imbuto non allineate (prove avviate dopo il 1° ottobre non ancora chiuse)",
+        "Visite alla pagina dei prezzi nel test (circa 136 al giorno) superiori alla media del sito intero (circa 103 al giorno): dato da verificare"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G5 completo: referral circa 105 € per cliente e Cassa Facile al 25% dell'incassato IVA compresa per 12 mesi (circa 190 € per cliente). Rilievi di altri ruoli fra le note (LinkedIn K7, abbandono C1, attivazione C7): non extra. L'MRR degli annuali tocca T1/T3 ma non li contesta (il conto torna a listino, la definizione è giusta): è un'incoerenza vera fra README e prezzi.md, contata come extra valido. Conti rifatti con Python, web non dichiarato. Riferimenti normativi dalla biblioteca, corretti nel senso."
+    },
+    "aibpd-07-R3": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Spostare metà di Google Ads su Instagram riduce il valore: LTV/CAC 5,5 contro 4,3 (4,3 contro 3,3 a margine)",
+        "LTV a 12 mesi di Instagram (640 €) superiore al massimo teorico a 12 mesi con l'ARPA medio (630 €)",
+        "Attribuzione incoerente: Google 56% dei clienti nuovi nella tabella dei canali contro il 7% del sondaggio",
+        "CAC per canale senza i costi di vendite e marketing (4 persone)",
+        "Campagna sugli annuali a gennaio prima della «Fatturazione annuale automatica», in roadmap nel Q1 con 8 settimane",
+        "Lo scambio dei turni «dal 2027» nel listino di Pro, con la dipendenza dall'App dipendenti 2.0 del Q3",
+        "Base con 25 dipendenti costa quanto Pro (59 €)",
+        "Il test misura le prove avviate e non il mix di piani che «Pro in evidenza» dovrebbe spostare",
+        "MRR degli annuali forse a listino contro l'equivalente mensile dichiarato nel README (circa 760 € al mese)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G5 completo e diviso in due rilievi (M-03 referral circa 105 €, M-04 Cassa Facile circa 192 € per cliente). Rilievi di altri ruoli: clienti riconosciuti dell'Emilia-Romagna (B3), abbandono 98/412 (C1), coorte di marzo (C5), attivazione (C7), «Gratis per sempre» (K3): non extra. Passaggio dei partner ad AIBPD-03 invece che ad AIBPD-10: errore marginale. Firma nella forma «— MENKENT (AIBPD-07)», con il nome in codice. Dichiara di non aver usato il web. Riferimenti normativi dalla biblioteca, corretti nel senso."
+    },
+    "aibpd-07-R4": {
+      "trovati": ["G1", "G2", "G3", "G4", "G5", "G6"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Spostare metà di Google Ads su Instagram riduce il valore: LTV/CAC 4,3 contro 5,5, circa 32 clienti contro 50",
+        "Base con 25 dipendenti costa quanto Pro (59 €)",
+        "Coorti dell'imbuto non allineate (prove avviate prima di novembre 2025 e ancora aperte a ottobre 2026)",
+        "MRR a listino con il 22% di annuali che pagano 10/12: circa 20.836 €",
+        "Lo scambio dei turni «dal 2027» incluso in Pro senza essere disponibile",
+        "Il test misura le prove avviate e non i pagamenti"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "G5 parziale: referral quantificato (fino a circa 118 € per cliente a prezzo Pro), fornitori della cassa solo «da verificare» per commissioni, senza il 25% dell'accordo con Cassa Facile; contato trovato. Rilievo 7 (412 paganti contro 180 nuovi non riconciliati) è una mancanza di testo debole, non contato né falso. Il rapporto dice di girare su un modello più piccolo. Web non dichiarato. Riferimenti normativi dalla biblioteca, corretti nel senso."
+    }
+  },
+  "proposte_scheda": [
+    "Extra valido ricorrente in 4 su 4: la proposta di spostare il budget su Instagram è sbagliata anche con i dati del documento, perché conta LTV/CAC (Google 5,5, Instagram 4,3) e non l'LTV da solo; aggiungerlo a G6 o come difetto a sé.",
+    "Extra valido ricorrente in 4 su 4: Base con 25 dipendenti costa quanto Pro (59 €); estendere G3 al confine Base/Pro.",
+    "Ambiguità ricorrente in 3 su 4: l'MRR del mix moltiplica tutti i locali per il listino mentre il README dice che gli annuali contano per l'equivalente mensile (10/12). La trappola T3 dice che il conto torna, ma con il 22% di annuali l'incoerenza è vera: precisare nella scheda se è un difetto, un accettabile o va tolta dai documenti (per esempio scrivendo che il mix è a listino).",
+    "Ricorrenti in 3 su 4: il test misura le prove avviate e non il piano scelto né i pagamenti; coorti dell'imbuto non allineate con la prova di 30 giorni; scambio dei turni «dal 2027» nel listino di Pro. Valutare se aggiungerli agli accettabili di AIBPD-07.",
+    "LTV di Instagram (640 €) sopra il ricavo massimo a 12 mesi con l'ARPA medio (630 €), in 2 su 4: rafforza G6, si può citare nella scheda.",
+    "CAC senza costi del personale (2 su 4): candidato agli accettabili.",
+    "G5: chiarire se basta il costo del referral o servono entrambe le cause. Due rapporti su quattro quantificano il referral ma per i fornitori della cassa dicono solo «da verificare le commissioni», senza il 25% dell'accordo con Cassa Facile; qui li ho contati trovati."
+  ]
+}

@@ -2,6 +2,12 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.18.0 — 2026-11-27
+
+### Cambiato
+- Modello consigliato per altri 10 agenti, misurato sui casi di prova (F49, `examples/risultati/2026-11-27-ondata-2.md`): Sonnet per AIBPD-02 Market Research, AIBPD-03 Product Innovation, AIBPD-04 Product Manager, AIBPD-06 Business & Financial, AIBPD-07 Growth & Monetization, AIBPD-08 Product Marketing, AIBPD-09 Sales & Revenue, AIBPD-10 Business Development, AIBPD-11 Customer Success, AIBPD-12 Portfolio & Roadmap. Si vede in `list_agents`, nel testo dell'agente e nei subagent di `init --subagents`.
+- README: tabella dei modelli consigliati con i 27 agenti misurati; gli altri 29 restano sul modello della sessione.
+
 ## 0.17.1 — 2026-11-26
 
 ### Cambiato

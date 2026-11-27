@@ -179,3 +179,21 @@ Non contano come falsi né come extra validi.
 ## Regole di conteggio
 
 Quelle del [README](../README.md#come-si-conta). Ogni esecuzione si conta solo sulla tabella del suo ruolo: un difetto di un altro ruolo trovato in più non è extra valido ma accettabile. Nessuna regola in più per i conti rifatti nel rapporto (decisione dell'apertura di F49).
+
+## Chiarimenti dopo la seconda ondata (F49)
+
+Decisi con l'utente il 2026-11-27, dopo i conteggi di [2026-11-27-ondata-2.md](../risultati/2026-11-27-ondata-2.md). Valgono per le esecuzioni successive; i conteggi di F49 restano quelli dei file di `conteggi/`.
+
+- **T6.** La trappola è il tipo di prova: un comportamento misurato con una soglia, non un'intenzione. Una critica alla sua dimensione o al disegno (8 locali per due settimane, prototipo cliccabile, nessun gruppo di controllo, «6 su 8» per locale invece che sull'insieme) è accettabile per AIBPD-03 e 04, non falso. Resta falso dire che A non ha una validazione di comportamento.
+- **C1.** L'abbandono corretto come 81/330 = 24,5% (clienti di inizio periodo persi) vale come 98/330 = 29,7%: il difetto è il denominatore di fine periodo.
+- **Accettabili aggiunti** (problemi veri trovati da tutti o quasi i rapporti di un ruolo):
+  - **AIBPD-02**: fasce della domanda sul prezzo che si sovrappongono a 59 €; percentuali dei canali non ottenibili con 74 risposte.
+  - **AIBPD-03**: Orarix e Shiftella hanno già lo scambio, quindi A porta alla parità; valore 5 di C senza evidenze; il cedolino di B chiede dati che Turnio non ha; lato dei lavoratori di C non validato.
+  - **AIBPD-04**: R6 non mitiga il rischio dei responsabili che non approvano; metrica del 60% senza denominatore; nota libera con possibili dati sulla salute; cessione o scambio del turno non chiaro; chiusura a 2 ore contro l'ipotesi a più di 4 ore.
+  - **AIBPD-06**: costo del fornitore (4,50 €) assente dal conto economico; adozione del 35% senza base; 6,5 mesi di sviluppo che la roadmap non ha.
+  - **AIBPD-07**: lo spostamento su Instagram è sbagliato anche con i dati del documento (LTV/CAC 5,5 contro 4,3); Base a 25 dipendenti costa quanto Pro; MRR con gli annuali a listino invece che all'equivalente mensile.
+  - **AIBPD-08**: «fa tutto dal telefono» contro l'approvazione dal pannello web; testimonial firmato da 8 giorni; Google al 7% nel sondaggio contro 100 clienti su 180 nell'imbuto; budget senza importo.
+  - **AIBPD-09**: previsione concentrata su D-08, che chiude l'ultimo giorno del trimestre; P-07 e P-11 dipendono da un accordo non firmato.
+  - **AIBPD-10**: sconto e compenso dell'associazione che durano oltre l'accordo; soci già clienti non esclusi; 900 e 4.200 sono platea, non clienti; cumulo con l'annuale e perimetro del «listino» non definiti; compenso di Cassa Facile senza storno.
+  - **AIBPD-11**: `coorti.csv` non torna con il bilancio dei clienti; 98 risposte su 98 clienti persi al questionario di uscita; abbandono da dividere fra mensili e annuali.
+  - **AIBPD-12**: seconda parte di Paghe Light in nessun trimestre; esportazione per il consulente e report del costo del lavoro già venduti in Pro e Plus; notifiche WhatsApp e push dell'App 2.0 come doppione.

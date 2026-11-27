@@ -137,5 +137,6 @@ Il resto si traduce: output → risultato, report → resoconto (resta nel nome 
 | F50 | [50-misura-design.md](50-misura-design.md) | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10), un progetto nuovo | completata (0.19.0) |
 | F51 | [51-misura-cyber-privacy-software.md](51-misura-cyber-privacy-software.md) | Misura dei modelli, quarta ondata: otto specialisti di cyber, privacy e software sui progetti di F37 estesi; chiusura del rilievo dei ruoli non misurati | da fare |
 | F52 | [52-pannello-mappa.md](52-pannello-mappa.md) | Pannello: tab con vista per reparto compatta e mappa a corsie degli agenti, senza framework; pagine `/pannello` e `/orchestrazione` del sito allineate; menu dell'header sotto la voce e al passaggio del mouse, `/pannello` sotto «Come funziona» | da fare |
+| F53 | [53-impara.md](53-impara.md) | Impara: percorso a lezioni sull'IA dall'ABC con gli esempi di Agentrica, in italiano e inglese; lezioni nel repository esportate dal pacchetto e lette dal sito; aggiornamento a ogni chiusura di fase con un controllo in `verify` | da fare |
 
 Ordine: F0 → F51 in sequenza.

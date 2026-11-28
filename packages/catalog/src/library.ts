@@ -1,7 +1,7 @@
 // Biblioteca di un reparto (F25): schede in agents/<agenzia>/biblioteca/NN-nome.md e fonti ammesse in
 // agents/<agenzia>/fonti.json. Le schede vanno al modello e seguono SEC-ARCH-01 (content.ts) come i file di ruolo;
 // fonti.json porta gli URL e non va mai al modello: servono al controllo delle fonti e al rilevatore delle novità.
-// Formato e ciclo di studio: docs/Biblioteca degli agenti.md.
+// Formato e ciclo di studio: BIBLIOTECA.md.
 import { contentProblems } from "./content.ts";
 import type { Lang } from "./departments.ts";
 import { parseRole } from "./markdown.ts";

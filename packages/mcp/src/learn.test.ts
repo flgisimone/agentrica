@@ -1,5 +1,5 @@
 // «Impara» (F53): formato delle lezioni e del glossario, stesse sezioni e stessi link in italiano e inglese, link al
-// repository che esistono, termini nel glossario, e una lezione collegata (o la nota) per ogni fase completata del piano.
+// repository che esistono, termini nel glossario, e learn/fasi.md che porta a lezioni esistenti.
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -79,15 +79,11 @@ test("glossario: stessi id nelle due lingue, unici, e i link delle definizioni a
   }
 });
 
-test("fasi: ogni fase completata di plan/README.md ha una lezione collegata o la nota «nessun concetto nuovo»", () => {
+// Che ogni fase completata del piano sia in learn/fasi.md lo controlla il verify del sito, dove sta il piano (F56).
+test("fasi: ogni fase di learn/fasi.md porta a lezioni che esistono, e ogni lezione ha almeno una fase", () => {
   const index = loadPhaseIndex();
   const ids = new Set(lessons.it.map((l) => l.id));
-  const completed = readFileSync(join(ROOT, "plan", "README.md"), "utf8")
-    .split("\n")
-    .map((line) => /^\| (F\d+) \|.*\| completata[^|]*\|$/.exec(line)?.[1])
-    .filter((phase) => phase !== undefined);
-  assert.ok(completed.length > 50);
-  for (const phase of completed) assert.ok(index.has(phase), `learn/fasi.md: manca ${phase}`);
+  assert.ok(index.size > 50);
   for (const [phase, lessonIds] of index) for (const id of lessonIds) assert.ok(ids.has(id), `learn/fasi.md: ${phase} → ${id} non è una lezione`);
   assert.ok(lessons.it.every((l) => l.phases.length > 0), "ogni lezione ha almeno una fase collegata");
 });

@@ -43,4 +43,4 @@ Definizione.
 
 ## Aggiornamento
 
-A ogni chiusura di fase (CONVENTIONS §13.7) si aggiunge la riga della fase in `fasi.md` e si aggiorna la lezione toccata, in tutte e due le lingue; `npm run verify` fallisce se una fase completata non ha la sua riga.
+A ogni chiusura di fase (CONVENTIONS §13.7) si aggiunge la riga della fase in `fasi.md` e si aggiorna la lezione toccata, in tutte e due le lingue; il `verify` del sito, dove sta il piano, fallisce se manca la riga di una fase completata (F56).

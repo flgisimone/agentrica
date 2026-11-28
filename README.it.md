@@ -1,6 +1,6 @@
 # AIgentrica
 
-[![AIgentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+[![AIgentrica MCP su mcprush](https://mcprush.com/badge/aigentrica-mcp/compact.svg)](https://mcprush.com/to/aigentrica-mcp?ref=badge)
 
 [English](README.md)
 
@@ -34,11 +34,14 @@ aigentrica/
 ├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto, biblioteca/ e fonti.json)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
 ├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @aigentrica/mcp con l'export ./catalog: vedi packages/mcp/README.it.md
-├── plan/                # decisioni e fasi del progetto
+├── learn/               # le lezioni di «Impara» e il glossario, in italiano e inglese
+├── starter/             # il modello di progetto che init copia
 ├── scripts/             # comandi da terminale: stats, ratings, agent-text, study (rilevatore della biblioteca)
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
-└── AGENTS.md, CONVENTIONS.md, CLAUDE.md   # regole di lavoro
+└── AGENTS.md, CONVENTIONS.md, CLAUDE.md, BIBLIOTECA.md   # regole di lavoro e formato della biblioteca
 ```
+
+Piano (`plan/`), audit (`audit/`) e documenti di lavoro (`docs/`) sono da F56 nel repository privato del sito; fino a F55 restano nella storia di questo repository.
 
 Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il **team** con cui il progetto viene sviluppato in Claude Code (le agenzie attive sono in [AGENTS.md](AGENTS.md)).
 
@@ -102,8 +105,9 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di AIgentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@aigentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata (0.22.0) |
 | F54 | AIgentrica: nuovo nome e dominio https://aigentrica.it; pacchetto `@aigentrica/mcp` dalla 1.0.0 (prima `@agentrica/mcp`, deprecato), configurazione copiata da `~/.agentrica`, `add` e `install` che sostituiscono la vecchia registrazione, redirect 308 dal vecchio indirizzo del sito | completata (1.0.0) |
 | F55 | Interfaccia del sito per il marchio AIgentrica, stessa palette: tagline «Agenti IA con un metodo. Le decisioni restano tue.», wordmark con la I ciano e simbolo «AI», hero con le costellazioni e il testo che si riempie scorrendo, home riordinata | completata |
+| F56 | Piano, audit e documenti di lavoro con la loro storia nel repository privato del sito; formato della biblioteca in `BIBLIOTECA.md`; controllo di `learn/fasi.md` nel sito; badge di mcprush su `aigentrica-mcp` | completata |
 
-Il dettaglio è in [plan/README.md](plan/README.md).
+Il dettaglio di ogni fase è nel piano, nel repository privato del sito (F56).
 
 ## Avvio
 
@@ -123,7 +127,7 @@ Il metodo di lavoro è lo stesso che `npx @aigentrica/mcp init` porta nei proget
 - **agenzie su richiesta**: i ruoli sono un modo di lavorare, i subagent si avviano solo per gli audit;
 - **ogni decisione finale è confermata dall'utente**, commit e push compresi.
 
-Per riprendere il lavoro in Claude Code: apri il repository, leggi `plan/README.md` e il file della fase in corso.
+Per riprendere il lavoro in Claude Code: apri il repository del sito, leggi `plan/README.md` e il file della fase in corso.
 
 ## Licenza
 

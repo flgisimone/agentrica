@@ -26,7 +26,7 @@ Si applica la scala Ponytail di `AGENTS.md`. Niente refactoring estranei, niente
 Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di accettazione sull'implementazione reale. Non si dichiara superato un controllo che non è stato eseguito.
 
 ### 2.6 Fasi e backlog
-Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
+Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese. Da F56 `plan/`, `audit/` e `docs/` stanno nella radice del repository privato `flgisimone/aigentrica-site` (in locale `../aigentrica-site`): i percorsi che li citano in questo documento si leggono lì, e il piano si aggiorna là anche per le fasi che toccano solo questo repository.
 - **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
 - **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l'evidenza: il pannello locale legge questo formato.
 - **Apertura.** Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
@@ -63,11 +63,12 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 | `agents/` | i file di ruolo dei cinque reparti: la fonte unica dei contenuti |
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
 | `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@aigentrica/mcp/catalog` per il sito |
-| `plan/` | decisioni e fasi |
 | `learn/` | (F53) le lezioni e il glossario di «Impara», in italiano e inglese, e l'indice fase→lezione; il pacchetto le esporta come `@aigentrica/mcp/learn` per il sito. Formato in `learn/README.md` |
 | `starter/` | (F18) il modello di progetto che `aigentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
 | `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto AIgentrica.» |
-| `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
+| `BIBLIOTECA.md` | (F25) formato delle schede della biblioteca e di `fonti.json`, livelli delle fonti e ciclo di studio |
+
+`plan/` (decisioni e fasi), `audit/` (rilievi) e `docs/` (materiale di riferimento) sono da F56 nel repository del sito (§2).
 
 Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve servire anche al server MCP.
 
@@ -145,13 +146,13 @@ Si riportano i comandi eseguiti e l'esito reale, e si dice esplicitamente cosa n
 ### 13.7 Chiusura di una fase
 Si lavora su `fase/fN-nome` (o `fix/nome` per una correzione fuori fase), partendo da `develop`. Quando i criteri di accettazione sono soddisfatti, la fase si chiude con questi passi, in quest'ordine:
 
-1. **Piano.** Il file della fase passa a «completata» con «Fatto», «Verifiche» e «Rilievi aperti»; si aggiornano la riga in «Fasi» e, se servono, «Decisioni» e «Glossario» di `plan/README.md`, e la tabella «Stato» del `README.md`. In `learn/fasi.md` si aggiunge la riga della fase: le lezioni di «Impara» che la usano come esempio, aggiornate in italiano e in inglese, oppure la nota «nessun concetto nuovo»; `npm run verify` fallisce se manca (F53).
+1. **Piano.** Il file della fase passa a «completata» con «Fatto», «Verifiche» e «Rilievi aperti»; si aggiornano la riga in «Fasi» e, se servono, «Decisioni» e «Glossario» di `plan/README.md`, e la tabella «Stato» del `README.md`. In `learn/fasi.md` si aggiunge la riga della fase: le lezioni di «Impara» che la usano come esempio, aggiornate in italiano e in inglese, oppure la nota «nessun concetto nuovo»; il `verify` del sito, che legge il piano, fallisce se manca (F53, F56).
 2. **Controlli.** `npm run verify` e `npm run verify:e2e` (da quando esiste), con l'esito reale.
 3. **Proposta.** All'utente si presentano il riepilogo (§19) e la sequenza dei passi 4–7, con un'unica domanda di conferma. Senza l'ok non si va avanti; se l'utente chiede modifiche, si riparte dal passo 1.
-4. **Commit** sul branch della fase, con il messaggio che dice cosa cambia.
+4. **Commit** sul branch della fase, in ogni repository toccato (il piano sta in quello del sito), con il messaggio che dice cosa cambia.
 5. **Merge** in `develop` con `--no-ff` e messaggio «Merge fase/fN-nome in develop».
 6. **Push** di `develop` e del branch della fase; la CI (`.github/workflows/ci.yml`) deve diventare verde (`gh run list`, `gh run watch`). Se è rossa, la si corregge su un `fix/…` prima di aprire la fase successiva.
-7. **Indice.** `tokensave sync` dalla root.
+7. **Indice.** `tokensave sync` dalla root di ogni repository toccato.
 8. **Sessione nuova.** Si dice all'utente che lo stato è completo in `plan/` e in git e che può fare `/clear`; la fase successiva riparte leggendo `plan/README.md` e il suo file.
 
 Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi successivi. Una correzione `fix/…` segue gli stessi passi; il messaggio del merge è «Merge fix/nome in develop».
@@ -186,7 +187,7 @@ Il sito legge il catalogo da `@aigentrica/mcp/catalog`, che trova `agents/` acca
 Tailwind 4 con `@theme inline` in `src/app/globals.css`: i token di shadcn (`--background`, `--card`, `--muted-foreground`…) hanno i valori del tema scuro; gli accenti dei reparti sono `--aibpd` … `--aiwda` e `--dept`, che `[data-dept="SIGLA"]` imposta per il sottoalbero (classi `text-dept`, `border-dept`, `bg-dept`). shadcn con lo stile base-nova su Base UI (`components.json`).
 
 ### 15.4 Agenzie
-Ruoli, attivazione e coordinamento delle agenzie sono in `AGENTS.md`, sezione «Agenzie», e in `docs/AI Multi-Agency System.md`. Le regole delle agenzie si aggiungono a questo documento, non lo sostituiscono.
+Ruoli, attivazione e coordinamento delle agenzie sono in `AGENTS.md`, sezione «Agenzie», e in `starter/docs/AI Multi-Agency System.md`. Le regole delle agenzie si aggiungono a questo documento, non lo sostituiscono.
 
 ## 16. Istruzioni e conflitti
 

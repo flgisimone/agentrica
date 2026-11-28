@@ -24,7 +24,7 @@ A false finding weighs more than a missed one: it makes you work on a problem th
 Finally, the choice is not forever. New models come out, prices change, role texts change: a measurement holds for the version you ran it on.
 
 ## In AIgentrica
-Phase F24 made the first measurement, with the method described in [plan/24-modelli.md](../../plan/24-modelli.md): seven test cases, four configurations (Opus with medium reasoning as the reference, Opus with low reasoning, Sonnet, Haiku), two runs each, 56 in all. The results are in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md). Compared with Opus at medium reasoning, on the finished task and at 2026-11-03 prices, Sonnet cost 52% less and Haiku 96% less, while using more tokens.
+Phase F24 made the first measurement, with this method: seven test cases, four configurations (Opus with medium reasoning as the reference, Opus with low reasoning, Sonnet, Haiku), two runs each, 56 in all. The results are in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md). Compared with Opus at medium reasoning, on the finished task and at 2026-11-03 prices, Sonnet cost 52% less and Haiku 96% less, while using more tokens.
 
 But the threshold decides role by role. In the third wave, on design, Sonnet found the same defects as Opus for three roles but with one extra false finding in one run, and those roles stayed on your session's model: see [examples/risultati/2026-11-27-ondata-3.md](../../examples/risultati/2026-11-27-ondata-3.md).
 

@@ -2,6 +2,14 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.22.0 — 2026-11-28
+
+### Added
+- `@agentrica/mcp/learn` export: lessons and glossary of «Learn», the site's course on AI, in Italian and English (`loadLessons`, `loadGlossary`), from the `learn/` folder included in the package. F53.
+
+### Fixed
+- The catalog no longer takes a «## » heading written inside a code block for a section.
+
 ## 0.21.0 — 2026-11-28
 
 ### Added

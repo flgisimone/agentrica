@@ -435,7 +435,7 @@ npm uninstall -g @agentrica/mcp
 
 Il secondo comando serve solo se avevi usato `install`; con `add --project` o `--local` usa quell'ambito al posto di `user`. Se hai salvato una [configurazione](#configurazione), cancella anche la cartella `~/.agentrica`.
 
-Lo stesso catalogo si legge anche da codice, senza avviare il server: `import { loadCatalog } from "@agentrica/mcp/catalog"` restituisce reparti e agenti (con i tipi `Department` e `Agent`) dagli `agents/` del pacchetto. È ciò che usa il sito di Agentrica.
+Lo stesso catalogo si legge anche da codice, senza avviare il server: `import { loadCatalog } from "@agentrica/mcp/catalog"` restituisce reparti e agenti (con i tipi `Department` e `Agent`) dagli `agents/` del pacchetto. È ciò che usa il sito di Agentrica. Allo stesso modo `import { loadLessons, loadGlossary } from "@agentrica/mcp/learn"` restituisce lezioni e glossario del percorso «Impara» del sito, in italiano o in inglese, dalla `learn/` del pacchetto.
 
 ## Versioni
 

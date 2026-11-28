@@ -437,7 +437,7 @@ npm uninstall -g @agentrica/mcp
 
 The second command is needed only if you used `install`; with `add --project` or `--local` use that scope instead of `user`. If you saved a [configuration](#configuration), also delete the `~/.agentrica` folder.
 
-The same catalog can be read from code, without starting the server: `import { loadCatalog } from "@agentrica/mcp/catalog"` returns departments and agents (with the `Department` and `Agent` types) from the package's `agents/`. The Agentrica site uses it.
+The same catalog can be read from code, without starting the server: `import { loadCatalog } from "@agentrica/mcp/catalog"` returns departments and agents (with the `Department` and `Agent` types) from the package's `agents/`. The Agentrica site uses it. Likewise `import { loadLessons, loadGlossary } from "@agentrica/mcp/learn"` returns the lessons and glossary of the site's «Learn» course, in Italian or English, from the package's `learn/`.
 
 ## Versions
 

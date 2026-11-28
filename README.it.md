@@ -8,7 +8,7 @@
 
 Questo repository contiene:
 
-1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.20.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.21.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
 2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
 
 Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.

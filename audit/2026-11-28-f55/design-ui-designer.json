@@ -1,0 +1,80 @@
+{
+  "agente": "AIWDA-05 · UI Designer, consolidato da AIWDA-01 · CANOPUS (ruoli nella sessione principale)",
+  "data": "2026-11-28",
+  "perimetro": "Sito aigentrica-site su develop (dopo F54) in locale con npm run dev, Playwright a 1440 e 390 px con movimento ridotto: home (it, en), /agenti, /agenti/aisa-02, /installa, /impara; sola lettura",
+  "sintesi": "L'interfaccia è solida e accessibile, ma il nome nuovo non si legge: con Inter la «I» maiuscola e la «l» sono uguali e AIgentrica appare «Algentrica». La home apre ancora con la mappa del cielo e mette il nome, non il messaggio, nel titolo.",
+  "rilievi": [
+    {
+      "id": "F55-UI-01",
+      "titolo": "«AIgentrica» si legge «Algentrica»",
+      "evidenza": "evidenze/prima-home-d.png (header, h1), prima-impara-it-d.png (sottotitolo, link indietro, footer), prima-agente-d.png (footer); prima-cv08.png: la variante cv08 di Inter (I con grazie) non è nel font servito da next/font, le tre righe sono identiche",
+      "priorita": "P1",
+      "motivazione": "Il marchio è il motivo della fase: chi lo legge sul sito lo scrive e lo cerca sbagliato. Succede in header, footer, titoli e testo corrente.",
+      "raccomandazione": "Tipografia in cui la I maiuscola si distingue dalla l (scelta dell'utente fra font dei titoli e wordmark dedicato), e wordmark con «AI» in evidenza nell'header, nel footer e nell'immagine Open Graph.",
+      "stato": "Risolto in F55 (2026-11-28): Wordmark con la I ciano in header, footer, hero e Open Graph; evidenze/dopo-home-d.png, dopo-og.png."
+    },
+    {
+      "id": "F55-UI-02",
+      "titolo": "La home apre con la mappa del cielo e il nome come h1",
+      "evidenza": "src/app/[lang]/page.tsx: HeroSim (costellazioni dei reparti) nel primo schermo; h1 «AIgentrica», tagline sotto in grigio; evidenze/prima-home-d.png",
+      "priorita": "P1",
+      "motivazione": "Contrasta con due decisioni dell'utente (mappa fuori dalla home, messaggio sul controllo). Il primo schermo deve dire cosa fa il prodotto, non solo come si chiama.",
+      "raccomandazione": "H1 = tagline «Agenti IA con un metodo. Le decisioni restano tue.», sotto il lead, il comando e i due pulsanti; a destra un elemento sobrio e tecnico già esistente (Terminal con la dimostrazione) al posto della mappa.",
+      "stato": "Risolto in F55 (2026-11-28): hero rifatto su decisione dell'utente (costellazione al centro, AIGENTRICA come h1 con la tagline sotto, senza pulsanti); evidenze/dopo-home-d.png."
+    },
+    {
+      "id": "F55-UI-03",
+      "titolo": "Su mobile le etichette della mappa si sovrappongono",
+      "evidenza": "evidenze/prima-home-m.png: le etichette dei direttori AISA, AICA, AIPCA e AIWDA coprono i nomi dei reparti («Software», «your confirmation»)",
+      "priorita": "P2",
+      "motivazione": "Testo illeggibile nel primo schermo da telefono; si risolve con F55-UI-02.",
+      "raccomandazione": "Togliere la mappa dalla home (F55-UI-02).",
+      "stato": "Risolto in F55 (2026-11-28): reparti separati e scala sull'intero giro; evidenze/dopo-giro-m.png."
+    },
+    {
+      "id": "F55-UI-04",
+      "titolo": "Il titolo del capitolo della simulazione compete con il titolo",
+      "evidenza": "evidenze/prima-home-d.png: «Specialised agents, organised in departments.» con evidenziazione piena, grande quanto la tagline",
+      "priorita": "P2",
+      "motivazione": "Due messaggi di pari peso nel primo schermo: la gerarchia non dice qual è la promessa.",
+      "raccomandazione": "Con la mappa fuori dalla home i capitoli escono dal primo schermo; la spiegazione del metodo resta nella sezione «Come lavoriamo» (Simulation) e in /orchestrazione.",
+      "stato": "Risolto in F55 (2026-11-28): capitoli tolti dall'hero."
+    },
+    {
+      "id": "F55-UI-05",
+      "titolo": "Il simbolo è la costellazione di F28",
+      "evidenza": "src/components/brand-mark.tsx e src/app/icon.svg: tre stelle su quadrato chiaro",
+      "priorita": "P2",
+      "motivazione": "L'utente ha scelto un simbolo nuovo con il wordmark; la costellazione lega il marchio alla metafora che si riduce.",
+      "raccomandazione": "Simbolo nuovo leggibile a 16 px, stessi colori (brand.light e brand.night); aggiornare insieme icon.svg, apple-icon, icone PWA e opengraph-image.",
+      "stato": "Risolto in F55 (2026-11-28): tessera scura «AI» con la I ciano; evidenze/proposta-tessera.png, icone rigenerate."
+    },
+    {
+      "id": "F55-UI-06",
+      "titolo": "Il badge di mcprush nel footer mostra il vecchio nome",
+      "evidenza": "evidenze/prima-agente-d.png: «Agentrica MCP», v0.19.0",
+      "priorita": "P2",
+      "motivazione": "Nome e versione vecchi accanto al marchio nuovo; è un'immagine esterna.",
+      "raccomandazione": "Si risolve in F56 (badge di mcprush su aigentrica-mcp); in F55 nessun intervento.",
+      "stato": "Aperto: si chiude in F56 (scheda mcprush aigentrica-mcp), issue flgisimone/aigentrica#61."
+    },
+    {
+      "id": "F55-A11Y-01",
+      "titolo": "Tagline illeggibile prima dello scroll",
+      "evidenza": "velo al 28% di --muted-foreground su --background: contrasto 1,56:1 (calcolo in OKLab e luminanza WCAG)",
+      "priorita": "P1",
+      "motivazione": "WCAG 1.4.3 AA chiede 3:1 per il testo grande; il logotipo AIGENTRICA è esente.",
+      "raccomandazione": "Velo più forte sulla tagline.",
+      "stato": "Risolto in F55 (2026-11-28): --veil 60% sulla tagline, 3,51:1; evidenze/dopo-tagline-velo.png."
+    },
+    {
+      "id": "F55-A11Y-02",
+      "titolo": "Pausa dell'animazione richiesta da togliere",
+      "evidenza": "richiesta dell'utente di togliere il pulsante PAUSA; l'animazione parte da sola e dura più di 5 s",
+      "priorita": "P1",
+      "motivazione": "WCAG 2.2.2 (livello A) chiede un modo per fermarla.",
+      "raccomandazione": "Icona discreta con nome accessibile.",
+      "stato": "Risolto in F55 (2026-11-28): icona pausa/riprendi con aria-label e aria-pressed; e2e landing.spec.ts."
+    }
+  ]
+}

@@ -58,3 +58,4 @@ Ogni fase completata di `plan/README.md` con le lezioni che la usano come esempi
 | F52 | orchestration |
 | F53 | nessun concetto nuovo |
 | F54 | nessun concetto nuovo |
+| F55 | nessun concetto nuovo |

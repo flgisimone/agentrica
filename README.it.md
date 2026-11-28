@@ -101,6 +101,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F52 | Pannello: vista per reparto compatta e mappa a corsie degli agenti, senza framework; pagine `/pannello` e `/orchestrazione` del sito allineate; menu dell'header sotto la voce | completata (0.21.0) |
 | F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di AIgentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@aigentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata (0.22.0) |
 | F54 | AIgentrica: nuovo nome e dominio https://aigentrica.it; pacchetto `@aigentrica/mcp` dalla 1.0.0 (prima `@agentrica/mcp`, deprecato), configurazione copiata da `~/.agentrica`, `add` e `install` che sostituiscono la vecchia registrazione, redirect 308 dal vecchio indirizzo del sito | completata (1.0.0) |
+| F55 | Interfaccia del sito per il marchio AIgentrica, stessa palette: tagline «Agenti IA con un metodo. Le decisioni restano tue.», wordmark con la I ciano e simbolo «AI», hero con le costellazioni e il testo che si riempie scorrendo, home riordinata | completata |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 

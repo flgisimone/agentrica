@@ -1,6 +1,8 @@
 # Regole per gli agenti
 
-Prima di implementare leggi le sezioni pertinenti di [CONVENTIONS.md](CONVENTIONS.md) e il file della fase in [plan/](plan/README.md): queste regole li completano, non li sostituiscono (CONVENTIONS §16).
+Prima di implementare leggi le sezioni pertinenti di [CONVENTIONS.md](CONVENTIONS.md) e il file della fase in `plan/`: queste regole li completano, non li sostituiscono (CONVENTIONS §16).
+
+Da F56 `plan/`, `audit/` e `docs/` stanno nella radice del repository privato `flgisimone/aigentrica-site` (in locale `../aigentrica-site`): i percorsi `plan/…`, `audit/…` e `docs/…` di questo file e di `CONVENTIONS.md` si leggono lì. Pianificazione e audit si fanno da una sessione aperta in quel repository, così il pannello li trova; una fase che tocca questo repository ne aggiorna il piano là.
 
 ## Esplorare il codice: tokensave
 
@@ -47,7 +49,7 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 ## Agenzie
 
-Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); in `.claude/agents/` ogni ruolo è anche un subagent che rimanda al suo file. Il quadro completo è in `docs/AI Multi-Agency System.md`.
+Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `README.md`, `00-common-rules.md` con le regole comuni e un file numerato per ruolo); in `.claude/agents/` ogni ruolo è anche un subagent che rimanda al suo file. Il quadro completo è in `starter/docs/AI Multi-Agency System.md`.
 
 | Agenzia | Prefisso | Cosa fa | Attiva |
 |---|---|---|---|
@@ -81,6 +83,6 @@ In questo repository le agenzie hanno due parti: sono il **contenuto** del prodo
 - **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e il server MCP in `packages/mcp`, che esporta anche il catalogo (`@aigentrica/mcp/catalog`). Da F17 il sito (Next.js 16, Tailwind 4, shadcn/ui) è nel repository privato `flgisimone/aigentrica-site` (in locale `../aigentrica-site`), con le regole di Next nel suo `AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
 - **File di ruolo.** Sono contenuto pubblicato: un cambio a un file di `agents/` è una modifica al prodotto e passa dalla conferma dell'utente, come il codice. Nomi in codice e sigle stanno solo in `packages/catalog/src/departments.ts` e non cambiano dopo la pubblicazione.
 - **Dati.** Nessun dato personale né dato reale: il sito è statico e i contenuti vengono dal catalogo. Niente persone, clienti, risultati o recensioni inventati.
-- **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
-- **Versionati.** `agents/`, `.claude/agents/`, `audit/`, `docs/` e `plan/` sono nel repository. Se le evidenze degli audit mostrano dati personali, si attiva la riga `audit/*/evidenze/` del `.gitignore`.
+- **Audit.** I rilievi stanno in `audit/<audit_id>/` del repository del sito (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.
+- **Versionati.** `agents/` e `.claude/agents/` sono in questo repository; `plan/`, `audit/` e `docs/` nel repository del sito, con la loro storia (fino a F55 erano qui e restano nella storia pubblica). `BIBLIOTECA.md` (formato delle schede e ciclo di studio) resta qui, perché lo studio si fa su `agents/`.
 - Push, deploy e migrazioni in produzione richiedono l'approvazione esplicita dell'utente.

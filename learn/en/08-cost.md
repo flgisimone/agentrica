@@ -30,7 +30,7 @@ In AIgentrica's calculations the API prices are those of 2026-11-03, per million
 
 In the F24 measurement, in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md), the cache covered 75 to 82% of tokens, depending on the configuration. The same measurement also tells the cost of redone work: 27 attempts stopped by the subscription's five-hour limit spent 532 thousand tokens with no result, and were rerun from scratch.
 
-Since phase F27 you can send your token totals to the site, only after a preview of what leaves and your yes: totals per day, agent, model and reasoning effort, no text or paths. The decisions are in [plan/27-consumo-sito.md](../../plan/27-consumo-sito.md). And the project's working rules, in the «Efficienza» (efficiency) section of [AGENTS.md](../../AGENTS.md), start from here: a session's cost grows with the calls and with the size of the context, because every call rereads all of it.
+Since phase F27 you can send your token totals to the site, only after a preview of what leaves and your yes: totals per day, agent, model and reasoning effort, no text or paths. And the project's working rules, in the «Efficienza» (efficiency) section of [AGENTS.md](../../AGENTS.md), start from here: a session's cost grows with the calls and with the size of the context, because every call rereads all of it.
 
 ## Try it
 Look at your usage over the last week. In Claude Code the `/cost` command shows the session's cost with the API, and with a subscription `/usage` shows the limits. With AIgentrica, the local panel shows the project's usage with charts.

@@ -42,4 +42,4 @@ Agents with a defence-first approach: they protect systems, data, people and bus
 The mere presence of these files does not authorise any test on real systems.
 
 ## Library
-The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the AIgentrica repository (in Italian).
+The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `BIBLIOTECA.md` of the AIgentrica repository (in Italian).

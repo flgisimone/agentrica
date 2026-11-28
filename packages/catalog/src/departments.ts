@@ -1,5 +1,5 @@
 // Reparti di AIgentrica e nomi in codice degli agenti.
-// I testi dei ruoli non stanno qui: si leggono da agents/ (plan/README.md, «Fonte unica»).
+// I testi dei ruoli non stanno qui: si leggono da agents/ (decisione «Fonte unica» del piano).
 
 /** Lingue dei contenuti (F32): l'italiano in agents/<agenzia>/, l'inglese in agents/<agenzia>/en/. */
 export type Lang = "it" | "en";

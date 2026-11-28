@@ -23,7 +23,7 @@ La stessa domanda può dare risposte diverse: nella scelta del token successivo 
 Questo non rende i modelli inutili. Li rende strumenti da usare come si usa un collega molto rapido e molto informato, ma che non ha visto il tuo codice e non sempre dice quando non sa: gli dai il materiale giusto, gli chiedi cose controllabili e controlli.
 
 ## In AIgentrica
-AIgentrica è costruita su questa idea di confine. Il suo server non chiama nessun modello: compone testi, tiene lo stato della sessione e fa controlli che non dipendono dal caso. Il ragionamento lo fa il modello del tuo assistente. È una decisione scritta nel piano, «Confini del Core (F40)», in [plan/README.md](../../plan/README.md).
+AIgentrica è costruita su questa idea di confine. Il suo server non chiama nessun modello: compone testi, tiene lo stato della sessione e fa controlli che non dipendono dal caso. Il ragionamento lo fa il modello del tuo assistente. È una decisione scritta nel piano, «Confini del Core (F40)».
 
 Un agente di AIgentrica, quindi, non è un programma che pensa: è un testo che il server consegna al tuo modello. Per esempio il ruolo dell'architetto software sta in [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md). Il modello lo legge e prova a comportarsi come descritto.
 

@@ -111,11 +111,13 @@ test("un file di fase che è un link fuori dal progetto non si legge", () => {
   assert.match(issue!.message, /non si può leggere: è un link fuori dalla cartella del progetto/);
 });
 
-test("il piano di questo repository si legge senza problemi", async () => {
+// Il piano di AIgentrica sta da F56 nel repository del sito, che lo controlla con `aigentrica-mcp check` nel suo verify.
+test("il piano del modello starter/ si legge senza problemi, git di questo repository sì", async () => {
   const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
-  const plan = readPlan(repo);
-  assert.deepEqual(checkProject(repo), [], "plan/ e audit/ di questo repository passano il controllo (F42)");
-  assert.ok(plan.phases.length >= 15);
+  for (const starter of [join(repo, "starter"), join(repo, "starter", "en")]) {
+    assert.deepEqual(checkProject(starter), [], `${starter}: plan/ e audit/ passano il controllo (F42)`);
+    assert.ok(readPlan(starter).phases.length >= 1);
+  }
   const git = await readGit(repo);
   assert.ok(git && git.branch.length > 0 && git.changed >= 0 && git.untracked >= 0);
   assert.equal(await readGit(outside), null);

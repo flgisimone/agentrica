@@ -28,7 +28,7 @@ And one ground rule: what a program can check should be checked by a program. A 
 ## In AIgentrica
 AIgentrica's agents are roles your assistant takes on: the server provides the role's text, your assistant works with its own tools. The roles also exist as Claude Code subagents, for example [.claude/agents/software/sw-architect.md](../../.claude/agents/software/sw-architect.md), a short file that points to the role file. The project starts them only when you ask: the rules in [AGENTS.md](../../AGENTS.md) call them «the most expensive item».
 
-A real problem: the server's instructions arrive only at startup, and after a few requests the model tended to work alone, without loading the agents. Phase F39 solved it with a hook: the `init` command writes into your project's `.claude/settings.json` a reminder that Claude Code adds to every request. The code is in [packages/mcp/src/init.ts](../../packages/mcp/src/init.ts), the phase in [plan/39-promemoria-agenti.md](../../plan/39-promemoria-agenti.md).
+A real problem: the server's instructions arrive only at startup, and after a few requests the model tended to work alone, without loading the agents. Phase F39 solved it with a hook: the `init` command writes into your project's `.claude/settings.json` a reminder that Claude Code adds to every request. The code is in [packages/mcp/src/init.ts](../../packages/mcp/src/init.ts).
 
 And an example of a deterministic check: since phase F42 the server verifies the shape of plan and audit files without asking a model anything, in [packages/mcp/src/check.ts](../../packages/mcp/src/check.ts). The same check is a tool, `check`, that the agent calls after writing those files: if a table is malformed it knows right away, instead of hoping the model notices.
 

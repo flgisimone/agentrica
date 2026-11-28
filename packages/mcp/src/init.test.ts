@@ -97,12 +97,6 @@ test("argomenti non validi: due cartelle, nome vuoto", () => {
   assert.match(init("c", "--name", " ").stderr, /--name/);
 });
 
-test("docs: il quadro delle agenzie di starter/ è uguale a quello del repository (F18-R1, F30)", () => {
-  const repo = join(import.meta.dirname, "..", "..", "..");
-  const name = join("docs", "AI Multi-Agency System.md");
-  assert.equal(readFileSync(join(repo, "starter", name), "utf8"), readFileSync(join(repo, name), "utf8"), "aggiorna le due copie insieme");
-});
-
 test("init in inglese (F32): starter e subagent di starter/en/, agents/ intero, stessi file dell'italiano", () => {
   const it = projectFiles("X", "/x", "2026-01-01", "linux", "it", true);
   const en = projectFiles("Test App", "/tmp/test", "2026-01-01", "linux", "en", true);

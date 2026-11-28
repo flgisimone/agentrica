@@ -42,4 +42,4 @@ Questi agenti svolgono audit UX/UI, accessibilità, architettura informativa, de
 Le convenzioni comuni per sicurezza, evidenze, priorità e formato dei resoconti sono in `00-common-rules.md`.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `BIBLIOTECA.md` del repository di AIgentrica.

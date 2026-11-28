@@ -1,6 +1,6 @@
 # Fasi e lezioni
 
-Ogni fase completata di `plan/README.md` con le lezioni che la usano come esempio, o la nota «nessun concetto nuovo». Formato in [README.md](README.md).
+Ogni fase completata del piano di AIgentrica con le lezioni che la usano come esempio, o la nota «nessun concetto nuovo». Formato in [README.md](README.md).
 
 | Fase | Lezioni |
 |---|---|
@@ -59,3 +59,5 @@ Ogni fase completata di `plan/README.md` con le lezioni che la usano come esempi
 | F53 | nessun concetto nuovo |
 | F54 | nessun concetto nuovo |
 | F55 | nessun concetto nuovo |
+| F56 | nessun concetto nuovo |
+| F57 | nessun concetto nuovo |

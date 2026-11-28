@@ -64,6 +64,7 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
 | `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@agentrica/mcp/catalog` per il sito |
 | `plan/` | decisioni e fasi |
+| `learn/` | (F53) le lezioni e il glossario di «Impara», in italiano e inglese, e l'indice fase→lezione; il pacchetto le esporta come `@agentrica/mcp/learn` per il sito. Formato in `learn/README.md` |
 | `starter/` | (F18) il modello di progetto che `agentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
 | `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto Agentrica.» |
 | `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
@@ -144,7 +145,7 @@ Si riportano i comandi eseguiti e l'esito reale, e si dice esplicitamente cosa n
 ### 13.7 Chiusura di una fase
 Si lavora su `fase/fN-nome` (o `fix/nome` per una correzione fuori fase), partendo da `develop`. Quando i criteri di accettazione sono soddisfatti, la fase si chiude con questi passi, in quest'ordine:
 
-1. **Piano.** Il file della fase passa a «completata» con «Fatto», «Verifiche» e «Rilievi aperti»; si aggiornano la riga in «Fasi» e, se servono, «Decisioni» e «Glossario» di `plan/README.md`, e la tabella «Stato» del `README.md`.
+1. **Piano.** Il file della fase passa a «completata» con «Fatto», «Verifiche» e «Rilievi aperti»; si aggiornano la riga in «Fasi» e, se servono, «Decisioni» e «Glossario» di `plan/README.md`, e la tabella «Stato» del `README.md`. In `learn/fasi.md` si aggiunge la riga della fase: le lezioni di «Impara» che la usano come esempio, aggiornate in italiano e in inglese, oppure la nota «nessun concetto nuovo»; `npm run verify` fallisce se manca (F53).
 2. **Controlli.** `npm run verify` e `npm run verify:e2e` (da quando esiste), con l'esito reale.
 3. **Proposta.** All'utente si presentano il riepilogo (§19) e la sequenza dei passi 4–7, con un'unica domanda di conferma. Senza l'ok non si va avanti; se l'utente chiede modifiche, si riparte dal passo 1.
 4. **Commit** sul branch della fase, con il messaggio che dice cosa cambia.

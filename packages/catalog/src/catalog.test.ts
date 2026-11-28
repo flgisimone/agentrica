@@ -107,3 +107,9 @@ test("il catalogo inglese si ferma se manca un gemello o se le sezioni non coinc
     rmSync(copy, { recursive: true, force: true });
   }
 });
+
+test("parseRole: un «## » dentro un blocco di codice resta nel corpo della sezione (F53)", () => {
+  const { sections } = parseRole("# T\n\n## Prova\n```markdown\n## Backlog\n```\n\n## Termini\n- x");
+  assert.deepEqual(sections.map((s) => s.heading), ["Prova", "Termini"]);
+  assert.equal(sections[0]!.body, "```markdown\n## Backlog\n```");
+});

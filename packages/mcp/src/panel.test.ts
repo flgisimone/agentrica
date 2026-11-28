@@ -371,6 +371,6 @@ test("keepActivity: le ultime chiamate piÃ¹ l'ultima di ogni agente uscito, cosÃ
   const list = calls(["AISA-02", "AISA-02", "AISA-02", "AIWDA-08", "AISA-02", "AICA-04", "AIWDA-08"]);
   assert.deepEqual(keepActivity(list, 3).map((a) => a.n), [0, 1, 2, 3, 5]);
   assert.deepEqual(keepActivity(calls(["A", "B"]), 3).map((a) => a.id), ["A", "B"]);
-  const many = calls(Array.from({ length: 40 }, () => "AISA-02"));
-  assert.equal(keepActivity(many).length, 20);
+  const many = calls(Array.from({ length: 140 }, () => "AISA-02"));
+  assert.equal(keepActivity(many).length, 100);
 });

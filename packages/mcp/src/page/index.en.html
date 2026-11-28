@@ -63,8 +63,18 @@
         <h1 class="sr-only" tabindex="-1">Agents</h1>
         <section aria-labelledby="h-tree" class="card">
           <h2 id="h-tree">Agents in use</h2>
-          <p class="hint">One column per department, in the order they came in: at the top, as a rule, the director, below the specialists one at a time. The number on the card is the call order; task and report open on the card.</p>
-          <div id="tree"></div>
+          <div class="filters" role="group" aria-label="Agents view" id="agents-views">
+            <button type="button" data-sub="dept" aria-pressed="true">By department</button>
+            <button type="button" data-sub="map" aria-pressed="false">Map</button>
+          </div>
+          <div id="agents-dept">
+            <p class="hint">One column per department, in the order they came in; inside, one row per agent, as a rule the director first. The numbers are the call order, ×3 means three calls: the last one is shown in full, the earlier ones open below.</p>
+            <div id="tree"></div>
+          </div>
+          <div id="agents-map" hidden>
+            <p class="hint">One lane per department, the steps from left to right in call order. The double ring marks the director, the filled circle the active agent; an arrow back to a lane already used is the department returning.</p>
+            <div id="map"></div>
+          </div>
         </section>
       </div>
 

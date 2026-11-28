@@ -2,7 +2,7 @@
 
 **Obiettivo**: chiudere le ondate per reparto decise in F49 con gli otto specialisti che restano di cybersecurity, privacy e software, sui tre progetti di F37 estesi. Dopo F51 ogni ruolo è misurato o è `inherit` per una decisione scritta.
 
-> **Stato: completata** (2026-11-27). Versione 0.20.0 preparata, da pubblicare insieme al sito. Branch `fase/f51-misura-cyber-privacy-software`, aperto il 2026-11-26 dal branch di F50 (commit `f8d44dc`) per preparare materiali e scheda, allineato a `develop` il 2026-11-27 dopo la chiusura di F50. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte e backlog decisi lo stesso giorno e confermati all'apertura delle esecuzioni (2026-11-27).
+> **Stato: completata** (2026-11-27). Rilasciata con la 0.20.0 il 2026-11-28: pacchetto su npm con provenance (tag `v0.20.0`) e sito con la dipendenza alla 0.20.0 e la tabella delle prove di `/consumo` aggiornata a tutte le misure (F24, F37, F49, F50, F51: −50% del costo, −5% di token). Branch `fase/f51-misura-cyber-privacy-software`, aperto il 2026-11-26 dal branch di F50 (commit `f8d44dc`) per preparare materiali e scheda, allineato a `develop` il 2026-11-27 dopo la chiusura di F50. Perimetro e configurazioni decisi con l'utente il 2026-11-26 all'apertura di F49; proposte e backlog decisi lo stesso giorno e confermati all'apertura delle esecuzioni (2026-11-27).
 
 **Agenzie**: software (QA per casi e conteggi, Backend per catalogo e subagent, Code Reviewer). Cybersecurity, privacy e software sono l'**oggetto** della misura, non revisori.
 
@@ -74,7 +74,7 @@ Come in F49, e in più: nella riga «Modelli» di [README.md](README.md) ogni ru
 ## Rilievi aperti
 
 - ~~P3~~ Chiuso come accettato in `fix/rilievi-f51` (2026-11-28, scelta dell'utente): caso singolo, si riapre se una prossima prova lo ripete. Un rapporto Opus di AISA-06 è uscito in inglese, con il compito in italiano: primo caso nelle ondate. Da guardare se si ripete; il testo dell'agente chiede già di rispondere nella lingua dell'utente.
-- P3 · Il sito mostra la tabella delle prove di `/consumo` fino a F50: va aggiornata con F51 al rilascio della 0.20.0. Issue [#52](https://github.com/flgisimone/agentrica/issues/52).
+- ~~P3~~ Chiuso con il rilascio 0.20.0 (2026-11-28): tabella aggiornata nel sito e verificata in produzione, in italiano e in inglese. Il sito mostra la tabella delle prove di `/consumo` fino a F50: va aggiornata con F51 al rilascio della 0.20.0. Issue [#52](https://github.com/flgisimone/agentrica/issues/52).
 
 ## Dopo la chiusura: `fix/rilievi-f51` (2026-11-28)
 

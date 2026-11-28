@@ -84,4 +84,4 @@
 
 ## Rilievi aperti
 
-- P3: al rilascio, voce del `CHANGELOG` (it, en) e pubblicazione insieme di pacchetto e sito, perché le schermate di `/pannello` mostrano già le viste nuove. Issue [#55](https://github.com/flgisimone/agentrica/issues/55).
+- P3: al rilascio, voce del `CHANGELOG` (it, en) e pubblicazione insieme di pacchetto e sito, perché le schermate di `/pannello` mostrano già le viste nuove. Issue [#55](https://github.com/flgisimone/agentrica/issues/55). Risolto: voce 0.21.0 nel `CHANGELOG` (it, en), tag `v0.21.0` e sito sulla 0.21.0 lo stesso giorno; issue chiusa il 2026-11-28.

@@ -2,7 +2,7 @@
 
 **Obiettivo**: un'area del sito con un percorso a lezioni che porta chi usa un assistente di codice senza basi di IA fino agli agenti e a MCP, e da lì all'installazione del server, usando come esempio quello che è stato costruito in Agentrica. I contenuti stanno in questo repository, il sito li legge dal pacchetto e restano aggiornati a ogni fase.
 
-> **Stato: completata** il 2026-11-28 su `fase/f53-impara` (anche in `agentrica-site`). Registrata il 2026-11-27; pianificata il 2026-11-28 (business: AIBPD-01, 04, 11; design: AIWDA-01, 04, 10), con backlog e criteri confermati dall'utente.
+> **Stato: completata** il 2026-11-28 su `fase/f53-impara` (anche in `agentrica-site`), rilasciata nella 0.22.0 lo stesso giorno. Registrata il 2026-11-27; pianificata il 2026-11-28 (business: AIBPD-01, 04, 11; design: AIWDA-01, 04, 10), con backlog e criteri confermati dall'utente.
 
 **Agenzie**: software (Backend per `learn/` e l'export, Frontend nel sito, QA, Code Reviewer); web design in revisione (UI, Accessibility, UX Writer sui testi delle lezioni).
 
@@ -83,4 +83,4 @@
 
 ## Rilievi aperti
 
-- P2: rilascio insieme di pacchetto e sito. Il sito dipende dall'export nuovo `@agentrica/mcp/learn`: il branch `fase/f53-impara` di `agentrica-site` va in `develop` solo con la versione nuova del pacchetto (0.22.0, con la voce del `CHANGELOG` it/en), altrimenti la CI del sito, che installa la 0.21.0, fallisce. Insieme al rilievo di F52 ([#55](https://github.com/flgisimone/agentrica/issues/55)).
+- P2: rilascio insieme di pacchetto e sito, perché il sito dipende dall'export nuovo `@agentrica/mcp/learn`. Risolto il 2026-11-28 (scelta dell'utente alla chiusura): PR [#58](https://github.com/flgisimone/agentrica/pull/58) in `main`, tag `v0.22.0`, pubblicazione su npm con provenance dal workflow Release; sito con la dipendenza 0.22.0 (verify ed e2e verdi, 165 passati e 3 saltati) in `main` con la PR 32 di `agentrica-site`; in produzione `/it/impara`, `/en/learn`, una lezione, il glossario e il redirect dello slug inglese rispondono 200. `develop` e `main` allineati nei due repository.

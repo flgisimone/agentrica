@@ -45,7 +45,7 @@ test("ogni reparto ha missione, flusso, collaborazione e regole comuni dai suoi 
 });
 
 test("un README senza flusso di lavoro fa fallire il caricamento", () => {
-  const copy = mkdtempSync(join(tmpdir(), "agentrica-"));
+  const copy = mkdtempSync(join(tmpdir(), "aigentrica-"));
   try {
     cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
     const readme = join(copy, "agents", DEPARTMENTS[4]!.folder, "README.md");
@@ -57,7 +57,7 @@ test("un README senza flusso di lavoro fa fallire il caricamento", () => {
 });
 
 test("un file di ruolo senza nome in codice fa fallire il caricamento", () => {
-  const copy = mkdtempSync(join(tmpdir(), "agentrica-"));
+  const copy = mkdtempSync(join(tmpdir(), "aigentrica-"));
   try {
     cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
     const folder = join(copy, "agents", DEPARTMENTS[3]!.folder);
@@ -92,7 +92,7 @@ test("il catalogo inglese ha gli stessi reparti, agenti, nomi in codice e schede
 });
 
 test("il catalogo inglese si ferma se manca un gemello o se le sezioni non coincidono", () => {
-  const copy = mkdtempSync(join(tmpdir(), "agentrica-"));
+  const copy = mkdtempSync(join(tmpdir(), "aigentrica-"));
   try {
     cpSync(findAgentsDir(), join(copy, "agents"), { recursive: true });
     const en = join(copy, "agents", DEPARTMENTS[3]!.folder, "en");

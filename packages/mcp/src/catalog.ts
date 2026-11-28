@@ -1,4 +1,4 @@
-// Export pubblico «@agentrica/mcp/catalog»: il catalogo letto dagli agents/ di questo pacchetto. Lo usa il sito, che vive
+// Export pubblico «@aigentrica/mcp/catalog»: il catalogo letto dagli agents/ di questo pacchetto. Lo usa il sito, che vive
 // in un repository privato (F17) e installa il pacchetto a versione esatta. Non importa l'SDK né zod.
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -10,7 +10,7 @@ export { DEPARTMENTS, LANGS, type Lang, type Agent, type Department, type Depart
 // dell'utente e non deve poter fornire un'altra agents/. Tre livelli sopra c'è agents/ sia da un clone
 // (packages/mcp/src → la root del repository) sia nel pacchetto (dist/mcp/src → la root del pacchetto, dove prepack
 // copia agents/). Il catalogo è importato per percorso relativo, così tsc lo compila dentro dist e il pacchetto non
-// dipende da @agentrica/catalog.
+// dipende da @aigentrica/catalog.
 export const AGENTS_DIR = join(import.meta.dirname, "..", "..", "..", "agents");
 
 /** Reparti e agenti dagli agents/ del pacchetto, nella lingua `lang` (F32: l'inglese è in agents/<agenzia>/en/). */
@@ -21,7 +21,7 @@ export function loadCatalog(lang: Lang = "it"): Department[] {
 /** I subagent di .claude/agents/, nella root del repository e, copiati da prepack, in quella del pacchetto. */
 export const SUBAGENTS_DIR = join(dirname(AGENTS_DIR), ".claude", "agents");
 
-/** Nome di ogni subagent di Agentrica → id del suo agente, dal file di ruolo che il subagent nomina (F27). */
+/** Nome di ogni subagent di AIgentrica → id del suo agente, dal file di ruolo che il subagent nomina (F27). */
 export function subagentIds(departments: readonly Department[], dir = SUBAGENTS_DIR): Map<string, string> {
   // Il percorso senza «/en/» (F32): i subagent italiani nominano il file italiano, il catalogo può essere in inglese.
   const plain = (path: string) => path.replace("/en/", "/");

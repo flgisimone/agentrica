@@ -23,8 +23,8 @@ Instructions written in a file have three advantages. You can reread and improve
 
 One limit to know: long, contradictory instructions confuse the model as much as a person. If two rules clash, the model picks one, not always the one you meant. Better a few clear rules, each with its reason.
 
-## In Agentrica
-In Agentrica the agents are instructions written in files. Each department has a file of common rules, for example [agents/ai_software_agency/00-common-rules.md](../../agents/ai_software_agency/00-common-rules.md), with rules such as «do not add dependencies without a reason» or «do not read real personal data unless the task requires it». Then there is a [role file](glossary.md#role-file) for each agent, with its mission and way of working: see [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md).
+## In AIgentrica
+In AIgentrica the agents are instructions written in files. Each department has a file of common rules, for example [agents/ai_software_agency/00-common-rules.md](../../agents/ai_software_agency/00-common-rules.md), with rules such as «do not add dependencies without a reason» or «do not read real personal data unless the task requires it». Then there is a [role file](glossary.md#role-file) for each agent, with its mission and way of working: see [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md).
 
 When you ask for an agent, the server assembles the prompt: the department's common rules, the role file and your task, in this order. The code that does it is in [packages/mcp/src/prompt.ts](../../packages/mcp/src/prompt.ts). You can see the exact text that reaches the model with the script [scripts/agent-text.ts](../../scripts/agent-text.ts), the same one used in the measurements.
 

@@ -1,14 +1,14 @@
-// `npm run stats`: download npm di @agentrica/mcp e stelle del repository, da API pubbliche senza chiavi.
+// `npm run stats`: download npm di @aigentrica/mcp e stelle del repository, da API pubbliche senza chiavi.
 // ponytail: i download npm contano anche CI, mirror e bot e `npx -y` riscarica a ogni versione nuova:
 // sono una tendenza, non persone. Un numero più preciso richiede un MCP remoto (F15).
 import { formatWeekly, lastMonthsRange, toWeekly, type DailyDownloads } from "./stats-lib.ts";
 
-const PACKAGE = "@agentrica/mcp";
-const REPOSITORY = "flgisimone/agentrica";
+const PACKAGE = "@aigentrica/mcp";
+const REPOSITORY = "flgisimone/aigentrica";
 const MONTHS = 3;
 
 async function getJson(url: string): Promise<{ status: number; body: unknown }> {
-  const response = await fetch(url, { headers: { "user-agent": "agentrica-stats" } });
+  const response = await fetch(url, { headers: { "user-agent": "aigentrica-stats" } });
   return { status: response.status, body: await response.json() };
 }
 

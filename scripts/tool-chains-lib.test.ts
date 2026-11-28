@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { agentricaTool, chainsReport, chainStats, fileChains, intermediateBytes, programmableCalls, type SessionChains } from "./tool-chains-lib.ts";
+import { aigentricaTool, chainsReport, chainStats, fileChains, intermediateBytes, programmableCalls, type SessionChains } from "./tool-chains-lib.ts";
 
 // Righe nel formato dei file di Claude Code, costruite a mano: nessuna sessione reale.
 const user = (text: string, extra: Record<string, unknown> = {}) => JSON.stringify({ type: "user", message: { role: "user", content: text }, ...extra });
@@ -9,20 +9,21 @@ const use = (id: string, name: string, caller = "direct") =>
 const result = (id: string, content: unknown, isError = false) =>
   JSON.stringify({ type: "user", message: { content: [{ type: "tool_result", tool_use_id: id, content, is_error: isError }] } });
 
-test("agentricaTool: solo i server con agentrica nel nome, nome del tool senza prefisso", () => {
-  assert.equal(agentricaTool("mcp__agentrica-dev__agent"), "agent");
-  assert.equal(agentricaTool("mcp__agentrica__list_agents"), "list_agents");
-  assert.equal(agentricaTool("mcp__tokensave__tokensave_search"), undefined);
-  assert.equal(agentricaTool("Bash"), undefined);
-  assert.equal(agentricaTool("mcp__agentrica__nome con spazi"), undefined);
-  assert.equal(agentricaTool(42), undefined);
+test("aigentricaTool: solo i server con aigentrica nel nome, nome del tool senza prefisso", () => {
+  assert.equal(aigentricaTool("mcp__aigentrica-dev__agent"), "agent");
+  assert.equal(aigentricaTool("mcp__aigentrica__list_agents"), "list_agents");
+  assert.equal(aigentricaTool("mcp__agentrica-dev__agent"), "agent", "sessioni prima del cambio di nome");
+  assert.equal(aigentricaTool("mcp__tokensave__tokensave_search"), undefined);
+  assert.equal(aigentricaTool("Bash"), undefined);
+  assert.equal(aigentricaTool("mcp__aigentrica__nome con spazi"), undefined);
+  assert.equal(aigentricaTool(42), undefined);
 });
 
-test("agentricaTool e fileChains con --server: solo il server con quel nome esatto", () => {
-  assert.equal(agentricaTool("mcp__agenti__agent", "agenti"), "agent");
-  assert.equal(agentricaTool("mcp__agentrica__agent", "agenti"), undefined);
-  assert.equal(agentricaTool("mcp__agenti-dev__agent", "agenti"), undefined);
-  const lines = [user("compito"), use("a", "mcp__agenti__list_agents"), result("a", "x".repeat(10)), use("b", "mcp__agentrica__agent"), result("b", "y")];
+test("aigentricaTool e fileChains con --server: solo il server con quel nome esatto", () => {
+  assert.equal(aigentricaTool("mcp__agenti__agent", "agenti"), "agent");
+  assert.equal(aigentricaTool("mcp__aigentrica__agent", "agenti"), undefined);
+  assert.equal(aigentricaTool("mcp__agenti-dev__agent", "agenti"), undefined);
+  const lines = [user("compito"), use("a", "mcp__agenti__list_agents"), result("a", "x".repeat(10)), use("b", "mcp__aigentrica__agent"), result("b", "y")];
   assert.deepEqual(fileChains(lines, "agenti").map((c) => c.map((call) => call.tool)), [["list_agents"]]);
   assert.deepEqual(fileChains(lines).map((c) => c.map((call) => call.tool)), [["agent"]]);
 });
@@ -30,16 +31,16 @@ test("agentricaTool e fileChains con --server: solo il server con quel nome esat
 test("fileChains: un messaggio dell'utente chiude la catena; meta, riassunti e altri tool no", () => {
   const chains = fileChains([
     user("primo compito"),
-    use("a", "mcp__agentrica__list_agents"),
+    use("a", "mcp__aigentrica__list_agents"),
     result("a", "x".repeat(100)),
     use("b", "Bash"),
     result("b", "y".repeat(5000)),
     user("testo aggiunto da Claude Code", { isMeta: true }),
     user("riassunto", { isCompactSummary: true }),
-    use("c", "mcp__agentrica__agent"),
+    use("c", "mcp__aigentrica__agent"),
     result("c", [{ type: "text", text: "è" }, { type: "image", source: {} }]),
     user("secondo compito"),
-    use("d", "mcp__agentrica__library", "code_execution"),
+    use("d", "mcp__aigentrica__library", "code_execution"),
     result("d", "errore", true),
     "riga non valida {",
   ]);
@@ -53,7 +54,7 @@ test("fileChains: un messaggio dell'utente chiude la catena; meta, riassunti e a
 });
 
 test("fileChains: una chiamata senza risultato vale zero byte", () => {
-  assert.deepEqual(fileChains([use("a", "mcp__agentrica__agent")]), [[{ tool: "agent", caller: "direct", bytes: 0, error: false }]]);
+  assert.deepEqual(fileChains([use("a", "mcp__aigentrica__agent")]), [[{ tool: "agent", caller: "direct", bytes: 0, error: false }]]);
 });
 
 test("intermediateBytes: tutti i risultati tranne l'ultimo della catena, senza i testi di istruzioni", () => {
@@ -87,7 +88,7 @@ test("chainsReport: esito secondo la soglia, stessi numeri, nessun input dei too
   assert.match(over, /Soglia superata\*\* \(catene lunghe e byte intermedi\)/);
   assert.match(chainsReport(chainStats([], 3, 0), "2026-11-25"), /nessun dato/);
   assert.equal(over, chainsReport(chainStats([session(4), session(1)], 1, 0), "2026-11-25"));
-  const fromLines = chainsReport(chainStats([{ chains: fileChains([use("a", "mcp__agentrica__agent"), result("a", "contenuto-riservato")]), subagentChains: 0 }], 1, 0), "2026-11-25");
+  const fromLines = chainsReport(chainStats([{ chains: fileChains([use("a", "mcp__aigentrica__agent"), result("a", "contenuto-riservato")]), subagentChains: 0 }], 1, 0), "2026-11-25");
   assert.doesNotMatch(fromLines, /segreto|non deve uscire|contenuto-riservato/);
 });
 

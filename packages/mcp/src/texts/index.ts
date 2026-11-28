@@ -1,4 +1,4 @@
-// Lingua del server (F32): --lang, poi «lang» in ~/.agentrica/config.json, poi la lingua del sistema. Italiano se è
+// Lingua del server (F32): --lang, poi «lang» in ~/.aigentrica/config.json, poi la lingua del sistema. Italiano se è
 // it, altrimenti inglese. Un processo ha una lingua sola: T è un binding vivo che setLang sostituisce all'avvio.
 import type { Lang } from "../../../catalog/src/index.ts";
 import { en } from "./en.ts";
@@ -20,12 +20,12 @@ export function setLang(value: Lang): void {
 
 export const isLang = (value: unknown): value is Lang => value === "it" || value === "en";
 
-// F33: il sito ha le note legali in /it/note-legali e /en/legal, con le ancore tradotte (agentrica-site, src/i18n/config.ts).
+// F33: il sito ha le note legali in /it/note-legali e /en/legal, con le ancore tradotte (aigentrica-site, src/i18n/config.ts).
 const LEGAL_ANCHORS = { valutazioni: "ratings", consumo: "usage", progetti: "projects" } as const;
 
 /** Le note legali del sito nella lingua del server, alla sezione `anchor`. */
 export function legalUrl(anchor: keyof typeof LEGAL_ANCHORS): string {
-  const site = "https://agentrica.vercel.app";
+  const site = "https://aigentrica.it";
   return lang === "en" ? `${site}/en/legal#${LEGAL_ANCHORS[anchor]}` : `${site}/it/note-legali#${anchor}`;
 }
 

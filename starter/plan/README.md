@@ -17,7 +17,7 @@ Questo piano raccoglie le decisioni prese e le fasi di lavoro, una per file.
 
 | Tema | Decisione | Motivo |
 |---|---|---|
-| Struttura | Repository creato con `npx @agentrica/mcp init`: AGENTS, CONVENTIONS, plan, agenzie, audit e docs versionati; `.mcp.json` con il server di Agentrica e il pannello | Scelta dell'utente ({{DATE}}) |
+| Struttura | Repository creato con `npx @aigentrica/mcp init`: AGENTS, CONVENTIONS, plan, agenzie, audit e docs versionati; `.mcp.json` con il server di AIgentrica e il pannello | Scelta dell'utente ({{DATE}}) |
 | Agenzie | <!-- quali sono attive, quali tolte --> ; attivate solo quando un'attività lo richiede; ogni decisione finale passa dalla conferma dell'utente | <!-- F0 --> |
 | Stack | <!-- da decidere in F0 --> | |
 | Test | <!-- es. unitari con `node --test` su `src/lib`, e2e con Playwright su dati finti --> | |

@@ -23,7 +23,7 @@ Un rilievo falso pesa più di uno mancato: ti fa lavorare su un problema che non
 
 Infine, la scelta non è per sempre. Escono modelli nuovi, cambiano i prezzi, cambiano i testi dei ruoli: una misura vale per la versione su cui l'hai fatta.
 
-## In Agentrica
+## In AIgentrica
 La fase F24 ha fatto la prima misura, con il metodo descritto in [plan/24-modelli.md](../../plan/24-modelli.md): sette casi di prova, quattro configurazioni (Opus con ragionamento medio come riferimento, Opus con ragionamento basso, Sonnet, Haiku), due esecuzioni ciascuna, 56 in tutto. I risultati sono in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md). Rispetto a Opus con ragionamento medio, sul compito finito e a prezzi del 2026-11-03, Sonnet è costato il 52% in meno e Haiku il 96% in meno, pur usando più token.
 
 Ma la soglia decide ruolo per ruolo. Nella terza ondata, sul design, Sonnet ha trovato gli stessi difetti di Opus per tre ruoli ma con un rilievo falso in più in una esecuzione, e quei ruoli sono rimasti sul modello della tua sessione: lo dice [examples/risultati/2026-11-27-ondata-3.md](../../examples/risultati/2026-11-27-ondata-3.md).

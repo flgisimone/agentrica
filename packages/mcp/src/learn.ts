@@ -1,4 +1,4 @@
-// Export pubblico «@agentrica/mcp/learn» (F53): le lezioni di «Impara» lette dai learn/ di questo pacchetto, per il
+// Export pubblico «@aigentrica/mcp/learn» (F53): le lezioni di «Impara» lette dai learn/ di questo pacchetto, per il
 // sito. Formato in learn/README.md. Come catalog.ts non importa l'SDK né zod, e learn/ è in un punto fisso: tre livelli
 // sopra questo file sia da un clone sia nel pacchetto, dove prepack la copia.
 import { readdirSync, readFileSync } from "node:fs";
@@ -12,8 +12,8 @@ export const LEARN_DIR = join(import.meta.dirname, "..", "..", "..", "learn");
 
 /** Le sezioni di ogni lezione, in quest'ordine, per lingua. */
 export const LESSON_SECTIONS: Record<Lang, readonly string[]> = {
-  it: ["In breve", "L'idea", "In Agentrica", "Prova", "Termini"],
-  en: ["In short", "The idea", "In Agentrica", "Try it", "Terms"],
+  it: ["In breve", "L'idea", "In AIgentrica", "Prova", "Termini"],
+  en: ["In short", "The idea", "In AIgentrica", "Try it", "Terms"],
 };
 
 /** Il file del glossario per lingua: le lezioni lo citano nei link «glossario.md#id». */

@@ -10,7 +10,7 @@ import { after, before, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
-const cwd = mkdtempSync(join(tmpdir(), "agentrica-mcp-"));
+const cwd = mkdtempSync(join(tmpdir(), "aigentrica-mcp-"));
 const repo = join(import.meta.dirname, "..", "..", "..");
 const client = new Client({ name: "test", version: "0" });
 const transport = new StdioClientTransport({
@@ -64,7 +64,7 @@ test("quattro tool in sola lettura; rate_agent, share_usage e submit_project, gl
   assert.match(client.getInstructions() ?? "", /rate_agent/);
   assert.match(client.getInstructions() ?? "", /share_usage/);
   // F39-04: cosa esce dal computer.
-  assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad Agentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
+  assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad AIgentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
   // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
   assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
   assert.match(client.getInstructions() ?? "", /Dopo aver scritto file in plan\/ o audit\/, controllane il formato con check\./);
@@ -231,7 +231,7 @@ test("compito: fino a 20.000 caratteri, oltre è un errore", async () => {
 
 test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr, codice 1", () => {
   // Stessa struttura del repository (packages/mcp/src) ma senza agents/: il server non deve cercarla altrove.
-  const root = mkdtempSync(join(tmpdir(), "agentrica-vuoto-"));
+  const root = mkdtempSync(join(tmpdir(), "aigentrica-vuoto-"));
   try {
     const src = join(root, "packages", "mcp", "src");
     mkdirSync(src, { recursive: true });
@@ -248,7 +248,7 @@ test("senza agents/ accanto al pacchetto il server non parte: una riga su stderr
     // La cartella corrente è la root del repository, che ha una agents/ valida: il server non deve usarla.
     const run = spawnSync(process.execPath, [join(src, "server.ts"), "--lang", "it"], { cwd: repo, input: "", encoding: "utf8" });
     assert.equal(run.status, 1);
-    assert.match(run.stderr, /^agentrica: catalogo non leggibile in .*agents: /);
+    assert.match(run.stderr, /^aigentrica: catalogo non leggibile in .*agents: /);
     assert.equal(run.stderr.trim().split("\n").length, 1);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -269,7 +269,7 @@ test("--agents: prompt e tool vedono solo la squadra", async () => {
     assert.equal(prompts.length, 14);
     assert.equal(prompts[0]!.name, "aisa-02-software");
     assert.ok(prompts.slice(1, -3).every((p) => /^aiwda-\d{2}-design$/.test(p.name)));
-    assert.match(squad.getInstructions() ?? "", /^Agentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
+    assert.match(squad.getInstructions() ?? "", /^AIgentrica: 11 agenti IA in 2 reparti \(AISA, AIWDA\)\./);
     const list = text(await squad.callTool({ name: "list_agents", arguments: {} }));
     assert.equal(list.match(/^- /gm)?.length, 11);
     const outside = await squad.callTool({ name: "list_agents", arguments: { department: "AICA" } });
@@ -287,13 +287,13 @@ test("--agents sbagliato o opzione sconosciuta: il server non parte, una riga su
     spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--lang", "it", ...args], { cwd, input: "", encoding: "utf8" });
   const unknown = start("--agents", "aisa-02,aisa-99");
   assert.equal(unknown.status, 1);
-  assert.equal(unknown.stderr, 'agentrica: agente o reparto sconosciuto in --agents: "aisa-99"\n');
+  assert.equal(unknown.stderr, 'aigentrica: agente o reparto sconosciuto in --agents: "aisa-99"\n');
   const empty = start("--agents=");
   assert.equal(empty.status, 1);
-  assert.match(empty.stderr, /^agentrica: --agents è vuoto/);
+  assert.match(empty.stderr, /^aigentrica: --agents è vuoto/);
   const option = start("--agent", "aisa");
   assert.equal(option.status, 1);
-  assert.match(option.stderr, /^agentrica: .*--agent\b/);
+  assert.match(option.stderr, /^aigentrica: .*--agent\b/);
   assert.equal(option.stderr.trim().split("\n").length, 1);
   const control = start("--x\n\u001b[31m");
   assert.equal(control.status, 1);
@@ -307,9 +307,9 @@ test("--lang en: istruzioni, descrizioni, testo dell'agente e schede in inglese"
     new StdioClientTransport({ command: process.execPath, args: ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "en"], cwd, stderr: "pipe" }),
   );
   try {
-    assert.match(english.getInstructions() ?? "", /^Agentrica: 56 AI agents in 5 departments/);
+    assert.match(english.getInstructions() ?? "", /^AIgentrica: 56 AI agents in 5 departments/);
     const { tools } = await english.listTools();
-    assert.match(tools.find((t) => t.name === "list_agents")!.description!, /^Lists the Agentrica agents/);
+    assert.match(tools.find((t) => t.name === "list_agents")!.description!, /^Lists the AIgentrica agents/);
     const agent = text(await english.callTool({ name: "agent", arguments: { id: "AICA-03", task: "Check the login." } }));
     assert.match(agent, /^# AICA-03 · BETELGEUSE — Senior Application Security Engineer\n\nYou are AICA-03/);
     assert.match(agent, /## Department common rules\n\n.*### Mandatory rules/s);
@@ -333,7 +333,7 @@ test("pannello acceso di predefinito, ma con il permission model senza rete né 
   assert.ok(!tools.some((t) => t.name === "open_panel"));
   const run = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${repo}`, join(import.meta.dirname, "server.ts"), "--lang", "it", "--panel"], { cwd, input: "", encoding: "utf8" });
   assert.equal(run.status, 1);
-  assert.match(run.stderr, /^agentrica: pannello non avviato: /);
+  assert.match(run.stderr, /^aigentrica: pannello non avviato: /);
   const both = spawnSync(process.execPath, [join(import.meta.dirname, "server.ts"), "--lang", "it", "--panel", "--no-panel"], { cwd, input: "", encoding: "utf8" });
   assert.match(both.stderr, /--panel o --no-panel/);
 });

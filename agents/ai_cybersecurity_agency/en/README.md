@@ -19,7 +19,7 @@ Agents with a defence-first approach: they protect systems, data, people and bus
 ## Structure
 - `00-common-rules.md`: rules common to all roles of the agency.
 - `01-…` onwards: one file per role, in the order of the workflow, without frontmatter.
-- The agents are consulted through the Agentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/cybersecurity/` exist only in projects created with `init --subagents` and load their agent from the same server.
+- The agents are consulted through the AIgentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/cybersecurity/` exist only in projects created with `init --subagents` and load their agent from the same server.
 
 ## Workflow
 1. The CISO defines goals and priorities.
@@ -42,4 +42,4 @@ Agents with a defence-first approach: they protect systems, data, people and bus
 The mere presence of these files does not authorise any test on real systems.
 
 ## Library
-The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the Agentrica repository (in Italian).
+The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the AIgentrica repository (in Italian).

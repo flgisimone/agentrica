@@ -1,17 +1,17 @@
-# Agentrica
+# AIgentrica
 
-[![Agentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
+[![AIgentrica MCP su mcprush](https://mcprush.com/badge/agentrica-mcp/compact.svg)](https://mcprush.com/to/agentrica-mcp?ref=badge)
 
 [English](README.md)
 
-**Agentrica è un server MCP con agenti IA organizzati in reparti, da usare nei tuoi progetti.** Ogni reparto copre una competenza e ogni agente ha un ruolo preciso, un metodo di lavoro e dei limiti dichiarati.
+**AIgentrica è un server MCP con agenti IA organizzati in reparti, da usare nei tuoi progetti.** Ogni reparto copre una competenza e ogni agente ha un ruolo preciso, un metodo di lavoro e dei limiti dichiarati.
 
 Questo repository contiene:
 
-1. **Il server MCP** `@agentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @agentrica/mcp@0.22.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
-2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://agentrica.vercel.app presenta gli agenti a partire da questo catalogo.
+1. **Il server MCP** `@aigentrica/mcp`: gli agenti usabili come strumenti in qualsiasi progetto (Claude Code o un altro client MCP), senza copiarne a mano i prompt. Si installa con `npx -y @aigentrica/mcp@1.0.0 install` (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)).
+2. **Il catalogo**: i file di ruolo in [`agents/`](agents/) e il pacchetto `packages/catalog` che li legge. Il sito https://aigentrica.it presenta gli agenti a partire da questo catalogo.
 
-Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@agentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
+Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](agents/). Un ruolo si modifica in un solo punto e cambia in entrambi. Da F17 il codice del sito è in un repository privato, che legge il catalogo da `@aigentrica/mcp/catalog`: un ruolo modificato arriva sul sito con la versione successiva del pacchetto.
 
 ## I reparti
 
@@ -25,15 +25,15 @@ Sito e server MCP leggono la **stessa fonte**: i file Markdown di [`agents/`](ag
 
 Ogni agente ha un **nome in codice di stella**: la sigla del reparto, il numero del suo file di ruolo e una stella, per esempio `AISA-02 · ALTAIR` per il Senior Software Architect. Il numero 01 di ogni reparto è il direttore.
 
-Agentrica non ha persone, clienti o casi di successo: il sito non ne inventa.
+AIgentrica non ha persone, clienti o casi di successo: il sito non ne inventa.
 
 ## Struttura
 
 ```
-agentrica/
+aigentrica/
 ├── agents/              # i ruoli: la fonte unica dei contenuti (un .md per agente, 00-common-rules.md per reparto, biblioteca/ e fonti.json)
 ├── packages/catalog/    # TypeScript: legge agents/ e restituisce reparti e agenti tipizzati, con i nomi in codice
-├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @agentrica/mcp con l'export ./catalog: vedi packages/mcp/README.it.md
+├── packages/mcp/        # il server MCP degli agenti (stdio), pacchetto npm @aigentrica/mcp con l'export ./catalog: vedi packages/mcp/README.it.md
 ├── plan/                # decisioni e fasi del progetto
 ├── scripts/             # comandi da terminale: stats, ratings, agent-text, study (rilevatore della biblioteca)
 ├── .claude/agents/      # gli stessi ruoli come subagent di Claude Code, per lavorare a questo repository
@@ -47,7 +47,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | Fase | Contenuto | Stato |
 |---|---|---|
 | F0 | Monorepo, catalogo da `agents/`, sito Astro di base, controlli e CI | completata |
-| F1 | Landing di Agentrica | completata |
+| F1 | Landing di AIgentrica | completata |
 | F2 | Il sito passa da Astro a Next.js con Tailwind e shadcn | completata |
 | F3 | Pagine dei reparti | completata |
 | F4 | Pagine degli agenti con biografia | completata |
@@ -72,7 +72,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F23 | Avvisi e installazione: `install` e `add` su Mac, Windows e Linux, valutazione con il modulo del client, avviso di versione nuova, reparto nei comandi, CHANGELOG (0.6.0) | completata |
 | F24 | Modelli per ruolo misurati sui casi di prova e consumo di token nel pannello | completata |
 | F25 | Biblioteca degli agenti: schede con fonte e data, tool `library`, rilevatore settimanale delle novità | completata |
-| F26 | Progetti degli utenti: vetrina su richiesta da issue e topic `agentrica`, pagina `/progetti` | completata |
+| F26 | Progetti degli utenti: vetrina su richiesta da issue e topic `aigentrica`, pagina `/progetti` | completata |
 | F27 | Consumo sul sito: `share_usage`, endpoint con somme, pagina `/consumo` (0.7.0) | completata |
 | F28 | Nuova interfaccia del sito: strumento per sviluppatori, osservatorio stellare, catalogo `/agenti` e pannello «Usalo» | completata |
 | F29 | Configurazione salvata, comandi `valuta`, `configura` e `progetto`, progetti proposti dal server MCP (0.8.0) | completata |
@@ -99,7 +99,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F50 | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10) con il pannello turnio e le schermate fisse; Sonnet supera la soglia in sei ruoli (−55% del costo sul compito) e diventa il modello consigliato per AIWDA-04–08 e 10 | completata (0.19.0) |
 | F51 | Misura dei modelli, quarta ondata: otto specialisti di cyber, privacy e software su Opus medio e Sonnet (Haiku su AICA-12) con i progetti di F37 estesi; Sonnet supera la soglia in sei ruoli (−57% del costo sul compito) e diventa il modello consigliato per AICA-06, 08, AIPCA-03, AISA-03 e 06, Haiku per AICA-12; ogni ruolo `inherit` ha il suo motivo | completata (0.20.0) |
 | F52 | Pannello: vista per reparto compatta e mappa a corsie degli agenti, senza framework; pagine `/pannello` e `/orchestrazione` del sito allineate; menu dell'header sotto la voce | completata (0.21.0) |
-| F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di Agentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@agentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata (0.22.0) |
+| F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di AIgentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@aigentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata (0.22.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 
@@ -110,12 +110,12 @@ Requisiti: Node (versione in `.nvmrc`) e npm.
 ```sh
 npm ci
 npm run verify    # typecheck, lint, test: prima di ogni commit
-npm run stats     # download npm di @agentrica/mcp e stelle su GitHub
+npm run stats     # download npm di @aigentrica/mcp e stelle su GitHub
 ```
 
 ## Come si lavora
 
-Il metodo di lavoro è lo stesso che `npx @agentrica/mcp init` porta nei progetti nuovi (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)):
+Il metodo di lavoro è lo stesso che `npx @aigentrica/mcp init` porta nei progetti nuovi (vedi [packages/mcp/README.it.md](packages/mcp/README.it.md)):
 
 - **una fase alla volta**: un file in `plan/` con backlog (attività `FN-NN` con priorità `P0`–`P3`) e criteri di accettazione confermati dall'utente, un branch `fase/fN-nome` da `develop`, chiusura con la procedura di [CONVENTIONS §13.7](CONVENTIONS.md); il metodo è in [CONVENTIONS §2.6](CONVENTIONS.md);
 - **agenzie su richiesta**: i ruoli sono un modo di lavorare, i subagent si avviano solo per gli audit;

@@ -1,11 +1,11 @@
-// `agentrica-mcp add` e `agentrica-mcp install` (F23): registrano il server in Claude Code con un solo comando, uguale su
+// `aigentrica-mcp add` e `aigentrica-mcp install` (F23): registrano il server in Claude Code con un solo comando, uguale su
 // Mac, Windows e Linux. Chiamano `claude mcp add` (e per install `npm install -g`) senza shell, con gli argomenti in un
 // array: niente quoting di PowerShell, cmd, zsh o bash. La versione è sempre quella di questo pacchetto, fissata.
 // - add: il server parte con npx (su Windows `cmd /c npx`, perché npx è npx.cmd); ambito user, --project o --local.
 // - install: installa questa versione con npm -g e registra `node <cartella globale>/…/server.js` con ambito user.
 // Una registrazione con lo stesso nome nello stesso ambito si sostituisce: rilanciare con una versione nuova aggiorna.
 // Se mancano Node ≥ 22, npm o claude, lo dice e stampa i comandi da lanciare a mano.
-// Se Agentrica è registrato anche in un altro ambito, lo dice dopo la registrazione (F30-08): Claude Code usa quello
+// Se AIgentrica è registrato anche in un altro ambito, lo dice dopo la registrazione (F30-08): Claude Code usa quello
 // più vicino al progetto e l'utente vedrebbe due comandi diversi.
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -15,9 +15,11 @@ import { parseArgs } from "node:util";
 import { VERSION } from "./prompt.ts";
 import { isLang, T } from "./texts/index.ts";
 
-const NAME = "agentrica";
-const PACKAGE = `@agentrica/mcp@${VERSION}`;
-const SERVER_IN_PACKAGE = ["@agentrica", "mcp", "dist", "mcp", "src", "server.js"];
+const NAME = "aigentrica";
+// Il nome di prima di F54: la sua voce nello stesso ambito si toglie, in un altro ambito si segnala.
+const LEGACY = "agentrica";
+const PACKAGE = `@aigentrica/mcp@${VERSION}`;
+const SERVER_IN_PACKAGE = ["@aigentrica", "mcp", "dist", "mcp", "src", "server.js"];
 
 export type Scope = "user" | "project" | "local";
 export interface RunResult {
@@ -33,8 +35,8 @@ export interface SetupDeps {
   run(command: string, args: string[]): RunResult;
   exists(path: string): boolean;
   out(text: string): void;
-  /** Gli ambiti in cui Agentrica è già registrato in Claude Code; assente nei test che non lo usano. */
-  registered?(): Scope[];
+  /** Gli ambiti in cui un server con quel nome è già registrato in Claude Code; assente nei test che non lo usano. */
+  registered?(name: string): Scope[];
 }
 
 /**
@@ -63,12 +65,12 @@ function realRun(platform: NodeJS.Platform) {
 }
 
 /**
- * Gli ambiti con una voce «agentrica» nei file di Claude Code: `mcpServers` di ~/.claude.json (user), della cartella
+ * Gli ambiti con una voce «aigentrica» nei file di Claude Code: `mcpServers` di ~/.claude.json (user), della cartella
  * corrente in `projects` dello stesso file (local) e di ./.mcp.json (project). Un file illeggibile non conta.
  * ponytail: non segue CLAUDE_CONFIG_DIR, un cambio di formato di Claude Code né, su Windows, una chiave di `projects` scritta
  * in altra forma (barre /): l'avviso è un aiuto, non un controllo; da rivedere con la prova su Windows (F23-10).
  */
-export function registeredScopes(home: string, cwd: string, read = (path: string) => readFileSync(path, "utf8")): Scope[] {
+export function registeredScopes(home: string, cwd: string, read = (path: string) => readFileSync(path, "utf8"), name = NAME): Scope[] {
   const json = (path: string): Record<string, unknown> | undefined => {
     try {
       const value: unknown = JSON.parse(read(path));
@@ -79,7 +81,7 @@ export function registeredScopes(home: string, cwd: string, read = (path: string
   };
   const has = (config: unknown) => {
     const servers = (config as { mcpServers?: unknown } | undefined)?.mcpServers;
-    return typeof servers === "object" && servers !== null && Object.hasOwn(servers, NAME);
+    return typeof servers === "object" && servers !== null && Object.hasOwn(servers, name);
   };
   const user = json(join(home, ".claude.json"));
   const local = (user?.projects as Record<string, unknown> | undefined)?.[cwd];
@@ -94,7 +96,7 @@ const REAL: SetupDeps = {
   run: realRun(process.platform),
   exists: existsSync,
   out: (text) => process.stdout.write(text),
-  registered: () => registeredScopes(homedir(), process.cwd()),
+  registered: (name) => registeredScopes(homedir(), process.cwd(), undefined, name),
 };
 
 /** Il comando con cui il client avvia il server. */
@@ -148,7 +150,7 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
     if (values["no-update-check"]) flags.push("--no-update-check");
     from = values.from;
   } catch (error) {
-    say(`agentrica ${mode}: ${(error instanceof Error ? error.message : String(error)).replace(/\p{Cc}/gu, " ")}`);
+    say(`aigentrica ${mode}: ${(error instanceof Error ? error.message : String(error)).replace(/\p{Cc}/gu, " ")}`);
     return 1;
   }
 
@@ -204,7 +206,11 @@ export function runSetup(mode: "add" | "install", args: string[], deps: SetupDep
   }
   say(T.setup.registered(VERSION, T.setup.scope[scope], removed.status === 0));
   say(T.setup.command(shown(command)));
-  for (const other of deps.registered?.().filter((s) => s !== scope) ?? []) say(T.setup.otherScope(T.setup.scope[other], NAME, other));
+  for (const other of deps.registered?.(NAME).filter((s) => s !== scope) ?? []) say(T.setup.otherScope(T.setup.scope[other], NAME, other));
+  for (const old of deps.registered?.(LEGACY) ?? []) {
+    if (old !== scope) say(T.setup.otherScope(T.setup.scope[old], LEGACY, old));
+    else if (deps.run("claude", ["mcp", "remove", LEGACY, "--scope", scope]).status === 0) say(T.setup.legacyRemoved(T.setup.scope[scope]));
+  }
   say(T.setup.restart);
   return 0;
 }

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { VERSION } from "./prompt.ts";
 import { cmdLine, registeredScopes, runSetup, serverCommand, type RunResult, type SetupDeps } from "./setup.ts";
 
-const PKG = `@agentrica/mcp@${VERSION}`;
+const PKG = `@aigentrica/mcp@${VERSION}`;
 
 /** Dipendenze finte: registra i comandi e risponde con `answers` (per programma) o con successo. */
 function fake(platform: NodeJS.Platform, answers: Record<string, Partial<RunResult>> = {}, nodeVersion = "22.12.0") {
@@ -30,8 +30,8 @@ test("add: npx su Mac e Linux, cmd /c npx su Windows, ambito user, registrazione
     assert.equal(runSetup("add", [], deps), 0, platform);
     const server = platform === "win32" ? ["cmd", "/c", "npx", "-y", PKG] : ["npx", "-y", PKG];
     assert.deepEqual(calls, [
-      ["claude", "mcp", "remove", "agentrica", "--scope", "user"],
-      ["claude", "mcp", "add", "--scope", "user", "agentrica", "--", ...server],
+      ["claude", "mcp", "remove", "aigentrica", "--scope", "user"],
+      ["claude", "mcp", "add", "--scope", "user", "aigentrica", "--", ...server],
     ]);
     assert.match(output(), /registrato in Claude Code \(ambito user: tutti i tuoi progetti\), al posto della registrazione precedente/);
   }
@@ -40,7 +40,7 @@ test("add: npx su Mac e Linux, cmd /c npx su Windows, ambito user, registrazione
 test("add: --project e --local, flag del server inoltrati; prima registrazione senza «al posto»", () => {
   const { deps, calls, output } = fake("darwin", { "claude mcp remove": { status: 1 } });
   assert.equal(runSetup("add", ["--project", "--agents", "aisa,aiwda-08", "--panel", "--no-ratings", "--no-update-check"], deps), 0);
-  assert.deepEqual(calls[1], ["claude", "mcp", "add", "--scope", "project", "agentrica", "--", "npx", "-y", PKG, "--agents", "aisa,aiwda-08", "--panel", "--no-ratings", "--no-update-check"]);
+  assert.deepEqual(calls[1], ["claude", "mcp", "add", "--scope", "project", "aigentrica", "--", "npx", "-y", PKG, "--agents", "aisa,aiwda-08", "--panel", "--no-ratings", "--no-update-check"]);
   assert.ok(!output().includes("al posto"));
   const local = fake("linux");
   assert.equal(runSetup("add", ["--local"], local.deps), 0);
@@ -55,14 +55,14 @@ test("install: npm install -g della stessa versione, poi node <cartella globale>
     const { deps, calls } = fake(platform, { "npm root -g": { stdout: `${root}\n` } });
     assert.equal(runSetup("install", ["--panel"], deps), 0, platform);
     assert.deepEqual(calls.slice(0, 2), [["npm", "install", "-g", PKG], ["npm", "root", "-g"]]);
-    assert.deepEqual(calls[3], ["claude", "mcp", "add", "--scope", "user", "agentrica", "--", "node", join(root, "@agentrica", "mcp", "dist", "mcp", "src", "server.js"), "--panel"]);
+    assert.deepEqual(calls[3], ["claude", "mcp", "add", "--scope", "user", "aigentrica", "--", "node", join(root, "@aigentrica", "mcp", "dist", "mcp", "src", "server.js"), "--panel"]);
   }
 });
 
 test("install: --from installa un .tgz; ambiti di progetto non ammessi", () => {
   const { deps, calls } = fake("linux", { "npm root -g": { stdout: "/usr/lib/node_modules" } });
-  assert.equal(runSetup("install", ["--from", "./agentrica-mcp-0.6.0.tgz"], deps), 0);
-  assert.deepEqual(calls[0], ["npm", "install", "-g", "./agentrica-mcp-0.6.0.tgz"]);
+  assert.equal(runSetup("install", ["--from", "./aigentrica-mcp-0.6.0.tgz"], deps), 0);
+  assert.deepEqual(calls[0], ["npm", "install", "-g", "./aigentrica-mcp-0.6.0.tgz"]);
   for (const args of [["--project"], ["--local"]]) {
     const run = fake("linux");
     assert.equal(runSetup("install", args, run.deps), 1);
@@ -77,7 +77,7 @@ test("senza claude: codice 1 e il comando da lanciare a mano per quel sistema", 
   const { deps, calls, output } = fake("win32", { claude: { missing: true, status: null } });
   assert.equal(runSetup("add", [], deps), 1);
   assert.equal(calls.length, 1);
-  assert.match(output(), new RegExp(`claude mcp add --scope user agentrica -- cmd /c npx -y ${PKG.replace(/[.@/]/g, "\\$&")}`));
+  assert.match(output(), new RegExp(`claude mcp add --scope user aigentrica -- cmd /c npx -y ${PKG.replace(/[.@/]/g, "\\$&")}`));
 });
 
 test("senza npm, npm che fallisce o Node vecchio: niente registrazione, un messaggio chiaro", () => {
@@ -95,7 +95,7 @@ test("senza npm, npm che fallisce o Node vecchio: niente registrazione, un messa
 });
 
 test("claude mcp add che fallisce: codice 1, errore di claude e comando manuale", () => {
-  const { deps, output } = fake("linux", { "claude mcp add": { status: 1, stderr: "MCP server agentrica already exists" } });
+  const { deps, output } = fake("linux", { "claude mcp add": { status: 1, stderr: "MCP server aigentrica already exists" } });
   assert.equal(runSetup("add", [], deps), 1);
   assert.match(output(), /already exists[\s\S]*claude mcp add/);
 });
@@ -117,8 +117,8 @@ test("serverCommand e cmdLine: argomenti fra virgolette per cmd, rifiutati se co
 
 test("registeredScopes: user e local da ~/.claude.json, project da .mcp.json; file illeggibili non contano (F30-08)", () => {
   const files: Record<string, string> = {
-    [join("/casa", ".claude.json")]: JSON.stringify({ mcpServers: { agentrica: {} }, projects: { "/prog": { mcpServers: { agentrica: {} } }, "/altro": { mcpServers: {} } } }),
-    [join("/prog", ".mcp.json")]: JSON.stringify({ mcpServers: { agentrica: {} } }),
+    [join("/casa", ".claude.json")]: JSON.stringify({ mcpServers: { aigentrica: {} }, projects: { "/prog": { mcpServers: { aigentrica: {} } }, "/altro": { mcpServers: {} } } }),
+    [join("/prog", ".mcp.json")]: JSON.stringify({ mcpServers: { aigentrica: {} } }),
     [join("/rotto", ".mcp.json")]: "{",
   };
   const read = (path: string) => {
@@ -130,12 +130,12 @@ test("registeredScopes: user e local da ~/.claude.json, project da .mcp.json; fi
   assert.deepEqual(registeredScopes("/vuota", "/rotto", read), []);
 });
 
-test("add --local con Agentrica già in ambito user: registra e avvisa con il comando per togliere l'altra (F30-08)", () => {
+test("add --local con AIgentrica già in ambito user: registra e avvisa con il comando per togliere l'altra (F30-08)", () => {
   const { deps, output } = fake("darwin");
   deps.registered = () => ["user", "local"];
   assert.equal(runSetup("add", ["--local"], deps), 0);
   assert.match(output(), /registrato anche con ambito user: tutti i tuoi progetti/);
-  assert.match(output(), /claude mcp remove agentrica --scope user/);
+  assert.match(output(), /claude mcp remove aigentrica --scope user/);
   assert.ok(!output().includes("--scope local\n"));
 
   const install = fake("darwin", { "npm root -g": { stdout: "/globale\n" } });
@@ -148,4 +148,14 @@ test("add --local con Agentrica già in ambito user: registra e avvisa con il co
   single.deps.registered = () => ["user"];
   runSetup("add", [], single.deps);
   assert.ok(!single.output().includes("Attenzione"));
+});
+
+test("cambio di nome (F54): la voce «agentrica» nello stesso ambito si toglie, in un altro si segnala", () => {
+  const { deps, calls, output } = fake("darwin");
+  deps.registered = (name) => (name === "agentrica" ? ["user", "project"] : ["user"]);
+  assert.equal(runSetup("add", [], deps), 0);
+  assert.deepEqual(calls.at(-1), ["claude", "mcp", "remove", "agentrica", "--scope", "user"]);
+  assert.match(output(), /Tolta la vecchia registrazione «agentrica» \(ambito user/);
+  assert.match(output(), /claude mcp remove agentrica --scope project/);
+  assert.ok(!calls.some((c) => c.includes("agentrica") && c.includes("project")), "il .mcp.json del progetto non si tocca");
 });

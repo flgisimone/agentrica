@@ -22,12 +22,12 @@ The same question can give different answers: there is an element of chance in c
 
 None of this makes models useless. It makes them tools to use the way you would use a very fast and very well-read colleague who has not seen your code and does not always say when they do not know: you give them the right material, you ask for things that can be checked, and you check.
 
-## In Agentrica
-Agentrica is built on this idea of a boundary. Its server does not call any model: it assembles texts, keeps the state of the session and runs checks that do not depend on chance. The reasoning is done by your assistant's model. It is a decision written in the plan, «Confini del Core (F40)» (boundaries of the Core), in [plan/README.md](../../plan/README.md).
+## In AIgentrica
+AIgentrica is built on this idea of a boundary. Its server does not call any model: it assembles texts, keeps the state of the session and runs checks that do not depend on chance. The reasoning is done by your assistant's model. It is a decision written in the plan, «Confini del Core (F40)» (boundaries of the Core), in [plan/README.md](../../plan/README.md).
 
-An Agentrica agent, then, is not a program that thinks: it is a text the server hands to your model. For example the software architect's role is in [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md). The model reads it and tries to behave as described.
+An AIgentrica agent, then, is not a program that thinks: it is a text the server hands to your model. For example the software architect's role is in [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md). The model reads it and tries to behave as described.
 
-Since models make mistakes, Agentrica tests them. In [examples/README.md](../../examples/README.md) there are small projects with defects planted on purpose: an agent gets the project and we count how many defects it finds and how many it makes up. In the measurement of 2026-11-19, in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md), on the case of requirements for a subscription service the smallest model, Haiku, reported one more non-existent defect than Opus in one of its two runs. Haiku was not chosen for that role. A made-up error matters, because it makes you waste time chasing it.
+Since models make mistakes, AIgentrica tests them. In [examples/README.md](../../examples/README.md) there are small projects with defects planted on purpose: an agent gets the project and we count how many defects it finds and how many it makes up. In the measurement of 2026-11-19, in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md), on the case of requirements for a subscription service the smallest model, Haiku, reported one more non-existent defect than Opus in one of its two runs. Haiku was not chosen for that role. A made-up error matters, because it makes you waste time chasing it.
 
 ## Try it
 Run two experiments with your assistant, in two new chats.

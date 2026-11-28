@@ -27,7 +27,7 @@ coverage/
 /blob-report/
 /playwright/.cache/
 
-# agents/, .claude/agents/, plan/, docs/ and audit/ are versioned (default of `@agentrica/mcp init`).
+# agents/, .claude/agents/, plan/, docs/ and audit/ are versioned (default of `@aigentrica/mcp init`).
 # If audit evidence shows personal data, uncomment:
 # audit/*/evidence/
 

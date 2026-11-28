@@ -6,13 +6,13 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { legalUrl, T } from "./texts/index.ts";
 
-export const RATINGS_URL = "https://agentrica.vercel.app/api/ratings";
+export const RATINGS_URL = "https://aigentrica.it/api/ratings";
 export const MAX_COMMENT = 1000;
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
 export const REMINDER_AFTER_MS = 30 * 60_000;
 
-/** Quello che parte verso Agentrica, e nient'altro. */
+/** Quello che parte verso AIgentrica, e nient'altro. */
 export interface Rating {
   usageId: string;
   agentId: string;

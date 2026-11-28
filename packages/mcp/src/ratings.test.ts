@@ -117,11 +117,11 @@ test("anteprima: campi, avviso con l'informativa, codice e istruzione di chieder
 });
 
 test("legalUrl (F33-08): le note legali nella lingua del server, con le ancore tradotte", () => {
-  assert.equal(legalUrl("progetti"), "https://agentrica.vercel.app/it/note-legali#progetti");
+  assert.equal(legalUrl("progetti"), "https://aigentrica.it/it/note-legali#progetti");
   setLang("en");
   try {
-    assert.equal(legalUrl("valutazioni"), "https://agentrica.vercel.app/en/legal#ratings");
-    assert.equal(legalUrl("consumo"), "https://agentrica.vercel.app/en/legal#usage");
+    assert.equal(legalUrl("valutazioni"), "https://aigentrica.it/en/legal#ratings");
+    assert.equal(legalUrl("consumo"), "https://aigentrica.it/en/legal#usage");
     assert.match(notice(), /\/en\/legal#ratings/);
   } finally {
     setLang("it");

@@ -2,7 +2,7 @@
 
 Before implementing, read the relevant sections of [CONVENTIONS.md](CONVENTIONS.md) and the phase file in [plan/](plan/README.md): these rules complete them, they do not replace them (CONVENTIONS §16).
 
-**Main rule: all work on the project goes through Agentrica's agents, even if the user does not name them.** A new feature, a change, a stack choice, phase F0, an audit or a finding to fix starts from the Agentrica MCP server: load its tools with ToolSearch (`mcp__agentrica__`), then `list_agents` and the department director with `agent`, as «How to consult an agent» says. Questions to the user are asked with `ask_user`, which shows them in the panel. Work without agents only if the user asks for it, or for short answers that do not touch the project.
+**Main rule: all work on the project goes through AIgentrica's agents, even if the user does not name them.** A new feature, a change, a stack choice, phase F0, an audit or a finding to fix starts from the AIgentrica MCP server: load its tools with ToolSearch (`mcp__aigentrica__`), then `list_agents` and the department director with `agent`, as «How to consult an agent» says. Questions to the user are asked with `ask_user`, which shows them in the panel. Work without agents only if the user asks for it, or for short answers that do not touch the project.
 
 <!-- If the framework writes its own block of rules here at the top (for example Next.js with `next dev`), leave it and commit it. -->
 
@@ -52,7 +52,7 @@ The cost of a session grows with the number of calls and the size of the context
 
 ## Agencies
 
-Five teams of roles. The role files are in `agents/`, in English in the `en/` subfolder of each agency (in each folder `README.md`, `00-common-rules.md` with the common rules and one numbered file per role; the Italian files sit next to `en/`); the agents are consulted through the Agentrica MCP server (`.mcp.json`), as «How to consult an agent» says. The full picture is in `docs/AI Multi-Agency System.md`.
+Five teams of roles. The role files are in `agents/`, in English in the `en/` subfolder of each agency (in each folder `README.md`, `00-common-rules.md` with the common rules and one numbered file per role; the Italian files sit next to `en/`); the agents are consulted through the AIgentrica MCP server (`.mcp.json`), as «How to consult an agent» says. The full picture is in `docs/AI Multi-Agency System.md`.
 
 | Agency | Prefix | What it does | Active |
 |---|---|---|---|
@@ -62,16 +62,16 @@ Five teams of roles. The role files are in `agents/`, in English in the `en/` su
 | Business & Product (`agents/ai_business_product_development_agency/en/`) | `biz-` | goals, requirements, priorities, roadmap, business case, market. Read-only, no external contact | <!-- yes/no --> |
 | Cybersecurity (`agents/ai_cybersecurity_agency/en/`) | `sec-` | threat model, hosting and database configuration, access, dependencies and vulnerabilities, logs, incident response. Read-only, no active tests without written authorisation | <!-- yes/no --> |
 
-<!-- In F0 decide with the user which agencies stay active. Inactive ones are removed from agents/ and, if the project has subagents, from .claude/agents/ (when needed they can be copied again from the same folders of the `@agentrica/mcp` package) and the decision goes in the table of plan/README.md. If there are subagents, also remove the roles the project does not use. -->
+<!-- In F0 decide with the user which agencies stay active. Inactive ones are removed from agents/ and, if the project has subagents, from .claude/agents/ (when needed they can be copied again from the same folders of the `@aigentrica/mcp` package) and the decision goes in the table of plan/README.md. If there are subagents, also remove the roles the project does not use. -->
 
 ### Two rules that always apply
 
 - **Only the relevant agents.** All work on the project goes through the agents (main rule, at the top), but never all agencies or all agents together. For each task choose the agency and only the relevant specialists, at the moment they are needed.
-- **User confirmation.** Every final decision of the agencies is a proposal until the user confirms it: priorities and content of the backlog, requirements and specifications, architecture and data model choices, findings accepted or rejected, closing a task, new dependencies, commits, merges, pushes, deploys and migrations. Present the alternatives with their reasons (with `ask_user`, in Agentrica's panel; AskUserQuestion only if the panel is off) and proceed only after the user's go-ahead. At the end of a phase, commit, merge into `develop`, push and `tokensave sync` are confirmed with a single question (CONVENTIONS §13.7).
+- **User confirmation.** Every final decision of the agencies is a proposal until the user confirms it: priorities and content of the backlog, requirements and specifications, architecture and data model choices, findings accepted or rejected, closing a task, new dependencies, commits, merges, pushes, deploys and migrations. Present the alternatives with their reasons (with `ask_user`, in AIgentrica's panel; AskUserQuestion only if the panel is off) and proceed only after the user's go-ahead. At the end of a phase, commit, merge into `develop`, push and `tokensave sync` are confirmed with a single question (CONVENTIONS §13.7).
 
 ### How to consult an agent
 
-Agents are loaded from the Agentrica MCP server, which shows them in the local panel. In Claude Code the server's tools are loaded with ToolSearch (`mcp__agentrica__`).
+Agents are loaded from the AIgentrica MCP server, which shows them in the local panel. In Claude Code the server's tools are loaded with ToolSearch (`mcp__aigentrica__`).
 
 1. `list_agents` to choose: the director of each department is marked as such.
 2. `agent` with the id of the department's **director** (`-01`) and the task: it says which specialists are needed and in what order.
@@ -79,7 +79,7 @@ Agents are loaded from the Agentrica MCP server, which shows them in the local p
 4. The director consolidates the results and presents them to the user. Across departments the order in «How to use them» applies.
 5. The user's choices are asked with `ask_user`, which shows them in the panel (`open_panel` gives the address). If an agent's text offers a rating, use `rate_agent`.
 
-For Agentrica's agents do not use Claude Code's `Agent` tool (subagents): the panel shows the agents loaded from the server, and subagents only in a separate section. The subagents in `.claude/agents/` exist only if the project was created with `init --subagents`; they are started only when the user asks for them or for a parallel audit, and each one loads its agent from the server.
+For AIgentrica's agents do not use Claude Code's `Agent` tool (subagents): the panel shows the agents loaded from the server, and subagents only in a separate section. The subagents in `.claude/agents/` exist only if the project was created with `init --subagents`; they are started only when the user asks for them or for a parallel audit, and each one loads its agent from the server.
 
 ### How to use them
 

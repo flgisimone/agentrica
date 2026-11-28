@@ -282,7 +282,7 @@ export function missingHandoff(summary: string): ("outcome" | "findings" | "ques
   return HANDOFF_PARTS.filter(([, pattern]) => !pattern.test(summary)).map(([part]) => part);
 }
 
-/** Il comando `agentrica-mcp check [cartella]`: stampa le segnalazioni; 1 se ce ne sono, 0 se no. */
+/** Il comando `aigentrica-mcp check [cartella]`: stampa le segnalazioni; 1 se ce ne sono, 0 se no. */
 export function runCheck(args: string[]): number {
   let dir: string;
   try {

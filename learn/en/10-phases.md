@@ -24,8 +24,8 @@ A rhythm that works:
 
 The biggest benefit is trust. When the agent says «done», you can check a precise list instead of trusting a sentence.
 
-## In Agentrica
-Agentrica was built this way, from the first phase to the latest. The plan is in [plan/README.md](../../plan/README.md): decisions with date and reason, and the table of phases. Each phase has its own file, modelled on [plan/00-base.md](../../plan/00-base.md), with «Fatto» (done), «Verifiche» (checks) and «Rilievi aperti» (open findings) at closure. The closing procedure is in [CONVENTIONS.md](../../CONVENTIONS.md), section 13.7: updated plan, `npm run verify`, a single confirmation question for commit, merge and push, then a new session. Since phase F16 the method is written there; findings phases, such as F15, close the problems left open by earlier ones.
+## In AIgentrica
+AIgentrica was built this way, from the first phase to the latest. The plan is in [plan/README.md](../../plan/README.md): decisions with date and reason, and the table of phases. Each phase has its own file, modelled on [plan/00-base.md](../../plan/00-base.md), with «Fatto» (done), «Verifiche» (checks) and «Rilievi aperti» (open findings) at closure. The closing procedure is in [CONVENTIONS.md](../../CONVENTIONS.md), section 13.7: updated plan, `npm run verify`, a single confirmation question for commit, merge and push, then a new session. Since phase F16 the method is written there; findings phases, such as F15, close the problems left open by earlier ones.
 
 The method reaches your projects too. Since phase F18 the `init` command copies a template with the plan already set up, [starter/plan/README.md](../../starter/plan/README.md); since F35 `init --existing` adds it to a project already under way, with the plan created by reading the code. Since F42 the `check` tool checks the shape of `plan/` without models, and the local panel shows phases, backlog and findings.
 
@@ -50,7 +50,7 @@ Pick the next thing you want to do in your project and write it as a phase, in a
 - A sentence that can be checked with a command.
 ```
 
-Then open a new session and ask your assistant to develop only that phase. If you want it done with Agentrica's agents, the server installs with one command: [install Agentrica](/installa).
+Then open a new session and ask your assistant to develop only that phase. If you want it done with AIgentrica's agents, the server installs with one command: [install AIgentrica](/installa).
 
 ## Terms
 - [Phase](glossary.md#phase)

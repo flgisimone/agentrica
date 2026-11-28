@@ -10,7 +10,7 @@ Il progetto è indicizzato con tokensave (cartella `.tokensave/`, ignorata da gi
 - `tokensave_search` per un simbolo per nome, con `literal: true` per il testo esatto;
 - `tokensave_callers`, `tokensave_callees` e `tokensave_impact` per chi usa cosa.
 
-Il server MCP non ha un progetto predefinito: passa `graph_root: "/Users/flgisimone/Desktop/lavoro/agentrica"`, oppure usa la CLI dalla root (`tokensave tool search <query>`). A fine di ogni fase l'indice si aggiorna con `tokensave sync` dalla root, come passo della chiusura (CONVENTIONS §13.7); anche dopo modifiche importanti a metà fase. L'indice si crea in F0 con `tokensave init`, quando c'è il primo codice. Se tokensave non è installato, esplora con ricerca e lettura dei file.
+Il server MCP non ha un progetto predefinito: passa `graph_root: "/Users/flgisimone/Desktop/lavoro/aigentrica"`, oppure usa la CLI dalla root (`tokensave tool search <query>`). A fine di ogni fase l'indice si aggiorna con `tokensave sync` dalla root, come passo della chiusura (CONVENTIONS §13.7); anche dopo modifiche importanti a metà fase. L'indice si crea in F0 con `tokensave init`, quando c'è il primo codice. Se tokensave non è installato, esplora con ricerca e lettura dei file.
 
 ## Scrivere codice: Ponytail
 
@@ -42,7 +42,7 @@ Il costo di una sessione cresce con le chiamate e con la dimensione del contesto
 
 - `npm run verify` (typecheck, lint, test unitari) deve passare prima di ogni commit.
 - `npm run verify:e2e` (Playwright) prima del merge di una fase che tocca il sito: da F17 sta nel repository del sito, insieme alla build.
-- Le modifiche visibili si provano nel sito (`npm run dev` in `../agentrica-site`) prima di dichiararle fatte. Se una prova non è stata fatta, si dice.
+- Le modifiche visibili si provano nel sito (`npm run dev` in `../aigentrica-site`) prima di dichiararle fatte. Se una prova non è stata fatta, si dice.
 - La CI (`.github/workflows/ci.yml`) esegue gli stessi due comandi: i nomi `verify` e `verify:e2e` sono il contratto fra il progetto e la CI.
 
 ## Agenzie
@@ -57,7 +57,7 @@ Cinque team di ruoli. I file dei ruoli sono in `agents/` (in ogni cartella `READ
 | Business & Product (`agents/ai_business_product_development_agency/`) | `biz-` | obiettivi, requisiti, priorità, roadmap, business case, mercato. Sola lettura, nessun contatto esterno | su richiesta |
 | Cybersecurity (`agents/ai_cybersecurity_agency/`) | `sec-` | threat model, configurazioni di hosting e database, accessi, dipendenze e vulnerabilità, log, risposta agli incidenti. Sola lettura, nessun test attivo senza autorizzazione scritta | da F5 |
 
-In questo repository le agenzie hanno due parti: sono il **contenuto** del prodotto (Agentrica le presenta come reparti AIBPD, AICA, AIPCA, AISA, AIWDA) e il **team** che lo sviluppa. Per questo `agents/` resta completo anche per le agenzie non attive: modificare un file di ruolo cambia il sito e, da F5, il server MCP.
+In questo repository le agenzie hanno due parti: sono il **contenuto** del prodotto (AIgentrica le presenta come reparti AIBPD, AICA, AIPCA, AISA, AIWDA) e il **team** che lo sviluppa. Per questo `agents/` resta completo anche per le agenzie non attive: modificare un file di ruolo cambia il sito e, da F5, il server MCP.
 
 ### Due regole che valgono sempre
 
@@ -78,7 +78,7 @@ In questo repository le agenzie hanno due parti: sono il **contenuto** del prodo
 
 ### Adattamenti a questo repository
 
-- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e il server MCP in `packages/mcp`, che esporta anche il catalogo (`@agentrica/mcp/catalog`). Da F17 il sito (Next.js 16, Tailwind 4, shadcn/ui) è nel repository privato `flgisimone/agentrica-site` (in locale `../agentrica-site`), con le regole di Next nel suo `AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
+- **Stack.** Monorepo npm workspaces: `packages/catalog` (TypeScript senza dipendenze, legge `agents/`) e il server MCP in `packages/mcp`, che esporta anche il catalogo (`@aigentrica/mcp/catalog`). Da F17 il sito (Next.js 16, Tailwind 4, shadcn/ui) è nel repository privato `flgisimone/aigentrica-site` (in locale `../aigentrica-site`), con le regole di Next nel suo `AGENTS.md`. Dettagli in CONVENTIONS §5 e §15.
 - **File di ruolo.** Sono contenuto pubblicato: un cambio a un file di `agents/` è una modifica al prodotto e passa dalla conferma dell'utente, come il codice. Nomi in codice e sigle stanno solo in `packages/catalog/src/departments.ts` e non cambiano dopo la pubblicazione.
 - **Dati.** Nessun dato personale né dato reale: il sito è statico e i contenuti vengono dal catalogo. Niente persone, clienti, risultati o recensioni inventati.
 - **Audit.** I rilievi stanno in `audit/<audit_id>/` (un JSON per agente, i resoconti dei direttori in `report-*.md`), le evidenze in `audit/<audit_id>/evidenze/`.

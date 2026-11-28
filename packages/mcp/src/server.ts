@@ -68,6 +68,11 @@ if (process.argv[2] === "reminder") {
   const { runReminder } = await import("./init.ts");
   process.exit(runReminder(process.argv.slice(3)));
 }
+// `list`, `agent` e `library` (F58-07): la CLI di sola lettura del catalogo, stampa e termina (cli.ts).
+if (process.argv[2] === "list" || process.argv[2] === "agent" || process.argv[2] === "library") {
+  const { runCli } = await import("./cli.ts");
+  process.exit(runCli(process.argv[2], process.argv.slice(3)));
+}
 if (process.argv[2] === "add" || process.argv[2] === "install") {
   const { runSetup } = await import("./setup.ts");
   process.exit(runSetup(process.argv[2], process.argv.slice(3)));

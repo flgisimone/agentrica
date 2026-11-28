@@ -65,9 +65,17 @@ test("quattro tool in sola lettura; rate_agent, share_usage e submit_project, gl
   assert.match(client.getInstructions() ?? "", /share_usage/);
   // F39-04: cosa esce dal computer.
   assert.match(client.getInstructions() ?? "", /I dati restano sul computer: inviano ad AIgentrica solo rate_agent, share_usage e submit_project, dopo l'anteprima e il sì dell'utente; fuori va solo, se attivo, il controllo delle versioni nuove sul registro npm\./);
-  // F35: formato di plan/ e sessioni per fase anche nei progetti installati con add.
-  assert.match(client.getInstructions() ?? "", /plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+proponi di crearlo leggendo il codice/);
-  assert.match(client.getInstructions() ?? "", /Dopo aver scritto file in plan\/ o audit\/, controllane il formato con check\./);
+  // F35: fasi in plan/ e sessioni per fase anche nei progetti installati con add. F58-06: il formato sta nella
+  // descrizione di check e nel testo dei direttori, le istruzioni rimandano lì.
+  assert.match(client.getInstructions() ?? "", /Il lavoro va per fasi in plan\/; il formato lo danno i direttori e check, da usare dopo aver scritto in plan\/ o audit\/\. Se plan\/ manca, proponi di crearlo leggendo il codice\./);
+  assert.doesNotMatch(client.getInstructions() ?? "", /«## Backlog»/);
+  const format = /Formato di plan\/: README\.md con la tabella «## Fasi».+id F0, F1.+«## Backlog» in tabella.+«## Criteri di accettazione»/;
+  assert.match(tools.find((t) => t.name === "check")!.description ?? "", format);
+  const director = await client.callTool({ name: "agent", arguments: { id: "AISA-01" } });
+  const specialist = await client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
+  const text = (result: typeof director) => (result.content as { text: string }[])[0]!.text;
+  assert.match(text(director), format);
+  assert.doesNotMatch(text(specialist), format);
   assert.match(client.getInstructions() ?? "", /Pianificare è una sessione a sé: solo plan\/.+proponi \/clear senza sviluppare\. Una fase per sessione; alla chiusura proponi \/clear/);
 });
 

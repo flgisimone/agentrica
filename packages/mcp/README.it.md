@@ -194,6 +194,21 @@ I nomi dei prompt degli agenti (`aisa-02-software`) non cambiano.
 
 I file degli agenti, i testi del server e il pannello esistono in italiano e in inglese. Il server usa la lingua del sistema (italiano se è l'italiano, altrimenti inglese), oppure quella che scegli con `--lang it` o `--lang en` o nella [configurazione](#configurazione); in qualunque lingua siano i testi, l'agente risponde nella lingua in cui gli scrivi. Durante il lavoro l'agente dice chi è, per esempio «AISA-02 · ALTAIR — Senior Software Architect, reparto AISA (AI Software)»: all'inizio, quando passa a un altro agente e nel riepilogo finale.
 
+## Dal terminale
+
+Gli stessi testi di `list_agents`, `agent` e `library` sono anche comandi, da usare fuori da un client MCP: in uno script, o passati alla riga di comando di un altro assistente. Stampano su stdout e terminano, senza avviare il server né inviare nulla:
+
+```sh
+npx -y @aigentrica/mcp@1.0.0 list [REPARTO]
+npx -y @aigentrica/mcp@1.0.0 agent AISA-12 [--task "Rivedi il diff"]
+npx -y @aigentrica/mcp@1.0.0 library AICA-02 owasp-top-10-2025
+npx -y @aigentrica/mcp@1.0.0 agent aisa-12 --task "Rivedi il diff" | claude -p
+```
+
+`agent` stampa sempre regole comuni e indice della biblioteca interi, perché ogni comando è una sessione a sé; non c'è la valutazione né il resoconto, che restano al server. Il codice d'uscita è 0 se riesce, 1 per un agente, un reparto o una scheda che non esistono, 2 per argomenti sbagliati.
+
+Rispetto al server non risparmiano contesto: il testo dell'agente è lo stesso, ed è quello che pesa. La parte fissa del server sono le istruzioni, circa 2,5 KB, mentre in Claude Code i tool sono rinviati e i prompt restano fuori dal contesto.
+
 ## Configurazione
 
 Lingua, squadra, pannello, valutazioni e avviso di versione si scelgono con un modulo, senza rilanciare `add` o `install`.

@@ -10,6 +10,10 @@ const confirmStep = (tool: string, code: string) =>
   `Show this preview to the user and ask whether to send it. Only after they say yes, call ${tool} again with code "${code}" (valid for 10 minutes, once). If they say no, do nothing.`;
 const AGENT_NOT_FOUND = "Agent not found: use list_agents to see the ids.";
 
+/** The plan/ format (F58-06): in the directors' text and in the check description, not in the server instructions. */
+const PLAN_FORMAT =
+  "plan/ format: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria».";
+
 export const en: Texts = {
   locale: "en-GB",
   readme: "README.md",
@@ -48,8 +52,8 @@ export const en: Texts = {
       // F41-02: rules and index once per department; how to get them back after /compact.
       "Common rules and index come in full with the first agent of each department, then as a reference: after /compact or /clear, or if they are not in your context, call agent again with full_rules true. " +
       `Prompts are named after the agent id and the department, e.g. ${o.example}; the agent tool takes the id, e.g. ${o.exampleId}. ` +
-      "After writing files in plan/ or audit/, check their format with check. " +
-      "Work goes by phases in plan/: README.md with the «## Phases» table (Phase | File | Content | Status; ids F0, F1…; status to do, in progress or completed) and one NN-name.md file per phase with «**Goal**:», «## Backlog» as a table (# | Task | Priority; ids FN-NN) and «## Acceptance criteria»; if missing, offer to create it by reading the code. " +
+      // F58-06: the plan/ format is in the directors' text and in the check description, not here.
+      "Work goes by phases in plan/; the directors and check give the format, use check after writing in plan/ or audit/. If plan/ is missing, offer to create it by reading the code. " +
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
       // F39-04: what leaves the computer, for those working under a «nothing leaves» rule.
       " Data stays on the computer: " +
@@ -190,7 +194,8 @@ export const en: Texts = {
       title: "Format check of plan/ and audit/",
       description:
         "Checks without models the shape of the plan/ and audit/ files of the project folder: tables, required fields, unique ids, linked files that exist. " +
-        "It also reports contradictions (same finding with different values, finding closed without evidence, completed phase with P0 tasks without an outcome), with both locations. It changes nothing.",
+        "It also reports contradictions (same finding with different values, finding closed without evidence, completed phase with P0 tasks without an outcome), with both locations. It changes nothing. " +
+        PLAN_FORMAT,
       unreadable: (why: string) => `Cannot read the project folder: ${why}`,
     },
 
@@ -264,7 +269,8 @@ export const en: Texts = {
       `${advice} If the project has AIgentrica's subagents (init --subagents) and the user asks to use them, the one for this role already has this model; otherwise continue with the session model.`,
     lead: (code: string) =>
       `You are the director of the department: for the task choose the specialists needed and the order (list_agents with department ${code} lists them). ` +
-      "The session loads them with agent one at a time, each from the previous one's handover, not their whole answer; at the end you consolidate the results and present them to the user, who confirms them.",
+      "The session loads them with agent one at a time, each from the previous one's handover, not their whole answer; at the end you consolidate the results and present them to the user, who confirms them. " +
+      PLAN_FORMAT,
     reportsTo: (director: string, id: string) =>
       `You report to ${director}, the director of the department: if they have not been loaded yet in this session, load them first with agent (id ${id}). ` +
       "You work on the part they assign you and hand over to them briefly: outcome, findings with their evidence (file and line, command), open questions.",
@@ -545,5 +551,11 @@ export const en: Texts = {
     sameIdDiffers: (id: string, where: string, fields: string) => `finding ${id} is also in ${where}, with different values in ${fields}.`,
     usage: "Usage: aigentrica-mcp check [project folder]",
     noDir: (dir: string) => `Folder ${dir} not found.`,
+  },
+  cli: {
+    usage:
+      "Usage: aigentrica-mcp list [DEPARTMENT] | agent ID [--task \"task\"] | library ID CARD… (e.g. agent aisa-12, library aica-02 owasp-top-10-2025).",
+    unknownDepartment: (given: string, codes: string) => `Unknown department: ${given}. Departments: ${codes}.`,
+    agentNotFound: "Agent not found: `aigentrica-mcp list` lists the ids.",
   },
 };

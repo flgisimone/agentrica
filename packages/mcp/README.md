@@ -196,6 +196,21 @@ The agents' prompt names (`aisa-02-software`) do not change.
 
 While working, the agent says who it is, for example "AISA-02 · ALTAIR — Senior Software Architect, AISA department (AI Software)": at the start, when it hands over to another agent and in the final summary.
 
+## From the terminal
+
+The same texts as `list_agents`, `agent` and `library` are also commands, for use outside an MCP client: in a script, or piped into another assistant's command line. They print to stdout and exit, without starting the server or sending anything:
+
+```sh
+npx -y @aigentrica/mcp@1.0.0 list [DEPARTMENT]
+npx -y @aigentrica/mcp@1.0.0 agent AISA-12 [--task "Review the diff"]
+npx -y @aigentrica/mcp@1.0.0 library AICA-02 owasp-top-10-2025
+npx -y @aigentrica/mcp@1.0.0 agent aisa-12 --task "Review the diff" | claude -p
+```
+
+`agent` always prints the common rules and the library index in full, since each command is a session of its own; there is no rating or report, which only the server handles. The exit code is 0 on success, 1 for an unknown agent, department or card, 2 for wrong arguments.
+
+They do not save context compared with the server: the agent's text is the same, and it is what weighs. The server's fixed part is its instructions, about 2.5 KB, while in Claude Code the tools are deferred and the prompts stay out of the context.
+
 ## Configuration
 
 Language, squad, panel, ratings and the new-version notice can be chosen with a form, without running `add` or `install` again.

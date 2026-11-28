@@ -11,6 +11,10 @@ const confirmStep = (tool: string, code: string) =>
   `Mostra questa anteprima all'utente e chiedigli se inviarla. Solo dopo il suo sì richiama ${tool} con code "${code}" (valido 10 minuti, una volta). Se dice no, non fare nulla.`;
 const AGENT_NOT_FOUND = "Agente non trovato: usa list_agents per vedere gli id.";
 
+/** Il formato di plan/ (F58-06): nel testo dei direttori e nella descrizione di check, non nelle istruzioni del server. */
+const PLAN_FORMAT =
+  "Formato di plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione».";
+
 export const it = {
   /** Locale per numeri e ore. */
   locale: "it-IT",
@@ -50,8 +54,8 @@ export const it = {
       // F41-02: regole e indice una volta per reparto; come riaverli dopo /compact.
       "Regole comuni e indice arrivano interi al primo agente di ogni reparto, poi come riferimento: dopo /compact o /clear, o se non li hai nel contesto, richiama agent con full_rules true. " +
       `I prompt hanno il nome dell'id dell'agente e del reparto, es. ${o.example}; il tool agent vuole l'id, es. ${o.exampleId}. ` +
-      "Dopo aver scritto file in plan/ o audit/, controllane il formato con check. " +
-      "Il lavoro va per fasi in plan/: README.md con la tabella «## Fasi» (Fase | File | Contenuto | Stato; id F0, F1…; stato da fare, in corso o completata) e un file NN-nome.md per fase con «**Obiettivo**:», «## Backlog» in tabella (# | Attività | Priorità; id FN-NN) e «## Criteri di accettazione»; se manca, proponi di crearlo leggendo il codice. " +
+      // F58-06: il formato di plan/ sta nel testo dei direttori e nella descrizione di check, non qui.
+      "Il lavoro va per fasi in plan/; il formato lo danno i direttori e check, da usare dopo aver scritto in plan/ o audit/. Se plan/ manca, proponi di crearlo leggendo il codice. " +
       "Pianificare è una sessione a sé: solo plan/, conferma dell'utente, poi proponi /clear senza sviluppare. Una fase per sessione; alla chiusura proponi /clear." +
       // F39-04: cosa esce dal computer, per chi lavora con la regola «non esce niente».
       " I dati restano sul computer: " +
@@ -192,7 +196,8 @@ export const it = {
       title: "Controllo del formato di plan/ e audit/",
       description:
         "Controlla senza modelli la forma dei file di plan/ e audit/ della cartella del progetto: tabelle, campi obbligatori, id univoci, file collegati che esistono. " +
-        "Segnala anche le contraddizioni (stesso rilievo con valori diversi, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito), con entrambe le posizioni. Non modifica nulla.",
+        "Segnala anche le contraddizioni (stesso rilievo con valori diversi, rilievo chiuso senza evidenza, fase completata con attività P0 senza esito), con entrambe le posizioni. Non modifica nulla. " +
+        PLAN_FORMAT,
       unreadable: (why: string) => `Non riesco a leggere la cartella del progetto: ${why}`,
     },
 
@@ -266,7 +271,8 @@ export const it = {
       `${advice} Se il progetto ha i subagent di AIgentrica (init --subagents) e l'utente chiede di usarli, quello di questo ruolo ha già questo modello; altrimenti continua con il modello della sessione.`,
     lead: (code: string) =>
       `Sei il direttore del reparto: per il compito scegli gli specialisti che servono e l'ordine (list_agents con department ${code} li elenca). ` +
-      "La sessione li carica con agent uno alla volta, ognuno dal passaggio di consegne del precedente, non dalla sua risposta intera; alla fine consolidi i risultati e li presenti all'utente, che li conferma.",
+      "La sessione li carica con agent uno alla volta, ognuno dal passaggio di consegne del precedente, non dalla sua risposta intera; alla fine consolidi i risultati e li presenti all'utente, che li conferma. " +
+      PLAN_FORMAT,
     reportsTo: (director: string, id: string) =>
       `Riporti a ${director}, il direttore del reparto: se in questa sessione non è ancora stato caricato, caricalo prima con agent (id ${id}). ` +
       "Lavori sulla parte che ti assegna e gli consegni in breve: esito, rilievi con l'evidenza (file e riga, comando), domande aperte.",
@@ -549,6 +555,12 @@ export const it = {
     sameIdDiffers: (id: string, where: string, fields: string) => `il rilievo ${id} c'è anche in ${where}, con valori diversi in ${fields}.`,
     usage: "Uso: aigentrica-mcp check [cartella del progetto]",
     noDir: (dir: string) => `Non trovo la cartella ${dir}.`,
+  },
+  cli: {
+    usage:
+      "Uso: aigentrica-mcp list [REPARTO] | agent ID [--task \"compito\"] | library ID SCHEDA… (es. agent aisa-12, library aica-02 owasp-top-10-2025).",
+    unknownDepartment: (given: string, codes: string) => `Reparto sconosciuto: ${given}. Reparti: ${codes}.`,
+    agentNotFound: "Agente non trovato: `aigentrica-mcp list` elenca gli id.",
   },
 };
 

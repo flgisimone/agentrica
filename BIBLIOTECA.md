@@ -1,6 +1,6 @@
 # Biblioteca degli agenti
 
-Gli agenti di AIgentrica sanno lavorare, ma quello che sanno dipende dal modello che li esegue, e quelle conoscenze si fermano alla data di addestramento. La biblioteca serve a tenerli aggiornati: ogni reparto ha schede di nozioni recenti (standard, norme, release, manuali), ciascuna verificata su una fonte ammessa e con una scadenza. Il server MCP le passa all'agente; un ciclo di studio settimanale trova le novità. Decisioni e requisiti sono in [plan/25-biblioteca.md](../plan/25-biblioteca.md).
+Gli agenti di AIgentrica sanno lavorare, ma quello che sanno dipende dal modello che li esegue, e quelle conoscenze si fermano alla data di addestramento. La biblioteca serve a tenerli aggiornati: ogni reparto ha schede di nozioni recenti (standard, norme, release, manuali), ciascuna verificata su una fonte ammessa e con una scadenza. Il server MCP le passa all'agente; un ciclo di studio settimanale trova le novità. Decisioni e requisiti sono nel piano, fase F25.
 
 ## Dove stanno
 

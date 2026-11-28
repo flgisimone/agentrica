@@ -47,4 +47,4 @@ I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con i
 I riferimenti normativi nei file sono indicativi: verificare sempre testo vigente, giurisdizione, linee guida e applicabilità al caso concreto.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `BIBLIOTECA.md` del repository di AIgentrica.

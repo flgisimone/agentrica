@@ -47,4 +47,4 @@ The Markdown files define roles and instructions; in Claude Code they are loaded
 The legal references in the files are indicative: always check the text in force, jurisdiction, guidelines and applicability to the specific case.
 
 ## Library
-The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the AIgentrica repository (in Italian).
+The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `BIBLIOTECA.md` of the AIgentrica repository (in Italian).

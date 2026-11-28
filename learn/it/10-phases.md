@@ -25,7 +25,7 @@ Un ritmo che funziona:
 Il vantaggio più grande è la fiducia. Quando l'agente dice «fatto», puoi controllare un elenco preciso invece di fidarti di una frase.
 
 ## In AIgentrica
-AIgentrica è stata costruita così, dalla prima fase all'ultima. Il piano è in [plan/README.md](../../plan/README.md): decisioni con data e motivo, e la tabella delle fasi. Ogni fase ha il suo file, sul modello di [plan/00-base.md](../../plan/00-base.md), con «Fatto», «Verifiche» e «Rilievi aperti» alla chiusura. La procedura di chiusura è in [CONVENTIONS.md](../../CONVENTIONS.md), paragrafo 13.7: piano aggiornato, `npm run verify`, un'unica domanda di conferma per commit, merge e push, poi sessione nuova. Dalla fase F16 il metodo è scritto lì; le fasi dei rilievi, come F15, chiudono i problemi lasciati aperti dalle precedenti.
+AIgentrica è stata costruita così, dalla prima fase all'ultima. Il piano ha le decisioni con data e motivo e la tabella delle fasi; ogni fase ha il suo file, con «Fatto», «Verifiche» e «Rilievi aperti» alla chiusura. La procedura di chiusura è in [CONVENTIONS.md](../../CONVENTIONS.md), paragrafo 13.7: piano aggiornato, `npm run verify`, un'unica domanda di conferma per commit, merge e push, poi sessione nuova. Dalla fase F16 il metodo è scritto lì; le fasi dei rilievi, come F15, chiudono i problemi lasciati aperti dalle precedenti.
 
 Il metodo arriva anche nei tuoi progetti. Dalla fase F18 il comando `init` copia un modello con il piano già impostato, [starter/plan/README.md](../../starter/plan/README.md); dalla F35 `init --existing` lo aggiunge a un progetto già avviato, con il piano creato leggendo il codice. Dalla F42 il tool `check` controlla la forma di `plan/` senza modelli, e il pannello locale mostra fasi, backlog e rilievi.
 

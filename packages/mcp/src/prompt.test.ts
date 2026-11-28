@@ -305,7 +305,7 @@ test("known: regole e indice come riferimento, cornice, ruolo, compito e chiusur
 });
 
 // Rilievo di F40 (P2), decisione dell'utente del 2026-11-25: oltre 12 KB con tutto il catalogo si riapre la selezione
-// con metadati e ricerca (decisione «Roadmap consolidata» in plan/README.md). Chi la supera apre quella fase.
+// con metadati e ricerca (decisione «Roadmap consolidata» del piano). Chi la supera apre quella fase.
 test("list_agents: tutto il catalogo entro 12 KB, nelle due lingue", () => {
   try {
     for (const lang of ["it", "en"] as const) {

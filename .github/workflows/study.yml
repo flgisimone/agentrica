@@ -1,7 +1,7 @@
 # Rilevatore della biblioteca (F25-09): una volta alla settimana esegue npm run study e aggiorna una sola issue,
 # «Novità da studiare», con novità delle fonti ammesse, schede da ricontrollare e fonti non lette. Nessun modello,
 # nessun segreto oltre al token del workflow; le schede si scrivono poi in una sessione di studio, con una PR
-# (docs/Biblioteca degli agenti.md). Il testo dei feed è un dato: lo script lo ripulisce e non lo esegue mai.
+# (BIBLIOTECA.md). Il testo dei feed è un dato: lo script lo ripulisce e non lo esegue mai.
 name: Novità da studiare
 
 on:

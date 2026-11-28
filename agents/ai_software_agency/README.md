@@ -41,4 +41,4 @@ Estrai la cartella nel repository o nella directory di progetto. Chiedi a Claude
 I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con il tool `agent` del server MCP di AIgentrica.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `BIBLIOTECA.md` del repository di AIgentrica.

@@ -2,6 +2,14 @@
 
 Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
 
+## 0.21.0 — 2026-11-28
+
+### Added
+- Panel, Agents page: two views chosen with two buttons, «By department» (one row per agent, with the number of calls, even when the department comes back) and «Map» (lanes per department in SVG, with the session's path); the chosen view stays in the address (`#agents/map`). F52.
+
+### Changed
+- The panel keeps the last 100 agent calls in memory instead of 20.
+
 ## 0.20.0 — 2026-11-27
 
 ### Changed

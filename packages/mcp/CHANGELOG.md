@@ -2,6 +2,14 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.21.0 — 2026-11-28
+
+### Nuovo
+- Pannello, pagina Agenti: due viste scelte con due pulsanti, «Per reparto» (una riga per agente, con il numero di chiamate, anche se il reparto torna) e «Mappa» (corsie per reparto in SVG, con il percorso della sessione); la vista scelta resta nell'indirizzo (`#agents/map`). F52.
+
+### Cambiato
+- Il pannello tiene in memoria le ultime 100 chiamate agli agenti invece di 20.
+
 ## 0.20.0 — 2026-11-27
 
 ### Cambiato

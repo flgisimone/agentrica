@@ -1,0 +1,132 @@
+{"ts": "2026-11-19T02:50:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:50:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:51:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:51:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:52:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:52:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:53:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:53:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:54:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:54:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:55:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:55:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:56:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:56:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:57:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:57:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:58:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:58:03+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:03+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "a.conti@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:12+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:12+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "b.marini@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:20+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:20+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "c.rinaldi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:58:30+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:30+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "d.costa@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:42+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:42+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "e.fontana@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:49+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:49+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "f.greco@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:58:56+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:58:56+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "g.lombardi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:59:09+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:09+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "h.moretti@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:20+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:20+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "i.barbieri@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:27+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:27+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "m.ricci@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T02:59:36+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:36+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "n.caruso@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:47+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:47+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "o.ferrara@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T02:59:54+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T02:59:54+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "p.santoro@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:00:05+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:05+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "r.mariani@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:13+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:13+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "s.rinaldi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:20+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:20+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "t.colombo@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:27+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:27+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "u.gentile@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:00:37+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:37+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "v.longo@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:47+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:47+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "z.leone@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:00:54+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:00:54+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "acquisti@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:01:02+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:02+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "amministrazione@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:09+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:09+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "info@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:20+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:20+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "ordini@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:01:30+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:30+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "magazzino2@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:37+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:37+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "contabilita@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:01:50+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:01:50+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "test@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:02:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:02:01+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T03:02:01+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "demo@clienti.example", "msg": "login failed"}
+{"ts": "2026-11-19T03:02:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:03:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:03:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:04:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:04:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:05:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:05:12+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /login HTTP/1.1", "status": 200, "bytes": 412}
+{"ts": "2026-11-19T03:05:12+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_success", "user": "l.verdi@ferramentanord.example", "msg": "login ok"}
+{"ts": "2026-11-19T03:05:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:05:40+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "GET /api/orders?limit=200 HTTP/1.1", "status": 200, "bytes": 48211}
+{"ts": "2026-11-19T03:06:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:06:02+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "GET /api/admin/users HTTP/1.1", "status": 200, "bytes": 9120}
+{"ts": "2026-11-19T03:06:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:06:31+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "GET /api/admin/export/customers HTTP/1.1", "status": 200, "bytes": 1873344}
+{"ts": "2026-11-19T03:07:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:07:05+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "POST /api/admin/users/57/role HTTP/1.1", "status": 200, "bytes": 11}
+{"ts": "2026-11-19T03:07:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:07:40+01:00", "source": "nginx", "client_ip": "203.0.113.77", "request": "GET /api/admin/export/customers HTTP/1.1", "status": 200, "bytes": 1873344}
+{"ts": "2026-11-19T03:08:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:08:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:09:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:09:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:10:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:10:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:11:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:11:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:12:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:12:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:13:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:13:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:14:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:14:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:15:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:15:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:16:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:16:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:17:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:17:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:18:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:18:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:19:00+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T03:19:30+01:00", "source": "nginx", "client_ip": "198.51.100.20", "request": "GET /status HTTP/1.1", "status": 404, "bytes": 153}
+{"ts": "2026-11-19T09:10:02+01:00", "source": "nginx", "client_ip": "10.8.0.10", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T09:10:02+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "a.bianchi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T09:10:15+01:00", "source": "nginx", "client_ip": "10.8.0.10", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T09:10:15+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "a.bianchi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T09:10:31+01:00", "source": "nginx", "client_ip": "10.8.0.10", "request": "POST /login HTTP/1.1", "status": 401, "bytes": 38}
+{"ts": "2026-11-19T09:10:31+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_failed", "user": "a.bianchi@ferramentanord.example", "msg": "login failed"}
+{"ts": "2026-11-19T09:10:48+01:00", "source": "nginx", "client_ip": "10.8.0.10", "request": "POST /login HTTP/1.1", "status": 200, "bytes": 412}
+{"ts": "2026-11-19T09:10:48+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_success", "user": "a.bianchi@ferramentanord.example", "msg": "login ok"}
+{"ts": "2026-11-19T09:12:10+01:00", "source": "nginx", "client_ip": "93.40.11.8", "request": "POST /login HTTP/1.1", "status": 200, "bytes": 412}
+{"ts": "2026-11-19T09:12:10+01:00", "service": "portale-ordini", "level": 30, "ip": "172.18.0.5", "path": "/login", "event": "login_success", "user": "ordini@edilsud.example", "msg": "login ok"}
+{"ts": "2026-11-19T09:12:30+01:00", "source": "nginx", "client_ip": "93.40.11.8", "request": "POST /api/orders HTTP/1.1", "status": 201, "bytes": 14}

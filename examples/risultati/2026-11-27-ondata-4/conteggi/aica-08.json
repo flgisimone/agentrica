@@ -1,0 +1,59 @@
+{
+  "ruolo": "aica-08",
+  "rapporti": {
+    "aica-08-R1": {
+      "trovati": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti, con il punto del rapporto, le righe del log e l'azione corretta. La riga 11 (SIEM) fuori ordine è segnalata solo come cosa da spiegare per l'affidabilità della cronologia, non come errore di gestione (T1 rispettata). Chiusura prematura senza lezioni apprese: accettabile. operator con customers:export: probabile difetto IAM di F37, non è extra. Calcolo del termine delle 72 ore (dalle 10:05 del 21, scadenza il 24) corretto e dichiarato come da confermare con DPO e legale."
+    },
+    "aica-08-R2": {
+      "trovati": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Provenienza e integrità dell'estratto da chiarire: nomi degli eventi (login_ok, customers_export) e campo client_ip non corrispondono a quello che scrive il codice (login_success, admin_export a livello debug, ip del socket di nginx in server.js:12), e l'allarme export_volume non corrisponde a nessuna regola di detection-rules.yml",
+        "La VM ricreata ha fermato il portale senza toccare la causa: la compromissione è a livello applicativo (credenziali, ruoli e dati nel database), quindi la ricreazione non contiene nulla"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Va oltre il perimetro del compito: legge anche auth.js, server.js, orders.js, nginx.conf, vector.yaml, detection-rules.yml, access-review e l'archivio del 19-11. I fatti verificati sono corretti (spraying del 19-11 da 203.0.113.77, login di l.verdi alle 03:05, due export e POST sul ruolo dell'utente 57; requireAdmin che lascia passare ogni ruolo tranne customer; filtro .level >= 40 di Vector; JWT di 8 ore senza revoca; anomalie della revisione degli accessi). Sono probabili difetti di F37 di altri ruoli: non contano come extra. In R3 c'è una frase pasticciata («un'ora e 7 minuti dopo l'export delle 09:58 del 19-11... nel caso del 21, 7 minuti dopo»), che poi si corregge da sola: errore marginale. La domanda su chi ha fatto il reset (admin.ferri o c.ferri) è una verifica dell'identità, non presenta come illegittimo il reset dalla VPN (T2). Righe dell'archivio citate in modo approssimato (spraying 18-79): marginale."
+    },
+    "aica-08-R3": {
+      "trovati": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Provenienza e integrità dell'estratto da chiarire: il formato non coincide con il codice (login_ok contro login_success, client_ip contro ip del socket, customers_export contro admin_export a livello debug, che con il livello predefinito di pino non viene emesso)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti e sette i difetti, con una cronologia ricostruita e ordinata (T1 gestita come va gestita). Anche qui la lettura va oltre il perimetro (auth.js, server.js, orders.js, nginx.conf, vector.yaml, revisione degli accessi). F6 (set_real_ip_from 0.0.0.0/0 con X-Forwarded-For, quindi IP che si possono falsificare) è vero in nginx.conf ed è probabilmente un difetto di F37 di un altro ruolo. Non presenta come difetto l'accesso da 192.0.2.14 (T3), ne indebolisce solo l'attribuzione. Bypass di requireAdmin, filtro di Vector e anomalie IAM (c.ferri senza scadenza, account magazzino, g.neri): altri ruoli, non extra. La riga di presentazione è fra virgolette caporali, ma è completa."
+    },
+    "aica-08-R4": {
+      "trovati": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "La VM ricreata senza motivo di sicurezza: gli accessi passano per credenziali applicative valide, quindi la ricreazione non toglie la causa, costa indisponibilità e distrugge lo stato della macchina"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Si ferma ai quattro file del compito. Dice che l'IP del client «è affidabile» basandosi sul README («nginx vede l'IP della connessione»). In nginx.conf però set_real_ip_from 0.0.0.0/0 con X-Forwarded-For lo rende falsificabile. È un'incoerenza vera fra README e configurazione, che il rapporto non poteva vedere senza leggere infra/: non è contato come falso, ma va annotato. «Evento fuori sequenza» (riga 11) è un rilievo P3, ma l'azione è solo ordinare l'estratto e annotarne la fonte, come dice la trappola T1: è irrobustimento, non falso. Errori marginali: indisponibilità di «45 minuti (10:30-11:15)», che sono 35 dalle 10:40; «52 secondi», che sono 51. Il reset da 10.8.0.5 è riconosciuto come fatto dalla VPN, come da README (T2 rispettata)."
+    }
+  },
+  "proposte_scheda": [
+    "Accettabile da aggiungere: la VM ricreata non risolve una compromissione applicativa (credenziali, JWT e ruoli nel database) e causa solo indisponibilità. Lo trovano R2 e R4, R3 in parte; ricorrente, potrebbe diventare un difetto della tabella o un accettabile.",
+    "Ambiguità nei materiali: l'estratto del 21-11 non ha il formato che scrive il codice (login_ok/customers_export/client_ip contro login_success/admin_export/ip di 172.18.0.5), e l'allarme export_volume non è in detection-rules.yml. Due rapporti su quattro lo segnalano come problema di provenienza delle prove. Conviene allineare l'estratto al codice, oppure mettere fra gli accettabili «provenienza e integrità dell'estratto da chiarire».",
+    "Ambiguità: il README dice che nginx vede l'IP della connessione, ma nginx.conf accetta X-Forwarded-For da 0.0.0.0/0 (difetto di F37). Un rapporto che si ferma al perimetro del compito considera affidabile 203.0.113.77, uno che legge infra/ lo considera falsificabile. Conviene dire nella scheda che le due letture sono entrambe ammesse.",
+    "Precisare T1: un rilievo che chiede solo di ordinare l'estratto e annotare le fonti (anche se ha una priorità P3) non è falso.",
+    "Perimetro: il compito nomina quattro file, ma due rapporti leggono anche app/, logging/, infra/ e l'archivio del 19-11 e trovano l'intrusione del 19-11 (spraying, export, cambio di ruolo dell'utente 57). Sono difetti di F37 di altri ruoli. Si può aggiungere agli accettabili di AICA-08 il collegamento con l'archivio del 19-11 e con il codice di autenticazione (JWT non revocabili, requireAdmin)."
+  ]
+}

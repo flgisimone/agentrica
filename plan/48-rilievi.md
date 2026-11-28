@@ -62,8 +62,8 @@
 
 ## Rilievi aperti
 
-- P3: la ripetizione della misura delle catene (F45) resta da fare quando l'uso reale cresce.
-- P3: C6 e C7 con la frase nuova non sono provati nel client con il pannello aperto (in `claude -p` le domande non hanno risposta).
+- ~~P3~~ Chiuso in `fix/rilievi-f51` (2026-11-28). La ripetizione della misura delle catene (F45) resta da fare quando l'uso reale cresce. Rifatta su 43 progetti, 42 sessioni e 230 chiamate ([2026-11-28-catene-tool.md](../examples/risultati/2026-11-28-catene-tool.md)): soglia non superata (catene lunghe in 4 sessioni su 42, 9,5%; mediana dei byte intermedi 10%), Code Mode resta rinviato.
+- P3: C6 e C7 con la frase nuova non sono provati nel client con il pannello aperto (in `claude -p` le domande non hanno risposta). Issue [#51](https://github.com/flgisimone/agentrica/issues/51).
 - P3: nel sito, un `next dev` lanciato a mano senza le variabili dei dati di prova lascia una cache che fa fallire gli e2e di consumo e reputazione per un'ora; da scrivere nel README del sito o da evitare con una chiave di cache che dipenda dai dati di prova. Chiuso in `fix/rilievi-prerilascio` (2026-11-26): il file dei dati finti è nella chiave di `unstable_cache` (`usage-data.ts`, `reputation-data.ts`); provato con un `next dev` senza dati finti prima degli e2e, che passano.
 
 ## Dopo la chiusura: `fix/rilievi-prerilascio` (2026-11-26)

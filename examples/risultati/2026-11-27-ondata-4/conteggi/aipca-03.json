@@ -1,0 +1,87 @@
+{
+  "ruolo": "aipca-03",
+  "rapporti": {
+    "aipca-03-R1": {
+      "trovati": ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Informativa: PagaFacile presentato fra i «nominati responsabili», ma nel registro è titolare autonomo (L-07)",
+        "ChatNow assente dal registro dei fornitori e dall'informativa, benché installi chatnow_id e il widget si carichi su ogni pagina (L-11, L-04)",
+        "Cookie policy senza contenuti minimi: finalità, base, contatti, modalità di revoca; la cancellazione dal browser non è revoca (L-12)",
+        "Informativa senza l'indicazione se il conferimento è obbligatorio e delle conseguenze (art. 13(2)(e)) (L-08)",
+        "Trascrizione con IA di minori sotto i 14 anni senza il consenso genitoriale della L. 132/2025 art. 4 c. 4, non citata nell'informativa (L-09)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i difetti trovati. L2 in L-07 (dati fuori UE, LessonCam/Mailorbit/InsightAI) con le garanzie in L-05/L-06; L6 in L-06 e L-07. L-09 mette in dubbio la soglia dei 14 anni solo sul piano della capacità contrattuale, come questione interpretativa da portare al legale: non presenta T6 come difetto, non è falso. Riferimenti ai file di codice (public/index.html r. 19 e 26, src/transcribe.js, config/retention.json, procedura-diritti 60 giorni) verificati e corretti. Rilievi su registro fornitori (Privacy Shield, ISO LessonCam scaduta, accordo InsightAI) e procedura diritti non contati come extra: materiale di F37, probabilmente difetti di altri ruoli."
+    },
+    "aipca-03-R2": {
+      "trovati": ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Informativa: PagaFacile presentato come responsabile, nel registro è titolare autonomo (PL-04)",
+        "ChatNow assente dall'informativa e dal registro dei fornitori (PL-04, PL-09, PL-16)",
+        "Cookie policy senza titolare, finalità, link alle terze parti e modalità di revoca (PL-10)",
+        "Informativa senza legittimo interesse specificato (art. 13(1)(d)), natura del conferimento (13(2)(e)) e decisioni automatizzate (13(2)(f)) (PL-06)",
+        "«Offerte» nel modulo: marketing non dichiarato nell'informativa, che parla solo di newsletter (PL-12)",
+        "Modulo di iscrizione rapida senza verifica dell'età (PL-12)",
+        "Link della home a /privacy.html diverso dall'URL dichiarato dall'informativa (PL-13)",
+        "Trascrizione con IA per minori sotto i 14 anni senza consenso genitoriale (L. 132/2025 art. 4 c. 4) e insegnanti da informare sull'IA (art. 11) (PL-01, PL-07)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i difetti trovati. L6 nel P0 PL-01 (riuso per addestramento contro «mai usati per finalità diverse»). PL-07 sui 14 anni: questione interpretativa sulla capacità contrattuale, non presenta T6 come difetto. Riferimenti verificati: art. 28(10), C-40/17 Fashion ID, C-673/17 Planet49, L. 132/2025 art. 11 corretti. Fatti sul codice (analytics.js userId, newsletter.js marketing_consent, README r. 22-23) corretti. Note fuori perimetro (chiave in config/default.json, disiscrizione senza controllo) e registro fornitori (Privacy Shield, ISO LessonCam) non contate: probabili difetti di altri ruoli di F37."
+    },
+    "aipca-03-R3": {
+      "trovati": ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Informativa: PagaFacile fra i «nominati responsabili», ma è titolare autonomo; InsightAI senza nomina (L-16, L-17)",
+        "ChatNow assente dal registro e dall'informativa (L-03)",
+        "Cookie policy senza finalità, base, terze parti, modalità di revoca e rinvio all'informativa (L-04)",
+        "Informativa senza legittimo interesse specificato (13(1)(d)), natura del conferimento (13(2)(e)) (L-06)",
+        "«Offerte» nel modulo: marketing; manca il link all'informativa nel punto di raccolta (L-10)",
+        "Trascrizione con IA di minori: consenso genitoriale sotto i 14 anni (L. 132/2025 art. 4 c. 4) non previsto in informativa (L-09)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i difetti trovati. L2 in L-07 e L-08, L6 in L-07 e L-09. L-12 sui 14 anni: questione interpretativa di capacità contrattuale, non T6 come difetto. Imprecisioni marginali, non falsi: «AI Act: trasparenza e alfabetizzazione applicabili da agosto 2026» (l'alfabetizzazione, art. 4, si applica dal febbraio 2025; attribuito alla scheda e presentato come tema da valutare); durata di ps_stats «indicativamente 12 mesi secondo le indicazioni del Garante» (non è un limite delle linee guida, dichiarato indicativo). Citazioni di procedura-diritti (60 giorni, 10 euro, punto 6) e purge.js corrette. Registro fornitori (ISO LessonCam, Nimbus) e procedura diritti non contati come extra."
+    },
+    "aipca-03-R4": {
+      "trovati": ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [
+        "Informativa: PagaFacile presentato come responsabile, è titolare autonomo (03-04)",
+        "ChatNow assente dall'informativa e dal registro (03-04)",
+        "Cookie policy senza titolare, finalità, terze parti e revoca (03-12)",
+        "Informativa senza legittimo interesse specificato (13(1)(d)) e natura del conferimento (13(2)(e)) (03-09)",
+        "«Offerte» nel modulo: marketing non dichiarato nell'informativa, da separare (03-08)",
+        "Insegnanti e personale senza informativa, uso dell'IA sulla loro voce (L. 132/2025 art. 11) (03-11)",
+        "Modulo di prova senza richiesta dell'età; link della home a /privacy.html da verificare rispetto all'URL dichiarato (03-10, inventario)",
+        "Consenso genitoriale per la trascrizione con IA sotto i 14 anni (L. 132/2025 art. 4 c. 4) assente dall'informativa (03-01, 03-10)"
+      ],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "Tutti i difetti trovati. L6 nel P0 03-01 e in 03-04. 03-10 sui 14 anni: questione interpretativa sulla capacità contrattuale, non T6 come difetto. Fatti sul codice verificati: newsletter.js imposta newsletter=false mentre la sincronizzazione filtra marketing_consent (vero; probabile difetto di altro ruolo di F37, non contato); refresh-staging.sh citato correttamente. Nelle segnalazioni ad altri ruoli le «righe» di procedura-diritti sono i numeri dei punti, non le righe del file: marginale. Riga di presentazione fra virgolette «»: presente. Registro fornitori (Privacy Shield, ISO LessonCam) e procedura diritti non contati come extra."
+    }
+  },
+  "proposte_scheda": [
+    "Extra ricorrente in 4 rapporti su 4: l'informativa dice «nominati responsabili» anche per PagaFacile, che il registro dà come titolare autonomo. Aggiungerlo alla tabella o agli accettabili.",
+    "Extra ricorrente in 4 su 4: ChatNow installa chatnow_id ma non compare né nel registro dei fornitori né nell'informativa (ruolo, sede, accordo).",
+    "Extra ricorrente in 4 su 4: la cookie policy non ha finalità, titolare, link alle terze parti e modalità di revoca; «cancellare dal browser» non è revoca. Accettabile o difetto L10.",
+    "Extra ricorrente: mancano in informativa il legittimo interesse perseguito (13(1)(d)) e la natura del conferimento (13(2)(e)); si potrebbe allargare L5 o aggiungerli agli accettabili.",
+    "Extra ricorrente in 4 su 4: trascrizione con IA dei minori sotto i 14 anni senza il consenso genitoriale della L. 132/2025 art. 4 c. 4 (scheda della biblioteca). Aggiungere agli accettabili.",
+    "«Offerte» nella casella della newsletter = marketing non dichiarato (3 su 4): accettabile.",
+    "Tutti e quattro discutono la soglia dei 14 anni (T6) come questione di capacità contrattuale da portare al legale: chiarire nella scheda che questa nota non è falsa (irrobustimento), mentre lo sarebbe dire che la soglia del consenso è sbagliata.",
+    "Ambiguità: i rilievi sul registro dei fornitori (Privacy Shield di Mailorbit, ISO LessonCam scaduta, accordo InsightAI in attesa) e sulla procedura dei diritti (60 giorni, 10 euro) toccano materiale di F37: indicare se sono difetti di altri ruoli (non contati) o parte di L2. Qui il Privacy Shield è stato considerato parte di L2 (garanzie) e il resto non contato.",
+    "Possibile accettabile: insegnanti e personale senza informativa sull'uso dell'IA (L. 132/2025 art. 11)."
+  ]
+}

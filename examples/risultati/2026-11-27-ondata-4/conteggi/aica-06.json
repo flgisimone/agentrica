@@ -1,0 +1,51 @@
+{
+  "ruolo": "aica-06",
+  "rapporti": {
+    "aica-06-R1": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": ["forgotPassword (auth.js:25) cerca anche utenti non attivi: un account disattivato può ricevere e usare un link di reset (impatto basso, il login richiede active)"],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I4 passato a sec-incident-response con preservazione dei log. Rilievo 8 (MFA per revisore.kpmx) esplicitamente non violazione formale: irrobustimento su T14, non falso. Rilievo 9 (inattività 60 giorni, revisione) e MFA non applicata dal login: accettabili. A2 e S2 citati fuori perimetro: altri ruoli. T12, T13 riconosciuti come conformi."
+    },
+    "aica-06-R2": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": ["Token di reset salvato in chiaro nel database (auth.js:29)"],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I4 a P0 con Incident Response e Privacy; '43 giorni dopo' corretto. IAM-03 (MFA non applicata), IAM-04 (roles.yaml non letto), IAM-09 (revoca non immediata), IAM-10 (revisore intestato a uno studio), campo instance di svc-backup non vincolante, ECR su *: accettabili. IAM-10 chiede la data di rilascio senza affermare il superamento dei 90 giorni: conforme al chiarimento T14. IAM-11 (A2) e IAM-12 setRole senza log (S3): altri ruoli. Riferimenti A01:2025 e A07:2025 corretti."
+    },
+    "aica-06-R3": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": [],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I1 a P0, I4 a P1 con segnalazione di incidente al responsabile IT e verifica degli accessi dopo il 30/09 (conta come passaggio alla risposta agli incidenti). Revoca non immediata, MFA non applicata, inattività 60 giorni: accettabili. Rilievo 7 (A2) e rilievo 10 setRole senza traccia (S3): altri ruoli. Nessun riferimento normativo specifico errato."
+    },
+    "aica-06-R4": {
+      "trovati": ["I1", "I2", "I3", "I4", "I5", "I6", "I7"],
+      "mancati": [],
+      "falsi": [],
+      "extra_validi": ["resetPassword non controlla che l'utente sia active: un account disattivato può reimpostare la password (il rapporto nota che il login resta bloccato)"],
+      "presentazione": true,
+      "priorita_ok": true,
+      "firma": true,
+      "note": "I4 a P0 con Incident Response e Privacy. R6 cita formazione/regole-personale.md:9 (magazzino1/magazzino2, password su WhatsApp) e il log riga 72: fatti verificati, ma formazione/ conta solo per altri ruoli; marginale: la riga 72 è un login fallito (spraying), non un login riuscito come lascia intendere 'mostra un login'. Esposizione pubblica di /api/admin/* via location / di nginx: verificata, trattata come contesto di I1. 'fail-open A10:2025' corretto (Mishandling of Exceptional Conditions). MFA non applicata, roles.yaml non letto, revoca non immediata, ECR su *, trust senza vincolo di istanza, inattività: accettabili. R8 reset (A2) e log di setRole (S3): altri ruoli. R12 'nessun account attivo supera 60 giorni senza accessi': corretto."
+    }
+  },
+  "proposte_scheda": [
+    "Aggiungere agli accettabili di AICA-06: reset della password che non verifica active (forgotPassword cerca anche utenti disattivati) e token di reset salvato in chiaro; compaiono in 3 rapporti su 4 come note su A2.",
+    "Aggiungere agli accettabili di AICA-06: /api/admin/* raggiungibile da Internet via location / di nginx (solo /admin/ è limitato alla VPN), come contesto di I1.",
+    "Aggiungere agli accettabili di AICA-06: setRole senza blocco dell'auto-promozione o secondo passaggio per concedere admin (oltre al log mancante di S3).",
+    "Chiarire per AICA-06 se gli account condivisi magazzino1/magazzino2 di formazione/ citati come revisione degli accessi incompleta (regola 8) vanno trattati come accettabili."
+  ]
+}

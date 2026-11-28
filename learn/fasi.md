@@ -60,3 +60,4 @@ Ogni fase completata del piano di AIgentrica con le lezioni che la usano come es
 | F54 | nessun concetto nuovo |
 | F55 | nessun concetto nuovo |
 | F56 | nessun concetto nuovo |
+| F57 | nessun concetto nuovo |

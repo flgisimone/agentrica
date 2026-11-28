@@ -2,7 +2,7 @@
 
 **Obiettivo**: decidere quali cartelle servono solo all'utente (piano, audit, documenti, prove) e toglierle dal repository pubblico senza perderle.
 
-> **Stato: sospesa** il 2026-11-16, all'apertura, senza modifiche: per scelta dell'utente resta tutto com'è e tutto resta pubblico. Il pannello conta come chiuse solo le fasi «completata» e «sospesa», per questo lo stato è «sospesa» anche se la fase è abbandonata.
+> **Stato: sospesa** il 2026-11-16, all'apertura, senza modifiche: per scelta dell'utente resta tutto com'è e tutto resta pubblico. Ripresa in F56 (2026-11-28), con la sede nel repository privato del sito. Il pannello conta come chiuse solo le fasi «completata» e «sospesa», per questo lo stato è «sospesa» anche se la fase è abbandonata.
 
 **Agenzie**: software (DevOps, Architect, Code Reviewer); cybersecurity (Cloud Security) per cosa resta visibile nella storia; privacy (Legal Specialist) per le note legali, che citano il repository.
 

@@ -1,7 +1,7 @@
 // Schermate del pannello locale per la pagina /pannello del sito (F47-02, script aggiunto dopo F48): un progetto di prova
 // creato con `init`, il server di questo repository avviato con un client MCP vero, la pagina fotografata con Playwright.
 // Uso: npm run -s panel-screenshots -- [--site ../agentrica-site]
-// Scrive <site>/src/assets/pannello/pannello-<vista>-<lingua>.png, sei viste per lingua. Playwright e il Chrome installato
+// Scrive <site>/src/assets/pannello/pannello-<vista>-<lingua>.png, sette viste per lingua. Playwright e il Chrome installato
 // vengono dal repository del sito, come per i suoi e2e: qui non c'è una dipendenza in più.
 // Tutto avviene in cartelle temporanee: HOME (configurazione di Agentrica) e CLAUDE_CONFIG_DIR (file di sessione finti)
 // non sono quelli dell'utente, e un `open` finto nel PATH impedisce al server di aprire il browser.
@@ -215,6 +215,9 @@ async function shoot(lang: Lang, browser: Browser) {
         await view(hash);
         await save(name);
       }
+      // La mappa a corsie della pagina Agenti (F52-03).
+      await view("agents/map");
+      await save("agents-map", 520);
       // Avvisi: un id doppio nel backlog, come un errore di formato vero; il pannello lo mostra sopra la vista.
       const phaseFile = join(project, "plan", f.phaseFile);
       writeFileSync(phaseFile, readFileSync(phaseFile, "utf8").replace(f.tasks[3]!, `${f.tasks[3]!}\n${f.tasks[3]!}`));

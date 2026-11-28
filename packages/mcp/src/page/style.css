@@ -193,7 +193,7 @@ details.task .full { margin: 4px 0 0; white-space: pre-line; color: var(--foregr
 .toast { position: fixed; right: 16px; bottom: 16px; left: 16px; max-width: 28rem; margin: 0 0 0 auto; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--secondary); color: var(--foreground); z-index: 10; }
 #notify { margin-top: 0; }
 
-/* Agenti in uso (F34): schede, e nella pagina Agenti l'albero per reparto. */
+/* Agenti in uso (F34): schede, e nella pagina Agenti le colonne per reparto. */
 ol.cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .agent { border: 1px solid var(--border); border-left: 3px solid var(--dept, var(--border)); border-radius: var(--radius); padding: 8px 12px; background: var(--secondary); }
 .agent.active { box-shadow: 0 0 0 1px var(--dept); }
@@ -217,3 +217,29 @@ ol.tree { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wra
 #view-agents .hint { margin-bottom: 12px; }
 /* La prima riga del compito non è un titolo: peso normale, colore secondario (prova in VS Code del 2026-11-22). */
 .agent details.task summary { font-weight: 400; color: var(--muted-foreground); }
+
+/* F52-02: la riga di un agente richiamato, con ×N e le chiamate precedenti a scomparsa. */
+.times { color: var(--dept); font-weight: 700; }
+.agent details.earlier summary { font-weight: 400; color: var(--muted-foreground); }
+.earlier ol { list-style: none; margin: 4px 0 0; padding: 0 0 0 8px; border-left: 1px solid var(--border); }
+.earlier li + li { margin-top: 6px; }
+#agents-views { margin-bottom: 12px; }
+
+/* F52-03: la mappa a corsie. Le sigle restano ferme a sinistra, il disegno scorre. */
+.map { display: grid; grid-template-columns: auto minmax(0, 1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+ol.lanes { list-style: none; margin: 0; padding: 0 10px 0 8px; border-right: 1px solid var(--border); }
+ol.lanes li { height: 44px; display: flex; align-items: center; font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+.map-scroll { overflow-x: auto; }
+.map-scroll svg { display: block; }
+.map-lane { fill: transparent; }
+.map-lane.odd { fill: var(--secondary); }
+.map-edge { fill: none; stroke: var(--muted-foreground); stroke-width: 1.5; }
+.map-arrowhead { fill: var(--muted-foreground); }
+.map-node circle { fill: var(--card); stroke: var(--dept); stroke-width: 2; }
+.map-node circle.map-ring { fill: none; stroke-width: 1.5; }
+.map-node text { fill: var(--foreground); font-size: 11px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.map-node.active circle:not(.map-ring) { fill: var(--dept); }
+.map-node.active text { fill: var(--background); }
+details.steps { margin-top: 12px; }
+details.steps ol { margin: 4px 0 0; padding-left: 2em; }
+details.steps li { padding: 2px 0; }

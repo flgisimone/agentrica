@@ -63,8 +63,18 @@
         <h1 class="sr-only" tabindex="-1">Agenti</h1>
         <section aria-labelledby="h-tree" class="card">
           <h2 id="h-tree">Agenti in uso</h2>
-          <p class="hint">Una colonna per reparto, nell'ordine in cui sono entrati: in cima, di regola, il direttore, sotto gli specialisti uno alla volta. Il numero sulla scheda è l'ordine di chiamata; compito e resoconto si aprono sulla scheda.</p>
-          <div id="tree"></div>
+          <div class="filters" role="group" aria-label="Vista degli agenti" id="agents-views">
+            <button type="button" data-sub="dept" aria-pressed="true">Per reparto</button>
+            <button type="button" data-sub="map" aria-pressed="false">Mappa</button>
+          </div>
+          <div id="agents-dept">
+            <p class="hint">Una colonna per reparto, nell'ordine in cui sono entrati; dentro una riga per agente, di regola prima il direttore. I numeri sono l'ordine delle chiamate, ×3 vuol dire tre chiamate: l'ultima è per intero, le precedenti si aprono sotto.</p>
+            <div id="tree"></div>
+          </div>
+          <div id="agents-map" hidden>
+            <p class="hint">Una corsia per reparto, i passaggi da sinistra a destra nell'ordine di chiamata. L'anello doppio segna il direttore, il cerchio pieno l'agente attivo; una freccia che torna su una corsia già usata è un ritorno del reparto.</p>
+            <div id="map"></div>
+          </div>
         </section>
       </div>
 

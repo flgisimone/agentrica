@@ -192,7 +192,7 @@ async function submit(event, question, form, error) {
 }
 
 // Gli agenti in uso (F34-07): una scheda per chiamata, con il numero d'ordine, il direttore segnato, l'ultimo attivo,
-// il compito e il resoconto. La Sessione mostra le ultime tre; la pagina Agenti tutte, in un albero per reparto.
+// il compito e il resoconto. La Sessione mostra le ultime tre; la pagina Agenti tutte, per reparto o in una mappa (F52).
 const RECENT = 3;
 
 /** Lo stato del resoconto: il testo, «coordina il reparto» per un direttore il cui reparto lavora ancora, o la mancanza. */
@@ -211,24 +211,52 @@ function reportBlock(a, i, chain) {
   return el("span", { class: "task muted" }, TEXTS.noReport);
 }
 
-function agentCard(a, i, chain) {
+/** La scheda di una chiamata; con `calls` (F52-02) è la riga di un agente: i numeri di tutte le sue chiamate e ×N. */
+function agentCard(a, i, chain, calls) {
   const last = i === chain.length - 1;
+  const n = calls ? calls.length : 1;
   return el(
     "article",
-    { class: `agent${last ? " active" : ""}`, "data-dept": dept(a), "aria-label": TEXTS.cardLabel(i + 1, a.codeName) },
+    { class: `agent${last ? " active" : ""}`, "data-dept": dept(a), "aria-label": calls ? TEXTS.rowLabel(a.codeName, n) : TEXTS.cardLabel(i + 1, a.codeName) },
     el(
       "p",
       { class: "agent-head" },
-      el("span", { class: "order mono" }, `#${i + 1}`),
-      " ",
+      n === 1 && [el("span", { class: "order mono" }, `#${i + 1}`), " "],
       el("strong", { class: "dot" }, a.codeName),
+      n > 1 && [" ", el("span", { class: "times mono", "aria-hidden": "true" }, `×${n}`)],
       // Lo spazio separa le parole anche nel testo copiato e per i lettori di schermo (il margine non basta).
       a.director && [" ", el("span", { class: "tag" }, TEXTS.director)],
       last && [" ", el("span", { class: "now" }, TEXTS.active)],
     ),
+    // I numeri di tutte le chiamate su una riga a parte: nell'intestazione spezzerebbero il nome.
+    n > 1 && el("p", { class: "order mono" }, calls.map(([, k]) => `#${k + 1}`).join(" · ")),
     el("p", { class: "agent-role" }, `${a.role}${TEXTS.department(a.department)} · `, el("time", { datetime: a.time }, time(a.time))),
     a.task && taskBlock(`${a.id} ${a.time}`, a.task),
     reportBlock(a, i, chain),
+    n > 1 && earlierCalls(a.id, calls.slice(0, -1), chain),
+  );
+}
+
+/** Le chiamate prima dell'ultima, a scomparsa: orario, compito e resoconto di ognuna. */
+function earlierCalls(id, calls, chain) {
+  const key = `e ${id}`;
+  return el(
+    "details",
+    { class: "earlier", open: openTasks.has(key), ontoggle: (e) => (e.currentTarget.open ? openTasks.add(key) : openTasks.delete(key)) },
+    el("summary", {}, TEXTS.earlier(calls.length)),
+    el(
+      "ol",
+      {},
+      calls.map(([a, i]) =>
+        el(
+          "li",
+          {},
+          el("p", { class: "agent-role" }, el("span", { class: "order mono" }, `#${i + 1}`), " · ", el("time", { datetime: a.time }, time(a.time))),
+          a.task && taskBlock(`${a.id} ${a.time}`, a.task),
+          reportBlock(a, i, chain),
+        ),
+      ),
+    ),
   );
 }
 
@@ -243,37 +271,167 @@ function renderActivity({ activity }) {
           el("p", { class: "more" }, el("a", { href: "#agents" }, TEXTS.allAgents(chain.length))),
         ]),
   );
+  // La pagina Agenti si ridisegna solo quando cambiano le chiamate: il focus e lo scorrimento della mappa restano (F52-01).
+  const key = JSON.stringify(activity);
+  if (key === agentsKey) return;
+  agentsKey = key;
   renderTree(chain);
+  renderMap(chain);
 }
 
+let agentsKey = null;
+
 /**
- * L'albero per reparto: una colonna per ogni tratto di chiamate dello stesso reparto, nell'ordine; in cima, di regola,
- * il direttore, sotto gli specialisti. Un reparto che torna dopo un altro (la revisione dopo il software) apre una colonna
- * nuova, segnata come ritorno.
+ * Per reparto (F52-02): una colonna per reparto, nell'ordine in cui è entrato, anche se torna (i ritorni sono nella mappa);
+ * dentro una riga per agente, nell'ordine della prima chiamata, con l'ultima chiamata intera e le precedenti a scomparsa.
+ * La pagina cresce con gli agenti, non con le chiamate.
  */
 function renderTree(chain) {
-  const columns = [];
+  const columns = new Map();
   chain.forEach((a, i) => {
-    const current = columns[columns.length - 1];
-    if (current && current.dept === dept(a)) current.items.push([a, i]);
-    else columns.push({ dept: dept(a), name: a.department, back: columns.some((c) => c.dept === dept(a)), items: [[a, i]] });
+    if (!columns.has(dept(a))) columns.set(dept(a), { dept: dept(a), name: a.department, agents: new Map() });
+    const agents = columns.get(dept(a)).agents;
+    if (!agents.has(a.id)) agents.set(a.id, []);
+    agents.get(a.id).push([a, i]);
   });
   $("tree").replaceChildren(
-    columns.length === 0
+    columns.size === 0
       ? empty(TEXTS.noActivity)
       : el(
           "ol",
           { class: "tree" },
-          columns.map((c, n) =>
+          [...columns.values()].map((c) =>
             el(
               "li",
               { class: "column", "data-dept": c.dept },
-              el("h3", {}, el("span", { class: "order mono" }, `${n + 1}`), " ", c.name, c.back && [" ", el("span", { class: "tag" }, TEXTS.back)]),
-              el("ol", { class: "cards" }, c.items.map(([a, i]) => el("li", {}, agentCard(a, i, chain)))),
+              el("h3", {}, c.name),
+              el(
+                "ol",
+                { class: "cards" },
+                [...c.agents.values()].map((calls) => {
+                  const [a, i] = calls[calls.length - 1];
+                  return el("li", {}, agentCard(a, i, chain, calls));
+                }),
+              ),
             ),
           ),
         ),
   );
+}
+
+// Mappa (F52-03): una corsia per reparto, un cerchio per chiamata da sinistra a destra, frecce fra un passaggio e il
+// successivo. Il disegno è nascosto ai lettori di schermo: lo ripete l'elenco «I passaggi in ordine». Il contenitore che
+// scorre si crea una volta sola e resta, così un aggiornamento non toglie il focus.
+const SVG_NS = "http://www.w3.org/2000/svg";
+const LANE = 44;
+const STEP = 46;
+const PAD = 26;
+const R = 14;
+
+function svg(tag, attrs = {}, ...children) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
+  node.append(...children.filter(Boolean));
+  return node;
+}
+
+function mapShell() {
+  const box = $("map");
+  if (!box.firstChild) {
+    const summary = el("summary", {});
+    box.append(
+      el(
+        "div",
+        { class: "map", id: "map-body" },
+        el("ol", { class: "lanes", id: "map-lanes", "aria-hidden": "true" }),
+        el("div", { class: "map-scroll", id: "map-scroll", tabindex: "0", role: "region", "aria-label": TEXTS.mapLabel }),
+      ),
+      el(
+        "details",
+        { class: "steps", open: openTasks.has("steps"), ontoggle: (e) => (e.currentTarget.open ? openTasks.add("steps") : openTasks.delete("steps")) },
+        summary,
+        el("ol", { id: "map-steps" }),
+      ),
+      el("p", { class: "empty", id: "map-empty" }, TEXTS.noActivity),
+      el("p", { class: "hint", id: "map-limit", hidden: true }, TEXTS.mapLimit),
+    );
+  }
+  return box;
+}
+
+function renderMap(chain) {
+  const box = mapShell();
+  const lanes = [...new Set(chain.map(dept))];
+  $("map-empty").hidden = chain.length > 0;
+  $("map-body").hidden = chain.length === 0;
+  box.querySelector(".steps").hidden = chain.length === 0;
+  // Il server tiene le ultime 100 chiamate (MAX_ACTIVITY in panel.ts): oltre, i primi passaggi non ci sono più.
+  $("map-limit").hidden = chain.length < 100;
+  if (chain.length === 0) return;
+  const at = (i) => [PAD + i * STEP, lanes.indexOf(dept(chain[i])) * LANE + LANE / 2];
+  const width = PAD * 2 + (chain.length - 1) * STEP;
+  const height = lanes.length * LANE;
+  const edges = chain.slice(1).map((_, k) => {
+    const [x1, y1] = at(k);
+    const [x2, y2] = at(k + 1);
+    const d = y1 === y2 ? `M${x1 + R} ${y1}H${x2 - R - 2}` : `M${x1 + R} ${y1}C${x1 + R + 14} ${y1} ${x2 - R - 16} ${y2} ${x2 - R - 2} ${y2}`;
+    return svg("path", { d, class: "map-edge", "marker-end": "url(#map-arrow)" });
+  });
+  const nodes = chain.map((a, i) => {
+    const [x, y] = at(i);
+    return svg(
+      "g",
+      { class: i === chain.length - 1 ? "map-node active" : "map-node", "data-dept": dept(a) },
+      svg("title", {}, `#${i + 1} ${a.codeName} — ${a.role} · ${time(a.time)}`),
+      a.director && svg("circle", { cx: x, cy: y, r: R + 4, class: "map-ring" }),
+      svg("circle", { cx: x, cy: y, r: R }),
+      svg("text", { x, y, "text-anchor": "middle", "dominant-baseline": "central" }, `${i + 1}`),
+    );
+  });
+  const drawing = svg(
+    "svg",
+    { width, height, viewBox: `0 0 ${width} ${height}`, "aria-hidden": "true", focusable: "false" },
+    svg("defs", {}, svg("marker", { id: "map-arrow", viewBox: "0 0 8 8", refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: "auto" }, svg("path", { d: "M0 0L8 4L0 8z", class: "map-arrowhead" }))),
+    ...lanes.map((_, n) => svg("rect", { x: 0, y: n * LANE, width, height: LANE, class: n % 2 ? "map-lane" : "map-lane odd" })),
+    ...edges,
+    ...nodes,
+  );
+  const scroll = $("map-scroll");
+  // Chi guarda l'ultimo passaggio continua a vederlo quando ne arriva uno nuovo.
+  const atEnd = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 4;
+  // Prima le sigle: una corsia nuova allarga la loro colonna e restringe l'area che scorre (prova di QA di F52).
+  $("map-lanes").replaceChildren(...lanes.map((d) => el("li", { "data-dept": d }, el("span", { class: "dot" }, d))));
+  scroll.replaceChildren(drawing);
+  if (atEnd) scroll.scrollLeft = scroll.scrollWidth;
+  setText(box.querySelector(".steps summary"), TEXTS.steps(chain.length));
+  $("map-steps").replaceChildren(
+    ...chain.map((a, i) => {
+      const back = i > 0 && dept(chain[i - 1]) !== dept(a) && chain.slice(0, i).some((b) => dept(b) === dept(a));
+      const marks = [a.director && TEXTS.director, back && TEXTS.back, i === chain.length - 1 && TEXTS.active].filter(Boolean);
+      return el(
+        "li",
+        { "data-dept": dept(a) },
+        el("strong", { class: "dot" }, a.codeName),
+        ` — ${a.role}${TEXTS.department(a.department)} · `,
+        el("time", { datetime: a.time }, time(a.time)),
+        marks.length > 0 && ` · ${marks.join(" · ")}`,
+      );
+    }),
+  );
+}
+
+// Per reparto o Mappa, dall'indirizzo (#agents/dept o #agents/map): la scelta resta dopo gli aggiornamenti e, tornando
+// con la scheda «Agenti» (#agents), anche dopo aver visto un'altra pagina.
+let agentsSub = "dept";
+
+function showAgentsView(sub) {
+  if (sub === "map" || sub === "dept") agentsSub = sub;
+  const map = agentsSub === "map";
+  $("agents-dept").hidden = map;
+  $("agents-map").hidden = !map;
+  for (const button of $("agents-views").querySelectorAll("button")) button.setAttribute("aria-pressed", String((button.dataset.sub === "map") === map));
+  const scroll = $("map-scroll");
+  if (map && scroll) scroll.scrollLeft = scroll.scrollWidth;
 }
 
 // I subagent di Claude Code (F34-06), a parte: non passano dal server, il pannello li legge dai file di Claude Code.
@@ -652,7 +810,8 @@ async function previewShare() {
 const VIEWS = ["session", "agents", "plan", "findings", "ratings", "usage"];
 
 function showView(moveFocus) {
-  const name = location.hash.slice(1);
+  const [name, sub] = location.hash.slice(1).split("/");
+  showAgentsView(sub);
   // Senza valutazioni (--no-ratings) la pagina non c'è: il suo indirizzo porta alla sessione.
   const allowed = VIEWS.filter((v) => v !== "ratings" || !state || state.rating);
   const current = allowed.includes(name) ? name : VIEWS[0];
@@ -750,6 +909,13 @@ $("usage-groups").addEventListener("click", (event) => {
   if (!button) return;
   usageGroup = button.dataset.group;
   renderUsageDetail();
+});
+// replaceState non fa scattare hashchange: il focus resta sul pulsante premuto.
+$("agents-views").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-sub]");
+  if (!button) return;
+  history.replaceState(null, "", `#agents/${button.dataset.sub}`);
+  showAgentsView(button.dataset.sub);
 });
 showView(false);
 connect();

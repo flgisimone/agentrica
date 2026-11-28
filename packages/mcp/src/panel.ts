@@ -83,7 +83,7 @@ export interface Panel {
 
 const MAX_BODY_BYTES = 16_000;
 const MAX_NOTE = 2000;
-const MAX_ACTIVITY = 20;
+const MAX_ACTIVITY = 100;
 
 /**
  * Le ultime `max` chiamate più l'ultima di ogni agente uscito da quelle (F30-09): ogni agente usato nella sessione resta

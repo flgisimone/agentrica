@@ -73,5 +73,9 @@ Come in F49, e in più: nella riga «Modelli» di [README.md](README.md) ogni ru
 
 ## Rilievi aperti
 
-- P3 · Un rapporto Opus di AISA-06 è uscito in inglese, con il compito in italiano: primo caso nelle ondate. Da guardare se si ripete; il testo dell'agente chiede già di rispondere nella lingua dell'utente.
-- P3 · Il sito mostra la tabella delle prove di `/consumo` fino a F50: va aggiornata con F51 al rilascio della 0.20.0.
+- ~~P3~~ Chiuso come accettato in `fix/rilievi-f51` (2026-11-28, scelta dell'utente): caso singolo, si riapre se una prossima prova lo ripete. Un rapporto Opus di AISA-06 è uscito in inglese, con il compito in italiano: primo caso nelle ondate. Da guardare se si ripete; il testo dell'agente chiede già di rispondere nella lingua dell'utente.
+- P3 · Il sito mostra la tabella delle prove di `/consumo` fino a F50: va aggiornata con F51 al rilascio della 0.20.0. Issue [#52](https://github.com/flgisimone/agentrica/issues/52).
+
+## Dopo la chiusura: `fix/rilievi-f51` (2026-11-28)
+
+Su scelta dell'utente, prima del rilascio 0.20.0: chiusi i rilievi che non chiedono una prova umana. Rapporto in inglese (P3 di F51) e prove con un lettore di schermo vero (P3 di F46 e F47) chiusi come accettati; misura delle catene rifatta (P3 di F48, [2026-11-28-catene-tool.md](../examples/risultati/2026-11-28-catene-tool.md)), soglia non superata, e con lei chiuso come accettato il P2 di F45 su `list_agents`, con la condizione per riaprirlo. Restano aperti: la tabella di `/consumo` (P3 di F51), da aggiornare nel sito con il rilascio, e C6 e C7 nel client con il pannello aperto (P3 di F48), che chiedono una prova dell'utente. Da qui i rilievi aperti sono anche issue su GitHub (#51, #52; scelta dell'utente, 2026-11-28).

@@ -80,4 +80,4 @@ Fuori perimetro, perché interni: misure di F37, F40 e F45 (Code Mode rinviato).
 ## Rilievi aperti
 
 - P3: le schermate del pannello vanno rifatte quando il pannello cambia aspetto; lo script e i dati di prova non sono nel repository (sono stati fatti in una cartella temporanea): da aggiungere se servono di nuovo. Chiuso in `fix/rilievi-prerilascio` (2026-11-26): `npm run -s panel-screenshots -- [--site ../agentrica-site]` (`scripts/panel-screenshots.ts`) crea il progetto di prova con `init`, avvia il server con un client MCP vero in cartelle temporanee (HOME, `CLAUDE_CONFIG_DIR`, `open` finto) e scrive le dodici schermate in `src/assets/pannello/` del sito; schermate rifatte sulla 0.17.1.
-- P3: nessuna prova con un lettore di schermo vero sulle pagine nuove; verificati struttura, testi alternativi e axe.
+- ~~P3~~ Chiuso come accettato in `fix/rilievi-f51` (2026-11-28, scelta dell'utente). Nessuna prova con un lettore di schermo vero sulle pagine nuove; verificati struttura, testi alternativi e axe.

@@ -1,8 +1,8 @@
-// Catene di chiamate ai tool di Agentrica nelle sessioni di Claude Code (F45-01): quante chiamate in fila fa il modello
+// Catene di chiamate ai tool di AIgentrica nelle sessioni di Claude Code (F45-01): quante chiamate in fila fa il modello
 // e quanti byte dei risultati sono intermedi, cioè seguiti da un'altra chiamata. È la misura per decidere su Code Mode.
 // Uso: npm run -s tool-chains -- [<cartella progetto> ...] [--all] [--server <nome>] [--date AAAA-MM-GG]
 // Senza cartelle legge il progetto corrente; --all legge tutti i progetti di Claude Code. Senza --server conta i server
-// con «agentrica» nel nome; con --server solo quello con quel nome. Stampa Markdown su stdout,
+// con «aigentrica» nel nome; con --server solo quello con quel nome. Stampa Markdown su stdout,
 // solo conteggi e byte.
 import { createReadStream } from "node:fs";
 import { readdir } from "node:fs/promises";

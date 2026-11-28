@@ -1,8 +1,8 @@
-// Configurazione salvata (F29): le scelte del modulo in ~/.agentrica/config.json, una per utente, valide dalla sessione
+// Configurazione salvata (F29): le scelte del modulo in ~/.aigentrica/config.json, una per utente, valide dalla sessione
 // successiva. I flag del comando del server hanno la precedenza, chiave per chiave. È l'unico file che il server scrive,
 // e solo dopo il modulo; il contenuto è a schema fisso, senza percorsi, progetti o date (PRIV-CFG-01).
-// Il percorso viene solo da os.homedir(): nessuna variabile d'ambiente di Agentrica lo sposta (SEC-CFG-01).
-import { chmodSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+// Il percorso viene solo da os.homedir(): nessuna variabile d'ambiente di AIgentrica lo sposta (SEC-CFG-01).
+import { chmodSync, constants, copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { isLang, T } from "./texts/index.ts";
@@ -24,9 +24,27 @@ export const MAX_CONFIG_BYTES = 4096;
 export const MAX_AGENTS = 500;
 export const KEYS = ["lang", "agents", "panel", "ratings", "updateCheck"] as const satisfies readonly ConfigKey[];
 
-export const configPath = (home = homedir()) => join(home, ".agentrica", "config.json");
+export const configPath = (home = homedir()) => join(home, ".aigentrica", "config.json");
 /** Il percorso da mostrare all'utente, con ~ al posto della cartella personale. */
-export const shownPath = "~/.agentrica/config.json";
+export const shownPath = "~/.aigentrica/config.json";
+
+/**
+ * Il cambio di nome (F54): se c'è solo ~/.agentrica/config.json lo copia in ~/.aigentrica, con gli stessi permessi di
+ * writeConfig; il vecchio file resta. Il contenuto non si guarda qui: lo controlla readConfig come per ogni file.
+ * ponytail: un errore (permessi, disco) si ignora e vale come file mancante; da togliere dopo la 1.x.
+ */
+export function migrateLegacyConfig(home = homedir()): void {
+  const path = configPath(home);
+  const legacy = join(home, ".agentrica", "config.json");
+  if (!canUseConfig(path) || !canUseConfig(legacy) || existsSync(path) || !existsSync(legacy)) return;
+  try {
+    mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+    copyFileSync(legacy, path, constants.COPYFILE_EXCL);
+    chmodSync(path, 0o600);
+  } catch {
+    // vedi sopra
+  }
+}
 
 /**
  * Con il permission model di Node (--permission) il server legge e scrive il file solo se gli è permesso: senza

@@ -6,8 +6,8 @@ import { after, test } from "node:test";
 import { checkProject } from "./check.ts";
 import { readGit, readPlan } from "./project.ts";
 
-const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-project-")));
-const outside = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-outside-")));
+const root = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-project-")));
+const outside = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-outside-")));
 after(() => {
   rmSync(root, { recursive: true, force: true });
   rmSync(outside, { recursive: true, force: true });
@@ -19,7 +19,7 @@ const write = (path: string, text: string) => {
 };
 
 test("senza plan/ il pannello dà un'informazione con le due strade, non un problema (F35)", () => {
-  const empty = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-empty-")));
+  const empty = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-empty-")));
   const plan = readPlan(empty);
   const noPlanIssues = checkProject(empty);
   mkdirSync(join(empty, "plan"));

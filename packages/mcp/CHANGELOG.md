@@ -1,6 +1,16 @@
-# Novità di @agentrica/mcp
+# Novità di @aigentrica/mcp
 
-Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
+Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@aigentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md). Fino alla 0.22.0 il pacchetto si chiamava `@agentrica/mcp` (AIgentrica era Agentrica): le voci di quelle versioni restano con il nome di allora.
+
+## 1.0.0 — 2026-11-28
+
+### Incompatibile
+- Nuovo nome: Agentrica diventa **AIgentrica**, il pacchetto `@aigentrica/mcp` (prima `@agentrica/mcp`, che non riceve più aggiornamenti), il comando `aigentrica-mcp`, il server `aigentrica` in Claude Code e in `.mcp.json`, i tool `mcp__aigentrica__…`, la configurazione in `~/.aigentrica/config.json`, il sito su https://aigentrica.it. Id, nomi in codice, tool e prompt non cambiano. Come passare: «Se usavi Agentrica» nel README. F54.
+
+### Cambiato
+- Al primo avvio la configurazione salvata in `~/.agentrica/config.json` viene copiata in `~/.aigentrica/config.json`, se lì non ce n'è già una; il vecchio file resta.
+- `add` e `install` tolgono la vecchia registrazione `agentrica` di Claude Code nello stesso ambito e segnalano quelle negli altri ambiti, con il comando per toglierle.
+- Valutazioni, totali di token e progetti proposti vanno a https://aigentrica.it.
 
 ## 0.22.0 — 2026-11-28
 

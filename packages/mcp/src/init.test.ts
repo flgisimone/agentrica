@@ -13,7 +13,7 @@ import { readPlan } from "./project.ts";
 import { VERSION } from "./prompt.ts";
 import { TEXTS } from "./texts/index.ts";
 
-const tmp = mkdtempSync(join(tmpdir(), "agentrica-init-"));
+const tmp = mkdtempSync(join(tmpdir(), "aigentrica-init-"));
 after(() => rmSync(tmp, { recursive: true, force: true }));
 
 const server = join(import.meta.dirname, "server.ts");
@@ -21,7 +21,7 @@ const identity = { GIT_AUTHOR_NAME: "t", GIT_AUTHOR_EMAIL: "t@t", GIT_COMMITTER_
 const init = (...args: string[]) =>
   spawnSync(process.execPath, [server, "init", "--lang", "it", ...args], { cwd: tmp, encoding: "utf8", env: { ...process.env, ...identity } });
 
-test("i subagent di Agentrica nominano il progetto una volta sola, nella frase che init sostituisce", () => {
+test("i subagent di AIgentrica nominano il progetto una volta sola, nella frase che init sostituisce", () => {
   const files = [...projectFiles("X", "/x", "2026-01-01", "linux", "it", true).keys()].filter((file) => file.startsWith(".claude/agents/"));
   assert.equal(files.length, 56);
   const dir = join(AGENTS_DIR, "..");
@@ -38,12 +38,12 @@ test("file del progetto: starter, agents/ del pacchetto, subagent e .mcp.json, s
   assert.match(files.get("plan/README.md")!, /^# Piano di Prova App/);
   assert.match(files.get("CONVENTIONS.md")!, /### 2\.6 Fasi e backlog/);
   assert.match(files.get(".claude/agents/software/sw-cto.md")!, /del progetto Prova App\./);
-  assert.deepEqual(JSON.parse(files.get(".mcp.json")!).mcpServers.agentrica.args, ["-y", `@agentrica/mcp@${VERSION}`]);
-  const windows = JSON.parse(projectFiles("X", "C:\\x", "2026-01-01", "win32").get(".mcp.json")!).mcpServers.agentrica;
-  assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@agentrica/mcp@${VERSION}`]);
+  assert.deepEqual(JSON.parse(files.get(".mcp.json")!).mcpServers.aigentrica.args, ["-y", `@aigentrica/mcp@${VERSION}`]);
+  const windows = JSON.parse(projectFiles("X", "C:\\x", "2026-01-01", "win32").get(".mcp.json")!).mcpServers.aigentrica;
+  assert.deepEqual([windows.command, ...windows.args], ["cmd", "/c", "npx", "-y", `@aigentrica/mcp@${VERSION}`]);
   for (const [file, text] of files) {
     assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
-    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /progetto Agentrica/, file);
+    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /progetto AIgentrica/, file);
   }
 });
 
@@ -53,8 +53,8 @@ test("subagent solo con --subagents (F34-05): con il flag caricano il loro agent
     const files = [...projectFiles("X", "/x", "2026-01-01", "linux", lang, true)].filter(([file]) => file.startsWith(".claude/agents/"));
     assert.equal(files.length, 56, lang);
     for (const [file, text] of files) {
-      assert.match(text, /^tools: .+, mcp__agentrica__agent, mcp__agentrica__library$/m, file);
-      assert.match(text, /^---\n[\s\S]+?\n---\n\n(Primo passo|First step): .+`mcp__agentrica__agent`.+`A[A-Z]+-\d{2}`.+\n\n\S/, file);
+      assert.match(text, /^tools: .+, mcp__aigentrica__agent, mcp__aigentrica__library$/m, file);
+      assert.match(text, /^---\n[\s\S]+?\n---\n\n(Primo passo|First step): .+`mcp__aigentrica__agent`.+`A[A-Z]+-\d{2}`.+\n\n\S/, file);
       // F41-03: un subagent ha un contesto suo, quindi chiede sempre le regole intere.
       assert.match(text, /^(Primo passo|First step): .+`A[A-Z]+-\d{2}`, `full_rules` true /m, file);
     }
@@ -73,7 +73,7 @@ test("init crea il progetto con git su main e develop, e il pannello ne legge il
   const dir = join(tmp, "nuovo");
   const git = (...args: string[]) => spawnSync("git", args, { cwd: dir, encoding: "utf8" }).stdout.trim();
   assert.equal(git("branch", "--show-current"), "develop");
-  assert.equal(git("log", "--format=%s", "main"), "Progetto creato con @agentrica/mcp init");
+  assert.equal(git("log", "--format=%s", "main"), "Progetto creato con @aigentrica/mcp init");
   assert.equal(git("status", "--porcelain"), "");
   const plan = readPlan(realpathSync(dir));
   assert.deepEqual(checkProject(realpathSync(dir)), []);
@@ -93,7 +93,7 @@ test("con un file già presente init non scrive nulla e dice quale", () => {
 });
 
 test("argomenti non validi: due cartelle, nome vuoto", () => {
-  assert.match(init("a", "b").stderr, /uso: agentrica-mcp init/);
+  assert.match(init("a", "b").stderr, /uso: aigentrica-mcp init/);
   assert.match(init("c", "--name", " ").stderr, /--name/);
 });
 
@@ -115,7 +115,7 @@ test("init in inglese (F32): starter e subagent di starter/en/, agents/ intero, 
   assert.match(en.get(".claude/agents/software/sw-cto.md")!, /of the Test App project\..*`agents\/ai_software_agency\/en\/01-/s);
   for (const [file, text] of en) {
     assert.doesNotMatch(text, /\{\{(PROJECT_|DATE)/, file);
-    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /Agentrica project/, file);
+    if (file.startsWith(".claude/")) assert.doesNotMatch(text, /AIgentrica project/, file);
   }
   const dir = join(AGENTS_DIR, "..", "starter", "en", ".claude", "agents");
   for (const file of readdirSync(dir, { recursive: true }).map(String).filter((f) => f.endsWith(".md"))) {
@@ -143,7 +143,7 @@ test("init --existing (F35): scrive solo i file mancanti, salta gli altri e li e
   spawnSync("git", ["init", "-q", "-b", "main"], { cwd: dir });
   const result = init("avviato", "--existing");
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Regole di Agentrica aggiunte a «avviato»/);
+  assert.match(result.stdout, /Regole di AIgentrica aggiunte a «avviato»/);
   assert.match(result.stdout, /Saltati perché esistono già: .*CLAUDE\.md/);
   assert.match(result.stdout, /aggiungi una riga «@AGENTS\.md»/);
   assert.match(result.stdout, /git: nessun commit/);
@@ -157,7 +157,7 @@ test("init --existing (F35): scrive solo i file mancanti, salta gli altri e li e
   assert.deepEqual(checkProject(realpathSync(dir)), []);
   assert.deepEqual(plan.phases, []);
   assert.match(plan.notice!, /non ha ancora fasi/);
-  assert.match(readFileSync(join(dir, "plan", "README.md"), "utf8"), /`npx @agentrica\/mcp init --existing`[\s\S]+Nessuna fase ancora/);
+  assert.match(readFileSync(join(dir, "plan", "README.md"), "utf8"), /`npx @aigentrica\/mcp init --existing`[\s\S]+Nessuna fase ancora/);
   // Una seconda volta non scrive nulla e non si ferma.
   const again = init("avviato", "--existing");
   assert.equal(again.status, 0, again.stderr);
@@ -246,7 +246,7 @@ test("init --existing con .claude/settings.json già presente: non lo tocca e di
   writeFileSync(join(dir, ".claude", "settings.json"), "{}\n");
   const result = init("con-impostazioni", "--existing");
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Il promemoria non è stato aggiunto.+npx @agentrica\/mcp reminder/);
+  assert.match(result.stdout, /Il promemoria non è stato aggiunto.+npx @aigentrica\/mcp reminder/);
   assert.equal(readFileSync(join(dir, ".claude", "settings.json"), "utf8"), "{}\n");
   const fresh = init("con-hook", "--existing");
   assert.doesNotMatch(fresh.stdout, /promemoria non è stato aggiunto/);

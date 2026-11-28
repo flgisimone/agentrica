@@ -12,7 +12,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { VERSION } from "./prompt.ts";
 import { keepActivity, parseAnswer, parseRate, planTouchedAfter, startPanel, type RateInput } from "./panel.ts";
 
-const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-")));
+const root = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-panel-")));
 const repo = realpathSync(join(import.meta.dirname, "..", "..", ".."));
 after(() => rmSync(root, { recursive: true, force: true }));
 
@@ -151,11 +151,11 @@ test("valutazioni nel pannello: stato, difese e invio con le valutazioni del ser
 });
 
 test("avviso di versione nuova nello stato, per il banner (F23)", async () => {
-  const panel = await startPanel(root, undefined, () => "È uscita la versione 9.9.9 di Agentrica.");
+  const panel = await startPanel(root, undefined, () => "È uscita la versione 9.9.9 di AIgentrica.");
   try {
     const cookie = await login(panel.url);
     const state = JSON.parse((await call(`${new URL(panel.url).origin}/api/state`, { headers: { Cookie: cookie } })).body);
-    assert.equal(state.update, "È uscita la versione 9.9.9 di Agentrica.");
+    assert.equal(state.update, "È uscita la versione 9.9.9 di AIgentrica.");
     assert.equal(state.version, VERSION, "la versione del server per la testata (F46-04)");
   } finally {
     await panel.close();
@@ -176,7 +176,7 @@ test("subagent di Claude Code nello stato, separati dagli agenti del server (F34
 });
 
 test("avviso plan/ senza agenti (F39-02): plan/ modificato dopo l'avvio e nessun agente; sparisce al primo agente", async () => {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-noagent-")));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-noagent-")));
   mkdirSync(join(dir, "plan"));
   writeFileSync(join(dir, "plan", "README.md"), "# Piano\n");
   utimesSync(join(dir, "plan", "README.md"), new Date(0), new Date(0));
@@ -217,7 +217,7 @@ test("resoconto (tool report): sull'ultima chiamata dell'agente, solo per agenti
 });
 
 test("errori di formato e contraddizioni arrivano alla pagina in due elenchi (F44-06)", async () => {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-panel-check-")));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-panel-check-")));
   after(() => rmSync(dir, { recursive: true, force: true }));
   mkdirSync(join(dir, "audit", "a"), { recursive: true });
   writeFileSync(join(dir, "audit", "a", "rotto.json"), "");
@@ -254,14 +254,14 @@ test("difese: token, cookie, Host, Origin, tipo e dimensione del corpo", async (
     assert.match(page.body, /<html lang="it">/);
     assert.equal((await call(`${base}/../server.ts`, { headers: { Cookie: cookie } })).status, 404);
     assert.equal((await call(`${base}/%2e%2e/package.json`, { headers: { Cookie: cookie } })).status, 404);
-    assert.equal((await call(`${base}/api/state`, { headers: { Cookie: "agentrica_panel_1=x" } })).status, 403);
+    assert.equal((await call(`${base}/api/state`, { headers: { Cookie: "aigentrica_panel_1=x" } })).status, 403);
 
     const state = JSON.parse((await call(`${base}/api/state`, { headers: { Cookie: cookie } })).body);
     assert.equal(state.project.name, basename(root));
     assert.deepEqual(state.project.problems, []);
     assert.match(state.project.notice, /init --existing/);
     // Consumo (F24): stesso cookie delle altre rotte; un progetto senza file di Claude Code dà zero risposte.
-    assert.equal((await call(`${base}/api/usage`, { headers: { Cookie: "agentrica_panel_1=x" } })).status, 403);
+    assert.equal((await call(`${base}/api/usage`, { headers: { Cookie: "aigentrica_panel_1=x" } })).status, 403);
     const usage = JSON.parse((await call(`${base}/api/usage`, { headers: { Cookie: cookie } })).body);
     assert.equal(usage.total.requests, 0);
     assert.equal(usage.prices.date, "2026-11-03");
@@ -313,7 +313,7 @@ test("con --panel: open_panel, ask_user con risposta dalla pagina, agenti in uso
       args: [join(import.meta.dirname, "server.ts"), "--lang", "it", "--panel", "--agents", "aisa", "--no-update-check"],
       cwd: repo,
       // HOME senza configurazione salvata (F29): conta solo ciò che dicono i flag, la cartella personale vera resta fuori.
-      env: { PATH: root, HOME: root, USERPROFILE: root, AGENTRICA_RATINGS_URL: ratingsUrl },
+      env: { PATH: root, HOME: root, USERPROFILE: root, AIGENTRICA_RATINGS_URL: ratingsUrl },
       stderr: "pipe",
     }),
   );

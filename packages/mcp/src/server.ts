@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Server MCP di Agentrica su stdio: un prompt per agente e tre tool in sola lettura (list_agents, agent e, da F25,
+// Server MCP di AIgentrica su stdio: un prompt per agente e tre tool in sola lettura (list_agents, agent e, da F25,
 // library, che dà le schede della biblioteca del reparto; gli URL delle fonti restano in fonti.json, mai al modello).
 // Con --agents (es. --agents aisa,aiwda-08) prompt e tool vedono solo la squadra; senza, tutti gli agenti.
 // Legge i file di agents/ all'avvio e non registra dati. Da F29 legge e, solo dopo il modulo, scrive la configurazione
-// in ~/.agentrica/config.json (config.ts): le scelte senza flag vengono da lì; i comandi rate e configure sono prompt
+// in ~/.aigentrica/config.json (config.ts): le scelte senza flag vengono da lì; i comandi rate e configure sono prompt
 // e il modulo della configurazione compare alla prima chiamata se il file manca. Due tipi di connessione:
 // l'invio di una valutazione (F20, ratings.ts) o, da F27, dei totali di token (share.ts), solo dopo la conferma
 // dell'utente, e da F23 il controllo della versione sul registro npm all'avvio (update.ts). --no-ratings toglie i tool
@@ -18,7 +18,7 @@ import { realpathSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { checkProject, checkText, missingHandoff } from "./check.ts";
 import { AGENTS_DIR, loadCatalog, subagentIds, type Department, type DepartmentCode } from "./catalog.ts";
-import { canUseConfig, configForm, configMessage, configPath, DEFAULTS, KEYS, parseConfigForm, readConfig, shownPath, writeConfig, type Config, type ConfigKey } from "./config.ts";
+import { canUseConfig, configForm, configMessage, configPath, DEFAULTS, KEYS, migrateLegacyConfig, parseConfigForm, readConfig, shownPath, writeConfig, type Config, type ConfigKey } from "./config.ts";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -35,7 +35,7 @@ import { fetchLatest, installKind, isNewer, REGISTRY_URL, updateMessage } from "
 // contenere argomenti della configurazione del client: i caratteri di controllo (a capo, escape) diventano \uXXXX.
 function fail(message: string): never {
   const safe = message.replace(/\p{Cc}/gu, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
-  process.stderr.write(`agentrica: ${safe}\n`);
+  process.stderr.write(`aigentrica: ${safe}\n`);
   process.exit(1);
 }
 const reason = (error: unknown) => (error instanceof Error ? error.message : String(error));
@@ -46,6 +46,7 @@ const reason = (error: unknown) => (error instanceof Error ? error.message : Str
   const args = process.argv.slice(2);
   const at = args.findIndex((arg) => arg === "--lang" || arg.startsWith("--lang="));
   const flag = at === -1 ? undefined : args[at]!.includes("=") ? args[at]!.slice("--lang=".length) : args[at + 1];
+  migrateLegacyConfig();
   const file = configPath();
   const read = canUseConfig(file) ? readConfig(file) : undefined;
   setLang(chooseLang(isLang(flag) ? flag : undefined, read && "config" in read ? read.config.lang : undefined));
@@ -123,7 +124,7 @@ if (configUsable) {
       invalid = T.server.squadInvalid;
     }
   }
-  if (invalid) process.stderr.write(`agentrica: ${T.server.configIgnored(shownPath, invalid)}\n`);
+  if (invalid) process.stderr.write(`aigentrica: ${T.server.configIgnored(shownPath, invalid)}\n`);
 }
 const settings: Config = { ...DEFAULTS, ...saved, ...flags };
 const spec = flags.agents ?? (settings.agents || undefined);
@@ -138,15 +139,15 @@ try {
 const all = catalog.flatMap((department) => department.agents.map((agent) => ({ department, agent })));
 const codes = catalog.map((d) => d.code) as [DepartmentCode, ...DepartmentCode[]];
 
-// AGENTRICA_RATINGS_URL e AGENTRICA_REGISTRY_URL servono solo ai test (endpoint finti) e valgono solo su 127.0.0.1:
+// AIGENTRICA_RATINGS_URL e AIGENTRICA_REGISTRY_URL servono solo ai test (endpoint finti) e valgono solo su 127.0.0.1:
 // un .mcp.json di un progetto non può dirottare le connessioni verso un altro server. In uso restano gli URL fissi.
 const local = (name: string, fixed: string) => {
   const url = process.env[name];
   return url && /^http:\/\/127\.0\.0\.1:\d+\//.test(url) ? url : fixed;
 };
-const ratings: Ratings | undefined = withRatings ? createRatings({ version: VERSION, url: local("AGENTRICA_RATINGS_URL", RATINGS_URL) }) : undefined;
-const share: Share | undefined = withRatings ? createShare({ version: VERSION, url: local("AGENTRICA_USAGE_URL", SHARE_URL) }) : undefined;
-const showcase: Showcase | undefined = withRatings ? createShowcase({ version: VERSION, url: local("AGENTRICA_PROJECTS_URL", PROJECTS_URL) }) : undefined;
+const ratings: Ratings | undefined = withRatings ? createRatings({ version: VERSION, url: local("AIGENTRICA_RATINGS_URL", RATINGS_URL) }) : undefined;
+const share: Share | undefined = withRatings ? createShare({ version: VERSION, url: local("AIGENTRICA_USAGE_URL", SHARE_URL) }) : undefined;
+const showcase: Showcase | undefined = withRatings ? createShowcase({ version: VERSION, url: local("AIGENTRICA_PROJECTS_URL", PROJECTS_URL) }) : undefined;
 // Reparti e agenti di tutto il catalogo, non solo della squadra: un progetto può averne usati altri.
 const known = { departments: new Set(full.map((d) => d.code)), agents: new Set(full.flatMap((d) => d.agents.map((a) => a.id))) };
 
@@ -167,12 +168,12 @@ async function draftShare(share: Share) {
   return { ...share.draft(rows), omitted };
 }
 
-// Frasi per il modello in coda alla risposta del prossimo tool di Agentrica: l'avviso di versione nuova (una volta) e
+// Frasi per il modello in coda alla risposta del prossimo tool di AIgentrica: l'avviso di versione nuova (una volta) e
 // l'esito di un modulo di valutazione mostrato fuori da una chiamata.
 const notes: string[] = [];
 let update: string | undefined;
 if (withUpdateCheck) {
-  void fetchLatest(local("AGENTRICA_REGISTRY_URL", REGISTRY_URL)).then((version) => {
+  void fetchLatest(local("AIGENTRICA_REGISTRY_URL", REGISTRY_URL)).then((version) => {
     if (!version || !isNewer(version, VERSION)) return;
     update = updateMessage(VERSION, version, installKind(import.meta.filename));
     notes.push(T.server.updateNote(update));
@@ -198,7 +199,7 @@ if (withPanel && (panelAllowed || flags.panel)) {
     panel = await startPanel(root, panelRatings, () => update, () => subagentRuns(claudeProjectDir(root), started));
   } catch (error) {
     if (flags.panel) fail(T.server.panelFailed(reason(error)));
-    process.stderr.write(`agentrica: ${T.server.panelSkipped(reason(error).replace(/\p{Cc}/gu, " "))}\n`);
+    process.stderr.write(`aigentrica: ${T.server.panelSkipped(reason(error).replace(/\p{Cc}/gu, " "))}\n`);
   }
 }
 
@@ -319,7 +320,7 @@ async function askConfig(first: boolean): Promise<string> {
   return result.action === "accept" ? T.server.configSaved(shownPath) : T.server.configDefaultsSaved(shownPath);
 }
 
-/** Alla prima chiamata di Agentrica nella sessione, il modulo della configurazione se serve. */
+/** Alla prima chiamata di AIgentrica nella sessione, il modulo della configurazione se serve. */
 async function firstCall(): Promise<string | undefined> {
   if (configAsked || !canAsk()) return undefined;
   configAsked = true;
@@ -333,7 +334,7 @@ async function firstCall(): Promise<string | undefined> {
 
 
 const server = new McpServer(
-  { name: "agentrica", version: VERSION },
+  { name: "aigentrica", version: VERSION },
   {
     instructions: T.server.instructions({
       agents: all.length,

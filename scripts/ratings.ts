@@ -18,7 +18,7 @@ import {
 function connect(variable: "DATABASE_URL_READONLY" | "DATABASE_URL_MODERATOR") {
   const url = process.env[variable];
   if (!url) {
-    console.error(`Manca ${variable}: la stringa di connessione del ruolo ${variable === "DATABASE_URL_READONLY" ? "in sola lettura" : "ratings_moderator"} (agentrica-site/db/README.md).`);
+    console.error(`Manca ${variable}: la stringa di connessione del ruolo ${variable === "DATABASE_URL_READONLY" ? "in sola lettura" : "ratings_moderator"} (aigentrica-site/db/README.md).`);
     process.exit(1);
   }
   return neon(url);

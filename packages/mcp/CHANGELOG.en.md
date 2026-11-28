@@ -1,6 +1,16 @@
-# What's new in @agentrica/mcp
+# What's new in @aigentrica/mcp
 
-Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@agentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md).
+Each version with its npm publication date and its changes by type: Added, Changed, Fixed, Breaking. The version is pinned in the server command (`@aigentrica/mcp@<version>`): an update arrives only when you change it. The Italian version is [CHANGELOG.md](CHANGELOG.md). Up to 0.22.0 the package was called `@agentrica/mcp` (AIgentrica was Agentrica): the entries of those versions keep the name of the time.
+
+## 1.0.0 — 2026-11-28
+
+### Breaking
+- New name: Agentrica becomes **AIgentrica**, the package `@aigentrica/mcp` (formerly `@agentrica/mcp`, which no longer gets updates), the command `aigentrica-mcp`, the server `aigentrica` in Claude Code and in `.mcp.json`, the tools `mcp__aigentrica__…`, the configuration in `~/.aigentrica/config.json`, the site at https://aigentrica.it. Ids, code names, tools and prompts do not change. How to switch: «Coming from Agentrica» in the README. F54.
+
+### Changed
+- On first start the configuration saved in `~/.agentrica/config.json` is copied to `~/.aigentrica/config.json`, if there is none there yet; the old file stays.
+- `add` and `install` remove the old `agentrica` Claude Code registration in the same scope and point out those in other scopes, with the command to remove them.
+- Ratings, token totals and proposed projects go to https://aigentrica.it.
 
 ## 0.22.0 — 2026-11-28
 

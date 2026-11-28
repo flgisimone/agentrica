@@ -1,4 +1,4 @@
-// Catalogo di Agentrica: reparti e agenti letti dai file di agents/.
+// Catalogo di AIgentrica: reparti e agenti letti dai file di agents/.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { DEPARTMENTS, type DepartmentCode, type DepartmentInfo, type Lang, type Model } from "./departments.ts";

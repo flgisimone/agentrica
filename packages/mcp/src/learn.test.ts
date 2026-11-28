@@ -40,7 +40,7 @@ test("lezioni: lunghezza fra 600 e 1200 parole", () => {
     for (const lesson of lessons[lang]) assert.ok(lesson.words >= 600 && lesson.words <= 1200, `${lesson.path}: ${lesson.words} parole`);
 });
 
-test("lezioni: «In Agentrica» ha almeno un link al repository, e ogni link porta a un file che esiste", () => {
+test("lezioni: «In AIgentrica» ha almeno un link al repository, e ogni link porta a un file che esiste", () => {
   for (const lang of LANGS)
     for (const lesson of lessons[lang]) {
       const repo = links(lesson.sections[2]!.body).map((l) => linkKind(l.target, lang)).filter((l) => l.kind === "repo");

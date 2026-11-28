@@ -19,11 +19,11 @@ A server can run on your computer, started by the client and connected through t
 
 The specification changes over time. As of 2026-11-19 the current revision is 2026-07-28, which makes the protocol stateless and changes how a server asks the user for data during a call; the source is the [MCP specification](https://modelcontextprotocol.io/specification). SDKs can lag behind the specification: when you build a server, check which revision yours supports.
 
-## In Agentrica
-Agentrica is a local MCP server, stdio only, written with the official SDK, in [packages/mcp/src/server.ts](../../packages/mcp/src/server.ts). It offers one prompt per agent and a few tools:
+## In AIgentrica
+AIgentrica is a local MCP server, stdio only, written with the official SDK, in [packages/mcp/src/server.ts](../../packages/mcp/src/server.ts). It offers one prompt per agent and a few tools:
 
 - `list_agents` lists the agents, `agent` returns a role's text with your task, `library` a department's library cards, `check` checks the shape of the plan files;
-- `rate_agent`, `share_usage` and `submit_project` send something to Agentrica's site, and only after a preview and your yes;
+- `rate_agent`, `share_usage` and `submit_project` send something to AIgentrica's site, and only after a preview and your yes;
 - with the local panel (phase F14), `ask_user` shows a choice on the page, `open_panel` gives its address, `report` saves an agent's report.
 
 The package README, [packages/mcp/README.md](../../packages/mcp/README.md), has the table of what stays on the computer and what leaves, tool by tool.
@@ -35,13 +35,13 @@ An external proposal asked for a tool that would run chains of calls in a single
 ## Try it
 Look at which MCP servers your assistant has: in Claude Code the `/mcp` command lists them with their tools. For each one ask yourself: is it local or remote? What does it send out?
 
-Then connect a server in a test project. With Agentrica, in the project folder:
+Then connect a server in a test project. With AIgentrica, in the project folder:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp
+claude mcp add aigentrica -- npx -y @aigentrica/mcp
 ```
 
-Open a session and ask «list Agentrica's agents». Watch which tool the model picks and what comes back to it.
+Open a session and ask «list AIgentrica's agents». Watch which tool the model picks and what comes back to it.
 
 ## Terms
 - [Tool](glossary.md#tool)

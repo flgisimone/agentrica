@@ -28,7 +28,7 @@ Reread the diff, run the checks (§13), verify the acceptance criteria on the re
 ### 2.6 Phases and backlog
 Work is divided into phases, one at a time, listed in `plan/README.md` (table «Phases») with the decisions taken.
 - **Phase file.** Each phase has `plan/NN-name.md` with goal, status, agencies, starting situation, the user's decisions, `## Backlog`, `## Acceptance criteria` and, at closure, «Done», «Checks» and «Open findings» (template: `plan/00-base.md`).
-- **Backlog.** A table with id `FN-NN`, task and priority (`P0`–`P3`, as in `AGENTS.md`), confirmed by the user when the phase opens. A task is done when «Done» cites its id in bold (`**FN-NN**`) with the evidence: the panel of `@agentrica/mcp` (on by default) reads this format.
+- **Backlog.** A table with id `FN-NN`, task and priority (`P0`–`P3`, as in `AGENTS.md`), confirmed by the user when the phase opens. A task is done when «Done» cites its id in bold (`**FN-NN**`) with the evidence: the panel of `@aigentrica/mcp` (on by default) reads this format.
 - **Planning.** Phases are created in a session of their own, which writes only `plan/` (in a project already under way, by reading the existing code): phases in «Phases», phase files with backlog and criteria, no change to the code. Have the plan confirmed by the user and stop by suggesting `/clear`.
 - **Opening.** Each phase opens in a new session, only one phase per session. The «proposals to confirm» in the file are decided with the user; `phase/fN-name` is opened from `develop`.
 - **During.** Whatever falls outside the scope becomes a backlog item or an open finding, not a change in passing (§14). Fixes outside a phase go on `fix/name`.

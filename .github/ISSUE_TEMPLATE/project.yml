@@ -1,8 +1,8 @@
 # «Show your project» form, the English twin of progetto.yml (F33). `npm run projects` in the site repository reads
-# its field labels (FORM_EN in src/lib/projects.ts of agentrica-site): if you change one, change it there too. Same
+# its field labels (FORM_EN in src/lib/projects.ts of aigentrica-site): if you change one, change it there too. Same
 # label «progetto», so the script finds both forms.
 name: Show your project
-description: Ask to show on the Agentrica site a public project made with its agents.
+description: Ask to show on the AIgentrica site a public project made with its agents.
 title: "Project: "
 labels: [progetto]
 body:
@@ -11,7 +11,7 @@ body:
       value: |
         The project appears on the site's projects page only after our approval. This issue is public: do not write
         other people's data. Description and results stay yours and we do not check them. How we handle this data:
-        https://agentrica.vercel.app/en/legal#projects
+        https://aigentrica.it/en/legal#projects
   - type: input
     attributes:
       label: Project name
@@ -49,7 +49,7 @@ body:
       description: Optional. Ids separated by commas, e.g. AISA-02, AIWDA-08 (at most 10).
   - type: input
     attributes:
-      label: Agentrica version
+      label: AIgentrica version
       description: Optional, e.g. 0.9.0
   - type: input
     attributes:
@@ -59,7 +59,7 @@ body:
     attributes:
       label: Consent and licence
       options:
-        - label: I consent to Agentrica publishing on its site the data of this form (display name or handle, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.
+        - label: I consent to AIgentrica publishing on its site the data of this form (display name or handle, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.
           required: true
-        - label: I grant Agentrica, free of charge, permission to show on the site the project's name and description until I ask for them to be removed, and I declare that I am entitled to do so.
+        - label: I grant AIgentrica, free of charge, permission to show on the site the project's name and description until I ask for them to be removed, and I declare that I am entitled to do so.
           required: true

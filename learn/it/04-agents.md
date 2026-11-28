@@ -25,8 +25,8 @@ Due strumenti in più rendono gli agenti più affidabili.
 
 E una regola di fondo: quello che si può controllare con un programma va controllato con un programma. Un [controllo deterministico](glossario.md#deterministic-check), come un test o un validatore di formato, dà sempre la stessa risposta allo stesso ingresso. Il modello no. L'agente migliore usa il modello per capire e decidere, e i controlli per verificare.
 
-## In Agentrica
-Gli agenti di Agentrica sono ruoli che il tuo assistente assume: il server dà il testo del ruolo, il tuo assistente lavora con i suoi strumenti. I ruoli esistono anche come subagent di Claude Code, per esempio [.claude/agents/software/sw-architect.md](../../.claude/agents/software/sw-architect.md), un file breve che rimanda al file di ruolo. Il progetto li avvia solo quando li chiedi: le regole in [AGENTS.md](../../AGENTS.md) li chiamano «la voce più cara».
+## In AIgentrica
+Gli agenti di AIgentrica sono ruoli che il tuo assistente assume: il server dà il testo del ruolo, il tuo assistente lavora con i suoi strumenti. I ruoli esistono anche come subagent di Claude Code, per esempio [.claude/agents/software/sw-architect.md](../../.claude/agents/software/sw-architect.md), un file breve che rimanda al file di ruolo. Il progetto li avvia solo quando li chiedi: le regole in [AGENTS.md](../../AGENTS.md) li chiamano «la voce più cara».
 
 Un problema reale: le istruzioni del server arrivano solo all'avvio, e dopo qualche richiesta il modello tendeva a lavorare da solo, senza caricare gli agenti. La fase F39 l'ha risolto con un hook: il comando `init` scrive in `.claude/settings.json` del tuo progetto un promemoria che Claude Code aggiunge a ogni richiesta. Il codice è in [packages/mcp/src/init.ts](../../packages/mcp/src/init.ts), la fase in [plan/39-promemoria-agenti.md](../../plan/39-promemoria-agenti.md).
 

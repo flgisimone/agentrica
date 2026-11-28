@@ -84,11 +84,11 @@ test("agentText: il compito va in fondo, vuoto si omette", () => {
   assert.ok(!agentText(found, "   ").includes("## Compito"));
 });
 
-test("README del pacchetto e della radice (it, en): ogni comando @agentrica/mcp@x.y.z ha VERSION", () => {
+test("README del pacchetto e della radice (it, en): ogni comando @aigentrica/mcp@x.y.z ha VERSION", () => {
   // Il sito confronta i suoi comandi con il README pubblicato: la 0.15.0 è uscita con quelli della 0.13.0 (F43).
   for (const file of ["README.md", "README.it.md", "../../README.md", "../../README.it.md"]) {
     const text = readFileSync(join(import.meta.dirname, "..", file), "utf8");
-    const versions = [...text.matchAll(/@agentrica\/mcp@(\d+\.\d+\.\d+)/g)].map((m) => m[1]);
+    const versions = [...text.matchAll(/@aigentrica\/mcp@(\d+\.\d+\.\d+)/g)].map((m) => m[1]);
     assert.ok(versions.length > 0, file);
     assert.deepEqual([...new Set(versions)], [VERSION], file);
   }
@@ -168,7 +168,7 @@ test("agentText: nessun agente supera i 10 KB, con la proposta di valutazione e 
 test("modelAdvice: modello consigliato solo per i ruoli misurati, nel testo dell'agente", () => {
   const qa = findAgent(catalog, "aisa-08")!;
   assert.equal(qa.agent.model, "haiku");
-  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di Agentrica\. Se il progetto ha i subagent di Agentrica \(init --subagents\)/);
+  assert.match(agentText(qa), /Modello consigliato: Haiku, misurato sui casi di prova di AIgentrica\. Se il progetto ha i subagent di AIgentrica \(init --subagents\)/);
   const architect = findAgent(catalog, "aisa-02")!;
   assert.equal(architect.agent.model, "inherit");
   assert.equal(modelAdvice(architect.agent), undefined);

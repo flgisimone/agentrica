@@ -17,7 +17,7 @@ Agenti senior per audit e consulenza su UX, UI, architettura informativa, design
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/web-design/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
+- Gli agenti si consultano dal server MCP di AIgentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/web-design/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Director definisce perimetro, pagine e flussi da analizzare e attiva gli specialisti pertinenti.
@@ -42,4 +42,4 @@ Questi agenti svolgono audit UX/UI, accessibilità, architettura informativa, de
 Le convenzioni comuni per sicurezza, evidenze, priorità e formato dei resoconti sono in `00-common-rules.md`.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.

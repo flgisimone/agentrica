@@ -18,7 +18,7 @@ Poi la privacy. Tutto quello che metti nel contesto arriva al fornitore del mode
 
 Infine le fonti. Dalla [prima lezione](01-language-model.md) sai che il modello conosce il mondo fino alla data dell'addestramento e che a volte inventa. Per le cose che cambiano (versioni, norme, prezzi) chiedi da dove viene un'affermazione e quando è stata verificata. Una fonte primaria, come la specifica o il testo di legge, vale più di un articolo che la riassume.
 
-## In Agentrica
+## In AIgentrica
 I file degli agenti diventano istruzioni per il modello di chi usa il server, quindi un file alterato sarebbe una prompt injection distribuita a tutti. La revisione di sicurezza della fase F5, in [audit/2026-11-15-mcp/report-f5.md](../../audit/2026-11-15-mcp/report-f5.md), ha fissato la regola SEC-ARCH-01: nei file di `agents/` niente link, niente HTML, niente caratteri invisibili, solo blocchi di dati e una dimensione massima. La controlla [packages/catalog/src/content.ts](../../packages/catalog/src/content.ts) a ogni test, anche in CI. Dalla fase F10 il pacchetto si pubblica da [.github/workflows/release.yml](../../.github/workflows/release.yml) con la provenance di npm, che lega ogni versione al codice che l'ha prodotta.
 
 Per la privacy, i dati restano sul tuo computer. Gli unici invii, una valutazione, i totali di token o un progetto da mostrare, partono solo dopo un'anteprima di cosa esce e il tuo sì; le decisioni della fase F20 sono in [plan/20-valutazioni.md](../../plan/20-valutazioni.md). In F30 le parti del sito che scrivono nel database sono tornate a ruoli del database con i soli permessi necessari: privilegio minimo applicato.

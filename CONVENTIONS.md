@@ -1,10 +1,10 @@
-# Convenzioni di Agentrica
+# Convenzioni di AIgentrica
 
-Regole per chi lavora al codice di Agentrica, persone o agenti. `AGENTS.md` le completa con le regole per gli agenti e le agenzie (§16).
+Regole per chi lavora al codice di AIgentrica, persone o agenti. `AGENTS.md` le completa con le regole per gli agenti e le agenzie (§16).
 
 ## 1. Scopo
 
-Agentrica è un server MCP con agenti IA organizzati in reparti, da usare nei propri progetti; un sito lo presenta (catalogo, reparti, pagine degli agenti, installazione). La cosa da non rompere mai è la **fonte unica**: i file di `agents/` sono il catalogo, e sito e server MCP li leggono da `packages/catalog` senza copiarne i testi. Il sito non inventa persone, clienti, risultati o recensioni e dice sempre che gli agenti sono IA.
+AIgentrica è un server MCP con agenti IA organizzati in reparti, da usare nei propri progetti; un sito lo presenta (catalogo, reparti, pagine degli agenti, installazione). La cosa da non rompere mai è la **fonte unica**: i file di `agents/` sono il catalogo, e sito e server MCP li leggono da `packages/catalog` senza copiarne i testi. Il sito non inventa persone, clienti, risultati o recensioni e dice sempre che gli agenti sono IA.
 
 Le regole servono a tre cose, in quest'ordine: tenere il catalogo coerente e onesto, tenere il codice semplice e leggibile, consegnare modifiche verificate.
 
@@ -62,16 +62,16 @@ Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabel
 |---|---|
 | `agents/` | i file di ruolo dei cinque reparti: la fonte unica dei contenuti |
 | `packages/catalog/` | TypeScript senza dipendenze: legge `agents/`, assegna sigle e nomi in codice, restituisce `Department` e `Agent`; i test stanno accanto (`*.test.ts`) |
-| `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@agentrica/mcp/catalog` per il sito |
+| `packages/mcp/` | (F5) il server MCP, che legge lo stesso catalogo; da F17 lo esporta anche come `@aigentrica/mcp/catalog` per il sito |
 | `plan/` | decisioni e fasi |
-| `learn/` | (F53) le lezioni e il glossario di «Impara», in italiano e inglese, e l'indice fase→lezione; il pacchetto le esporta come `@agentrica/mcp/learn` per il sito. Formato in `learn/README.md` |
-| `starter/` | (F18) il modello di progetto che `agentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
-| `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto Agentrica.» |
+| `learn/` | (F53) le lezioni e il glossario di «Impara», in italiano e inglese, e l'indice fase→lezione; il pacchetto le esporta come `@aigentrica/mcp/learn` per il sito. Formato in `learn/README.md` |
+| `starter/` | (F18) il modello di progetto che `aigentrica-mcp init` copia insieme ad `agents/` e `.claude/agents/`: solo regole generali, le parti dello stack «da compilare» |
+| `.claude/agents/` | i ruoli come subagent per lavorare al repository; `init` li copia nei progetti nuovi con il loro nome, quindi nominano il progetto solo in «del progetto AIgentrica.» |
 | `audit/`, `docs/` | rilievi degli audit e materiale di riferimento |
 
 Il catalogo non importa Next, React né il browser (lo controlla ESLint): deve servire anche al server MCP.
 
-Da F17 il sito è nel repository privato `flgisimone/agentrica-site` (in locale `../agentrica-site`): Next.js con App Router, `src/app/` pagine, layout e `globals.css` con i token, `src/components/` i componenti (`ui/` quelli di shadcn), `src/lib/` le utilità, `e2e/` le prove con Playwright. Installa `@agentrica/mcp` a versione esatta e ne legge il catalogo; le sezioni di questo documento sul sito (§9, §11, §12, §13.4, §15.3) valgono lì.
+Da F17 il sito è nel repository privato `flgisimone/aigentrica-site` (in locale `../aigentrica-site`): Next.js con App Router, `src/app/` pagine, layout e `globals.css` con i token, `src/components/` i componenti (`ui/` quelli di shadcn), `src/lib/` le utilità, `e2e/` le prove con Playwright. Installa `@aigentrica/mcp` a versione esatta e ne legge il catalogo; le sezioni di questo documento sul sito (§9, §11, §12, §13.4, §15.3) valgono lì.
 
 ## 6. Dati e stato
 
@@ -158,10 +158,10 @@ Se un passo fallisce ci si ferma, si riferisce l'errore e non si salta ai passi 
 
 ### 13.8 Rilascio in `main`
 Non fa parte della chiusura di una fase: si fa solo quando l'utente lo chiede, con la CI di `develop` verde.
-1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando il controllo `verify` è verde (`gh pr merge --merge`). Il ruleset `main` vieta push diretti, force push e altri metodi di unione. **Subito dopo, `develop` torna allo stesso commit di `main`**: `git fetch`, su `develop` `git merge --ff-only origin/main`, push di `develop`, e `origin/develop` e `origin/main` devono avere lo stesso hash. Una nota scritta dopo il rilascio va in `main` con un'altra PR, poi si riallinea di nuovo. `develop` e `main` sono sempre allineati, anche in `agentrica-site`.
-2. **Sito**: da F17 Vercel pubblica `main` del repository privato `agentrica-site`, con le stesse regole (PR da `develop`, CI verde). Un rilascio del pacchetto arriva sul sito quando lì si alza la versione di `@agentrica/mcp`: Dependabot apre la PR verso `develop` di `agentrica-site` entro un giorno; la si unisce con la CI verde e poi si rilascia il sito in `main`.
+1. Pull request da `develop` a `main` (`gh pr create --base main --head develop --title "Rilascio: FN descrizione breve"`), unita con merge commit quando il controllo `verify` è verde (`gh pr merge --merge`). Il ruleset `main` vieta push diretti, force push e altri metodi di unione. **Subito dopo, `develop` torna allo stesso commit di `main`**: `git fetch`, su `develop` `git merge --ff-only origin/main`, push di `develop`, e `origin/develop` e `origin/main` devono avere lo stesso hash. Una nota scritta dopo il rilascio va in `main` con un'altra PR, poi si riallinea di nuovo. `develop` e `main` sono sempre allineati, anche in `aigentrica-site`.
+2. **Sito**: da F17 Vercel pubblica `main` del repository privato `aigentrica-site`, con le stesse regole (PR da `develop`, CI verde). Un rilascio del pacchetto arriva sul sito quando lì si alza la versione di `@aigentrica/mcp`: Dependabot apre la PR verso `develop` di `aigentrica-site` entro un giorno; la si unisce con la CI verde e poi si rilascia il sito in `main`.
 3. **Pacchetto MCP**: con la versione di `packages/mcp/package.json` (e `VERSION` in `prompt.ts`, il comando del sito e le «Versioni» dei README) già aggiornata su `main`, si crea il tag `vX.Y.Z` su `main` e lo si pusha; `.github/workflows/release.yml` controlla e pubblica su npm con provenance, dopo l'approvazione dell'ambiente `npm`. Il ruleset `versioni` lascia creare i tag `v*` solo all'amministratore del repository.
-4. **Eccezione, solo per la 0.1.0**: npm configura il trusted publisher dalla pagina di un pacchetto che esiste già, quindi la prima versione si pubblica a mano da `main` (`npm publish -w @agentrica/mcp --access public`, con il codice 2FA) e non ha provenance. Subito dopo si configura il trusted publisher (repository `flgisimone/agentrica`, workflow `release.yml`, ambiente `npm`) e dalla versione successiva vale il punto 3. Per la 0.1.0 non si crea il tag, che avvierebbe il rilascio.
+4. **Eccezione, la prima versione di un pacchetto nuovo**: npm configura il trusted publisher (dalla pagina del pacchetto o con `npm trust`) solo su un pacchetto che esiste già. Per la 0.1.0 di `@agentrica/mcp` la prima versione si pubblicò a mano da `main`, senza provenance e senza tag. Per `@aigentrica/mcp` (F54) si pubblica a mano un segnaposto 0.0.0 senza codice, poi `npm trust github @aigentrica/mcp --file release.yml --repo flgisimone/aigentrica --env npm --allow-publish`, e la 1.0.0 segue il punto 3; il segnaposto si depreca dopo.
 
 Deploy e pubblicazioni partono sempre con un ok esplicito, a parte da quello della fase.
 
@@ -181,7 +181,7 @@ npm workspaces (`packages/*`); le dipendenze di sviluppo comuni (TypeScript, ESL
 ### 15.3 Next.js e Tailwind (repository del sito)
 Next.js 16 con App Router e Turbopack. Questa versione cambia API e convenzioni: prima di scrivere codice si legge la guida pertinente in `node_modules/next/dist/docs/` (lo ricorda l'`AGENTS.md` del sito, scritto da `next dev`). Niente `output: export`: le pagine sono pre-generate, ma restano possibili route server.
 
-Il sito legge il catalogo da `@agentrica/mcp/catalog`, che trova `agents/` accanto al proprio file (`import.meta.dirname`): per questo `next.config.ts` ha `serverExternalPackages: ["@agentrica/mcp"]`, che lo carica da `node_modules` invece di impacchettarlo. In questo repository il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`), per i test e gli script.
+Il sito legge il catalogo da `@aigentrica/mcp/catalog`, che trova `agents/` accanto al proprio file (`import.meta.dirname`): per questo `next.config.ts` ha `serverExternalPackages: ["@aigentrica/mcp"]`, che lo carica da `node_modules` invece di impacchettarlo. In questo repository il catalogo trova `agents/` risalendo dalla cartella corrente (`findAgentsDir`), per i test e gli script.
 
 Tailwind 4 con `@theme inline` in `src/app/globals.css`: i token di shadcn (`--background`, `--card`, `--muted-foreground`…) hanno i valori del tema scuro; gli accenti dei reparti sono `--aibpd` … `--aiwda` e `--dept`, che `[data-dept="SIGLA"]` imposta per il sottoalbero (classi `text-dept`, `border-dept`, `bg-dept`). shadcn con lo stile base-nova su Base UI (`components.json`).
 

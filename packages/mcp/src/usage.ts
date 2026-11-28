@@ -324,12 +324,12 @@ export async function usageReport(root: string, dir = claudeProjectDir(root)): P
   };
 }
 
-/** Una riga dei totali che si possono inviare ad Agentrica (F27): solo questi campi, con valori da elenchi chiusi. */
+/** Una riga dei totali che si possono inviare ad AIgentrica (F27): solo questi campi, con valori da elenchi chiusi. */
 export interface ShareRow {
   /** SHA-256 di sessione, giorno, agente, modello ed effort: il sito sostituisce la riga con la stessa chiave. */
   key: string;
   day: string;
-  /** Id di Agentrica (es. AISA-02), «sessione» per la conversazione principale, «altro» per gli altri subagent. */
+  /** Id di AIgentrica (es. AISA-02), «sessione» per la conversazione principale, «altro» per gli altri subagent. */
   agent: string;
   model: Family | "altro";
   effort: string;
@@ -347,7 +347,7 @@ const OTHER = "altro";
 /**
  * Le righe da inviare: gli ultimi SHARE_DAYS giorni fino a `today` (AAAA-MM-GG), una per sessione, giorno, agente,
  * modello ed effort, dalle più recenti, al più MAX_SHARE_ROWS (`omitted` dice quante restano fuori). `agentIds` porta
- * il nome di un subagent all'id di Agentrica: i nomi dei subagent dell'utente diventano «altro» e non partono.
+ * il nome di un subagent all'id di AIgentrica: i nomi dei subagent dell'utente diventano «altro» e non partono.
  */
 export function shareRows(records: readonly Usage[], agentIds: ReadonlyMap<string, string>, today: string): { rows: ShareRow[]; omitted: number } {
   const from = new Date(Date.parse(`${today}T00:00:00Z`) - (SHARE_DAYS - 1) * 86_400_000).toISOString().slice(0, 10);

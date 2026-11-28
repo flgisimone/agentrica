@@ -77,7 +77,7 @@ test("invio: l'anteprima con codice parte una volta, esattamente; errori chiari;
 
 // --- Con il server vero ---
 
-const root = mkdtempSync(join(tmpdir(), "agentrica-progetti-"));
+const root = mkdtempSync(join(tmpdir(), "aigentrica-progetti-"));
 const servers: Server[] = [];
 const clients: Client[] = [];
 after(async () => {
@@ -86,8 +86,8 @@ after(async () => {
   rmSync(root, { recursive: true, force: true });
 });
 // Configurazione già salvata: niente modulo della prima chiamata.
-mkdirSync(join(root, ".agentrica"));
-writeFileSync(join(root, ".agentrica", "config.json"), JSON.stringify({ version: 1 }));
+mkdirSync(join(root, ".aigentrica"));
+writeFileSync(join(root, ".aigentrica", "config.json"), JSON.stringify({ version: 1 }));
 
 async function endpoint() {
   const requests: { path: string; body: Record<string, unknown> }[] = [];
@@ -119,7 +119,7 @@ async function start(url: string, forms?: () => ElicitResult) {
       command: process.execPath,
       args: [join(import.meta.dirname, "server.ts"), "--lang", "it", "--no-update-check"],
       cwd: root,
-      env: { ...process.env, HOME: root, USERPROFILE: root, AGENTRICA_PROJECTS_URL: url } as Record<string, string>,
+      env: { ...process.env, HOME: root, USERPROFILE: root, AIGENTRICA_PROJECTS_URL: url } as Record<string, string>,
       stderr: "pipe",
     }),
   );

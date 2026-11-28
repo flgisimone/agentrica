@@ -1,9 +1,9 @@
 // Schermate del pannello locale per la pagina /pannello del sito (F47-02, script aggiunto dopo F48): un progetto di prova
 // creato con `init`, il server di questo repository avviato con un client MCP vero, la pagina fotografata con Playwright.
-// Uso: npm run -s panel-screenshots -- [--site ../agentrica-site]
+// Uso: npm run -s panel-screenshots -- [--site ../aigentrica-site]
 // Scrive <site>/src/assets/pannello/pannello-<vista>-<lingua>.png, sette viste per lingua. Playwright e il Chrome installato
 // vengono dal repository del sito, come per i suoi e2e: qui non c'è una dipendenza in più.
-// Tutto avviene in cartelle temporanee: HOME (configurazione di Agentrica) e CLAUDE_CONFIG_DIR (file di sessione finti)
+// Tutto avviene in cartelle temporanee: HOME (configurazione di AIgentrica) e CLAUDE_CONFIG_DIR (file di sessione finti)
 // non sono quelli dell'utente, e un `open` finto nel PATH impedisce al server di aprire il browser.
 // ponytail: il comando finto è uno script sh, quindi lo script gira su macOS e Linux; su Windows serve un open.cmd.
 import { execFileSync } from "node:child_process";
@@ -40,7 +40,7 @@ interface Playwright {
   chromium: { launch(options: { channel: string }): Promise<Browser> };
 }
 
-const { values } = parseArgs({ options: { site: { type: "string", default: join(import.meta.dirname, "..", "..", "agentrica-site") } } });
+const { values } = parseArgs({ options: { site: { type: "string", default: join(import.meta.dirname, "..", "..", "aigentrica-site") } } });
 const site = resolve(values.site);
 const out = join(site, "src", "assets", "pannello");
 const server = join(import.meta.dirname, "..", "packages", "mcp", "src", "server.ts");
@@ -161,7 +161,7 @@ function writeSubagent(dir: string, description: string) {
 }
 
 async function shoot(lang: Lang, browser: Browser) {
-  const tmp = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-shots-")));
+  const tmp = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-shots-")));
   try {
     const home = join(tmp, "home");
     const bin = join(tmp, "bin");

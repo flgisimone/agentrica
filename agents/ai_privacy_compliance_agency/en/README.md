@@ -17,7 +17,7 @@ Agents for audits and advice on GDPR, privacy and product compliance.
 ## Structure
 - `00-common-rules.md`: rules common to all roles of the agency.
 - `01-…` onwards: one file per role, in the order of the workflow, without frontmatter.
-- The agents are consulted through the Agentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/privacy-compliance/` exist only in projects created with `init --subagents` and load their agent from the same server.
+- The agents are consulted through the AIgentrica MCP server with the `agent` tool, one at a time and the director first. The subagents in `.claude/agents/privacy-compliance/` exist only in projects created with `init --subagents` and load their agent from the same server.
 
 ## Workflow
 1. The Chief defines scope and plan.
@@ -42,9 +42,9 @@ The agents carry out audits and make recommendations: they do not implement chan
 
 The agents support but do not replace the data controller, DPO, legal adviser or qualified professionals. They are not a certification or a guarantee of compliance.
 
-The Markdown files define roles and instructions; in Claude Code they are loaded with the `agent` tool of the Agentrica MCP server.
+The Markdown files define roles and instructions; in Claude Code they are loaded with the `agent` tool of the AIgentrica MCP server.
 
 The legal references in the files are indicative: always check the text in force, jurisdiction, guidelines and applicability to the specific case.
 
 ## Library
-The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the Agentrica repository (in Italian).
+The department's library cards are in `biblioteca/`, one per notion, with source, version, verification date and the date by which to recheck it; the approved sources, with their addresses, are in `fonti.json` (in the department folder, shared by both languages). Format, source levels and study cycle are described in `docs/Biblioteca degli agenti.md` of the AIgentrica repository (in Italian).

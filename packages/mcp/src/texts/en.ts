@@ -2,7 +2,7 @@
 import type { Texts } from "./it.ts";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-const UNREACHABLE = "Sending failed: Agentrica cannot be reached (no network, timeout or network not allowed). Try again later.";
+const UNREACHABLE = "Sending failed: AIgentrica cannot be reached (no network, timeout or network not allowed). Try again later.";
 const EXPIRED = "Code expired or already used: prepare the preview again.";
 const serviceError = (status: number) => `Sending failed (service error ${status}). Try again later.`;
 const CODE_STEP = "The preview code, only after the user says yes (second step).";
@@ -25,25 +25,25 @@ export const en: Texts = {
     panelSkipped: (reason: string) => `panel not started (${reason}), the server continues without it`,
     ratingInvalid: (name: string) => `The rating of ${name} was not sent: the form had invalid data.`,
     ratingSent: (name: string, code: string) =>
-      `The user rated ${name} with the form: sent, code ${code}. Tell them: with this code they can ask for it to be deleted or for the comment not to be published (Agentrica legal notes).`,
+      `The user rated ${name} with the form: sent, code ${code}. Tell them: with this code they can ask for it to be deleted or for the comment not to be published (AIgentrica legal notes).`,
     ratingFailed: (name: string, message: string) => `The rating of ${name} was not sent: ${message}`,
     configClosed: "The user closed the configuration form: nothing changes.",
     configInvalid: "Configuration not saved: the form had invalid data.",
-    configBadSquad: (reason: string) => `Configuration not saved: ${reason}. Tell the user: they can try again with Agentrica's configure command.`,
+    configBadSquad: (reason: string) => `Configuration not saved: ${reason}. Tell the user: they can try again with AIgentrica's configure command.`,
     configWriteFailed: (path: string, reason: string) => `Configuration not saved in ${path}: ${reason}.`,
-    configSaved: (path: string) => `Agentrica configuration saved in ${path}: it applies from the next session. Tell the user in one line.`,
+    configSaved: (path: string) => `AIgentrica configuration saved in ${path}: it applies from the next session. Tell the user in one line.`,
     configDefaultsSaved: (path: string) =>
-      `The user closed the configuration form: the default values were saved in ${path}, so the form will not appear again. They can be changed with Agentrica's configure command.`,
+      `The user closed the configuration form: the default values were saved in ${path}, so the form will not appear again. They can be changed with AIgentrica's configure command.`,
     instructions: (o: { agents: number; departments: number; codes: string; example: string; exampleId: string; panel: boolean; ratings: boolean }) =>
-      `Agentrica: ${plural(o.agents, "AI agent", "AI agents")} in ${plural(o.departments, "department", "departments")} (${o.codes}). ` +
-      "All work on the user's project (features, changes, stack choices, phases, audits) goes through Agentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
+      `AIgentrica: ${plural(o.agents, "AI agent", "AI agents")} in ${plural(o.departments, "department", "departments")} (${o.codes}). ` +
+      "All work on the user's project (features, changes, stack choices, phases, audits) goes through AIgentrica's agents, even if the user does not name them; without agents only if the user asks for it. " +
       "To choose an agent use list_agents; to work as that agent load its instructions with agent. " +
       "For a task of a department load the director first (the -01 agent, marked in list_agents), who chooses the specialists and the order; " +
       "then load the specialists with agent one at a time, each from the previous one's handover (outcome, findings with their evidence, open questions), never two in the same response; the director consolidates and presents to the user. " +
       "Across departments the order is business → design → privacy → user confirmation → software → design and privacy reviews → Code Reviewer → user confirmation. " +
       // F48-03: on a new project (F0 to do) the model started from software for the technical base.
       "A request for a new feature starts from list_agents and then the business director, even if the project has no stack yet or F0 is to do: the technical base is software work, after the confirmation. " +
-      "For Agentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
+      "For AIgentrica's agents use agent, not local subagents (Claude Code's Agent tool, .claude/agents/): start a subagent only if the user asks for it. " +
       "The instructions contain the index of the department library: read the cards the task needs with library. " +
       // F41-02: rules and index once per department; how to get them back after /compact.
       "Common rules and index come in full with the first agent of each department, then as a reference: after /compact or /clear, or if they are not in your context, call agent again with full_rules true. " +
@@ -53,7 +53,7 @@ export const en: Texts = {
       "Planning is a session of its own: only plan/, user confirmation, then suggest /clear without developing. One phase per session; at its close suggest /clear." +
       // F39-04: what leaves the computer, for those working under a «nothing leaves» rule.
       " Data stays on the computer: " +
-      (o.ratings ? "only rate_agent, share_usage and submit_project send to Agentrica, after the preview and the user's yes; " : "") +
+      (o.ratings ? "only rate_agent, share_usage and submit_project send to AIgentrica, after the preview and the user's yes; " : "") +
       "the only other outbound request, if on, is the check for new versions on the npm registry." +
       (o.panel
         ? " The local panel is on: for choices that belong to the user use ask_user, which shows the question in the page; open_panel gives the page URL. The panel shows the agents loaded with agent, in order; Claude Code subagents only in a separate section. When an agent finishes its task, send its report with report."
@@ -69,10 +69,10 @@ export const en: Texts = {
       `Reminder for the model: ${names.join(", ")} ${names.length === 1 ? "has" : "have"} been in use for more than 30 minutes. At a natural point in the work, offer the user to rate ${names.length === 1 ? "it" : "them"} with rate_agent; if they decline, do not ask again.`,
 
     rate: {
-      title: "Rate an Agentrica agent",
+      title: "Rate an AIgentrica agent",
       description: "Opens the rating form for the agent in use or for the one given.",
       agent: "Agent id, e.g. AISA-02. Without it: the last agent in use.",
-      noneUsed: "The user wants to rate an Agentrica agent, but none has been used in this session. Ask them which one (an id like AISA-02) and then use rate_agent.",
+      noneUsed: "The user wants to rate an AIgentrica agent, but none has been used in this session. Ask them which one (an id like AISA-02) and then use rate_agent.",
       notInSquad: "The user wants to rate an agent, but the id is not among the agents of this squad. Ask them which one (list_agents gives the ids) and then use rate_agent.",
       alreadyRated: (name: string) => `${name} has already been rated in this session: tell the user.`,
       manual: (name: string, id: string) =>
@@ -82,8 +82,8 @@ export const en: Texts = {
     },
 
     project: {
-      title: "Show your project on the Agentrica site",
-      description: "Submits a project made with Agentrica for the projects page of the site, without a GitHub account; with remove it withdraws it.",
+      title: "Show your project on the AIgentrica site",
+      description: "Submits a project made with AIgentrica for the projects page of the site, without a GitHub account; with remove it withdraws it.",
       remove: "The code of the submission to withdraw.",
       badCode:
         "The text after the project command is the code of a submission to withdraw, and this is not one (it needs a UUID like 3f2a…-…). Tell the user: to submit a project, run the project command with no arguments; to withdraw one, use the code received when it was sent.",
@@ -91,18 +91,18 @@ export const en: Texts = {
         "Withdrawal request recorded: if the code is right, the submission no longer appears; if it was already on the site, it is removed with the next update, within 30 days. Tell the user.",
       tellUser: (message: string) => `${message} Tell the user.`,
       manual:
-        "The user wants to submit a project of theirs made with Agentrica for the site. Ask them for name, https link, description (280 characters, no links), " +
+        "The user wants to submit a project of theirs made with AIgentrica for the site. Ask them for name, https link, description (280 characters, no links), " +
         "departments used, agents used and display name (optional), and whether they give consent and license (texts in the submit_project description). " +
         "Then use submit_project: show them the preview and send only after they say yes.",
       closed: "The user closed the project form: nothing is sent.",
-      badFields: (reason: string) => `The submission was not sent: ${reason}. Tell the user: they can try again with Agentrica's project command.`,
+      badFields: (reason: string) => `The submission was not sent: ${reason}. Tell the user: they can try again with AIgentrica's project command.`,
       failed: (message: string) => `The submission was not sent: ${message}`,
     },
 
     submit: {
-      title: "Submit a project for the Agentrica site",
+      title: "Submit a project for the AIgentrica site",
       description:
-        "Submits a project made with Agentrica for the projects page of the site, if the user asks (also without a GitHub account). " +
+        "Submits a project made with AIgentrica for the projects page of the site, if the user asks (also without a GitHub account). " +
         "In two steps: 1) with the fields it returns the preview and a code; 2) show the preview to the user and only after they say yes call the tool again with that code. " +
         "consent and license are true only if the user accepted them in their own words: consent to publishing the form data and permission to show name and description.",
       name: "Project name, at most 60 characters.",
@@ -118,22 +118,22 @@ export const en: Texts = {
     },
 
     configure: {
-      title: "Configure Agentrica",
+      title: "Configure AIgentrica",
       description: (path: string) => `Chooses language, squad, panel, ratings and new version notice; the choices are saved in ${path}.`,
       flagsNote: "The server command options (--lang, --agents, --panel, --no-panel, --no-ratings, --no-update-check) take precedence over the file.",
       noPermission: (path: string) =>
         `The server runs with the Node permission model without access to ${path}: the configuration cannot be saved. Tell the user: they can use the server command options (--lang, --agents, --no-panel, --no-ratings, --no-update-check).`,
       allFixed: (path: string) => `All choices are set by the server command options: the file ${path} does not count. Tell the user.`,
       noForms: (config: string, path: string, flagsNote: string) =>
-        `The user wants to configure Agentrica, but this client does not show forms. Current configuration: ${config}. ` +
+        `The user wants to configure AIgentrica, but this client does not show forms. Current configuration: ${config}. ` +
         `Ask them what to change (lang: it, en or empty for the system language; agents: squad as in --agents, empty for all; panel, ratings, updateCheck: true or false) and write the JSON in ${path}, ` +
         `with the same keys and version 1. It applies from the next session. ${flagsNote}`,
       formNotShown: (path: string, flagsNote: string) => `The form did not appear. The user can write ${path} by hand or use the server command options. ${flagsNote}`,
     },
 
     listAgents: {
-      title: "List the Agentrica agents",
-      description: "Lists the Agentrica agents with id, code name, role, department and, where it was measured, the recommended model. The department is optional.",
+      title: "List the AIgentrica agents",
+      description: "Lists the AIgentrica agents with id, code name, role, department and, where it was measured, the recommended model. The department is optional.",
       department: "Department code.",
       lead: (director: string) => `Director: ${director}. For a task of the department load them first, then the specialists one at a time.`,
     },
@@ -159,19 +159,19 @@ export const en: Texts = {
     },
 
     share: {
-      title: "Send token totals to Agentrica",
+      title: "Send token totals to AIgentrica",
       description:
-        "Sends Agentrica, anonymously, this project's token totals for the last 30 days (by day, agent, model and effort), " +
+        "Sends AIgentrica, anonymously, this project's token totals for the last 30 days (by day, agent, model and effort), " +
         "which the site adds to those of other users. In two steps: 1) without code it returns the preview of what is sent and a code; " +
         "2) show the preview to the user, ask whether to send it and only after they say yes call the tool again with that code. Never send without the user's yes.",
       code: CODE_STEP,
-      sent: (rows: number) => `Totals sent to Agentrica (${rows} rows), thank you. Tell the user.`,
+      sent: (rows: number) => `Totals sent to AIgentrica (${rows} rows), thank you. Tell the user.`,
     },
 
     rateAgent: {
-      title: "Rate an Agentrica agent",
+      title: "Rate an AIgentrica agent",
       description:
-        "Sends Agentrica the rating of an agent (score 1–5, optional comment), anonymously, in two steps. " +
+        "Sends AIgentrica the rating of an agent (score 1–5, optional comment), anonymously, in two steps. " +
         "1) Without code: returns the preview of what is sent and a code. 2) Show the preview to the user, ask whether to send it " +
         "and only after they say yes call the tool again with that code. Never send without the user's yes; do not put code, " +
         "files or project data in the comment, only the user's words.",
@@ -182,7 +182,7 @@ export const en: Texts = {
       alreadyRated: (name: string) => `${name} has already been rated in this session.`,
       sent: (name: string, code: string) =>
         `Rating of ${name} sent, thank you. Rating code: ${code}. ` +
-        "Tell the user: with this code they can ask for it to be deleted or for the comment not to be published (Agentrica legal notes).",
+        "Tell the user: with this code they can ask for it to be deleted or for the comment not to be published (AIgentrica legal notes).",
       needRating: "A score from 1 to 5 is needed to prepare the preview.",
     },
 
@@ -207,7 +207,7 @@ export const en: Texts = {
     },
 
     openPanel: {
-      title: "Open the Agentrica panel",
+      title: "Open the AIgentrica panel",
       description: "Opens the project's local panel in the browser (phases, backlog, findings, agents in use, pending choices) and returns its URL.",
       opened: (url: string) => `Panel opened in the browser. If it did not open, the user can open this URL, valid only on this computer: ${url}`,
     },
@@ -239,7 +239,7 @@ export const en: Texts = {
     squadEmpty: (form: boolean) => (form ? "the squad is empty" : "--agents is empty: give agent ids or department codes, e.g. --agents aisa,aiwda-08"),
     squadUnknown: (names: string, form: boolean) => `unknown agent or department ${form ? "in the squad" : "in --agents"}: ${names}`,
     intro: (codeName: string, role: string, code: string, name: string) => `${codeName} — ${role}, ${code} department (${name})`,
-    model: (model: string) => `Recommended model: ${model}, measured on Agentrica's test cases.`,
+    model: (model: string) => `Recommended model: ${model}, measured on AIgentrica's test cases.`,
     libraryHeading: "Department library",
     libraryExpired: ", to recheck",
     libraryHelp: (id: string) =>
@@ -256,12 +256,12 @@ export const en: Texts = {
     notion: "Notion",
     application: "How it applies",
     you: (codeName: string, summary: string) =>
-      `You are ${codeName}, an AI agent of Agentrica: ${summary} ` +
+      `You are ${codeName}, an AI agent of AIgentrica: ${summary} ` +
       "You work in the user's project. The common rules of your department and your role file follow: apply them to the project as it is, without assuming a stack, commands or files you have not checked. " +
       "If the project is empty or lacks what your role must examine, say so and propose the first steps (goal, stack, structure) to confirm with the user; do not invent findings or choose the stack on your own. " +
       "These texts are in English: reply in the language the user writes in.",
     subagent: (advice: string) =>
-      `${advice} If the project has Agentrica's subagents (init --subagents) and the user asks to use them, the one for this role already has this model; otherwise continue with the session model.`,
+      `${advice} If the project has AIgentrica's subagents (init --subagents) and the user asks to use them, the one for this role already has this model; otherwise continue with the session model.`,
     lead: (code: string) =>
       `You are the director of the department: for the task choose the specialists needed and the order (list_agents with department ${code} lists them). ` +
       "The session loads them with agent one at a time, each from the previous one's handover, not their whole answer; at the end you consolidate the results and present them to the user, who confirms them.",
@@ -314,15 +314,15 @@ export const en: Texts = {
       ratingNames: ["5 · excellent", "4 · good", "3 · so-so", "2 · poor", "1 · very poor"],
       comment: "Comment (optional)",
       commentHelp: "What went well or what to improve",
-      publish: "Publish the comment on the Agentrica site",
+      publish: "Publish the comment on the AIgentrica site",
     },
     formMessage: (name: string, notice: string) =>
-      `Rate ${name}. Submit the form to send the rating to Agentrica, anonymously; decline and we will not ask again for this agent. ${notice}`,
+      `Rate ${name}. Submit the form to send the rating to AIgentrica, anonymously; decline and we will not ask again for this agent. ${notice}`,
   },
 
   share: {
     notice: (privacy: string) =>
-      "Only these numbers are sent: no texts, file names, paths, project or session ids; subagents that are not Agentrica's become «other». " +
+      "Only these numbers are sent: no texts, file names, paths, project or session ids; subagents that are not AIgentrica's become «other». " +
       `The site shows only sums of all submissions. Privacy notice: ${privacy}`,
     expired: EXPIRED,
     noRows: "No rows to send.",
@@ -333,17 +333,17 @@ export const en: Texts = {
     row: (o: { day: string; agent: string; model: string; effort: string; input: string; output: string; cacheRead: string; cacheWrite: string }) =>
       `${o.day} · ${o.agent} · ${o.model} · ${o.effort}: input ${o.input}, output ${o.output}, cache read ${o.cacheRead}, cache write ${o.cacheWrite}`,
     nothing: "No token usage in the last 30 days for this project: there is nothing to send.",
-    previewHead: (rows: number, version: string) => `Preview of the token totals to send to Agentrica (${rows} rows, last 30 days, version ${version}):`,
+    previewHead: (rows: number, version: string) => `Preview of the token totals to send to AIgentrica (${rows} rows, last 30 days, version ${version}):`,
     omitted: (n: number) => `(${n} older rows are left out: at most 300 per submission)`,
     confirm: (code: string) => confirmStep("share_usage", code),
   },
 
   showcase: {
     consent:
-      "I agree that Agentrica may publish on its site the data in this form (display name, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.",
-    license: "I grant Agentrica, free of charge, permission to show the project's name and description on the site until I ask for them to be removed, and I declare that I am entitled to do so.",
-    defaultAuthor: "Agentrica user",
-    noAuthor: "none (the site writes «Agentrica user» or, in Italian, «Utente di Agentrica»)",
+      "I agree that AIgentrica may publish on its site the data in this form (display name, name, link, description, departments, agents, version) and the approval date, until I ask for them to be removed.",
+    license: "I grant AIgentrica, free of charge, permission to show the project's name and description on the site until I ask for them to be removed, and I declare that I am entitled to do so.",
+    defaultAuthor: "AIgentrica user",
+    noAuthor: "none (the site writes «AIgentrica user» or, in Italian, «Utente di AIgentrica»)",
     needConsent: "consent and license are required",
     badName: (max: number) => `name missing, longer than ${max} characters or with links and the symbols < > [ ] \``,
     badUrl: "the link must be a full https:// address, without port or credentials, at most 200 characters",
@@ -352,7 +352,7 @@ export const en: Texts = {
     badAgents: (max: number) => `unknown agents or more than ${max} (ids like AISA-02)`,
     badAuthor: (max: number) => `display name longer than ${max} characters or with links and symbols`,
     unreachable: UNREACHABLE,
-    withdrawUnreachable: "Withdrawal failed: Agentrica cannot be reached (no network, timeout or network not allowed). Try again later.",
+    withdrawUnreachable: "Withdrawal failed: AIgentrica cannot be reached (no network, timeout or network not allowed). Try again later.",
     expired: EXPIRED,
     tooMany: "Today's submission limit reached from this network. Try again tomorrow.",
     rejected: "Submission rejected: invalid data.",
@@ -377,7 +377,7 @@ export const en: Texts = {
       consent: "Consent",
       license: "License",
     },
-    formMessage: (notice: string) => `Show your project on the Agentrica site. ${notice}`,
+    formMessage: (notice: string) => `Show your project on the AIgentrica site. ${notice}`,
     preview: (o: { code: string; name: string; url: string; description: string; departments: string; agents: string; author: string; version: string; consent: string; license: string; notice: string }) =>
       [
         "Preview of the project submission:",
@@ -395,15 +395,15 @@ export const en: Texts = {
         confirmStep("submit_project", o.code),
       ].join("\n"),
     sent: (name: string, code: string, privacy: string) =>
-      `Submission of the project «${name}» sent to Agentrica: it will appear on the site after approval. Submission code: ${code}. ` +
-      `Tell the user and ask them to keep it: it is the only way to withdraw it, with Agentrica's project command and the remove argument (${privacy}).`,
+      `Submission of the project «${name}» sent to AIgentrica: it will appear on the site after approval. Submission code: ${code}. ` +
+      `Tell the user and ask them to keep it: it is the only way to withdraw it, with AIgentrica's project command and the remove argument (${privacy}).`,
   },
 
   update: {
-    global: (latest: string) => `To update: npx -y @agentrica/mcp@${latest} install, then restart the client.`,
-    npx: (latest: string) => `To update, change the version to @agentrica/mcp@${latest} in the server command (claude mcp add or .mcp.json), then restart the client.`,
+    global: (latest: string) => `To update: npx -y @aigentrica/mcp@${latest} install, then restart the client.`,
+    npx: (latest: string) => `To update, change the version to @aigentrica/mcp@${latest} in the server command (claude mcp add or .mcp.json), then restart the client.`,
     source: "To update the clone: git pull, then restart the client.",
-    message: (latest: string, current: string, how: string) => `Agentrica ${latest} is out (you are using ${current}). ${how}`,
+    message: (latest: string, current: string, how: string) => `AIgentrica ${latest} is out (you are using ${current}). ${how}`,
   },
 
   config: {
@@ -425,9 +425,9 @@ export const en: Texts = {
     },
     message: (path: string, fixed: boolean) =>
       [
-        "Configure Agentrica.",
-        `The choices are saved on your computer in ${path} and apply from the next session. Nothing is sent to Agentrica.`,
-        "To change them use Agentrica's configure command (in Claude Code /mcp__<server name>__configure); to go back to the defaults delete the file.",
+        "Configure AIgentrica.",
+        `The choices are saved on your computer in ${path} and apply from the next session. Nothing is sent to AIgentrica.`,
+        "To change them use AIgentrica's configure command (in Claude Code /mcp__<server name>__configure); to go back to the defaults delete the file.",
         fixed ? "Options written in the server command do not appear here: they take precedence." : "",
       ]
         .filter(Boolean)
@@ -445,52 +445,53 @@ export const en: Texts = {
     fromOnlyInstall: "--from only applies to install",
     badAgents: "--agents: agent ids and department codes separated by commas, e.g. --agents aisa,aiwda-08",
     manual: "Commands to run by hand:",
-    oldNode: (mode: string, version: string) => `agentrica ${mode}: Node.js 22 or newer is required (in use ${version}). Install it from https://nodejs.org and run again:`,
-    noNpm: "agentrica install: npm not found. Install Node.js 22 or newer (with npm) from https://nodejs.org and run again.",
+    oldNode: (mode: string, version: string) => `aigentrica ${mode}: Node.js 22 or newer is required (in use ${version}). Install it from https://nodejs.org and run again:`,
+    noNpm: "aigentrica install: npm not found. Install Node.js 22 or newer (with npm) from https://nodejs.org and run again.",
     npmFailed: (win: boolean) =>
-      `agentrica install: npm install -g failed.${win ? "" : " If it is a permissions problem, set up a global npm folder of your own (npm config set prefix) instead of using sudo."}`,
+      `aigentrica install: npm install -g failed.${win ? "" : " If it is a permissions problem, set up a global npm folder of your own (npm config set prefix) instead of using sudo."}`,
     unknownRoot: "(unknown global npm folder)",
-    serverMissing: (root: string) => `agentrica install: package installed but server not found in ${root}.`,
+    serverMissing: (root: string) => `aigentrica install: package installed but server not found in ${root}.`,
     installed: (what: string, root: string) => `Installed ${what} in ${root}.`,
-    noClaude: "agentrica: Claude Code (the claude command) not found. Install it and run this command again, or register the server by hand:",
-    otherClients: "For other MCP clients use the same server command in their configuration (README of @agentrica/mcp).",
-    addFailed: "agentrica: claude mcp add failed.",
+    noClaude: "aigentrica: Claude Code (the claude command) not found. Install it and run this command again, or register the server by hand:",
+    otherClients: "For other MCP clients use the same server command in their configuration (README of @aigentrica/mcp).",
+    addFailed: "aigentrica: claude mcp add failed.",
     registered: (version: string, scope: string, replaced: boolean) =>
-      `Agentrica ${version} registered in Claude Code (${scope})${replaced ? ", replacing the previous registration" : ""}.`,
+      `AIgentrica ${version} registered in Claude Code (${scope})${replaced ? ", replacing the previous registration" : ""}.`,
     command: (command: string) => `Server command: ${command}`,
     otherScope: (scope: string, name: string, other: string) =>
-      `Warning: Agentrica is also registered with ${scope}, with a command that may differ. Claude Code uses the registration closest to the project (local, then project, then user). If you do not need it, remove it with: claude mcp remove ${name} --scope ${other}`,
+      `Warning: AIgentrica is also registered with ${scope}, with a command that may differ. Claude Code uses the registration closest to the project (local, then project, then user). If you do not need it, remove it with: claude mcp remove ${name} --scope ${other}`,
+    legacyRemoved: (scope: string) => `Removed the old «agentrica» registration (${scope}): AIgentrica is the new name of Agentrica.`,
     restart: "Restart Claude Code (or use /mcp) and check with: claude mcp list",
   },
 
   init: {
     subagentProject: (name: string) => `of the ${name} project.`,
     subagentFirst: (id: string) =>
-      `First step: call the \`mcp__agentrica__agent\` tool of the Agentrica MCP server with id \`${id}\`, \`full_rules\` true and the task you received. ` +
+      `First step: call the \`mcp__aigentrica__agent\` tool of the AIgentrica MCP server with id \`${id}\`, \`full_rules\` true and the task you received. ` +
       "The instructions it returns are your role, with the department's common rules in full (a subagent has its own context), and make the agent appear in the panel: with them there is no need to reread the files named below, which remain the reference if the tool does not answer. Do not load the director of the department: the main session started you and coordinates.",
     inRepo: "git: the folder is already in a repository, no commit",
     noGit: "git: not installed, repository not created",
-    commit: "Project created with @agentrica/mcp init",
+    commit: "Project created with @aigentrica/mcp init",
     commitFailed: "git: commit failed (set user.name and user.email), files left staged on main",
     committed: "git: initial commit on main, develop branch active",
-    usage: 'usage: agentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents] [--existing] [--no-reminder]',
+    usage: 'usage: aigentrica-mcp init [folder] [--name "Name"] [--lang it|en] [--subagents] [--existing] [--no-reminder]',
     badName: "--name: a name on one line is required",
     taken: (files: string, more: number) => `no files written, these already exist: ${files}${more > 0 ? ` and ${more} more` : ""}`,
     created: (name: string, dir: string, count: number) => `Project «${name}» created in ${dir}: ${count} files.`,
     next: "Next steps:",
-    step1: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json registers the Agentrica server with the panel)`,
-    step1Registered: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json already existed and was skipped: the Agentrica server must be in it, or registered with add)`,
+    step1: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json registers the AIgentrica server with the panel)`,
+    step1Registered: (dir: string) => `  1. cd "${dir}" and open Claude Code (.mcp.json already existed and was skipped: the AIgentrica server must be in it, or registered with add)`,
     step2: "  2. ask to open phase F0 (plan/00-base.md): stack, active agencies, «to fill in» sections",
-    added: (name: string, dir: string, count: number) => `Agentrica's rules added to «${name}» in ${dir}: ${count} new files.`,
+    added: (name: string, dir: string, count: number) => `AIgentrica's rules added to «${name}» in ${dir}: ${count} new files.`,
     skipped: (files: string) => `Skipped because they already exist: ${files}`,
     /** Il promemoria dell'hook UserPromptSubmit (F39-01), a ogni richiesta: niente ' " $ ` % ! \ perché passa dalla shell. */
-    reminder: "Agentrica: if this request is work on the project, first load the right agent with the Agentrica agent tool (choose it with list_agents); work without agents only if the user asks.",
-    reminderSkipped: "The reminder was not added because .claude/settings.json already existed: to add it without touching the rest, run npx @agentrica/mcp reminder.",
-    reminderUsage: "usage: agentrica-mcp reminder [folder] [--lang it|en]",
+    reminder: "AIgentrica: if this request is work on the project, first load the right agent with the AIgentrica agent tool (choose it with list_agents); work without agents only if the user asks.",
+    reminderSkipped: "The reminder was not added because .claude/settings.json already existed: to add it without touching the rest, run npx @aigentrica/mcp reminder.",
+    reminderUsage: "usage: aigentrica-mcp reminder [folder] [--lang it|en]",
     reminderAdded: (file: string) => `Reminder added to ${file}: Claude Code reads it from the next session.`,
     reminderPresent: "The reminder is already in .claude/settings.json: nothing changed.",
-    reminderBadSettings: ".claude/settings.json is not a JSON object with hooks and UserPromptSubmit in the shape Claude Code uses: I left it untouched. Fix it or add the hook by hand (see «Reminder» in the @agentrica/mcp README).",
-    importAgents: "Your CLAUDE.md was not touched: add a line «@AGENTS.md» so that Claude Code reads Agentrica's rules.",
+    reminderBadSettings: ".claude/settings.json is not a JSON object with hooks and UserPromptSubmit in the shape Claude Code uses: I left it untouched. Fix it or add the hook by hand (see «Reminder» in the @aigentrica/mcp README).",
+    importAgents: "Your CLAUDE.md was not touched: add a line «@AGENTS.md» so that Claude Code reads AIgentrica's rules.",
     noCommit: "git: no commit, review the new files and add them yourself",
     stepExisting: "  2. ask Claude «Create the project phases from the existing code»: it writes only plan/, stops at the backlog and suggests /clear",
     noPhases: "No phases yet: ask Claude to create them by reading the existing code. In that session only the phases with backlog and criteria are written, then `/clear`; each phase opens in a new session.",
@@ -513,7 +514,7 @@ export const en: Texts = {
 
   project: {
     noPlan:
-      "This project has no plan yet (plan/README.md). To create one run `npx @agentrica/mcp init --existing`, which adds Agentrica's rules without touching your files, or ask Claude «Create the project plan from the existing code».",
+      "This project has no plan yet (plan/README.md). To create one run `npx @aigentrica/mcp init --existing`, which adds AIgentrica's rules without touching your files, or ask Claude «Create the project plan from the existing code».",
     emptyPlan: "The plan has no phases yet. Ask Claude «Create the project phases from the existing code»: it writes only plan/ and stops at the backlog.",
   },
 
@@ -542,7 +543,7 @@ export const en: Texts = {
     duplicateFinding: (id: string) => `finding ${id} appears twice in the file.`,
     closedNoEvidence: (id: string) => `finding ${id} is closed but has no evidence (evidenza/evidence).`,
     sameIdDiffers: (id: string, where: string, fields: string) => `finding ${id} is also in ${where}, with different values in ${fields}.`,
-    usage: "Usage: agentrica-mcp check [project folder]",
+    usage: "Usage: aigentrica-mcp check [project folder]",
     noDir: (dir: string) => `Folder ${dir} not found.`,
   },
 };

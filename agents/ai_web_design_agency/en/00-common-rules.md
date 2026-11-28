@@ -73,7 +73,7 @@ Return valid, structured data, without adding invented fields when the project d
 - Priorities common to all departments: P0 critical, P1 high, P2 medium, P3 low. In findings write only the code (e.g. P2), without added labels; the department descriptions say when to use them.
 - A P0 finding is reported to the user at once, without waiting for the end of the task.
 - If you work on a smaller model than the session's (for example Sonnet or Haiku in a subagent) and find a P0 or P1, or are unsure about a conclusion, say so in the report and propose a review by the department director or by a reviewer on Opus before it becomes final.
-- The Chief, the Software Agency and the other departments mentioned in these rules are Agentrica agents, not people in the user's organisation: decisions and approvals remain with the user or with the human owner they name.
+- The Chief, the Software Agency and the other departments mentioned in these rules are AIgentrica agents, not people in the user's organisation: decisions and approvals remain with the user or with the human owner they name.
 
 ## Up-to-date notions
 - For dated notions (versions of standards, regulations and deadlines, versions) use the department's library cards and cite source, version and verification date.

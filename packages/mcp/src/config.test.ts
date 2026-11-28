@@ -8,9 +8,9 @@ import { after, test } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { ElicitRequestSchema, type ElicitResult } from "@modelcontextprotocol/sdk/types.js";
-import { configForm, configPath, DEFAULTS, parseConfig, parseConfigForm, readConfig, writeConfig } from "./config.ts";
+import { configForm, configPath, DEFAULTS, migrateLegacyConfig, parseConfig, parseConfigForm, readConfig, writeConfig } from "./config.ts";
 
-const root = mkdtempSync(join(tmpdir(), "agentrica-config-"));
+const root = mkdtempSync(join(tmpdir(), "aigentrica-config-"));
 const clients: Client[] = [];
 after(async () => {
   for (const c of clients) await c.close();
@@ -96,8 +96,8 @@ test("primo modulo: compare una volta, salva le scelte, la sessione dopo le usa 
   });
   const list = await first.client.callTool({ name: "list_agents", arguments: {} });
   assert.equal(shown.length, 1);
-  assert.match(shown[0]!.message, /^Configura Agentrica\. .*~\/\.agentrica\/config\.json.*prossima sessione\. Ad Agentrica non arriva nulla\./);
-  assert.match(texts(list).at(-1)!, /salvata in ~\/\.agentrica\/config\.json: vale dalla prossima sessione/);
+  assert.match(shown[0]!.message, /^Configura AIgentrica\. .*~\/\.aigentrica\/config\.json.*prossima sessione\. Ad AIgentrica non arriva nulla\./);
+  assert.match(texts(list).at(-1)!, /salvata in ~\/\.aigentrica\/config\.json: vale dalla prossima sessione/);
   await first.client.callTool({ name: "agent", arguments: { id: "AISA-02" } });
   assert.equal(shown.length, 1, "una volta per sessione");
   assert.equal(await agentPrompts(first.client), 56, "nella stessa sessione non cambia nulla");
@@ -148,7 +148,7 @@ test("squadra non valida nel modulo: niente file; file non valido: ignorato con 
   assert.match(texts(result).at(-1)!, /^Configurazione non salvata: agente o reparto sconosciuto nella squadra: "xyz"/);
   assert.deepEqual(readdirSync(home), []);
 
-  mkdirSync(join(home, ".agentrica"));
+  mkdirSync(join(home, ".aigentrica"));
   writeFileSync(configPath(home), JSON.stringify({ version: 1, agents: "xyz" }));
   const shown: Form[] = [];
   const again = await start(home, ["--panel"], (form) => {
@@ -157,7 +157,7 @@ test("squadra non valida nel modulo: niente file; file non valido: ignorato con 
   });
   assert.equal(await agentPrompts(again.client), 56);
   await again.client.callTool({ name: "list_agents", arguments: {} });
-  assert.match(again.stderr(), /^agentrica: ~\/\.agentrica\/config\.json ignorato \(squadra non valida\)\n/);
+  assert.match(again.stderr(), /^aigentrica: ~\/\.aigentrica\/config\.json ignorato \(squadra non valida\)\n/);
   assert.ok(!again.stderr().includes("xyz"), "senza il contenuto del file");
   assert.deepEqual(Object.keys(shown[0]!.requestedSchema.properties), ["agents", "ratings"], "--panel e --no-update-check non compaiono nel modulo");
   assert.deepEqual(readConfig(configPath(home)), { config: DEFAULTS });
@@ -165,7 +165,7 @@ test("squadra non valida nel modulo: niente file; file non valido: ignorato con 
 
 test("configura: il modulo con i valori salvati; chiuso non cambia nulla; senza moduli le istruzioni per il file", async () => {
   const home = newHome();
-  mkdirSync(join(home, ".agentrica"));
+  mkdirSync(join(home, ".aigentrica"));
   writeFileSync(configPath(home), JSON.stringify({ version: 1, panel: false, ratings: false }));
   let answer: ElicitResult = { action: "cancel" };
   const shown: Form[] = [];
@@ -209,4 +209,25 @@ test("valuta: il modulo per l'ultimo agente o per quello indicato; senza moduli 
   const plain = await start(newHome());
   await plain.client.callTool({ name: "agent", arguments: { id: "AICA-03" } });
   assert.match(promptText(await plain.client.getPrompt({ name: "rate" })), /Chiedigli il voto.*rate_agent con id AICA-03/);
+});
+
+test("cambio di nome (F54): ~/.agentrica/config.json copiato in ~/.aigentrica, una volta sola, e letto dal server", async () => {
+  const home = newHome();
+  const legacy = join(home, ".agentrica", "config.json");
+  mkdirSync(join(home, ".agentrica"));
+  writeFileSync(legacy, JSON.stringify({ version: 1, panel: false, ratings: false }));
+  migrateLegacyConfig(home);
+  assert.deepEqual(readConfig(configPath(home)), { config: { ...DEFAULTS, panel: false, ratings: false } });
+  if (process.platform !== "win32") assert.equal(statSync(configPath(home)).mode & 0o777, 0o600);
+  assert.ok(readFileSync(legacy, "utf8").includes('"panel":false'), "il vecchio file resta");
+
+  writeFileSync(legacy, JSON.stringify({ version: 1, agents: "aisa" }));
+  migrateLegacyConfig(home);
+  assert.deepEqual(readConfig(configPath(home)), { config: { ...DEFAULTS, panel: false, ratings: false } }, "il nuovo non si sovrascrive");
+
+  const fresh = newHome();
+  mkdirSync(join(fresh, ".agentrica"));
+  writeFileSync(join(fresh, ".agentrica", "config.json"), JSON.stringify({ version: 1, agents: "aisa" }));
+  const { client } = await start(fresh);
+  assert.equal(await agentPrompts(client), 12, "la squadra del vecchio file vale già al primo avvio");
 });

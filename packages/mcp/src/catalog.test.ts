@@ -1,4 +1,4 @@
-// L'export «@agentrica/mcp/catalog» (F17): legge gli agents/ del pacchetto e package.json punta ai file che tsc produce.
+// L'export «@aigentrica/mcp/catalog» (F17): legge gli agents/ del pacchetto e package.json punta ai file che tsc produce.
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";

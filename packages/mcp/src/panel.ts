@@ -240,7 +240,7 @@ export async function startPanel(
     const origin = `http://127.0.0.1:${port}`;
     if (req.headers.host !== `127.0.0.1:${port}`) return send(res, 421, T.panel.badHost);
     const url = new URL(req.url ?? "/", origin);
-    const cookieName = `agentrica_panel_${port}`;
+    const cookieName = `aigentrica_panel_${port}`;
 
     if (req.method === "GET" && url.pathname === "/" && url.searchParams.has("t")) {
       if (!sameSecret(url.searchParams.get("t") ?? undefined, token)) return send(res, 403, T.panel.badToken);

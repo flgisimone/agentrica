@@ -3,18 +3,18 @@
 // in attesa finché il titolare non la approva con `npm run projects`. Come le valutazioni, parte solo dopo la conferma
 // dell'utente (il modulo inviato, o il codice dell'anteprima di submit_project) e manda esattamente l'anteprima.
 // Il codice della proposta (UUID casuale) è l'unico modo per ritirarla: lo vede solo l'utente (PRIV-PRJ-03).
-// ponytail: la validazione dei testi copia plainText di agentrica-site (src/lib/projects.ts), che resta il controllo
+// ponytail: la validazione dei testi copia plainText di aigentrica-site (src/lib/projects.ts), che resta il controllo
 // finale. Se cambia una delle due, cambiare anche l'altra; da unire se il sito legge un giorno le regole dal pacchetto.
 import { randomBytes, randomUUID } from "node:crypto";
 import { legalUrl, T } from "./texts/index.ts";
 
-export const PROJECTS_URL = "https://agentrica.vercel.app/api/projects";
+export const PROJECTS_URL = "https://aigentrica.it/api/projects";
 export const PROJECT_LIMITS = { name: 60, description: 280, author: 40, agents: 10, url: 200 } as const;
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
 
 
-/** Quello che parte verso Agentrica, e nient'altro. */
+/** Quello che parte verso AIgentrica, e nient'altro. */
 export interface ProjectPayload {
   code: string;
   name: string;

@@ -1,13 +1,13 @@
 {
-  "name": "@agentrica/mcp",
-  "version": "0.22.0",
-  "mcpName": "io.github.flgisimone/agentrica",
-  "description": "Agentrica's AI agents, organized in departments, as a local MCP server (stdio): one prompt per agent, four read-only tools (including the departments' library and the format check of plan/ and audit/), three tools that send only after confirmation (agent ratings, token totals, project submissions) and, with the local panel, tools to ask the user and save agent reports.",
+  "name": "@aigentrica/mcp",
+  "version": "1.0.0",
+  "mcpName": "io.github.flgisimone/aigentrica",
+  "description": "AIgentrica's AI agents, organized in departments, as a local MCP server (stdio): one prompt per agent, four read-only tools (including the departments' library and the format check of plan/ and audit/), three tools that send only after confirmation (agent ratings, token totals, project submissions) and, with the local panel, tools to ask the user and save agent reports.",
   "license": "MIT",
   "author": "Giulio Simone Floresta",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flgisimone/agentrica.git",
+    "url": "git+https://github.com/flgisimone/aigentrica.git",
     "directory": "packages/mcp"
   },
   "keywords": ["mcp", "model-context-protocol", "agents", "claude"],
@@ -26,7 +26,7 @@
     "./CHANGELOG.en.md": "./CHANGELOG.en.md"
   },
   "bin": {
-    "agentrica-mcp": "dist/mcp/src/server.js"
+    "aigentrica-mcp": "dist/mcp/src/server.js"
   },
   "files": [
     "dist",

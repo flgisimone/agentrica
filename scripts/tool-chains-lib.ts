@@ -1,7 +1,7 @@
-// Catene di chiamate ai tool di Agentrica nei file di sessione di Claude Code (F45-01). Di ogni riga si tengono solo
+// Catene di chiamate ai tool di AIgentrica nei file di sessione di Claude Code (F45-01). Di ogni riga si tengono solo
 // il nome del tool, il chiamante e i byte del risultato: testi, input e id di sessione non escono da qui.
 
-/** Una chiamata a un tool di Agentrica: nome senza il prefisso del server, chiamante, byte del testo restituito. */
+/** Una chiamata a un tool di AIgentrica: nome senza il prefisso del server, chiamante, byte del testo restituito. */
 export interface Call {
   tool: string;
   caller: string;
@@ -9,19 +9,19 @@ export interface Call {
   error: boolean;
 }
 
-/** Le chiamate ad Agentrica fra un messaggio dell'utente e il successivo, in ordine. */
+/** Le chiamate ad AIgentrica fra un messaggio dell'utente e il successivo, in ordine. */
 export type Chain = Call[];
 
 /**
- * «mcp__agentrica-dev__agent» → «agent»; undefined se il server non è Agentrica. Senza `server` conta i server con
- * «agentrica» nel nome, come nelle configurazioni dello starter e del README; con `server` (opzione --server, F48-04)
+ * «mcp__aigentrica-dev__agent» → «agent»; undefined se il server non è AIgentrica. Senza `server` conta i server con
+ * «aigentrica» o il vecchio «agentrica» (sessioni prima di F54) nel nome, come nelle configurazioni dello starter e del README; con `server` (opzione --server, F48-04)
  * solo quello con quel nome esatto, per chi l'ha registrato in un altro modo.
  */
-export function agentricaTool(name: unknown, server?: string): string | undefined {
+export function aigentricaTool(name: unknown, server?: string): string | undefined {
   if (typeof name !== "string") return undefined;
   const [prefix, named, ...rest] = name.split("__");
   const tool = rest.join("__");
-  const ours = server === undefined ? /agentrica/i.test(named ?? "") : named === server;
+  const ours = server === undefined ? /gentrica/i.test(named ?? "") : named === server;
   return prefix === "mcp" && named !== undefined && ours && /^[\w-]{1,64}$/.test(tool) ? tool : undefined;
 }
 
@@ -43,7 +43,7 @@ function isUserTurn(r: Record<string, unknown>, content: unknown): boolean {
 
 /** Le catene di un file di sessione (conversazione principale o subagent), dalle sue righe in ordine. */
 export function fileChains(lines: Iterable<string>, server?: string): Chain[] {
-  const mark = server === undefined ? "agentrica" : `mcp__${server}__`;
+  const mark = server === undefined ? "gentrica" : `mcp__${server}__`;
   const chains: Chain[] = [];
   let current: Chain = [];
   const pending = new Map<string, Call>();
@@ -52,7 +52,7 @@ export function fileChains(lines: Iterable<string>, server?: string): Chain[] {
     current = [];
   };
   for (const line of lines) {
-    // Le righe che non sono dell'utente e non nominano Agentrica non servono: non si analizzano nemmeno.
+    // Le righe che non sono dell'utente e non nominano AIgentrica non servono: non si analizzano nemmeno.
     if (!line.includes('"user"') && !line.includes(mark)) continue;
     let r: Record<string, unknown>;
     try {
@@ -69,7 +69,7 @@ export function fileChains(lines: Iterable<string>, server?: string): Chain[] {
     }
     for (const b of blocks(content)) {
       if (r.type === "assistant" && b.type === "tool_use") {
-        const tool = agentricaTool(b.name, server);
+        const tool = aigentricaTool(b.name, server);
         if (tool === undefined || typeof b.id !== "string") continue;
         const callerType = (b.caller as Record<string, unknown> | undefined)?.type;
         const call: Call = { tool, caller: typeof callerType === "string" && /^[\w-]{1,32}$/.test(callerType) ? callerType : "non indicato", bytes: 0, error: false };
@@ -103,7 +103,7 @@ export const THRESHOLD = { chainLength: 4, sessionsShare: 0.2, intermediateShare
  */
 export const INSTRUCTION_TOOLS: ReadonlySet<string> = new Set(["agent", "agente", "library"]);
 
-/** Un risultato è intermedio se un'altra chiamata ad Agentrica lo segue nella stessa catena e non è un testo di istruzioni. */
+/** Un risultato è intermedio se un'altra chiamata ad AIgentrica lo segue nella stessa catena e non è un testo di istruzioni. */
 /**
  * Chiamate che un programma potrebbe fare da solo, senza il modello e senza l'utente: niente testi di istruzioni e
  * niente `ask_user`, che aspetta la risposta dell'utente (decisione dell'utente del 2026-11-25). Solo queste contano
@@ -127,7 +127,7 @@ function median(values: number[]): number {
 
 export interface ChainStats {
   projects: number;
-  sessions: number; // sessioni con almeno una chiamata ad Agentrica
+  sessions: number; // sessioni con almeno una chiamata ad AIgentrica
   chains: number;
   calls: number;
   bytes: number;
@@ -205,16 +205,16 @@ export function chainsReport(s: ChainStats, date: string): string {
   const overBytes = s.medianIntermediateShare > THRESHOLD.intermediateShare;
   const verdict =
     s.sessions === 0
-      ? "Nessuna chiamata ad Agentrica nei progetti letti: nessun dato."
+      ? "Nessuna chiamata ad AIgentrica nei progetti letti: nessun dato."
       : overChains || overBytes
         ? `**Soglia superata** (${[overChains && "catene lunghe", overBytes && "byte intermedi"].filter(Boolean).join(" e ")}): Code Mode si può riaprire.`
         : "**Soglia non superata**: Code Mode resta rinviato.";
   return [
-    `# Catene di chiamate ai tool di Agentrica — ${date}`,
+    `# Catene di chiamate ai tool di AIgentrica — ${date}`,
     "",
     `Fonte: file di sessione di Claude Code di ${int(s.projects)} progetti (${int(s.skipped)} file saltati). Byte misurati sul testo dei risultati; token stimati come byte / 4. Nessun testo di sessione, percorso o id.`,
     "",
-    `Intermedio: un risultato seguito da un'altra chiamata ad Agentrica prima del messaggio successivo dell'utente, esclusi i testi di istruzioni (${[...INSTRUCTION_TOOLS].map((t) => `\`${t}\``).join(", ")}) che il modello deve leggere. È il limite superiore di ciò che Code Mode toglierebbe dal contesto.`,
+    `Intermedio: un risultato seguito da un'altra chiamata ad AIgentrica prima del messaggio successivo dell'utente, esclusi i testi di istruzioni (${[...INSTRUCTION_TOOLS].map((t) => `\`${t}\``).join(", ")}) che il modello deve leggere. È il limite superiore di ciò che Code Mode toglierebbe dal contesto.`,
     "",
     "## Esito",
     "",
@@ -227,12 +227,12 @@ export function chainsReport(s: ChainStats, date: string): string {
     "",
     "## Totali",
     "",
-    `- Sessioni con chiamate ad Agentrica: ${int(s.sessions)}; catene: ${int(s.chains)} (${int(s.subagentChains)} nei subagent); chiamate: ${int(s.calls)}.`,
+    `- Sessioni con chiamate ad AIgentrica: ${int(s.sessions)}; catene: ${int(s.chains)} (${int(s.subagentChains)} nei subagent); chiamate: ${int(s.calls)}.`,
     `- Byte dei risultati: ${kb(s.bytes)} (~${int(Math.round(s.bytes / 4))} token); intermedi: ${kb(s.intermediate)} (${pct(s.bytes === 0 ? 0 : s.intermediate / s.bytes)}).`,
     "",
     "## Lunghezza delle catene",
     "",
-    "Tutte le chiamate ad Agentrica della catena, comprese istruzioni e `ask_user`.",
+    "Tutte le chiamate ad AIgentrica della catena, comprese istruzioni e `ask_user`.",
     "",
     "| Chiamate | Catene |",
     "|---|---|",

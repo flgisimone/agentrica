@@ -1,5 +1,5 @@
-// `agentrica-mcp init [cartella] [--name "Nome"] [--subagents] [--existing] [--no-reminder]` (F18, al posto di agentic-starter): crea un
-// progetto con la governance di Agentrica. Copia starter/ (AGENTS, CONVENTIONS, plan/, audit/, docs/, CI), gli agents/ del
+// `aigentrica-mcp init [cartella] [--name "Nome"] [--subagents] [--existing] [--no-reminder]` (F18, al posto di agentic-starter): crea un
+// progetto con la governance di AIgentrica. Copia starter/ (AGENTS, CONVENTIONS, plan/, audit/, docs/, CI), gli agents/ del
 // pacchetto e, solo con --subagents (F34-05), i subagent di .claude/agents/ con il nome del progetto e il tool agent del
 // server come primo passo; scrive .mcp.json con questo pacchetto a versione esatta e, fuori da un repository git, fa il
 // primo commit su main e lascia attivo develop. È l'unico comando che scrive: il server resta in sola lettura. Senza
@@ -21,9 +21,9 @@ import { isLang, lang as serverLang, T, TEXTS, type Lang } from "./texts/index.t
 const ROOT = dirname(AGENTS_DIR);
 const STARTER_DIR = join(ROOT, "starter");
 const EN = "en";
-/** I subagent di Agentrica nominano il progetto solo in questa frase, per lingua (lo controlla init.test.ts). */
-export const subagentProject = (lang: Lang, name = "Agentrica") => TEXTS[lang].init.subagentProject(name);
-// npm non pubblica i file .gitignore: in starter/ si chiama gitignore (e non vale per il repository di Agentrica).
+/** I subagent di AIgentrica nominano il progetto solo in questa frase, per lingua (lo controlla init.test.ts). */
+export const subagentProject = (lang: Lang, name = "AIgentrica") => TEXTS[lang].init.subagentProject(name);
+// npm non pubblica i file .gitignore: in starter/ si chiama gitignore (e non vale per il repository di AIgentrica).
 const RENAMED: Record<string, string> = { gitignore: ".gitignore" };
 
 function filesIn(dir: string): string[] {
@@ -34,8 +34,8 @@ function filesIn(dir: string): string[] {
     .sort();
 }
 
-// I tool del server che un subagent copiato con --subagents può chiamare: il nome «agentrica» è quello di .mcp.json.
-const SERVER_TOOLS = ["mcp__agentrica__agent", "mcp__agentrica__library"];
+// I tool del server che un subagent copiato con --subagents può chiamare: il nome «aigentrica» è quello di .mcp.json.
+const SERVER_TOOLS = ["mcp__aigentrica__agent", "mcp__aigentrica__library"];
 
 /**
  * Un subagent copiato con --subagents (F34-05): i tool del server fra i `tools` e, prima del testo, il primo passo che
@@ -77,9 +77,9 @@ export function projectFiles(name: string, path: string, date: string, platform:
   }
   // Su Windows npx è npx.cmd, che Claude Code non avvia senza cmd /c (F23).
   // Da F29 il pannello parte di predefinito: niente --panel, così la configurazione salvata dell'utente vale anche qui.
-  const npx = ["-y", `@agentrica/mcp@${VERSION}`];
+  const npx = ["-y", `@aigentrica/mcp@${VERSION}`];
   const server = platform === "win32" ? { command: "cmd", args: ["/c", "npx", ...npx] } : { command: "npx", args: npx };
-  files.set(".mcp.json", `${JSON.stringify({ mcpServers: { agentrica: server } }, null, 2)}\n`);
+  files.set(".mcp.json", `${JSON.stringify({ mcpServers: { aigentrica: server } }, null, 2)}\n`);
   if (reminder) {
     const hooks = { UserPromptSubmit: [{ hooks: [{ type: "command", command: reminderCommand(TEXTS[lang].init.reminder) }] }] };
     files.set(".claude/settings.json", `${JSON.stringify({ hooks }, null, 2)}\n`);
@@ -94,7 +94,7 @@ const NEW_ONLY = [/^\.github\//, /^\.nvmrc$/, /^\.env\.example$/, /^plan\/00-bas
 export function existingFiles(files: Map<string, string>, lang: Lang): Map<string, string> {
   const out = new Map([...files].filter(([file]) => !NEW_ONLY.some((pattern) => pattern.test(file))));
   const plan = out.get("plan/README.md")!
-    .split("`npx @agentrica/mcp init`").join("`npx @agentrica/mcp init --existing`")
+    .split("`npx @aigentrica/mcp init`").join("`npx @aigentrica/mcp init --existing`")
     .replace(/^\| F0 \|.*\n/m, "")
     .replace(/^(Ordine|Order): F0 .*$/m, TEXTS[lang].init.noPhases);
   out.set("plan/README.md", plan);
@@ -172,7 +172,7 @@ export function addReminder(dir: string, lang: Lang): "added" | "present" {
   return "added";
 }
 
-/** `agentrica-mcp reminder [cartella]`: il promemoria in un progetto già avviato; restituisce il codice di uscita. */
+/** `aigentrica-mcp reminder [cartella]`: il promemoria in un progetto già avviato; restituisce il codice di uscita. */
 export function runReminder(args: string[]): number {
   try {
     const { values, positionals } = parseArgs({ args, options: { lang: { type: "string" } }, allowPositionals: true });
@@ -184,7 +184,7 @@ export function runReminder(args: string[]): number {
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    process.stderr.write(`agentrica reminder: ${message.replace(/\p{Cc}/gu, " ")}\n`);
+    process.stderr.write(`aigentrica reminder: ${message.replace(/\p{Cc}/gu, " ")}\n`);
     return 1;
   }
 }
@@ -222,7 +222,7 @@ export function runInit(args: string[]): number {
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    process.stderr.write(`agentrica init: ${message.replace(/\p{Cc}/gu, " ")}\n`);
+    process.stderr.write(`aigentrica init: ${message.replace(/\p{Cc}/gu, " ")}\n`);
     return 1;
   }
 }

@@ -23,8 +23,8 @@ Le istruzioni scritte in un file hanno tre vantaggi. Si rileggono e si miglioran
 
 Un limite da conoscere: istruzioni lunghe e contraddittorie confondono il modello quanto una persona. Se due regole si scontrano, il modello ne sceglie una, non sempre quella che volevi. Meglio poche regole chiare, ciascuna con il suo motivo.
 
-## In Agentrica
-In Agentrica gli agenti sono istruzioni scritte in file. Ogni reparto ha un file di regole comuni, per esempio [agents/ai_software_agency/00-common-rules.md](../../agents/ai_software_agency/00-common-rules.md), con regole come «non introdurre dipendenze senza motivazione» o «non leggere dati personali reali se il compito non lo richiede». Poi c'è un [file di ruolo](glossario.md#role-file) per ogni agente, con la missione e il modo di lavorare: guarda [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md).
+## In AIgentrica
+In AIgentrica gli agenti sono istruzioni scritte in file. Ogni reparto ha un file di regole comuni, per esempio [agents/ai_software_agency/00-common-rules.md](../../agents/ai_software_agency/00-common-rules.md), con regole come «non introdurre dipendenze senza motivazione» o «non leggere dati personali reali se il compito non lo richiede». Poi c'è un [file di ruolo](glossario.md#role-file) per ogni agente, con la missione e il modo di lavorare: guarda [agents/ai_software_agency/02-senior-software-architect.md](../../agents/ai_software_agency/02-senior-software-architect.md).
 
 Quando chiedi un agente, il server compone il prompt: regole comuni del reparto, file di ruolo e il tuo compito, in quest'ordine. Il codice che lo fa è in [packages/mcp/src/prompt.ts](../../packages/mcp/src/prompt.ts). Puoi vedere il testo esatto che arriva al modello con lo script [scripts/agent-text.ts](../../scripts/agent-text.ts), lo stesso usato nelle misure.
 

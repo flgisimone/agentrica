@@ -5,8 +5,8 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 import { claudeProjectDir, family, groupTotals, MAIN, MAX_SHARE_ROWS, parseLine, readUsage, shareRows, subagentRuns, totals, usageReport, type Usage } from "./usage.ts";
 
-const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-")));
-const outside = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-usage-out-")));
+const dir = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-usage-")));
+const outside = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-usage-out-")));
 after(() => {
   rmSync(dir, { recursive: true, force: true });
   rmSync(outside, { recursive: true, force: true });
@@ -53,7 +53,7 @@ symlinkSync(join(outside, "fuori.jsonl"), join(dir, "link.jsonl"));
 
 test("cartella di Claude Code del progetto", () => {
   // Il separatore è quello del sistema (join): su Windows «\c\projects\…».
-  assert.equal(claudeProjectDir("/Users/a/lavoro/agentrica", { CLAUDE_CONFIG_DIR: "/c" }), join("/c", "projects", "-Users-a-lavoro-agentrica"));
+  assert.equal(claudeProjectDir("/Users/a/lavoro/aigentrica", { CLAUDE_CONFIG_DIR: "/c" }), join("/c", "projects", "-Users-a-lavoro-aigentrica"));
   assert.equal(claudeProjectDir("C:\\Users\\a b\\x.y", { CLAUDE_CONFIG_DIR: "/c" }), join("/c", "projects", "C--Users-a-b-x-y"));
 });
 
@@ -172,7 +172,7 @@ test("shareRows: solo gli ultimi 30 giorni, senza righe vuote, al più 300 dalle
 });
 
 test("subagentRuns (F34-06, R3, R4): dai transcript della sessione, con tipo, descrizione corta e stato se il .meta.json si riconosce", async () => {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-runs-")));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-runs-")));
   try {
     const sub = join(dir, "sessione-1", "subagents");
     mkdirSync(sub, { recursive: true });

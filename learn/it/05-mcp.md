@@ -19,11 +19,11 @@ Un server può girare sul tuo computer, avviato dal client e collegato con l'ing
 
 La specifica cambia nel tempo. Al 2026-11-19 la revisione corrente è la 2026-07-28, che rende il protocollo senza stato e cambia il modo in cui un server chiede dati all'utente durante una chiamata; la fonte è la [specifica MCP](https://modelcontextprotocol.io/specification). Gli SDK possono essere indietro rispetto alla specifica: quando costruisci un server, controlla quale revisione supporta il tuo.
 
-## In Agentrica
-Agentrica è un server MCP locale, solo stdio, scritto con l'SDK ufficiale, in [packages/mcp/src/server.ts](../../packages/mcp/src/server.ts). Offre un prompt per agente e alcuni tool:
+## In AIgentrica
+AIgentrica è un server MCP locale, solo stdio, scritto con l'SDK ufficiale, in [packages/mcp/src/server.ts](../../packages/mcp/src/server.ts). Offre un prompt per agente e alcuni tool:
 
 - `list_agents` elenca gli agenti, `agent` restituisce il testo di un ruolo con il tuo compito, `library` le schede della biblioteca di un reparto, `check` controlla la forma dei file del piano;
-- `rate_agent`, `share_usage` e `submit_project` mandano qualcosa al sito di Agentrica, e solo dopo un'anteprima e il tuo sì;
+- `rate_agent`, `share_usage` e `submit_project` mandano qualcosa al sito di AIgentrica, e solo dopo un'anteprima e il tuo sì;
 - con il pannello locale (fase F14), `ask_user` mostra una scelta nella pagina, `open_panel` ne dà l'indirizzo, `report` salva il resoconto di un agente.
 
 Il README del pacchetto, [packages/mcp/README.md](../../packages/mcp/README.md), ha la tabella di cosa resta sul computer e cosa esce, tool per tool.
@@ -35,13 +35,13 @@ Una proposta esterna chiedeva un tool che eseguisse catene di chiamate in un sol
 ## Prova
 Guarda quali server MCP ha il tuo assistente: in Claude Code il comando `/mcp` li elenca con i loro tool. Per ognuno chiediti: è locale o in rete? Cosa manda fuori?
 
-Poi collega un server in un progetto di prova. Con Agentrica, nella cartella del progetto:
+Poi collega un server in un progetto di prova. Con AIgentrica, nella cartella del progetto:
 
 ```sh
-claude mcp add agentrica -- npx -y @agentrica/mcp
+claude mcp add aigentrica -- npx -y @aigentrica/mcp
 ```
 
-Apri una sessione e chiedi «elenca gli agenti di Agentrica». Guarda quale tool sceglie il modello e cosa gli torna indietro.
+Apri una sessione e chiedi «elenca gli agenti di AIgentrica». Guarda quale tool sceglie il modello e cosa gli torna indietro.
 
 ## Termini
 - [Tool](glossario.md#tool)

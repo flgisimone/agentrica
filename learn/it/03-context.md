@@ -10,7 +10,7 @@ Il modello non ricorda niente fra una richiesta e l'altra. Sembra ricordare perc
 
 Due conseguenze. La prima: più la conversazione si allunga, più testo il modello rilegge a ogni passo, e ogni token letto si paga, in denaro o nei limiti dell'abbonamento. La seconda: la finestra di contesto ha un massimo. Quando la conversazione ci si avvicina, l'assistente deve riassumere o tagliare, e qualche dettaglio si perde.
 
-Per stimare quanti token pesa un testo basta una regola grossolana: in media un token vale qualche carattere. Agentrica usa «byte diviso quattro», ed è dichiarata come stima. Il conteggio esatto dipende dal modello e dalla lingua.
+Per stimare quanti token pesa un testo basta una regola grossolana: in media un token vale qualche carattere. AIgentrica usa «byte diviso quattro», ed è dichiarata come stima. Il conteggio esatto dipende dal modello e dalla lingua.
 
 Un aiuto viene dalla [cache](glossario.md#cache). La parte iniziale del contesto resta uguale da un messaggio all'altro: istruzioni, file già letti. I fornitori la tengono pronta e la fanno pagare molto meno della prima lettura. Per questo conviene che le parti stabili stiano in cima e non cambino a ogni passo.
 
@@ -22,8 +22,8 @@ Cosa puoi fare in pratica:
 
 Il contesto è anche il motivo per cui un assistente sembra «non sapere» una cosa che gli hai detto un'ora prima: magari è stata riassunta via. Non è distrazione, è il limite della finestra.
 
-## In Agentrica
-Agentrica ha misurato quanto pesano i suoi testi prima di ridurli. Nella fase F40 la misura di base ha contato i byte di ogni parte del testo di un agente, in [examples/risultati/2026-11-25-baseline-contesto.md](../../examples/risultati/2026-11-25-baseline-contesto.md): da 6,2 a 8,7 KB per agente, di cui da 3,5 a 5 KB di regole comuni del reparto.
+## In AIgentrica
+AIgentrica ha misurato quanto pesano i suoi testi prima di ridurli. Nella fase F40 la misura di base ha contato i byte di ogni parte del testo di un agente, in [examples/risultati/2026-11-25-baseline-contesto.md](../../examples/risultati/2026-11-25-baseline-contesto.md): da 6,2 a 8,7 KB per agente, di cui da 3,5 a 5 KB di regole comuni del reparto.
 
 Le regole comuni si ripetevano identiche per ogni agente dello stesso reparto. Dalla fase F41 il server ricorda, per la sessione, a quali reparti le ha già mandate: il primo agente le riceve intere, i successivi solo un riferimento. Il risultato, in [examples/risultati/2026-11-25-contesto-compatto.md](../../examples/risultati/2026-11-25-contesto-compatto.md): uno specialista del software è passato da 6.301 a 2.604 byte, e un flusso completo da 47.676 a 44.395 byte (6,9% in meno), con gli stessi difetti trovati nelle prove. Il piano della fase è in [plan/41-contesto-compatto.md](../../plan/41-contesto-compatto.md). Il riferimento dice anche come riavere tutto con il parametro `full_rules`: dopo un `/compact` le regole potrebbero essere state riassunte.
 

@@ -10,7 +10,7 @@ A single model can write code, check security and review texts. But if you ask f
 
 Splitting has a cost, though. Every extra role is extra text in the context, and moving from one role to the next can lose information. So three rules are needed.
 
-- **Who coordinates.** A role that does not do the work but decides who does it and in what order. In Agentrica's scheme it is the department's [director](glossary.md#director).
+- **Who coordinates.** A role that does not do the work but decides who does it and in what order. In AIgentrica's scheme it is the department's [director](glossary.md#director).
 - **One at a time.** Specialists work in sequence, each starting from what the previous one left, instead of all together on the original task. That way the second sees the problems the first found and does not repeat them.
 - **What gets passed.** At the end of each role, a handover in three parts: the outcome, the [findings](glossary.md#finding) with their evidence (file, line, command) and the open questions. Without evidence a finding cannot be checked; without open questions whoever follows believes everything is settled.
 
@@ -18,7 +18,7 @@ The order between different skills matters too. If you build first and ask after
 
 Finally, the point that makes orchestration safe: agents propose, you decide. Priorities, architecture choices, findings accepted or rejected, commits and releases go through your confirmation.
 
-## In Agentrica
+## In AIgentrica
 The order is written in the server's instructions and in [AGENTS.md](../../AGENTS.md): business, design, privacy, user confirmation, software, design and privacy reviews, Code Reviewer, user confirmation. Each department has its workflow in its README, for example [agents/ai_software_agency/README.md](../../agents/ai_software_agency/README.md); since phase F3 the department READMEs share the same shape.
 
 The rules did not enforce themselves. The test case [examples/casi/orchestrazione-newsletter.md](../../examples/casi/orchestrazione-newsletter.md) asks a model to build a feature in a new project, and the run of 2026-11-22 in [examples/risultati/2026-11-22-orchestrazione.md](../../examples/risultati/2026-11-22-orchestrazione.md) shows the before and after. With version 0.9.0 the model started two subagents on its own and never called the server. After phase F34, [plan/34-orchestrazione.md](../../plan/34-orchestrazione.md), the same task went like this: list of agents, business, design and privacy directors one at a time, a question to the user, then the software director and one specialist. No subagents.
@@ -32,7 +32,7 @@ Take a small feature you want to add to your project, for example a contact form
 2. «Starting from these requirements, list the risks for personal data and security.»
 3. «Starting from requirements and risks, propose the smallest implementation.»
 
-Between steps, answer the open questions. Compare the result with what you would have got by asking for the code straight away. With Agentrica connected, you can ask for the same work and watch in the panel which agents get loaded and in what order.
+Between steps, answer the open questions. Compare the result with what you would have got by asking for the code straight away. With AIgentrica connected, you can ask for the same work and watch in the panel which agents get loaded and in what order.
 
 ## Terms
 - [Orchestration](glossary.md#orchestration)

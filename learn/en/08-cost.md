@@ -25,15 +25,15 @@ What you can do, in order of effect:
 
 Finally, measure. Without numbers you optimize at random. Many assistants save the tokens of each answer; looking at them once a week is enough to understand where they go.
 
-## In Agentrica
-In Agentrica's calculations the API prices are those of 2026-11-03, per million input and output tokens: Opus 5.5 4 and 20 dollars, Sonnet 5.5 2 and 10, Haiku 5.5 0.10 and 0.50; reading from the cache costs a tenth of input. They are written with their date in [packages/mcp/src/usage.ts](../../packages/mcp/src/usage.ts), the same file that reads usage: Claude Code saves for each answer the model, reasoning effort and tokens in the project's files under `~/.claude/projects/`, and the local panel shows them per agent, model, session and day. Only the numbers are read from those files, never the text of the conversations.
+## In AIgentrica
+In AIgentrica's calculations the API prices are those of 2026-11-03, per million input and output tokens: Opus 5.5 4 and 20 dollars, Sonnet 5.5 2 and 10, Haiku 5.5 0.10 and 0.50; reading from the cache costs a tenth of input. They are written with their date in [packages/mcp/src/usage.ts](../../packages/mcp/src/usage.ts), the same file that reads usage: Claude Code saves for each answer the model, reasoning effort and tokens in the project's files under `~/.claude/projects/`, and the local panel shows them per agent, model, session and day. Only the numbers are read from those files, never the text of the conversations.
 
 In the F24 measurement, in [examples/risultati/2026-11-19-modelli.md](../../examples/risultati/2026-11-19-modelli.md), the cache covered 75 to 82% of tokens, depending on the configuration. The same measurement also tells the cost of redone work: 27 attempts stopped by the subscription's five-hour limit spent 532 thousand tokens with no result, and were rerun from scratch.
 
 Since phase F27 you can send your token totals to the site, only after a preview of what leaves and your yes: totals per day, agent, model and reasoning effort, no text or paths. The decisions are in [plan/27-consumo-sito.md](../../plan/27-consumo-sito.md). And the project's working rules, in the «Efficienza» (efficiency) section of [AGENTS.md](../../AGENTS.md), start from here: a session's cost grows with the calls and with the size of the context, because every call rereads all of it.
 
 ## Try it
-Look at your usage over the last week. In Claude Code the `/cost` command shows the session's cost with the API, and with a subscription `/usage` shows the limits. With Agentrica, the local panel shows the project's usage with charts.
+Look at your usage over the last week. In Claude Code the `/cost` command shows the session's cost with the API, and with a subscription `/usage` shows the limits. With AIgentrica, the local panel shows the project's usage with charts.
 
 Then run a test on any task:
 

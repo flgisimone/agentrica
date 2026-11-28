@@ -18,7 +18,7 @@ Then privacy. Everything you put in the context reaches the model provider. A lo
 
 Finally, sources. From the [first lesson](01-language-model.md) you know the model knows the world up to its training date and sometimes makes things up. For things that change (versions, regulations, prices) ask where a claim comes from and when it was verified. A primary source, such as the specification or the text of the law, is worth more than an article summarizing it.
 
-## In Agentrica
+## In AIgentrica
 The agents' files become instructions for the model of whoever uses the server, so a tampered file would be a prompt injection shipped to everyone. The security review of phase F5, in [audit/2026-11-15-mcp/report-f5.md](../../audit/2026-11-15-mcp/report-f5.md), set rule SEC-ARCH-01: in `agents/` files no links, no HTML, no invisible characters, only data blocks and a maximum size. It is enforced by [packages/catalog/src/content.ts](../../packages/catalog/src/content.ts) in every test run, CI included. Since phase F10 the package is published from [.github/workflows/release.yml](../../.github/workflows/release.yml) with npm provenance, which ties each version to the code that produced it.
 
 For privacy, data stays on your computer. The only things sent, a rating, token totals or a project to showcase, leave only after a preview of what goes out and your yes; the decisions of phase F20 are in [plan/20-valutazioni.md](../../plan/20-valutazioni.md). In F30 the parts of the site that write to the database went back to database roles with only the permissions they need: least privilege applied.

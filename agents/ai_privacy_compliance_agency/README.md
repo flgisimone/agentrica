@@ -17,7 +17,7 @@ Agenti per audit e consulenza su GDPR, privacy e compliance del prodotto.
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/privacy-compliance/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
+- Gli agenti si consultano dal server MCP di AIgentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/privacy-compliance/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Chief definisce perimetro e piano.
@@ -42,9 +42,9 @@ Gli agenti svolgono audit e formulano raccomandazioni: non implementano modifich
 
 Gli agenti supportano ma non sostituiscono titolare del trattamento, DPO, consulente legale o professionisti qualificati. Non costituiscono certificazione né garanzia di conformità.
 
-I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con il tool `agent` del server MCP di Agentrica.
+I file Markdown definiscono ruoli e istruzioni; in Claude Code si caricano con il tool `agent` del server MCP di AIgentrica.
 
 I riferimenti normativi nei file sono indicativi: verificare sempre testo vigente, giurisdizione, linee guida e applicabilità al caso concreto.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.

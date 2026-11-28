@@ -21,7 +21,7 @@ async function download(source: Source): Promise<string> {
   let response: Response;
   for (let hops = 0; ; hops++) {
     response = await fetch(url, {
-      headers: { "user-agent": "agentrica-study", accept: "application/rss+xml, application/atom+xml, application/xml, application/json;q=0.9, */*;q=0.5" },
+      headers: { "user-agent": "aigentrica-study", accept: "application/rss+xml, application/atom+xml, application/xml, application/json;q=0.9, */*;q=0.5" },
       redirect: "manual",
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });

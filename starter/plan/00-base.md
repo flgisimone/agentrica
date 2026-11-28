@@ -8,7 +8,7 @@
 
 ## Proposte da confermare
 
-<!-- All'apertura della fase le propone il direttore software (AISA-01, con il tool `agent` di Agentrica) e si decidono con l'utente con `ask_user`, nel pannello. -->
+<!-- All'apertura della fase le propone il direttore software (AISA-01, con il tool `agent` di AIgentrica) e si decidono con l'utente con `ask_user`, nel pannello. -->
 
 - Stack e versioni delle dipendenze (stabili correnti, fissate esatte).
 - Agenzie attive per questo progetto (AGENTS.md, «Agenzie»).

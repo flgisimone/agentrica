@@ -1,11 +1,11 @@
-// Controllo della versione nuova (F23): all'avvio una GET ai dist-tag di @agentrica/mcp sul registro npm, senza
+// Controllo della versione nuova (F23): all'avvio una GET ai dist-tag di @aigentrica/mcp sul registro npm, senza
 // parametri né dati. La risposta è un dato esterno: se ne legge al più MAX_BYTES, si accetta solo una versione semver
 // x.y.z e nel testo per il modello entra solo quella. Rete assente o negata, timeout, risposta strana: niente avviso.
 // La versione resta fissata: l'avviso dice solo come aggiornare. --no-update-check lo spegne.
 
 import { T } from "./texts/index.ts";
 
-export const REGISTRY_URL = "https://registry.npmjs.org/-/package/@agentrica/mcp/dist-tags";
+export const REGISTRY_URL = "https://registry.npmjs.org/-/package/@aigentrica/mcp/dist-tags";
 const TIMEOUT_MS = 3_000;
 const MAX_BYTES = 4_096;
 const SEMVER = /^(\d{1,6})\.(\d{1,6})\.(\d{1,6})$/;
@@ -15,7 +15,7 @@ export type InstallKind = "global" | "npx" | "source";
 
 export function installKind(serverPath: string): InstallKind {
   if (/[\\/]_npx[\\/]/.test(serverPath)) return "npx";
-  if (/[\\/]node_modules[\\/]@agentrica[\\/]mcp[\\/]/.test(serverPath)) return "global";
+  if (/[\\/]node_modules[\\/]@aigentrica[\\/]mcp[\\/]/.test(serverPath)) return "global";
   return "source";
 }
 

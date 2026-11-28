@@ -1,15 +1,15 @@
-// Invio dei totali di token ad Agentrica (F27): come le valutazioni (ratings.ts), parte solo dopo la conferma
+// Invio dei totali di token ad AIgentrica (F27): come le valutazioni (ratings.ts), parte solo dopo la conferma
 // dell'utente e manda esattamente le righe dell'anteprima. Ogni riga ha la sua chiave (usage.ts, shareRows): il sito
 // sostituisce quella con la stessa chiave, quindi un secondo invio non conta due volte. Niente file, tutto in memoria.
 import { randomBytes } from "node:crypto";
 import { legalUrl, T } from "./texts/index.ts";
 import type { ShareRow } from "./usage.ts";
 
-export const SHARE_URL = "https://agentrica.vercel.app/api/usage";
+export const SHARE_URL = "https://aigentrica.it/api/usage";
 const CODE_TTL_MS = 10 * 60_000;
 const SEND_TIMEOUT_MS = 5_000;
 
-/** Quello che parte verso Agentrica, e nient'altro. */
+/** Quello che parte verso AIgentrica, e nient'altro. */
 export interface SharePayload {
   mcpVersion: string;
   rows: ShareRow[];

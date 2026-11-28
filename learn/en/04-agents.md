@@ -25,8 +25,8 @@ Two more tools make agents more reliable.
 
 And one ground rule: what a program can check should be checked by a program. A [deterministic check](glossary.md#deterministic-check), like a test or a format validator, always gives the same answer to the same input. The model does not. The best agent uses the model to understand and decide, and checks to verify.
 
-## In Agentrica
-Agentrica's agents are roles your assistant takes on: the server provides the role's text, your assistant works with its own tools. The roles also exist as Claude Code subagents, for example [.claude/agents/software/sw-architect.md](../../.claude/agents/software/sw-architect.md), a short file that points to the role file. The project starts them only when you ask: the rules in [AGENTS.md](../../AGENTS.md) call them «the most expensive item».
+## In AIgentrica
+AIgentrica's agents are roles your assistant takes on: the server provides the role's text, your assistant works with its own tools. The roles also exist as Claude Code subagents, for example [.claude/agents/software/sw-architect.md](../../.claude/agents/software/sw-architect.md), a short file that points to the role file. The project starts them only when you ask: the rules in [AGENTS.md](../../AGENTS.md) call them «the most expensive item».
 
 A real problem: the server's instructions arrive only at startup, and after a few requests the model tended to work alone, without loading the agents. Phase F39 solved it with a hook: the `init` command writes into your project's `.claude/settings.json` a reminder that Claude Code adds to every request. The code is in [packages/mcp/src/init.ts](../../packages/mcp/src/init.ts), the phase in [plan/39-promemoria-agenti.md](../../plan/39-promemoria-agenti.md).
 

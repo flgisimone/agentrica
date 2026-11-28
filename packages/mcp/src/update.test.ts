@@ -32,15 +32,15 @@ test("fetchLatest: risposta troppo grande, rete assente o timeout → undefined"
 });
 
 test("installKind: cartella globale di npm, cache di npx o clone, su Mac, Linux e Windows", () => {
-  assert.equal(installKind("/opt/homebrew/lib/node_modules/@agentrica/mcp/dist/mcp/src/server.js"), "global");
-  assert.equal(installKind("C:\\Users\\Ada Rossi\\AppData\\Roaming\\npm\\node_modules\\@agentrica\\mcp\\dist\\mcp\\src\\server.js"), "global");
-  assert.equal(installKind("/home/ada/.npm/_npx/1a2b/node_modules/@agentrica/mcp/dist/mcp/src/server.js"), "npx");
-  assert.equal(installKind("C:\\Users\\ada\\AppData\\Local\\npm-cache\\_npx\\1a2b\\node_modules\\@agentrica\\mcp\\dist\\mcp\\src\\server.js"), "npx");
-  assert.equal(installKind("/Users/ada/agentrica/packages/mcp/src/server.ts"), "source");
+  assert.equal(installKind("/opt/homebrew/lib/node_modules/@aigentrica/mcp/dist/mcp/src/server.js"), "global");
+  assert.equal(installKind("C:\\Users\\Ada Rossi\\AppData\\Roaming\\npm\\node_modules\\@aigentrica\\mcp\\dist\\mcp\\src\\server.js"), "global");
+  assert.equal(installKind("/home/ada/.npm/_npx/1a2b/node_modules/@aigentrica/mcp/dist/mcp/src/server.js"), "npx");
+  assert.equal(installKind("C:\\Users\\ada\\AppData\\Local\\npm-cache\\_npx\\1a2b\\node_modules\\@aigentrica\\mcp\\dist\\mcp\\src\\server.js"), "npx");
+  assert.equal(installKind("/Users/ada/aigentrica/packages/mcp/src/server.ts"), "source");
 });
 
 test("updateMessage: versioni e comando per come è installato il server", () => {
-  assert.match(updateMessage("0.6.0", "0.7.0", "global"), /versione 0\.7\.0 .*in uso la 0\.6\.0.*npx -y @agentrica\/mcp@0\.7\.0 install/);
-  assert.match(updateMessage("0.6.0", "0.7.0", "npx"), /@agentrica\/mcp@0\.7\.0 nel comando del server/);
+  assert.match(updateMessage("0.6.0", "0.7.0", "global"), /versione 0\.7\.0 .*in uso la 0\.6\.0.*npx -y @aigentrica\/mcp@0\.7\.0 install/);
+  assert.match(updateMessage("0.6.0", "0.7.0", "npx"), /@aigentrica\/mcp@0\.7\.0 nel comando del server/);
   assert.match(updateMessage("0.6.0", "0.7.0", "source"), /git pull/);
 });

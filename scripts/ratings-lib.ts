@@ -192,7 +192,7 @@ export const USAGE = [
   "  npm run ratings -- --delete <codice>      l'utente chiede di cancellare la valutazione",
 ];
 
-/** Esito di moderate_rating (agentrica-site/db/002-reputation.sql) in italiano. */
+/** Esito di moderate_rating (aigentrica-site/db/002-reputation.sql) in italiano. */
 export function resultMessage(result: unknown): string {
   switch (result) {
     case "ok":

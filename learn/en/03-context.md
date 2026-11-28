@@ -10,7 +10,7 @@ The model remembers nothing between one request and the next. It seems to rememb
 
 Two consequences. First: the longer the conversation, the more text the model rereads at each step, and every token read is paid for, in money or in the subscription's limits. Second: the context window has a maximum. When the conversation gets close to it, the assistant has to summarize or cut, and some details are lost.
 
-To estimate how many tokens a text weighs, a rough rule is enough: on average a token is a few characters. Agentrica uses «bytes divided by four», and states that it is an estimate. The exact count depends on the model and the language.
+To estimate how many tokens a text weighs, a rough rule is enough: on average a token is a few characters. AIgentrica uses «bytes divided by four», and states that it is an estimate. The exact count depends on the model and the language.
 
 The [cache](glossary.md#cache) helps. The start of the context stays the same from one message to the next: instructions, files already read. Providers keep it ready and charge much less for it than for the first read. That is why stable parts should sit at the top and not change at every step.
 
@@ -22,8 +22,8 @@ What you can do in practice:
 
 The context is also why an assistant seems «not to know» something you told it an hour ago: maybe it was summarized away. It is not carelessness, it is the limit of the window.
 
-## In Agentrica
-Agentrica measured how much its texts weigh before reducing them. In phase F40 the baseline counted the bytes of each part of an agent's text, in [examples/risultati/2026-11-25-baseline-contesto.md](../../examples/risultati/2026-11-25-baseline-contesto.md): from 6.2 to 8.7 KB per agent, of which 3.5 to 5 KB were the department's common rules.
+## In AIgentrica
+AIgentrica measured how much its texts weigh before reducing them. In phase F40 the baseline counted the bytes of each part of an agent's text, in [examples/risultati/2026-11-25-baseline-contesto.md](../../examples/risultati/2026-11-25-baseline-contesto.md): from 6.2 to 8.7 KB per agent, of which 3.5 to 5 KB were the department's common rules.
 
 The common rules were repeated identically for every agent of the same department. Since phase F41 the server remembers, for the session, which departments it has already sent them for: the first agent gets them in full, the following ones only a reference. The result, in [examples/risultati/2026-11-25-contesto-compatto.md](../../examples/risultati/2026-11-25-contesto-compatto.md): a software specialist went from 6,301 to 2,604 bytes, and a full flow from 47,676 to 44,395 bytes (6.9% less), with the same defects found in the tests. The phase plan is in [plan/41-contesto-compatto.md](../../plan/41-contesto-compatto.md). The reference also says how to get everything back with the `full_rules` parameter: after a `/compact` the rules may have been summarized.
 

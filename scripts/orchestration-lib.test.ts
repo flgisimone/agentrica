@@ -9,23 +9,23 @@ const ok = (calls: Call[], asked = false) => Object.fromEntries(checkOrchestrati
 
 test("le chiamate si leggono in ordine, senza i subagent e senza testi", () => {
   const calls = toolCalls([
-    line("m1", [{ type: "text", text: "ciao" }, use("mcp__agentrica__list_agents")]),
-    line("m2", [use("mcp__agentrica__agent", { id: "aiwda-01", task: "segreto" })]),
+    line("m1", [{ type: "text", text: "ciao" }, use("mcp__aigentrica__list_agents")]),
+    line("m2", [use("mcp__aigentrica__agent", { id: "aiwda-01", task: "segreto" })]),
     line("m3", [use("Read", { file_path: "x" })], { isSidechain: true }),
     line("m4", [use("Agent", { subagent_type: "Explore", prompt: "x" })]),
     "non json con \"tool_use\"",
     JSON.stringify({ type: "user", message: { content: [use("Bash")] } }),
   ]);
   assert.deepEqual(calls, [
-    { message: "m1", name: "mcp__agentrica__list_agents" },
-    { message: "m2", name: "mcp__agentrica__agent", target: "AIWDA-01" },
+    { message: "m1", name: "mcp__aigentrica__list_agents" },
+    { message: "m2", name: "mcp__aigentrica__agent", target: "AIWDA-01" },
     { message: "m4", name: "Agent", target: "Explore" },
   ]);
 });
 
-const agent = (message: string, id: string): Call => ({ message, name: "mcp__agentrica__agent", target: id });
-const list: Call = { message: "m0", name: "mcp__agentrica__list_agents" };
-const ask: Call = { message: "mq", name: "mcp__agentrica__ask_user" };
+const agent = (message: string, id: string): Call => ({ message, name: "mcp__aigentrica__agent", target: id });
+const list: Call = { message: "m0", name: "mcp__aigentrica__list_agents" };
+const ask: Call = { message: "mq", name: "mcp__aigentrica__ask_user" };
 
 test("una sessione in ordine passa tutti i criteri", () => {
   const calls = [list, agent("z", "AIBPD-01"), agent("a", "AIWDA-01"), agent("b", "AIWDA-03"), agent("c", "AIPCA-01"), ask, agent("d", "AISA-01"), agent("e", "AISA-05"), agent("f", "AIWDA-01")];

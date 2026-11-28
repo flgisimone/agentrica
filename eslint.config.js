@@ -1,7 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-// Solo TypeScript per Node: il sito, con le regole di Next, è nel repository privato agentrica-site (F17).
+// Solo TypeScript per Node: il sito, con le regole di Next, è nel repository privato aigentrica-site (F17).
 export default defineConfig([
   ...tseslint.configs.recommended,
   {

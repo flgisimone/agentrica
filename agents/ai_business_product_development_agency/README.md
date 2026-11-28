@@ -19,7 +19,7 @@ Agenti per strategia aziendale, sviluppo business, ricerca di mercato, innovazio
 ## Struttura
 - `00-common-rules.md`: regole comuni a tutti i ruoli dell'agenzia.
 - `01-…` e seguenti: un file per ruolo, nell'ordine del flusso di lavoro, senza frontmatter.
-- Gli agenti si consultano dal server MCP di Agentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/business-product/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
+- Gli agenti si consultano dal server MCP di AIgentrica con il tool `agent`, uno alla volta e il direttore per primo. I subagent di `.claude/agents/business-product/` ci sono solo nei progetti creati con `init --subagents` e caricano il loro agente dallo stesso server.
 
 ## Flusso di lavoro
 1. Il Chief Business & Product Officer riceve l'obiettivo.
@@ -37,4 +37,4 @@ Agenti per strategia aziendale, sviluppo business, ricerca di mercato, innovazio
 - Privacy & Compliance: finalità, flussi dati, categorie di dati, fornitori e modelli di business.
 
 ## Biblioteca
-Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di Agentrica.
+Le schede della biblioteca del reparto sono in `biblioteca/`, una per nozione, con fonte, versione, data di verifica e data entro cui ricontrollarla; le fonti ammesse, con i loro indirizzi, in `fonti.json`. Formato, livelli delle fonti e ciclo di studio sono descritti in `docs/Biblioteca degli agenti.md` del repository di AIgentrica.

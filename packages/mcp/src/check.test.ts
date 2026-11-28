@@ -11,7 +11,7 @@ after(() => dirs.forEach((dir) => rmSync(dir, { recursive: true, force: true }))
 
 /** Un progetto in una cartella nuova con i file dati (percorso → testo). */
 function project(files: Record<string, string>): string {
-  const root = realpathSync(mkdtempSync(join(tmpdir(), "agentrica-check-")));
+  const root = realpathSync(mkdtempSync(join(tmpdir(), "aigentrica-check-")));
   dirs.push(root);
   for (const [path, text] of Object.entries(files)) {
     mkdirSync(join(root, path, ".."), { recursive: true });
@@ -146,7 +146,7 @@ test("il comando check: 0 senza problemi, 1 con problemi, 2 con argomenti sbagli
   assert.equal(bad.status, 1);
   assert.match(bad.stdout, /^1 errore di formato:\n- plan\/README\.md: manca la tabella/);
   assert.equal(run("a", "b").status, 2);
-  assert.equal(run(join(tmpdir(), "agentrica-non-esiste")).status, 2);
+  assert.equal(run(join(tmpdir(), "aigentrica-non-esiste")).status, 2);
   // Permission model di Node senza lettura del progetto: non è «non trovo la cartella» (F48-02).
   const denied = spawnSync(process.execPath, ["--permission", `--allow-fs-read=${join(import.meta.dirname, "..", "..", "..")}`, server, "check", project({}), "--lang", "it"], { encoding: "utf8" });
   assert.equal(denied.status, 2);

@@ -45,7 +45,7 @@ A program such as Claude Code that uses a model to read, change and test your pr
 ## Role file
 Id: role-file
 
-In Agentrica, the file in `agents/` that describes an agent: mission, way of working, limits. The server hands it to the model together with the department's common rules.
+In AIgentrica, the file in `agents/` that describes an agent: mission, way of working, limits. The server hands it to the model together with the department's common rules.
 
 ## Context
 Id: context
@@ -65,7 +65,7 @@ The opening part of the context that the provider keeps ready between one reques
 ## Agent
 Id: agent
 
-A model working in a loop: it decides an action, carries it out with a tool, looks at the result, decides the next. In Agentrica it is also a role in a department.
+A model working in a loop: it decides an action, carries it out with a tool, looks at the result, decides the next. In AIgentrica it is also a role in a department.
 
 ## Subagent
 Id: subagent
@@ -100,7 +100,7 @@ The program that offers tools and prompts through [MCP](glossary.md#mcp). It can
 ## MCP prompt
 Id: mcp-prompt
 
-A ready-made text offered by an MCP server, called by name. In Agentrica there is one prompt per agent.
+A ready-made text offered by an MCP server, called by name. In AIgentrica there is one prompt per agent.
 
 ## Orchestration
 Id: orchestration
@@ -115,7 +115,7 @@ What an agent leaves to the next one: outcome, [findings](glossary.md#finding) w
 ## Director
 Id: director
 
-In Agentrica, the agent that coordinates a department: it picks the specialists and the order, and consolidates the results.
+In AIgentrica, the agent that coordinates a department: it picks the specialists and the order, and consolidates the results.
 
 ## Finding
 Id: finding

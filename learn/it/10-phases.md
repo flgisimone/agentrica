@@ -24,8 +24,8 @@ Un ritmo che funziona:
 
 Il vantaggio più grande è la fiducia. Quando l'agente dice «fatto», puoi controllare un elenco preciso invece di fidarti di una frase.
 
-## In Agentrica
-Agentrica è stata costruita così, dalla prima fase all'ultima. Il piano è in [plan/README.md](../../plan/README.md): decisioni con data e motivo, e la tabella delle fasi. Ogni fase ha il suo file, sul modello di [plan/00-base.md](../../plan/00-base.md), con «Fatto», «Verifiche» e «Rilievi aperti» alla chiusura. La procedura di chiusura è in [CONVENTIONS.md](../../CONVENTIONS.md), paragrafo 13.7: piano aggiornato, `npm run verify`, un'unica domanda di conferma per commit, merge e push, poi sessione nuova. Dalla fase F16 il metodo è scritto lì; le fasi dei rilievi, come F15, chiudono i problemi lasciati aperti dalle precedenti.
+## In AIgentrica
+AIgentrica è stata costruita così, dalla prima fase all'ultima. Il piano è in [plan/README.md](../../plan/README.md): decisioni con data e motivo, e la tabella delle fasi. Ogni fase ha il suo file, sul modello di [plan/00-base.md](../../plan/00-base.md), con «Fatto», «Verifiche» e «Rilievi aperti» alla chiusura. La procedura di chiusura è in [CONVENTIONS.md](../../CONVENTIONS.md), paragrafo 13.7: piano aggiornato, `npm run verify`, un'unica domanda di conferma per commit, merge e push, poi sessione nuova. Dalla fase F16 il metodo è scritto lì; le fasi dei rilievi, come F15, chiudono i problemi lasciati aperti dalle precedenti.
 
 Il metodo arriva anche nei tuoi progetti. Dalla fase F18 il comando `init` copia un modello con il piano già impostato, [starter/plan/README.md](../../starter/plan/README.md); dalla F35 `init --existing` lo aggiunge a un progetto già avviato, con il piano creato leggendo il codice. Dalla F42 il tool `check` controlla la forma di `plan/` senza modelli, e il pannello locale mostra fasi, backlog e rilievi.
 
@@ -50,7 +50,7 @@ Scegli la prossima cosa che vuoi fare nel tuo progetto e scrivila come fase, in 
 - Una frase che si verifica con un comando.
 ```
 
-Poi apri una sessione nuova e chiedi al tuo assistente di sviluppare solo quella fase. Se vuoi che lo faccia con gli agenti di Agentrica, il server si installa con un comando: [installa Agentrica](/installa).
+Poi apri una sessione nuova e chiedi al tuo assistente di sviluppare solo quella fase. Se vuoi che lo faccia con gli agenti di AIgentrica, il server si installa con un comando: [installa AIgentrica](/installa).
 
 ## Termini
 - [Fase](glossario.md#phase)

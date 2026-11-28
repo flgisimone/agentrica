@@ -28,7 +28,7 @@ Si rilegge il diff, si eseguono i controlli (§13), si verificano i criteri di a
 ### 2.6 Fasi e backlog
 Il lavoro si divide in fasi, una alla volta, elencate in `plan/README.md` (tabella «Fasi») con le decisioni prese.
 - **File di fase.** Ogni fase ha `plan/NN-nome.md` con obiettivo, stato, agenzie, situazione di partenza, decisioni dell'utente, `## Backlog`, `## Criteri di accettazione` e, alla chiusura, «Fatto», «Verifiche» e «Rilievi aperti» (modello: `plan/00-base.md`).
-- **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l’evidenza: il pannello di `@agentrica/mcp` (acceso di predefinito) legge questo formato.
+- **Backlog.** Una tabella con id `FN-NN`, attività e priorità (`P0`–`P3`, come in `AGENTS.md`), confermata dall'utente all'apertura. Un'attività è fatta quando «Fatto» cita il suo id in grassetto (`**FN-NN**`) con l’evidenza: il pannello di `@aigentrica/mcp` (acceso di predefinito) legge questo formato.
 - **Pianificazione.** Le fasi si creano in una sessione a sé, che scrive solo `plan/` (in un progetto già avviato leggendo il codice esistente): fasi in «Fasi», file di fase con backlog e criteri, nessuna modifica al codice. Si fa confermare il piano all'utente e ci si ferma proponendo `/clear`.
 - **Apertura.** Ogni fase si apre in una sessione nuova, una sola fase per sessione. Le «proposte da confermare» del file si decidono con l'utente; si apre `fase/fN-nome` da `develop`.
 - **Durante.** Ciò che esce dal perimetro diventa una voce del backlog o un rilievo aperto, non una modifica di passaggio (§14). Le correzioni fuori fase vanno su `fix/nome`.

@@ -2,6 +2,14 @@
 
 Ogni versione con la data di pubblicazione su npm e le novità per tipo: Nuovo, Cambiato, Corretto, Incompatibile. La versione si fissa nel comando del server (`@agentrica/mcp@<versione>`): un aggiornamento arriva solo quando la cambi tu. La versione inglese è [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 0.22.0 — 2026-11-28
+
+### Nuovo
+- Export `@agentrica/mcp/learn`: lezioni e glossario di «Impara», il percorso sull'IA del sito, in italiano e inglese (`loadLessons`, `loadGlossary`), dalla cartella `learn/` inclusa nel pacchetto. F53.
+
+### Corretto
+- Il catalogo non prende più per una sezione un titolo «## » scritto dentro un blocco di codice.
+
 ## 0.21.0 — 2026-11-28
 
 ### Nuovo

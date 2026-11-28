@@ -1,6 +1,6 @@
 {
   "name": "@agentrica/mcp",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "mcpName": "io.github.flgisimone/agentrica",
   "description": "Agentrica's AI agents, organized in departments, as a local MCP server (stdio): one prompt per agent, four read-only tools (including the departments' library and the format check of plan/ and audit/), three tools that send only after confirmation (agent ratings, token totals, project submissions) and, with the local panel, tools to ask the user and save agent reports.",
   "license": "MIT",
@@ -17,6 +17,10 @@
       "types": "./dist/mcp/src/catalog.d.ts",
       "default": "./dist/mcp/src/catalog.js"
     },
+    "./learn": {
+      "types": "./dist/mcp/src/learn.d.ts",
+      "default": "./dist/mcp/src/learn.js"
+    },
     "./package.json": "./package.json",
     "./CHANGELOG.md": "./CHANGELOG.md",
     "./CHANGELOG.en.md": "./CHANGELOG.en.md"
@@ -27,6 +31,7 @@
   "files": [
     "dist",
     "agents",
+    "learn",
     "starter",
     ".claude/agents",
     "README.it.md",
@@ -37,7 +42,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "prepack": "rm -rf dist agents starter .claude LICENSE && tsc -p tsconfig.build.json && cp -R src/page dist/mcp/src/page && cp -R ../../agents agents && cp -R ../../starter starter && mkdir .claude && cp -R ../../.claude/agents .claude/agents && cp ../../LICENSE LICENSE"
+    "prepack": "rm -rf dist agents learn starter .claude LICENSE && tsc -p tsconfig.build.json && cp -R src/page dist/mcp/src/page && cp -R ../../agents agents && cp -R ../../learn learn && cp -R ../../starter starter && mkdir .claude && cp -R ../../.claude/agents .claude/agents && cp ../../LICENSE LICENSE"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

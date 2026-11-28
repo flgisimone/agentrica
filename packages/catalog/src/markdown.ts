@@ -22,9 +22,12 @@ export function parseRole(markdown: string): ParsedRole {
   const intro: string[] = [];
   const sections: Section[] = [];
   let current: { heading: string; lines: string[] } | null = null;
+  // Un «## » dentro un blocco di codice è testo, non una sezione (le lezioni di learn/ mostrano esempi di Markdown).
+  let fenced = false;
 
   for (const line of lines.slice(titleIndex + 1)) {
-    if (line.startsWith("## ")) {
+    if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
+    if (!fenced && line.startsWith("## ")) {
       if (current) sections.push(close(current));
       current = { heading: line.slice(3).trim(), lines: [] };
     } else if (current) {

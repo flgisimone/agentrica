@@ -2,7 +2,7 @@
 
 **Obiettivo**: nelle sessioni lunghe, con agenti richiamati più volte, la pagina Agenti del pannello resta corta da scorrere e mostra il percorso della sessione con una mappa a corsie per reparto. Le pagine `/pannello` e `/orchestrazione` del sito si allineano.
 
-> **Stato: completata** (2026-11-28). Branch `fase/f52-pannello-mappa` in tutti e due i repository, da `develop`. Registrata il 2026-11-27; backlog, proposte e cosa cambiare nel sito confermati dall'utente il 2026-11-28 all'apertura, con pianificazione e sviluppo nella stessa sessione (scelta dell'utente). Da rilasciare insieme: pacchetto e sito (le schermate di `/pannello` mostrano il pannello di questa fase).
+> **Stato: completata** (2026-11-28). Branch `fase/f52-pannello-mappa` in tutti e due i repository, da `develop`. Registrata il 2026-11-27; backlog, proposte e cosa cambiare nel sito confermati dall'utente il 2026-11-28 all'apertura, con pianificazione e sviluppo nella stessa sessione (scelta dell'utente). Rilasciata con la 0.21.0 il 2026-11-28: pacchetto su npm con provenance (tag `v0.21.0`) e sito con la dipendenza alla 0.21.0, header nuovo e pagine `/pannello` e `/orchestrazione` (le schermate mostrano il pannello di questa fase).
 
 **Agenzie**: web design (UX Designer e Dataviz Designer per la mappa, Accessibility, UX Writer per i testi); software (Frontend, QA, Code Reviewer).
 

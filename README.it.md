@@ -99,7 +99,7 @@ Le agenzie servono due volte: sono il **contenuto** del prodotto e sono anche il
 | F50 | Misura dei modelli, terza ondata: nove specialisti di design su Opus medio e Sonnet (Haiku su AIWDA-10) con il pannello turnio e le schermate fisse; Sonnet supera la soglia in sei ruoli (−55% del costo sul compito) e diventa il modello consigliato per AIWDA-04–08 e 10 | completata (0.19.0) |
 | F51 | Misura dei modelli, quarta ondata: otto specialisti di cyber, privacy e software su Opus medio e Sonnet (Haiku su AICA-12) con i progetti di F37 estesi; Sonnet supera la soglia in sei ruoli (−57% del costo sul compito) e diventa il modello consigliato per AICA-06, 08, AIPCA-03, AISA-03 e 06, Haiku per AICA-12; ogni ruolo `inherit` ha il suo motivo | completata (0.20.0) |
 | F52 | Pannello: vista per reparto compatta e mappa a corsie degli agenti, senza framework; pagine `/pannello` e `/orchestrazione` del sito allineate; menu dell'header sotto la voce | completata (0.21.0) |
-| F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di Agentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@agentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata |
+| F53 | Impara: dieci lezioni sull'IA dall'ABC agli agenti con gli esempi di Agentrica, in italiano e inglese, in `learn/`; il pacchetto le esporta (`@agentrica/mcp/learn`) e il sito le mostra in `/impara`; ogni fase chiusa ha la sua riga in `learn/fasi.md`, controllata da `npm run verify` | completata (0.22.0) |
 
 Il dettaglio è in [plan/README.md](plan/README.md).
 
